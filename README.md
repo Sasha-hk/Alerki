@@ -1,6 +1,6 @@
 # **Appointment service**
 
-The service provide you abbility to make appointment with some master.
+The service gives you the opportunity to make an appointment with the master.
 
 Used tools:
 
