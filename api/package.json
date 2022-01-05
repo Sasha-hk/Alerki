@@ -1,19 +1,24 @@
 {
-  "name": "frontend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-  "dependencies": {
-    "cookie-parser": "^1.4.6",
-    "express": "^4.17.2",
-    "sequelize": "^6.12.5"
-  }
+    "name": "frontend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "NODE_ENV=development nodemon index.js",
+        "start": "NODE_ENV=production node index.js",
+        "makemigrations": "npx sequelize-mig migration:make -n",
+        "migrate": "npx sequelize-cli db:migrate"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cookie-parser": "^1.4.6",
+        "express": "^4.17.2",
+        "sequelize": "^6.12.5"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15",
+        "sequelize-cli": "^6.3.0",
+        "sequelize-mig": "^3.1.3"
+    }
 }
