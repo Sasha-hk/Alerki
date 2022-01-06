@@ -2,4 +2,4 @@
 
 Content:
 
-- [`database`](./database.md "Database documentation")
+- [`database`](./DATABASE.md "Database documentation")
