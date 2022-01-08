@@ -6,12 +6,14 @@ services:
         ports:
             - "5432:5432"
         environment:
-            - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=root
+            - POSTGRES_USERNAME=root
         container_name: database
 
     api:
-        build: ./api
+        build: 
+            context: ./api/
+        working_dir: /app
         ports:
             - "3000:3000"
         volumes:
@@ -22,5 +24,7 @@ services:
         container_name: api
         restart: always
 
+
 volumes:
     logvolume01: {}
+
