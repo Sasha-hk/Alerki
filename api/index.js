@@ -14,6 +14,9 @@ app.use(cookieParser())
 app.use(cors())
 
 // routers
+app.get('/', (req, res) => {
+    res.send('Okay!')
+})
 
 
 const start = async () => {
