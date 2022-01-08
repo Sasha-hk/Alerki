@@ -6,10 +6,11 @@ services:
         ports:
             - "5432:5432"
         environment:
+            - POSTGRES_USER=postgres
             - POSTGRES_PASSWORD=root
         container_name: database
-        
-    web:
+
+    api:
         build: ./api
         ports:
             - "3000:3000"
