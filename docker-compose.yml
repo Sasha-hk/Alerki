@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+    postgres:
+        image: postgres
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_PASSWORD=root
+        container_name: database
+        
+    web:
+        build: ./api
+        ports:
+            - "3000:3000"
+        volumes:
+            - .:/code
+            - logvolume01:/var/log
+        depends_on:
+            - postgres
+        container_name: api
+        restart: always
+
+volumes:
+    logvolume01: {}
