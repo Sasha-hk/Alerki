@@ -24,4 +24,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker-compose build
+        run: . ./development.sh
