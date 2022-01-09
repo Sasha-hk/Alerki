@@ -11,7 +11,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: -img
+  IMAGE_NAME: --img
 
 jobs:
   push:
