@@ -34,7 +34,7 @@ const start = async () => {
         }
     }
     else if (env == 'production') {
-        await dbConnect(() => {
+        awai dbConnect(() => {
             console.log('Connected to database!')
         })
         app.listen(PORT, () => {
