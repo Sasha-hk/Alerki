@@ -10,7 +10,7 @@ module.exports = async (callback) => {
         })
     }
     else if (env == 'production') {
-        await sequelize.authenticat()
+        await sequelize.authenticate()
     }
     else if (env == 'test') {
         await sequelize.sync({
