@@ -1,6 +1,6 @@
-name: Demo Push
+name: Push
 
-on:
+on:   
   push:
     branches:
       - main
@@ -11,7 +11,7 @@ on:
   pull_request:
 
 env:
-  IMAGE_NAME: -img
+  IMAGE_NAME: appointment-web
 
 jobs:
   push:
@@ -24,4 +24,4 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker-compose up --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        run: docker-compose build
