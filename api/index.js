@@ -6,6 +6,7 @@ const dbConnect = require('./models/connect')
 
 const PORT = process.env.PORT || 3000
 const app = express()
+const env = process.env.NODE_ENV || 'development'
 
 // middlewares
 app.use(express.json())
@@ -19,17 +20,27 @@ app.get('/', (req, res) => {
 
 
 const start = async () => {
-    try {
+    if (env == 'development') {
+        try {
+            await dbConnect(() => {
+                console.log('Connected to database')
+            })
+            app.listen(PORT, () => {
+                console.log(`Server started! http://localhost:${PORT}`)
+            })
+        }
+        catch (e) {
+            console.log(e)
+            throw e
+        }
+    }
+    else if (env == 'production') {
         await dbConnect(() => {
-            console.log('Connected to database')
+            console.log('Connected to database!')
         })
         app.listen(PORT, () => {
-            console.log(`Server started! http://localhost:${PORT}`)
+            console.log('Server started!')
         })
-    }
-    catch (e) {
-        console.log(e)
-        throw e
     }
 }
 
