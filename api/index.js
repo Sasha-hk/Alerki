@@ -18,7 +18,6 @@ app.get('/', (req, res) => {
     res.send('Okay!')
 })
 
-
 const start = async () => {
     if (env == 'development') {
         try {
@@ -39,15 +38,6 @@ const start = async () => {
         })
         app.listen(PORT, () => {
             console.log('Server started!')
-        })
-    }
-    else if (env == 'test') {
-        await dbConnect(() => {
-            console.log('Connected to database!')
-        })
-        app.listen(PORT, () => {
-            console.log('Server started!')
-            process.exit()
         })
     }
 }
