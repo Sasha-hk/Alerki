@@ -6,23 +6,27 @@ services:
         ports:
             - "5432:5432"
         environment:
-            - POSTGRES_PASSWORD=root
-            - POSTGRES_USERNAME=root
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: root
         container_name: database
+        volumes:
+            - ./pgdata:/var/lib/postgresql/data
 
     api:
         build: 
-            context: ./api/
+            context: ./api
         working_dir: /app
         ports:
             - "3000:3000"
+        # command: |
+        #     npx sequelize-cli db:create
         volumes:
             - .:/code
             - logvolume01:/var/log
         depends_on:
             - postgres
         container_name: api
-        restart: always
+        # restart: always
 
 volumes:
     logvolume01: {}
