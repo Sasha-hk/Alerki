@@ -1,7 +1,6 @@
-const someRouter = (req, res) => {
-    res.send('OK')
-}
+const authRouter = require('./auth')
+
 
 module.exports = (app) => {
-    app.use('/', someRouter)
+    app.use('/', authRouter)
 }
