@@ -4,8 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "NODE_ENV=development nodemon index.js",
-        "start": "NODE_ENV=production node index.js",
+        "start:test": "NODE_ENV=test node index.js",
+        "start:development": "NODE_ENV=development nodemon index.js",
+        "start:production": "NODE_ENV=production node index.js",
         "makemigrations": "npx sequelize-mig migration:make -n",
         "migrate": "npx sequelize-cli db:migrate"
     },

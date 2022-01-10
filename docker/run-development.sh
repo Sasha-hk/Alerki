@@ -1,6 +1,8 @@
 #!/bin/bash
 
 
+. ./docker/colors.sh
+
 while read line; do
     export $line;
 done < ./docker/.env.development
