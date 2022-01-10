@@ -40,6 +40,13 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: null,
         })
+
+        UserModel.belongsTo(models.UserPhotoModel, {
+            foreignKey: 'photoID',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
     }
 
     return UserModel
