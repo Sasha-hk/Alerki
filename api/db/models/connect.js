@@ -14,7 +14,8 @@ module.exports = async (callback) => {
     }
     else if (env == 'test') {
         await sequelize.sync({
-            logging: false
+            alter: true,
+            logging: true,
         })
     }
 

@@ -32,7 +32,15 @@ module.exports = (sequelize, DataTypes) => {
             tableName: 'Users',
         }
     )
-
+    
+    UserModel.associate = (models) => {
+        UserModel.belongsTo(models.UserModel, {
+            foreignKey: 'authID',
+            onDelete: 'CASCADE',
+            allowNull: false,
+            defaultValue: null,
+        })
+    }
 
     return UserModel
 }
