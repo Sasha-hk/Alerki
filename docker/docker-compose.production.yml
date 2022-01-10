@@ -18,6 +18,7 @@ services:
             context: ../api/
             dockerfile: Dockerfile.production
         container_name: api
+        command: bash -c "npm run migrate && npm run start:production"
         depends_on:
             - db
         env_file: .env.production
