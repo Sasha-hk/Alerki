@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 
     AppointmentModel.associate = (models) => {
         AppointmentModel.belongsTo(models.ServiceModel, {
-            foreignKey: 'service',
+            foreignKey: 'serviceID',
             onDelete: 'CASCADE',
             allowNull:true,
             defaultValue:null,

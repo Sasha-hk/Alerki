@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
 
     WorkerServiceModel.associate = (models) => {
         WorkerServiceModel.belongsTo(models.UserModel, {
-            foreignKey: 'worker',
+            foreignKey: 'workerID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,

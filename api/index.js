@@ -1,7 +1,7 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
-const dbConnect = require('./models/connect')
+const dbConnect = require('./db/models/connect')
 
 const PORT = process.env.PORT || 3000
 const app = express()
@@ -38,6 +38,9 @@ const start = async () => {
         app.listen(PORT, () => {
             console.log('Server started!')
         })
+    }
+    else if (env == 'test') {
+        console.log('Test mode')
     }
 }
 
