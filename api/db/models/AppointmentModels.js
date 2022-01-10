@@ -23,6 +23,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull:true,
             defaultValue:null,
         })
+
+        AppointmentModel.hasMany(models.UserModel, {
+            foreignKey: 'clientAppointments',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
+
+        AppointmentModel.hasMany(models.UserModel, {
+            foreignKey: 'workerAppointments',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
     }
 
     return AppointmentModel
