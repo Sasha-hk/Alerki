@@ -3,6 +3,6 @@
 
 while read line; do
     export $line;
-done < .env.development
+done < ./docker/.env.development
 
-docker-compose -f docker-compose.development.yml build
+docker-compose -f ./docker/docker-compose.development.yml build
