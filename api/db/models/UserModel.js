@@ -34,14 +34,21 @@ module.exports = (sequelize, DataTypes) => {
     )
     
     UserModel.associate = (models) => {
-        UserModel.belongsTo(models.UserModel, {
+        UserModel.belongsTo(models.UserPhotoModel, {
+            foreignKey: 'photoID',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
+
+        UserModel.hasMany(models.UserModel, {
             foreignKey: 'authID',
             onDelete: 'CASCADE',
             allowNull: false,
             defaultValue: null,
         })
 
-        UserModel.belongsTo(models.UserPhotoModel, {
+        UserModel.hasMany(models.UserPhotoModel, {
             foreignKey: 'photoID',
             onDelete: 'CASCADE',
             allowNull: true,
