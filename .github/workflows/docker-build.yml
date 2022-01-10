@@ -1,0 +1,27 @@
+name: Build
+
+on:   
+  # push:
+  #   branches:
+  #     - main
+
+  #   tags:
+  #     - v*
+
+  pull_request:
+
+env:
+  IMAGE_NAME: appointment-web
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: . ./docker/run-test.sh
