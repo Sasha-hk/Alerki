@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+    db:
+        container_name: database
+        environment:
+            POSTGRES_USER: $DB_USER
+            POSTGRES_PASSWORD: $DB_PASSWORD
+            POSTGRES_DB: $DB_DATABASE
+        image: postgres
+        ports:
+            - "5432:5432"
+        volumes:
+            - ../pgdata:/var/lib/postgresql/data
+
+    backend:
+        build: 
+            context: ../api/
+            dockerfile: Dockerfile.test
+        container_name: api
+        depends_on:
+            - db
+        env_file: .env.test
+        ports:
+            - "3000:3000"
+        volumes:
+            - ../:/app
+        working_dir: /app/api
