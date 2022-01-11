@@ -51,6 +51,33 @@ class AuthService {
             }
         )
     }
+
+    async removeTokens(userID) {
+        await AuthUserModel.update({
+                accessTokekn: '',
+                refreshToken: '',
+            },
+            {
+                where: {
+                    userID,
+                }
+            }
+        )
+
+        return true
+    }
+
+    async verifyAccessToken(accessToken) {
+        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET)
+
+        return decoded
+    }
+
+    async verifyRefreshToken(accessRefresh) {
+        const decoded = jwt.verify(accessRefresh, process.env.JWT_REFRESH_SECRET)
+
+        return decoded
+    }
 }
 
 

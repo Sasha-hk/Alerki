@@ -76,6 +76,20 @@ class UserService {
 
         return {userData, ...tokens}
     }
+
+    async logout(accessToken, refreshToken) {
+        const decodedToken = accessToken 
+            ? await AuthService.verifyAccessToken(accessToken)
+            : refreshToken 
+                ? await AuthService.verifyRefreshToken(refreshToken) 
+                : null
+
+        decodedToken
+            ? decodedToken.hasOwnProperty('id') 
+                ? await AuthService.removeTokens(decodedToken.id) 
+                : null
+            : null 
+    }
 }
 
 
