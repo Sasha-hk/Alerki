@@ -1,7 +1,7 @@
 const { UserModel } = require('../db/models')
 const AuthError = require('../exception/AuthError')
 const UserDto = require('../dto/UserDto')
-const TokenService = require('./TokenService')
+const AuthService = require('./AuthService')
 const bcrypt = require('bcrypt')
 
 
@@ -41,11 +41,39 @@ class UserService {
             profileType: profileType
         })
         
-        // generate tokens and save it
+        // generate and save tokens
         const userData = new UserDto(newUser)
-        const tokens = await TokenService.generateTokens({...userData})
-        await TokenService.saveToken(userData.id, tokens) 
+        const tokens = await AuthService.generateTokens({...userData})
+        await AuthService.saveTokens(userData.id, tokens) 
         
+        return {userData, ...tokens}
+    }
+
+    async login(email, password) {
+        // check if user exists
+        const loginUser = await UserModel.findOne({
+            raw: true,
+            where: {
+                email,
+            },
+        })
+
+        if (!loginUser) {
+            throw AuthError.EmailNotExistsError()
+        }
+
+        // check password
+        const passwordIsValid = bcrypt.compare(password, loginUser.password)
+
+        if (!passwordIsValid) {
+            throw AuthError.BadPasswordError()
+        }
+
+        // generate and save tokens
+        const userData = new UserDto(loginUser)
+        const tokens = await AuthService.generateTokens({...userData})
+        await AuthService.saveTokens(userData.id, tokens)
+
         return {userData, ...tokens}
     }
 }

@@ -1,7 +1,7 @@
 const { AuthUserModel, UserModel } = require('../db/models')
 const jwt = require('jsonwebtoken')
 
-class TokenService {
+class AuthService {
     async generateTokens(payload) {
         const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '30m'})
         const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {expiresIn: '30d'})
@@ -9,7 +9,7 @@ class TokenService {
         return {accessToken, refreshToken}
     }
 
-    async saveToken(userID, tokens) {
+    async saveTokens(userID, tokens) {
         // check if Auth data for the user already exists
         const checkExistsAuthData = await AuthUserModel.findOne({
             raw: true,
@@ -54,4 +54,4 @@ class TokenService {
 }
 
 
-module.exports = new TokenService()
+module.exports = new AuthService()
