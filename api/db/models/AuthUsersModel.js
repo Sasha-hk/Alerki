@@ -8,16 +8,16 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
             },
             accessToken: {
-                type: DataTypes.STRING(550)
+                type: DataTypes.STRING(1024)
             },
             refreshToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
             googleAccessToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
             googleRefreshToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
         },
         {

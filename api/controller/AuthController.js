@@ -12,7 +12,7 @@ class AuthController {
                 profileType
             } = req.body
 
-            const UserData = await UserService.register(
+            const userData = await UserService.register(
                 email, 
                 firstName,
                 lastName,
@@ -20,8 +20,8 @@ class AuthController {
                 profileType
             )
 
-            res.cookie('refreshToken', UserData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-            res.cookie('accessToken', UserData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
 
             delete UserData.refreshToken
 
@@ -35,19 +35,42 @@ class AuthController {
 
     async login(req, res, next) {
         try {
+            const {
+                email,
+                password,
+            } = req.body
 
+            const userData = await UserService.login(email, password)
+
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+
+            delete userData.refreshToken
+
+            res.json(userData)
         }
         catch(e) {
-
+            res.status(e.status || 500).json(e.errors)
         }
     }
 
     async logout(req, res, next) {
         try {
+            const {
+                accessToken,
+                refreshToken
+            } = req.cookies
 
+            UserService.logout(accessToken, refreshToken)
+
+            res.clearCookie('accessToken')
+            res.clearCookie('refreshToken')
+
+            res.sendStatus(200)
         }
         catch(e) {
-
+            console.log(e)
+            res.status(e.status || 500).json(e.errors)
         }
     }
 
