@@ -8,10 +8,12 @@ const PORT = process.env.PORT || 3000
 const app = express()
 const env = process.env.NODE_ENV || 'development'
 
+
 // middlewares
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
+
 
 // routers
 router(app)

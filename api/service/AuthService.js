@@ -9,62 +9,51 @@ class AuthService {
         return {accessToken, refreshToken}
     }
 
-    async saveTokens(userID, tokens) {
+    async saveTokens(userID, deviceName, tokens) {
         // check if Auth data for the user already exists
         const checkExistsAuthData = await AuthUserModel.findOne({
             raw: true,
             where: {
-                userID
+                userID,
+                deviceName,
             }
         })
 
         // if Auth data exists just update it
         if (checkExistsAuthData) {
-            const updateExistsAuthData = await AuthUserModel.update({
+            // update exists Auth data
+            await AuthUserModel.update({
                     accessToken: tokens.accessToken,
                     refreshToken: tokens.refreshToken,
                 },
                 {
                     raw: true,
                     where: {
-                        userID
+                        userID,
+                        deviceName,
                     }
                 }
             )
         }
-
-        // create new Auth data
-        const newAuthData = await AuthUserModel.create({
-            userID,
-            accessToken: tokens.accessToken,
-            refreshToken: tokens.refreshToken,
-        })
-
-        // make relationship with user
-        await UserModel.update({
-                authID: newAuthData.dataValues.id,
-            },
-            {
-                where: {
-                    id: userID,
-                },
-            }
-        )
+        else {    
+            // create new Auth data
+            await AuthUserModel.create({
+                userID,
+                deviceName,
+                accessToken: tokens.accessToken,
+                refreshToken: tokens.refreshToken,
+            })
+        }
     }
 
-    async removeTokens(userID) {
-        await AuthUserModel.update({
-                accessTokekn: '',
-                refreshToken: '',
-            },
-            {
+    async removeTokens(userID, deviceName) {
+        await AuthUserModel.destroy({
                 where: {
                     userID,
+                    deviceName
                 }
             }
         )
-
-        return true
     }
 
     async verifyAccessToken(accessToken) {

@@ -1,5 +1,7 @@
 const { UserModel, AuthUserModel } = require('../db/models')
 const UserService = require('../service/UserService')
+const getDeviceName = require('../utils/deviceName')
+
 
 class AuthController {
     async register(req, res, next) {
@@ -12,20 +14,23 @@ class AuthController {
                 profileType
             } = req.body
 
+            const deviceName = getDeviceName(req)
+
             const userData = await UserService.register(
                 email, 
                 firstName,
                 lastName,
                 password,
-                profileType
+                profileType,
+                deviceName,
             )
 
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
 
-            delete UserData.refreshToken
+            delete userData.refreshToken
 
-            res.json(UserData)
+            res.json(userData)
         }
         catch(e) {
             console.log(e)
@@ -40,7 +45,9 @@ class AuthController {
                 password,
             } = req.body
 
-            const userData = await UserService.login(email, password)
+            const deviceName = getDeviceName(req)
+
+            const userData = await UserService.login(email, password, deviceName)
 
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
@@ -61,7 +68,9 @@ class AuthController {
                 refreshToken
             } = req.cookies
 
-            UserService.logout(accessToken, refreshToken)
+            const deviceName = getDeviceName(req)
+
+            UserService.logout(accessToken, refreshToken, deviceName)
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
