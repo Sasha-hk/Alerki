@@ -10,7 +10,7 @@ module.exports = class AuthError extends Error {
     }
 
     static UnauthorizedError() {
-        return new AuthError(401, 'User not authorized')
+        return new AuthError(401, 'User not authorized', ['user not authorized'])
     }
 
     static EmailExistsError() {
@@ -18,11 +18,19 @@ module.exports = class AuthError extends Error {
     }
 
     static EmailNotExistsError() {
-        return new AuthError(400, 'User with this email not exists')
+        return new AuthError(400, 'User with this email not exists', ['user with this email not exists'])
     }
 
     static BadPasswordError() {
-        return new AuthError(400, 'Wrong password')
+        return new AuthError(400, 'Wrong password', ['wrong password'])
+    }
+    
+    static BadAccessToken() {
+        return new AuthError(400, 'Invalid accessToken', ['invalid accessToken'])
+    }
+    
+    static BadRefreshToken() {
+        return new AuthError(400, 'Invalid refreshToken', ['invalid refreshToken'])
     }
 
     static BadRequestError(errors=[]) {
