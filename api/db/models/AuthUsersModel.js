@@ -7,6 +7,9 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
+            deviceName: {
+                type: DataTypes.STRING(255),
+            },
             accessToken: {
                 type: DataTypes.STRING(1024)
             },

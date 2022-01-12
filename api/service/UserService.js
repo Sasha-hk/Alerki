@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 
 
 class UserService {
-    async register(email, firstName, lastName, password, profileType) {
+    async register(email, firstName, lastName, password, profileType, deviceName) {
         // check if all data specefied
         if ([email, firstName, lastName, password, profileType].includes(undefined)) {
             console.log(123)
@@ -38,18 +38,18 @@ class UserService {
             firstName: firstName,
             lastName: lastName,
             password: hashedPassword,
-            profileType: profileType
+            profileType: profileType,
         })
         
         // generate and save tokens
         const userData = new UserDto(newUser)
         const tokens = await AuthService.generateTokens({...userData})
-        await AuthService.saveTokens(userData.id, tokens) 
+        await AuthService.saveTokens(userData.id, deviceName, tokens) 
         
         return {userData, ...tokens}
     }
 
-    async login(email, password) {
+    async login(email, password, deviceName) {
         // check if user exists
         const loginUser = await UserModel.findOne({
             raw: true,
@@ -72,12 +72,13 @@ class UserService {
         // generate and save tokens
         const userData = new UserDto(loginUser)
         const tokens = await AuthService.generateTokens({...userData})
-        await AuthService.saveTokens(userData.id, tokens)
+        await AuthService.saveTokens(userData.id, deviceName, tokens)
 
         return {userData, ...tokens}
     }
 
-    async logout(accessToken, refreshToken) {
+    async logout(accessToken, refreshToken, deviceName) {
+        // get user id from accessToken or refreshToken
         const decodedToken = accessToken 
             ? await AuthService.verifyAccessToken(accessToken)
             : refreshToken 
@@ -86,7 +87,7 @@ class UserService {
 
         decodedToken
             ? decodedToken.hasOwnProperty('id') 
-                ? await AuthService.removeTokens(decodedToken.id) 
+                ? await AuthService.removeTokens(decodedToken.id, deviceName) 
                 : null
             : null 
     }
