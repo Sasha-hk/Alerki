@@ -7,17 +7,20 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
+            deviceName: {
+                type: DataTypes.STRING(255),
+            },
             accessToken: {
-                type: DataTypes.STRING(550)
+                type: DataTypes.STRING(1024)
             },
             refreshToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
             googleAccessToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
             googleRefreshToken: {
-                type: DataTypes.STRING(550),
+                type: DataTypes.STRING(1024),
             },
         },
         {

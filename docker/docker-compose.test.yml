@@ -16,8 +16,9 @@ services:
     backend:
         build: 
             context: ../api/
-            dockerfile: Dockerfile.test
+            dockerfile: Dockerfile
         container_name: api
+        command: bash -c "npm run migrate && npm run start:test"
         depends_on:
             - db
         env_file: .env.test

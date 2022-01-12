@@ -1,18 +1,17 @@
 const Router = require('express')
+const AuthController = require('../controller/AuthController')
 const router = new Router()
 
 
 router
-    .post('/register')
-    .post('/log-in')
+    .post('/register', AuthController.register)
+    .post('/log-in', AuthController.login)
 
 router
-    .get('/log-out')
-    .get('/refresh')
-    .get('/login/google')
-    .get('/login/apple')
-    .get('/callbach/google')
-    .get('/callbach/apple')
+    .get('/log-out', AuthController.logout)
+    .get('/refresh', AuthController.refresh)
+    .get('/login/google', AuthController.withGoogle)
+    .get('/callbach/google', AuthController.callbackGoogle)
 
 
 module.exports = router

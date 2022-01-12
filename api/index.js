@@ -2,20 +2,22 @@ const express = require('express')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const dbConnect = require('./db/models/connect')
+const router = require('./router')
 
 const PORT = process.env.PORT || 3000
 const app = express()
 const env = process.env.NODE_ENV || 'development'
+
 
 // middlewares
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors())
 
+
 // routers
-app.get('/', (req, res) => {
-    res.send('Okay!')
-})
+router(app)
+
 
 const start = async () => {
     if (env == 'development') {

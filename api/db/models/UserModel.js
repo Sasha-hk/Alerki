@@ -40,20 +40,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: null,
         })
-
-        UserModel.hasMany(models.UserModel, {
-            foreignKey: 'authID',
-            onDelete: 'CASCADE',
-            allowNull: false,
-            defaultValue: null,
-        })
-
-        UserModel.hasMany(models.UserPhotoModel, {
-            foreignKey: 'photoID',
-            onDelete: 'CASCADE',
-            allowNull: true,
-            defaultValue: null,
-        })
     }
 
     return UserModel
