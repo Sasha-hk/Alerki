@@ -49,8 +49,8 @@ class AuthController {
 
             const userData = await UserService.login(email, password, deviceName)
 
-            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
 
             delete userData.refreshToken
 
@@ -85,7 +85,16 @@ class AuthController {
 
     async refresh(req, res, next) {
         try {
+            const {refreshToken} = req.cookies
+            const deviceName = getDeviceName(req)
+            const userData = await UserService.refresh(refreshToken, deviceName)
 
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            
+            delete userData.refreshToken
+
+            res.json(userData)
         }
         catch(e) {
 

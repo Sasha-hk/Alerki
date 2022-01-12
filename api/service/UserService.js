@@ -91,6 +91,38 @@ class UserService {
                 : null
             : null 
     }
+
+    async refresh(refreshToken, deviceName) {
+        // decode refreshToken
+        const decodedToken = await AuthService.verifyRefreshToken(refreshToken)
+
+        if (decodedToken) { 
+            // check if use with id from refreshToken exists
+            const checkUser = await UserModel.findOne({
+                raw: true,
+                where: {
+                    email: decodedToken.email,
+                },
+            })
+
+            // if user exists generate new tokens
+            if (checkUser) {
+                // generate and save tokens
+                const userData = new UserDto(checkUser)
+                const tokens = await AuthService.generateTokens({...userData})
+                await AuthService.saveTokens(userData.id, deviceName, tokens)
+    
+                return {userData, ...tokens} 
+            }
+            else {
+                throw AuthError.BadRequestError(['User not exists'])
+            }
+
+        }
+        else {
+            throw AuthError.BadRefreshToken()
+        }
+    }
 }
 
 
