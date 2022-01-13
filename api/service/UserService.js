@@ -8,8 +8,8 @@ const bcrypt = require('bcrypt')
 class UserService {
     async register(email, firstName, lastName, password, profileType, deviceName) {
         // check if all data specefied
-        if ([email, firstName, lastName, password, profileType].includes(undefined)) {
-            console.log(123)
+        console.log(email, firstName, lastName, profileType)
+        if ([email, firstName, lastName, profileType].includes(undefined)) {
             throw AuthError.BadRequestError(['required data not specefied'])
         }
 
@@ -29,15 +29,17 @@ class UserService {
         if (profileType != 'client' && profileType != 'worker') {
             throw AuthError.BadRequestError()
         }
-        
-        const hashedPassword = bcrypt.hashSync(password, 1)
+
+        if (password) {
+            const hashedPassword = bcrypt.hashSync(password, 1)
+        } 
        
         // crete new user
         const newUser = await UserModel.create({
             email: email,
             firstName: firstName,
             lastName: lastName,
-            password: hashedPassword,
+            password: password ? hashedPassword : null,
             profileType: profileType,
         })
         

@@ -10,8 +10,8 @@ router
 router
     .get('/log-out', AuthController.logout)
     .get('/refresh', AuthController.refresh)
-    .get('/login/google', AuthController.withGoogle)
-    .get('/callbach/google', AuthController.callbackGoogle)
+    .get('/with/google', AuthController.withGoogle)
+    .get('/callback/google', AuthController.callbackGoogle)
 
 
 module.exports = router

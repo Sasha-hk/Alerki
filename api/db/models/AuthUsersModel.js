@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
             googleRefreshToken: {
                 type: DataTypes.STRING(1024),
             },
+            googleIdToken: {
+                type: DataTypes.STRING(2050),
+            },
         },
         {
             tableName: 'AuthUsers',

@@ -10,6 +10,9 @@ module.exports = (sequelize, DataTypes) => {
             photo: {
                 type: DataTypes.BLOB,
             },
+            photoSourceUrl: {
+                type: DataTypes.STRING(255),
+            },
         },
         {
             tableName: 'UserPhotos',
