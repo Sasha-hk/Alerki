@@ -1,7 +1,7 @@
-const { UserModel, AuthUserModel } = require('../db/models')
 const UserService = require('../service/UserService')
 const getDeviceName = require('../utils/deviceName')
-const request = require('request')
+const GoogleOAuth = require('../oauth/GoogleOAuth')
+const AuthError = require('../exception/AuthError')
 
 
 class AuthController {
@@ -34,7 +34,6 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
@@ -79,7 +78,7 @@ class AuthController {
             res.sendStatus(200)
         }
         catch(e) {
-            res.status(e.status || 500).json(e.errors)
+            res.status(e.status || 500).json(e.errors || e)
         }
     }
 
@@ -101,7 +100,10 @@ class AuthController {
         }
     }
 
-    async withGoogle(req, res, next) {
+    // it endpoint just return redirect url
+    // later I will be generate it url in Next.js su I remive this endpoin
+    // it only for development
+    async withhGoogle(req, res, next) {
         try {
             const redirect_url = 'https://accounts.google.com/o/oauth2/v2/auth?' +
                 'scope=https://www.googleapis.com/auth/userinfo.profile&' +
@@ -119,71 +121,33 @@ class AuthController {
         }
     }
 
-    async callbackGoogle(req, res, next) {
+    async withGoogle(req, res, next) {
         try {
-            const {code} = req.query
+            const {code} = req.body
+
+            if (!code) {
+                throw AuthError.BadRequestError(['code not specefied'])
+            }
 
             const deviceName = getDeviceName(req)
+            const googleToken = await GoogleOAuth.obtainToken(code)
+            const profileData = await GoogleOAuth.getUserInfo(googleToken.access_token)
+ 
+            const userData = await UserService.withGoogle(
+                profileData,
+                deviceName,
+                googleToken
+            )
+            
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            
+            delete userData.refreshToken
 
-            if (code) {
-                const google_response = await request.post(
-                    {
-                        url: 'https://www.googleapis.com/oauth2/v4/token',
-                        form: {
-                            code: code,
-                            client_id: process.env.GOOGLE_CLIENT_ID,
-                            client_secret: process.env.GOOGLE_CLIENT_SECRET,
-                            redirect_uri: 'http://localhost:3000/auth/callback/google',
-                            grant_type: 'authorization_code',
-                        },
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        json: true,
-                    },
-                    (err, httpResponse, token) => {
-                        const {
-                            access_token,
-                            refresh_token,
-                            id_token,
-                        } = token             
+            res.json(userData)
 
-                        const user = request.get(
-                            {
-                                url: 'https://www.googleapis.com/oauth2/v2/userinfo',
-                                qs: {
-                                    access_token
-                                },
-                                json: true,
-                            },
-                            async (err, httpResponse, profileData) => {
-                                if (profileData.picture) {
-                                    console.log('save into database the picture')
-                                }
-                                console.log(profileData.email)
-                                const userData = await UserService.register(
-                                    profileData.email,
-                                    profileData.given_name,
-                                    profileData.family_name,
-                                    null,
-                                    'client',
-                                    deviceName,
-                                )
-
-                                res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-                                res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
-
-                                delete userData.refreshToken
-
-                                res.json(userData)
-                            }
-                        )
-                    }
-                )
-            }
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }

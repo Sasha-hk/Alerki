@@ -1,23 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
-    const UserPhotoModel = sequelize.define(
-        'UserPhotoModel',
+    const UserPictureModel = sequelize.define(
+        'UserPictureModel',
         {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            photo: {
+            picture: {
                 type: DataTypes.BLOB,
             },
-            photoSourceUrl: {
+            pictureSourceUrl: {
                 type: DataTypes.STRING(255),
             },
         },
         {
-            tableName: 'UserPhotos',
+            tableName: 'UserPictures',
         }
     )
 
-    return UserPhotoModel
+    return UserPictureModel
 }
