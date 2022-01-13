@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             tableName: 'AuthUsers',
+            timestamp: false,
+            createdAt: false,
+            updatedAt: false,
         }
     )
 

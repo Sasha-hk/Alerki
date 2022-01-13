@@ -50,6 +50,20 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: true,
             defaultValue: null,
         })
+
+        UserModel.belongsTo(models.ClientProfileModel, {
+            foreignKey: 'cliendProfile',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
+
+        UserModel.belongsTo(models.WorkerProfileModel, {
+            foreignKey: 'workerProfile',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
     }
 
     return UserModel
