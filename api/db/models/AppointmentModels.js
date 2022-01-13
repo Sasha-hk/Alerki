@@ -24,19 +24,21 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue:null,
         })
 
-        AppointmentModel.hasMany(models.UserModel, {
-            foreignKey: 'clientAppointments',
-            onDelete: 'CASCADE',
-            allowNull: true,
-            defaultValue: null,
-        })
+        AppointmentModel.belongsToMany(
+            models.ClientProfileModel, 
+            {
+                foreignKey: 'appointmentID',
+                through: 'Appointment_Client',
+            }
+        )
 
-        AppointmentModel.hasMany(models.UserModel, {
-            foreignKey: 'workerAppointments',
-            onDelete: 'CASCADE',
-            allowNull: true,
-            defaultValue: null,
-        })
+        AppointmentModel.belongsToMany(
+            models.WorkerProfileModel, 
+            {
+                foreignKey: 'appointmentID',
+                through: 'Appointment_Worker',
+            }
+        )
     }
 
     return AppointmentModel
