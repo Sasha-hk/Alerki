@@ -27,15 +27,39 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.ENUM,
                 values: ['client', 'worker'],
             },
+
+            googleAccessToken: {
+                type: DataTypes.STRING(1024),
+            },
+            googleRefreshToken: {
+                type: DataTypes.STRING(1024),
+            },
+            googleIdToken: {
+                type: DataTypes.STRING(2050),
+            },
         },
         {
             tableName: 'Users',
         }
     )
-    
+     
     UserModel.associate = (models) => {
-        UserModel.belongsTo(models.UserPhotoModel, {
-            foreignKey: 'photoID',
+        UserModel.belongsTo(models.UserPictureModel, {
+            foreignKey: 'pictureID',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
+
+        UserModel.belongsTo(models.ClientProfileModel, {
+            foreignKey: 'cliendProfile',
+            onDelete: 'CASCADE',
+            allowNull: true,
+            defaultValue: null,
+        })
+
+        UserModel.belongsTo(models.WorkerProfileModel, {
+            foreignKey: 'workerProfile',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,

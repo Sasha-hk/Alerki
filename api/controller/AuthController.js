@@ -1,6 +1,7 @@
-const { UserModel, AuthUserModel } = require('../db/models')
 const UserService = require('../service/UserService')
 const getDeviceName = require('../utils/deviceName')
+const GoogleOAuth = require('../oauth/GoogleOAuth')
+const AuthError = require('../exception/AuthError')
 
 
 class AuthController {
@@ -17,7 +18,7 @@ class AuthController {
             const deviceName = getDeviceName(req)
 
             const userData = await UserService.register(
-                email, 
+                email,
                 firstName,
                 lastName,
                 password,
@@ -33,7 +34,6 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
@@ -78,8 +78,7 @@ class AuthController {
             res.sendStatus(200)
         }
         catch(e) {
-            console.log(e)
-            res.status(e.status || 500).json(e.errors)
+            res.status(e.status || 500).json(e.errors || e)
         }
     }
 
@@ -97,25 +96,59 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
+            res.status(e.status || 500).json(e.errors)
+        }
+    }
 
+    // it endpoint just return redirect url
+    // later I will be generate it url in Next.js su I remive this endpoin
+    // it only for development
+    async withhGoogle(req, res, next) {
+        try {
+            const redirect_url = 'https://accounts.google.com/o/oauth2/v2/auth?' +
+                'scope=https://www.googleapis.com/auth/userinfo.profile&' +
+                'access_type=offline&' +
+                'include_granted_scopes=true&' +
+                'response_type=code&' +
+                'state=state_parameter_passthrough_value&' +
+                'redirect_uri=http://localhost:3000/auth/callback/google&' +
+                'client_id=' + process.env.GOOGLE_CLIENT_ID
+            
+            res.redirect(redirect_url)
+        }
+        catch(e) {
+            res.status(e.status || 500).json(e.errors)
         }
     }
 
     async withGoogle(req, res, next) {
         try {
+            const {code} = req.body
+
+            if (!code) {
+                throw AuthError.BadRequestError(['code not specefied'])
+            }
+
+            const deviceName = getDeviceName(req)
+            const googleToken = await GoogleOAuth.obtainToken(code)
+            const profileData = await GoogleOAuth.getUserInfo(googleToken.access_token)
+ 
+            const userData = await UserService.withGoogle(
+                profileData,
+                deviceName,
+                googleToken
+            )
+            
+            res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            
+            delete userData.refreshToken
+
+            res.json(userData)
 
         }
         catch(e) {
-
-        }
-    }
-
-    async callbackGoogle(req, res, next) {
-        try {
-
-        }
-        catch(e) {
-
+            res.status(e.status || 500).json(e.errors)
         }
     }
 }
