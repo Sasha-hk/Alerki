@@ -9,7 +9,7 @@ class AuthService {
         return {accessToken, refreshToken}
     }
 
-    async saveTokens(userID, deviceName, tokens) {
+    async saveAuthData(userID, deviceName, tokens) {
         // check if Auth data for the user already exists
         const checkExistsAuthData = await AuthUserModel.findOne({
             raw: true,
@@ -24,7 +24,7 @@ class AuthService {
             // update exists Auth data
             await AuthUserModel.update({
                     accessToken: tokens.accessToken,
-                    refreshToken: tokens.refreshToken,
+                    refreshToken: tokens.refreshToken
                 },
                 {
                     raw: true,
@@ -41,12 +41,12 @@ class AuthService {
                 userID,
                 deviceName,
                 accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
+                refreshToken: tokens.refreshToken
             })
         }
     }
 
-    async removeTokens(userID, deviceName) {
+    async removeAuthData(userID, deviceName) {
         await AuthUserModel.destroy({
                 where: {
                     userID,
