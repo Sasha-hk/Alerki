@@ -1,11 +1,11 @@
 const authRouter = require('./auth')
-// const appointmentClientRouter = require('./appointment-client')
-// const appointmentWorkerRouter = require('./appointment-worker')
+// const clientAppointmentRouter = require('./appointment-client')
+// const workerAppointmentRouter = require('./appointment-worker')
 
 
 module.exports = (app) => {
     app.use('/auth', authRouter)
 
-    // app.use('/appointment/client', appointmentClientRouter)
-    // app.use('/appointment/worker', appointmentWorkerRouter)
+    // app.use('/appointment/client', clientAppointmentRouter)
+    // app.use('/appointment/worker', workerAppointmentRouter)
 }
