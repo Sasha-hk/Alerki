@@ -1,3 +1,6 @@
+const slugLength = require('../../config/models').appointemnt.slug.length;
+
+
 module.exports = (sequelize, DataTypes) => {
     const AppointmentModel = sequelize.define(
         'AppointmentModel',
@@ -6,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
+            },
+            slug: {
+                type: DataTypes.STRING(11),
             },
             appointmentTime: {
                 type: DataTypes.DATE,
