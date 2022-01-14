@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             appointmentTime: {
                 type: DataTypes.DATE,
             },
+            confirmed: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false,
+            },
         },
         {
             tableName: 'Appointments',

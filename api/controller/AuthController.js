@@ -100,9 +100,7 @@ class AuthController {
         }
     }
 
-    // it endpoint just return redirect url
-    // later I will be generate it url in Next.js su I remive this endpoin
-    // it only for development
+    // this only for developement - remove it later
     async withhGoogle(req, res, next) {
         try {
             const redirect_url = 'https://accounts.google.com/o/oauth2/v2/auth?' +
