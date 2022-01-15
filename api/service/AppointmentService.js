@@ -5,6 +5,77 @@ const generateSlug = require('../utils/generateSlug')
 
 
 class AppointmentService { 
+    async clientDetails(slug) {
+        const appointment = await AppointmentModel.findOne({
+            raw: true,
+            where: {
+                slug,
+            }
+        })
+
+        if (appointment) {
+            return appointment
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+    async clientAppointmentList(clientID, currentDate) {
+        if (!clientID || !currentDate) {
+            throw AppointmentError.BadRequestError([
+                !clientID && 'clientID is required',
+                !currentDate && 'currentDate is required'
+            ].filter(e => e))
+        }
+        const orderDate = new Date(Date.now()).toISOString()
+        
+        orderDate.setDate(dateNow.getDate() - 1)
+
+        const appointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                appointmentTime: {
+                    gt: orderDate,
+                },
+                clientID,
+            },
+        })
+        appointmentTime.findAll()
+
+        // filer appointments, return only active
+        const resultAppointments = appointments.filter(apItem => {
+            const filterDate = new Date(apItem.appointmentTime)
+            filterDate.setDate(filterDate.getTime() + filterDate.duration)
+
+            return filterDate < currentDate
+        })
+
+        return resultAppointments
+    }
+
+    async clientAppointmentsToday(date) {
+        const orderDate = new Date(date)
+        orderDate.setHours(0)
+        orderDate.setMinutes(0)
+        orderDate.setSeconds(0)
+        orderDate.setMilliseconds(0)
+
+        const appointmentsToday = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+
+                appointmentTime: {
+                    gte: orderDate,
+                },
+                appointmentTime: {
+                    lte: orderDate.setDate(orderDate.getDate() + 1),
+                },
+            }
+        })
+
+        return appointmentsToday
+    }
+
     async makeAppointemnt(
         clientID,
         workerID,
@@ -52,39 +123,26 @@ class AppointmentService {
         return newAppointment
     }
 
-    async clientAppointmentList(
-        clientID,
-        currentDate,
-    ) {
-        if (!clientID || !currentDate) {
-            throw AppointmentError.BadRequestError([
-                !clientID && 'clientID is required',
-                !currentDate && 'currentDate is required'
-            ].filter(e => e))
-        }
-        const dateNow = new Date(Date.now()).toISOString()
-        
-        dateNow.setDate(dateNow.getDate() - 1)
-
-        const appointments = AppointmentModel.findAll({
-            raw: true,
-            where: {
-                appointmentTime: dateNow,
-                clientID
+    async clientCancel(slug) {
+        const updated = await AppointmentModel.update(
+            {
+                confirmed: false,
             },
-        })
+            {
+                raw: true,
+                where: {
+                    slug,
+                }
+            }
+        )
 
-        const resultAppointments = appointments.filter(apItem => {
-            const filterDate = new Date(apItem.appointmentTime)
-            filterDate.setDate(filterDate.getTime() + filterDate.duration)
-
-            return filterDate < currentDate
-        })
-
-        return resultAppointments
-
+        if (updated) {
+            return updated
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
     }
-
 }
 
 

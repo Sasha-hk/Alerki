@@ -10,6 +10,10 @@ module.exports = class AppointmentError extends Error {
     }
 
     static BadRequestError(errors=[]) {
-        return new AuthError(400, 'Bad request', errors)
+        return new AppointmentError(400, 'Bad request', errors)
+    }
+
+    static NotFoundError() {
+        return new AppointmentError(404, 'Appointment not found', ['appointment not found'])
     }
 }

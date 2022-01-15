@@ -8,7 +8,7 @@ class AppointmentController {
         }
     }
 
-    clientList(req, res, next) {
+    async clientList(req, res, next) {
         try {
             
         }
