@@ -16,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
             appointmentTime: {
                 type: DataTypes.DATE,
             },
+            duration: {
+                type: DataTypes.INTEGER,
+                // in milliseconds
+            },
             confirmed: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
@@ -27,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     )
 
     AppointmentModel.associate = (models) => {
-        AppointmentModel.belongsTo(models.ServiceModel, {
+        AppointmentModel.belongsTo(models.WorkerServiceModel, {
             foreignKey: 'serviceID',
             onDelete: 'CASCADE',
             allowNull:true,
