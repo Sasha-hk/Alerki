@@ -1,5 +1,5 @@
 class AppointmentController {
-    clientDetails(req, res, next) {
+    async clientDetails(req, res, next) {
         try {
             
         }

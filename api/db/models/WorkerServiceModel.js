@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             location: {
                 type: DataTypes.STRING(256),
             },
-            time: {
+            duration: {
                 type: DataTypes.INTEGER,
             }
         },

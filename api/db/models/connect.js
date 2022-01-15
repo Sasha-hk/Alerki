@@ -6,7 +6,7 @@ module.exports = async (callback) => {
     if (env == 'development') {
         await sequelize.sync({
             // alter: true,
-            force: true,
+            // force: true,
             logging: false,
         })
     }
