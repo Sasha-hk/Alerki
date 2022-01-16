@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
             slug: {
                 type: DataTypes.STRING(11),
             },
-            appointmentTime: {
+            appointmentStartTime: {
+                type: DataTypes.DATE,
+            },
+            appointmentEndTime: {
                 type: DataTypes.DATE,
             },
             duration: {

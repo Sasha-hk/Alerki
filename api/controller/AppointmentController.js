@@ -17,7 +17,7 @@ class AppointmentController {
         }
     }
 
-    clientListToday(req, res, next) {
+    async clientListToday(req, res, next) {
         try {
             
         }
@@ -26,7 +26,7 @@ class AppointmentController {
         }
     }
 
-    clientMake(req, res, next) {
+    async clientMake(req, res, next) {
         try {
             
         }
@@ -35,7 +35,7 @@ class AppointmentController {
         }
     }
 
-    clientCancel(req, res, next) {
+    async clientCancel(req, res, next) {
         try {
             
         }
@@ -44,7 +44,7 @@ class AppointmentController {
         }
     }
     
-	workerDetails(req, res, next) {
+    async workerDetails(req, res, next) {
         try {
             
         }
@@ -53,7 +53,7 @@ class AppointmentController {
         }
     }
 
-	workerList(req, res, next) {
+    async workerList(req, res, next) {
         try {
             
         }
@@ -62,7 +62,7 @@ class AppointmentController {
         }
     }
 
-	workerListToday(req, res, next) {
+    async workerListToday(req, res, next) {
         try {
             
         }
@@ -71,7 +71,7 @@ class AppointmentController {
         }
     }
 
-	workerCancel(req, res, next) {
+    async workerCancel(req, res, next) {
         try {
             
         }
@@ -80,7 +80,7 @@ class AppointmentController {
         }
     }
 
-	workerConfirm(req, res, next) {
+    async workerConfirm(req, res, next) {
         try {
             
         }
