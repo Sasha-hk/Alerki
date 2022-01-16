@@ -12,20 +12,36 @@ module.exports = (sequelize, DataTypes) => {
             },
             slug: {
                 type: DataTypes.STRING(11),
+                allowNull: false,
             },
             appointmentStartTime: {
                 type: DataTypes.DATE,
+                allowNull: false,
             },
             appointmentEndTime: {
                 type: DataTypes.DATE,
+                allowNull: false,
             },
             duration: {
                 type: DataTypes.INTEGER,
+                allowNull: false,
                 // in milliseconds
             },
             confirmed: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
+            },
+            serviceID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            clientID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            workerID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
             },
         },
         {
@@ -34,26 +50,27 @@ module.exports = (sequelize, DataTypes) => {
     )
 
     AppointmentModel.associate = (models) => {
-        AppointmentModel.belongsTo(models.WorkerServiceModel, {
-            foreignKey: 'serviceID',
-            onDelete: 'CASCADE',
-            allowNull:true,
-            defaultValue:null,
-        })
-
-        AppointmentModel.belongsToMany(
+        AppointmentModel.belongsTo(
             models.ClientProfileModel, 
             {
-                foreignKey: 'appointmentID',
-                through: 'Appointment_Client',
+                foreignKey: 'clientID',
+                onDelete: 'CASCADE',
             }
         )
 
-        AppointmentModel.belongsToMany(
+        AppointmentModel.belongsTo(
+            models.WorkerServiceModel, 
+            {
+                foreignKey: 'serviceID',
+                onDelete: 'CASCADE',
+            }
+        )
+
+        AppointmentModel.belongsTo(
             models.WorkerProfileModel, 
             {
-                foreignKey: 'appointmentID',
-                through: 'Appointment_Worker',
+                foreignKey: 'workerID',
+                onDelete: 'CASCADE'
             }
         )
     }

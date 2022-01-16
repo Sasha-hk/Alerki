@@ -1,18 +1,34 @@
 const Router = require('express')
 const AppointmentController = require('../controller/AppointmentController')
+const authMiddleware = require('../middleware/AuthMiddleware')
 const router = new Router()
 
 
 router
-    .get('/details/:slug', AppointmentController.clientDetails)
-    .get('/list', AppointmentController.clientList)
-    .get('/list/today', AppointmentController.clientListToday)
+    .get('/details/:slug',
+        authMiddleware,
+        AppointmentController.clientDetails
+    )
+    .get('/list', 
+        authMiddleware,
+        AppointmentController.clientList
+    )
+    .get('/list/today',
+        authMiddleware,
+        AppointmentController.clientListToday
+    )
 
 router
-    .post('/make', AppointmentController.clientMake)
+    .post('/make', 
+        authMiddleware,
+        AppointmentController.clientMake
+    )
 
 router
-    .patch('/cancel/:slug', AppointmentController.clientCancel)
+    .patch('/cancel/:slug', 
+        authMiddleware,
+        AppointmentController.clientCancel
+    )
 
 
 module.exports = router
