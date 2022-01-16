@@ -1,5 +1,5 @@
 const {AppointmentModel} = require('../db/models')
-const {WorkerServiceModel} = requie('../db/models')
+const {WorkerServiceModel} = require('../db/models')
 const AppointmentError = require('../exception/AppointmentError') 
 const generateSlug = require('../utils/generateSlug')
 
@@ -111,13 +111,13 @@ class AppointmentService {
 
         const newAppointment = await AppointmentModel.create({
             slug,
-            clientID,
-            workerID,
-            serviceID,
             appointmentStartTime,
             appointmentEndTime,
             duration: workerService.duration,
             confirmed: false,
+            clientID,
+            workerID,
+            serviceID,
         })
 
         // generate notification

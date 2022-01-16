@@ -13,15 +13,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     )
 
-    WorkerProfileModel.associate = (models) => {
-        WorkerProfileModel.belongsToMany(
-            models.AppointmentModel, 
-            {            
-                foreignKey: 'workerID',
-                through: 'Appointment_Worker'
-            }
-        )
-    }
-
     return WorkerProfileModel
 }

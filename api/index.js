@@ -1,22 +1,8 @@
-const express = require('express')
-const cookieParser = require('cookie-parser')
-const cors = require('cors')
-const dbConnect = require('./db/models/connect')
-const router = require('./router')
+const dbConnect = require('./db/connect')
+const app = require('./server')
 
 const PORT = process.env.PORT || 3000
-const app = express()
 const env = process.env.NODE_ENV || 'development'
-
-
-// middlewares
-app.use(express.json())
-app.use(cookieParser())
-app.use(cors())
-
-
-// routers
-router(app)
 
 
 const start = async () => {
@@ -40,9 +26,6 @@ const start = async () => {
         app.listen(PORT, () => {
             console.log('Server started!')
         })
-    }
-    else if (env == 'test') {
-        console.log('Test mode')
     }
 }
 

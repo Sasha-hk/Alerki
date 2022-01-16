@@ -4,6 +4,12 @@ const AuthError = require('../exception/AuthError')
 
 module.exports = (req, res, next) => {
     try {
+        const accessToken = req.cookies.accessToken
+
+        if (!accessToken) {
+            throw AuthError.UnauthorizedError()
+        }
+        
         const decodedToken = AuthService.verifyAccessToken(req.cookies.accessToken)
 
         if (!decodedToken) {
@@ -13,7 +19,6 @@ module.exports = (req, res, next) => {
         next()
     }
     catch(e) {
-        console.log(e)
         res.status(e.status || 500).json(e.errors)
     }
 }
