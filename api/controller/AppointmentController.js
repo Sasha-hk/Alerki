@@ -1,7 +1,10 @@
+const AppointmentService = require('../service/AppointmentService')
 class AppointmentController {
     async clientDetails(req, res, next) {
         try {
-            
+            const slug = req.params.slug
+
+            res.json('ok')
         }
         catch(e) {
             res.status(e.status || 500).json(e.errors)
