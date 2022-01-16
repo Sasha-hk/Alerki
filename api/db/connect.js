@@ -15,8 +15,12 @@ module.exports = async (callback) => {
         await sequelize.authenticate()
     }
     else if (env == 'test') {
-        await sequelize.sync()
+        await sequelize.sync({
+            force: true,
+        })
     }
 
-    callback()
+    if (callback) {
+        callback()
+    }
 }
