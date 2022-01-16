@@ -2,8 +2,8 @@ const request = require('supertest')
 const app = require('../server')
 const dbConnect = require('../db/connect')
 
-const accessToken = ''
-const refreshToken = ''
+let accessToken = ''
+let refreshToken = ''
 
 
 describe("POST /users", () => {
