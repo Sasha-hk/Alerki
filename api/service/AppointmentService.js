@@ -5,13 +5,19 @@ const generateSlug = require('../utils/generateSlug')
 
 
 class AppointmentService { 
-    async clientDetails(slug) {
+    async getDetails(slug) {
         const appointment = await AppointmentModel.findOne({
             raw: true,
             where: {
                 slug,
             }
         })
+
+        return appointment
+    }
+
+    async clientDetails(slug) {
+        const appointment = await this.getDetails(slug)
 
         if (appointment) {
             return appointment
@@ -20,6 +26,7 @@ class AppointmentService {
             throw AppointmentError.NotFoundError()
         }
     }
+
     async clientAppointmentList(clientID, currentDate) {
         if (!clientID || !currentDate) {
             throw AppointmentError.BadRequestError([
@@ -27,33 +34,23 @@ class AppointmentService {
                 !currentDate && 'currentDate is required'
             ].filter(e => e))
         }
-        const orderDate = new Date(Date.now()).toISOString()
-        
-        orderDate.setDate(dateNow.getDate() - 1)
+
+        const orderDate = new Date(currentDate)
 
         const appointments = await AppointmentModel.findAll({
             raw: true,
             where: {
-                appointmentTime: {
+                clientID,
+                appointmentEndTime: {
                     gt: orderDate,
                 },
-                clientID,
             },
         })
-        appointmentTime.findAll()
-
-        // filer appointments, return only active
-        const resultAppointments = appointments.filter(apItem => {
-            const filterDate = new Date(apItem.appointmentTime)
-            filterDate.setDate(filterDate.getTime() + filterDate.duration)
-
-            return filterDate < currentDate
-        })
-
-        return resultAppointments
+        
+        return appointments
     }
 
-    async clientAppointmentsToday(date) {
+    async clientAppointmentsToday(clientID, date) {
         const orderDate = new Date(date)
         orderDate.setHours(0)
         orderDate.setMinutes(0)
@@ -63,12 +60,12 @@ class AppointmentService {
         const appointmentsToday = await AppointmentModel.findAll({
             raw: true,
             where: {
-
+                clientID,
                 appointmentTime: {
-                    gte: orderDate,
-                },
-                appointmentTime: {
-                    lte: orderDate.setDate(orderDate.getDate() + 1),
+                    between: [
+                        orderDate,
+                        orderDate.setDate(orderDate.getDate() + 1)
+                    ],
                 },
             }
         })
@@ -91,28 +88,35 @@ class AppointmentService {
             ].filter(e => e))
         }
 
-        const slug = await generateSlug(AppointmentModel)
-
         const workerService = await WorkerServiceModel.findOne({
             raw: true,
             where: {
                 id: serviceID,
             }
         })
-
+        
         if (!workerService) {
             throw AppointmentError.BadRequest([
-                `service with id ${serviceID} not found`
+                'service with id specefied not found'
             ])
         }
+
+        const slug = await generateSlug(AppointmentModel)
+
+        const appointmentStartTime = new Date(appointmentTime) 
+
+        appointmentEndTime = new Date(
+            appointmentStartTime.getTime() / 1000 + workerService.duration
+        )
 
         const newAppointment = await AppointmentModel.create({
             slug,
             clientID,
             workerID,
             serviceID,
-            appointmentTime,
-            diration: workerService.duration,
+            appointmentStartTime,
+            appointmentEndTime,
+            duration: workerService.duration,
             confirmed: false,
         })
 
@@ -138,6 +142,113 @@ class AppointmentService {
 
         if (updated) {
             return updated
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+
+    async workerDetails(slug) {
+        const appointment = await this.getDetails(slug)
+
+        if (appointment) {
+            return appointment
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+
+    async workerList(workerID, currentDate) {
+        if (!workerID || !currentDate) {
+            throw AppointmentError.BadRequestError([
+                !clientID && 'clientID is required',
+                !currentDate && 'currentDate is required'
+            ].filter(e => e))
+        }
+
+        const orderDate = new Date(currentDate)
+
+        const appointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                appointmentEndTime: {
+                    gt: orderDate,
+                },
+                workerID,
+            },
+        })
+        
+        return appointments
+    }
+
+    async workerAppointmentsToday(workerID, date) {
+        const startDate = new Date(date)
+        orderDate.setHours(0)
+        orderDate.setMinutes(0)
+        orderDate.setSeconds(0)
+        orderDate.setMilliseconds(0)
+
+        const appointmentsToday = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                workerID,
+                appointmentStartTime: {
+                    between: [
+                        startDate,
+                        startDate.setDate(startDate.getDate() + 1),
+                    ],
+                },
+            }
+        })
+
+        return appointmentsToday
+    }
+
+    async workerCancel(slug) {
+        const toCancel = await AppointmentModel.update(
+            {
+                confirmed: false,
+            },
+            {
+                raw: true,
+                where: {
+                    slug,
+                },
+            }
+        )
+
+
+        // make notification for client
+        // send notofication for client
+        
+
+        if (toCancel) {
+            return toCancel
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+
+    async workerConfirm(slug) {
+        const toCancel = await AppointmentModel.update(
+            {
+                confirmed: true,
+            },
+            {
+                raw: true,
+                where: {
+                    slug,
+                },
+            }
+        )
+
+        // make notification for client
+        // send notofication for client
+
+        if (toCancel) {
+            return toCancel
         }
         else {
             throw AppointmentError.NotFoundError()
