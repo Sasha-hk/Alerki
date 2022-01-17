@@ -87,7 +87,6 @@ class UserService {
             clientProfileID: clientProfile?.id || null,
             workerProfileID: workerProfile?.id || null,
         })
-
 		
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
