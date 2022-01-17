@@ -1,4 +1,3 @@
-const {ServiceModel} = require('../db/models')
 const ServiceService = require('../service/ServiceService')
 
 
@@ -12,7 +11,6 @@ class ServiceController {
             res.json(foundServices)
         }
         catch(e) {
-            console.log(e)
             res.status(e.ststus || 500).json(e)    
         }
     }

@@ -20,6 +20,17 @@ class UserService {
 		return checkUserExists
 	}
 
+    async findOneByID(id) {
+        const user = await UserModel.findOne({
+            raw: true,
+            where: {
+                id,
+            },
+        })
+
+        return user
+    }
+
     async checkEmailExists(email) {
         const checkUserExists = await this.getUserByEmail(email)
 

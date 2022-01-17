@@ -29,14 +29,13 @@ class ServiceService {
     async createService(name) {
         const candedat = await this.findOneByName(name)
 
-        
         if (!candedat) {
             const newService = await ServiceModel.create({name})
             
             return newService.dataValues
         }
 
-        return null
+        return candedat
     }
 }
 
