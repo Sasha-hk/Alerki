@@ -22,4 +22,4 @@ jobs:
       - name: Test API
         run: |
           . ./docker/build-test.sh
-          docker-compose -f ./docker/docker-compose.test.yml up
+          docker-compose -f ./docker/docker-compose.test.yml up --exit-code-from backend

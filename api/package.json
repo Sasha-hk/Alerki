@@ -26,6 +26,7 @@
     },
     "devDependencies": {
         "jest": "^27.4.7",
+        "jest-cli": "^27.4.7",
         "nodemon": "^2.0.15",
         "sequelize-cli": "^6.3.0",
         "sequelize-mig": "^3.1.3",
