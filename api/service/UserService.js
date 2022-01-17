@@ -3,6 +3,7 @@ const AuthError = require('../exception/AuthError')
 const UserDto = require('../dto/UserDto')
 const AuthService = require('./AuthService')
 const UserPictureService = require('./UserPictureService')
+const ProfileService = require('./ProfileService')
 const bcrypt = require('bcrypt')
 const request = require('request')
 
@@ -64,15 +65,29 @@ class UserService {
 
         // if password exists hash it else save null
         const hashedPassword = bcrypt.hashSync(password, 1)
-       
+
+        // create profile
+        let clientProfile = null
+        let workerProfile = null
+        if (profileType == 'client') {
+            clientProfile = await ProfileService.createClientProfile()
+        }
+        else {
+            clientProfile = await ProfileService.createClientProfile()
+            workerProfile = await ProfileService.createWorkerProfile()
+        }
+        
         // crete new user
         const newUser = await UserModel.create({
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
+            email,
+            firstName,
+            lastName,
             password: hashedPassword,
-            profileType: profileType,
+            profileType,
+            clientProfileID: clientProfile?.id || null,
+            workerProfileID: workerProfile?.id || null,
         })
+
 		
         return await this.generateAndSaveTokens(newUser, deviceName)
     }

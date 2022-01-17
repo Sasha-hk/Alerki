@@ -7,6 +7,16 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
+            shirtBiography: {
+                type: DataTypes.STRING(200),
+            },
+            instagramProfile: {
+                type: DataTypes.STRING(100),
+            },
+            available: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: true,
+            },
         },
         {
             tableName: 'WorkerProfiles'
