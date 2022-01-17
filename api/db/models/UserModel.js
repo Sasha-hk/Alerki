@@ -27,6 +27,16 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.ENUM,
                 values: ['client', 'worker'],
             },
+            pictureID: {
+                type: DataTypes.INTEGER,
+            },
+
+            clientProfileID: {
+                type: DataTypes.INTEGER,
+            },
+            workerProfileID: {
+                type: DataTypes.INTEGER,
+            },
 
             googleAccessToken: {
                 type: DataTypes.STRING(1024),
@@ -36,6 +46,11 @@ module.exports = (sequelize, DataTypes) => {
             },
             googleIdToken: {
                 type: DataTypes.STRING(2050),
+            },
+
+            banned: {
+                type: DataTypes.BOOLEAN,
+                default: false,
             },
         },
         {
@@ -52,14 +67,14 @@ module.exports = (sequelize, DataTypes) => {
         })
 
         UserModel.belongsTo(models.ClientProfileModel, {
-            foreignKey: 'cliendProfile',
+            foreignKey: 'cliendProfileID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,
         })
 
         UserModel.belongsTo(models.WorkerProfileModel, {
-            foreignKey: 'workerProfile',
+            foreignKey: 'workerProfileID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,

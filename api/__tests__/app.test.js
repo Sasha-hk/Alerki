@@ -17,6 +17,9 @@ describe("POST /users", () => {
                 {
                     email: 'email@gmail.com', firstName: 'l', lastName: 'd', profileType: 'worker', password: 'asdf'
                 },
+                {
+                    email: 'emasdfail@gmail.com', firstName: 'loliir', lastName: 'dasd', profileType: 'client', password: 'asdfaasdf'
+                }
             ]
 
             for (const body of bodyData) {

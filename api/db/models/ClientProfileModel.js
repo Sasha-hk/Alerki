@@ -7,21 +7,15 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
+            available: {
+                type: DataTypes.BOOLEAN,
+                default: true,
+            },
         },
         {
             tableName: 'ClientProfiles'
         }
     )
-
-    ClientProfileModel.associate = (models) => {
-        ClientProfileModel.belongsToMany(
-            models.AppointmentModel, 
-            {
-                foreignKey: 'clientID',
-                through: 'Appointment_Client'
-            }
-        )
-    }
 
     return ClientProfileModel
 }
