@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
 
             banned: {
                 type: DataTypes.BOOLEAN,
-                default: false,
+                defaultValue: false,
             },
         },
         {
@@ -67,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
         })
 
         UserModel.belongsTo(models.ClientProfileModel, {
-            foreignKey: 'cliendProfileID',
+            foreignKey: 'clientProfileID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,

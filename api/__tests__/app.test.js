@@ -5,6 +5,8 @@ const dbConnect = require('../db/connect')
 let accessToken = ''
 let refreshToken = ''
 
+let user = {}
+
 
 describe("POST /users", () => {
     it('setup database', async () => {
@@ -24,7 +26,7 @@ describe("POST /users", () => {
 
             for (const body of bodyData) {
                 const response = await request(app).post("/auth/register").send(body)
-
+                
                 expect(response.statusCode).toBe(200)
                 expect(response.body.userData.email).toBe(body.email)
                 expect(response.body.accessToken).toBeTruthy()
