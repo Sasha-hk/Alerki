@@ -7,8 +7,8 @@ if [ -f "./docker/.env.production" ]; then
     done < ./docker/.env.production
 
 else 
-    echo "${RED}\n - [!] You need to create .env.production file${None}"
-
+    echo "${RED}\n - [!] You need to fill .env.production file${None}"
+    touch ./docker/.env.production
 fi
 
 docker-compose -f ./docker/docker-compose.production.yml build
