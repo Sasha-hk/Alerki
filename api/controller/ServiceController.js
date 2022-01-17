@@ -9,9 +9,10 @@ class ServiceController {
 
             const foundServices = await ServiceService.findByName(name, limit, page)
 
-            return foundServices
+            res.json(foundServices)
         }
         catch(e) {
+            console.log(e)
             res.status(e.ststus || 500).json(e)    
         }
     }
@@ -22,7 +23,7 @@ class ServiceController {
 
             const newService = await ServiceService.createService(name)
 
-            return newService
+            res.json(newService)
         }
         catch(e) {
             res.status(e.ststus || 500).json(e)
