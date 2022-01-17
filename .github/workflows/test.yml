@@ -1,17 +1,14 @@
 name: Test API
 
 on:   
-  # push:
-  #   branches:
-  #     - main
-  #     - dev
-  #     - backend
+  push:
+    branches:
+      - main
 
   pull_request:
     branches:
       - main
       - dev
-      - backend
 
 jobs:
   push:

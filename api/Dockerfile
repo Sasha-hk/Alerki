@@ -4,8 +4,7 @@ WORKDIR /app/api
 
 COPY package*.json ./
 
-RUN npm install \
-    npm i -D jest
+RUN npm install
 
 COPY . .
 
