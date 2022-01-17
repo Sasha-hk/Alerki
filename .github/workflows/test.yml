@@ -1,11 +1,11 @@
 name: Test API
 
 on:   
-  push:
-    branches:
-      - main
-      - dev
-      - backend
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
+  #     - backend
 
   pull_request:
     branches:
@@ -22,4 +22,4 @@ jobs:
       - name: Test API
         run: |
           . ./docker/build-test.sh
-          docker-compose -f ./docker/docker-compose.test.yml up
+          docker-compose -f ./docker/docker-compose.test.yml up --exit-code-from backend

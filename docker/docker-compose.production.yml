@@ -24,6 +24,4 @@ services:
         env_file: .env.production
         ports:
             - "3000:3000"
-        volumes:
-            - ../:/app
         working_dir: /app/api
