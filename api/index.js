@@ -1,5 +1,5 @@
 const dbConnect = require('./db/connect')
-const app = require('./server')
+const app = require('./app')
 
 const PORT = process.env.PORT || 3000
 const env = process.env.NODE_ENV || 'development'
