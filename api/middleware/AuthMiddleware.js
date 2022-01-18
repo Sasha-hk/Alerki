@@ -2,7 +2,7 @@ const AuthService = require('../service/AuthService')
 const AuthError = require('../exception/AuthError')
 
 
-module.exports = (req, res, next) => {
+module.exports = async (req, res, next) => {
     try {
         const accessToken = req.cookies.accessToken
 
@@ -10,11 +10,13 @@ module.exports = (req, res, next) => {
             throw AuthError.UnauthorizedError()
         }
         
-        const decodedToken = AuthService.verifyAccessToken(req.cookies.accessToken)
+        const decodedToken = await AuthService.verifyAccessToken(req.cookies.accessToken)
 
         if (!decodedToken) {
             throw AuthError.UnauthorizedError()
         }
+
+        req.accessToken = decodedToken
         
         next()
     }

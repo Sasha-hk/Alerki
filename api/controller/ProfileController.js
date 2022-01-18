@@ -1,6 +1,5 @@
 const WorkerServiceService = require('../service/WorkerServicesService')
 const ServiceService = require('../service/ServiceService')
-const AuthService = require('../service/AuthService')
 const UserService = require('../service/UserService')
 const AuthError = require('../exception/AuthError')
 const APIError = require('../exception/APIError')
@@ -21,9 +20,9 @@ class ProfileController {
                 throw AuthError.UnauthorizedError()
             }
 
-            const decodedToken = await AuthService.verifyAccessToken(accessToken)
-
-            const user = await UserService.findOneByID(decodedToken.id)
+            const decodedToken = req.accessToken
+            
+            const user = await UserService.findUserByID(decodedToken.id)
 
             // return existed or create service
             const existsOrCreated = await ServiceService.createService(name)
@@ -42,7 +41,6 @@ class ProfileController {
             res.json(newWorkerService)
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e)    
         }
     }
