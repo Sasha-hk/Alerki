@@ -92,7 +92,10 @@ describe('Test services', () => {
         const body = {
             name: 'new-service',
         }
-        const response = await request(app).post('/profile/create/service').send(body)
+        const response = await request(app)
+            .post('/profile/create/service')
+            .set('Cookie', ['accessToken=' + accessToken])
+            .send(body)
 
         expect(response.statusCode).toBe(400)
     })
