@@ -143,7 +143,7 @@ class UserService {
     async refresh(refreshToken, deviceName) {
         // decode refreshToken
         const decodedToken = await AuthService.verifyRefreshToken(refreshToken)
-
+        
         if (decodedToken) {
             // check if use with id from refreshToken exists
             const checkUser = await this.findUserByEmail(decodedToken.email)
