@@ -23,7 +23,7 @@ class ProfileController {
 
             const decodedToken = await AuthService.verifyAccessToken(accessToken)
 
-            const user = await UserService.findOneByID(decodedToken.id)
+            const user = await UserService.findUserByID(decodedToken.id)
 
             // return existed or create service
             const existsOrCreated = await ServiceService.createService(name)

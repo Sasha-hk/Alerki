@@ -9,7 +9,7 @@ const request = require('request')
 
 
 class UserService {
-	async getUserByEmail(email) {
+	async findUserByEmail(email) {
 		const checkUserExists = await UserModel.findOne({
 			raw: true,
 			where: {
@@ -20,7 +20,7 @@ class UserService {
 		return checkUserExists
 	}
 
-    async findOneByID(id) {
+    async findUserByID(id) {
         const user = await UserModel.findOne({
             raw: true,
             where: {
@@ -32,7 +32,7 @@ class UserService {
     }
 
     async checkEmailExists(email) {
-        const checkUserExists = await this.getUserByEmail(email)
+        const checkUserExists = await this.findUserByEmail(email)
 
         if (checkUserExists) {
             throw AuthError.EmailExistsError()
@@ -146,7 +146,7 @@ class UserService {
 
         if (decodedToken) {
             // check if use with id from refreshToken exists
-            const checkUser = await this.getUserByEmail(decodedToken.email)
+            const checkUser = await this.findUserByEmail(decodedToken.email)
 
             // if user exists generate new tokens
             if (checkUser) {
@@ -180,7 +180,7 @@ class UserService {
 		if (!profileData.email) {
 			throw AuthError.BadRequestError(['code was invalid'])
 		}
-		const candedat = await this.getUserByEmail(profileData.email)
+		const candedat = await this.findUserByEmail(profileData.email)
 
 		if (candedat) {
 			return await this.generateAndSaveTokens(candedat, deviceName)
