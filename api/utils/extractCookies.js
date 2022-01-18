@@ -8,11 +8,16 @@ const shapeFlags = flags =>
 const extractCookies = headers => {
     const cookies = headers['set-cookie']
 
-    return cookies.reduce((shapedCookies, cookieString) => {
-        const [rawCookie, ...flags] = cookieString.split(' ')
-        const [cookieName, value] = rawCookie.split('=')
-        return { ...shapedCookies, [cookieName]: { value, flags: shapeFlags(flags) } }
-    }, {})
+    if (cookies) {
+        return cookies.reduce((shapedCookies, cookieString) => {
+            const [rawCookie, ...flags] = cookieString.split(' ')
+            const [cookieName, value] = rawCookie.split('=')
+            return { ...shapedCookies, [cookieName]: { value, flags: shapeFlags(flags) } }
+        }, {})
+    }
+    else {
+        throw Error('Cookies not fund')
+    }
 }
 
 module.exports = {
