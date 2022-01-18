@@ -1,5 +1,6 @@
 const Router = require('express')
 const ProfileController = require('../controller/ProfileController')
+const authMiddlweare = require('../middleware/AuthMiddleware')
 const router = new Router()
 
 
@@ -15,7 +16,9 @@ const router = new Router()
 //     )
 
 router
-    .post('/create/service', 
+    .post(
+        '/create/service',
+        authMiddlweare,
         ProfileController.createWorkerService
     )
     .post(
