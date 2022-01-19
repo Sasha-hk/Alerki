@@ -14,6 +14,6 @@ module.exports = class APIError extends Error {
     }
 
     static NotFoundError() {
-        return new APIError(404, 'Appointment not found', ['appointment not found'])
+        return new APIError(404, 'Resource not found', ['not found'])
     }
 }

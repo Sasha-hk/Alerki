@@ -20,7 +20,6 @@ function prepareError(parameter) {
 
 // check parameters function
 module.exports = (parameter) => {
-    console.log('=========')
     // check if parameters is object
     if (typeof parameter === 'object' && parameter !== null) {
         Object.keys(parameter).forEach(p => {

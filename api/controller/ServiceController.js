@@ -1,4 +1,5 @@
 const ServiceService = require('../service/ServiceService')
+const APIError = require('../exception/APIError')
 const oneExists = require('../utils/oneExists')
 
 
@@ -8,12 +9,18 @@ class ServiceController {
         try {
             const {name, limit, page} = req.query
 
+            oneExists({name})
+
             const foundServices = await ServiceService.findByName(name, limit, page)
+
+            if (foundServices.length == 0) {
+                throw APIError.NotFoundError()
+            }
 
             res.json(foundServices)
         }
         catch(e) {
-            res.status(e.ststus || 500).json(e)    
+            res.status(e.status || 500).json(e)    
         }
     }
 
@@ -28,7 +35,7 @@ class ServiceController {
             res.json(newService)
         }
         catch(e) {
-            res.status(e.ststus || 500).json(e)
+            res.status(e.status || 500).json(e.errors)
         }
     }
 }

@@ -107,9 +107,7 @@ class AppointmentController {
             const workerServices = await WorkerServiceService.findService(serviceID)
 
             for (const w of workerServices) {
-                console.log(w)
                 const foundWorker = await ProfileService.findWorkerByID(w.workerID)
-                console.log(foundWorker)
                 workersResult.push(foundWorker)
             }
             
