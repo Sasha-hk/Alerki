@@ -21,10 +21,6 @@ router
         authMiddlweare,
         ProfileController.createWorkerService
     )
-    .post(
-        'worker-profile',
-        () => true,
-    )
 
 
 module.exports = router

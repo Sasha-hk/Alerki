@@ -1,7 +1,7 @@
 const request = require('supertest')
 const {extractCookies} = require('../utils/extractCookies')
 const app = require('../app')
-const usersData = require('./data/authData')
+const usersData = require('./data/userData')
 
 const rushUsers = usersData.rushUsers
 const badUsers = usersData.badUsers
@@ -255,6 +255,103 @@ describe('Test srevices', () => {
                 .query({name: 'not exists name'})
             
             expect(r.statusCode).toBe(404)
+        })
+    })
+})
+
+describe('Test profile', () => {
+    describe('worker', () => {
+        test('create worker service with exists service', async () => {
+            const r = await request(app)
+                .post('/profile/create/service')
+                .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                .send({
+                    name: newServiceName,
+                    currency: 'UAN',
+                    price: '100',
+                    location: 'Sambir',
+                    duration: 20 * 60 * 1000
+                })
+            
+            expect(r.statusCode).toBe(200)
+        })
+
+        test('create worker service with exists service', async () => {
+            const r = await request(app)
+                .post('/profile/create/service')
+                .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                .send({
+                    name: 'prfi harcut',
+                    currency: 'UAN',
+                    price: '100',
+                    location: 'Sambir',
+                    duration: 20 * 60 * 1000
+                })
+            
+            expect(r.statusCode).toBe(200)
+        })
+
+        test('create worker service with bad parameters', async () => {
+            const r = await request(app)
+                .post('/profile/create/service')
+                .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+})
+
+describe('Test appointment', () => {
+    describe('client make appointment', () => {
+        describe('find worker', () => {
+            test('with corect parameters', async () => {
+                // get services list
+                const services = await request(app)
+                    .get('/services/find')
+                    .query({name: newServiceName})
+                
+                expect(services.statusCode).toBe(200)
+                // get workers
+                const workers = await request(app)
+                    .get('/appointment/find-worker')
+                    .query({serviceID: services.body[0].id})
+                
+                expect(workers.statusCode).toBe(200)
+
+            })
+
+            test('without parameters', async () => {
+                // get services list
+                const services = await request(app)
+                    .get('/services/find')
+                    .query({name: newServiceName})
+                
+                expect(services.statusCode).toBe(200)
+
+                // get workers
+                const workers = await request(app)
+                    .get('/appointment/find-worker')
+                
+                expect(workers.statusCode).toBe(400)
+            })
+
+            test('with not exists worker servcie', async () => {
+                // get workers
+                const workers = await request(app)
+                    .get('/appointment/find-worker')
+                    .query({serviceID: '200'})
+                
+                expect(workers.statusCode).toBe(404)
+            })
+
+            test('with string serviceID', async () => {
+                // get workers
+                const workers = await request(app)
+                    .get('/appointment/find-worker')
+                    .query({serviceID: 'not exists service name'})
+                
+                expect(workers.statusCode).toBe(400)
+            })
         })
     })
 })

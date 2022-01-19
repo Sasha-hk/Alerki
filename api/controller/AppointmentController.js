@@ -1,6 +1,7 @@
 const AppointmentService = require('../service/AppointmentService')
 const WorkerServiceService = require('../service/WorkerServicesService')
 const ProfileService = require('../service/ProfileService')
+const APIError = require('../exception/APIError')
 const oneExists = require('../utils/oneExists.js')
 
 
@@ -103,12 +104,20 @@ class AppointmentController {
 
             oneExists({serviceID})
 
-            let workersResult = null
+            let workersResult = []
             const workerServices = await WorkerServiceService.findService(serviceID)
+
+            if (workerServices.length == 0) {
+                throw APIError.NotFoundError()
+            }
 
             for (const w of workerServices) {
                 const foundWorker = await ProfileService.findWorkerByID(w.workerID)
-                workersResult.push(foundWorker)
+                workersResult.push({worker: foundWorker[0], workerService: w})
+            }
+
+            if (workersResult.length == 0) {
+                throw APIError.NotFoundError()
             }
             
             res.json(workersResult)
