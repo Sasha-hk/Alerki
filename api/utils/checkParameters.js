@@ -7,38 +7,21 @@ function causeError(errors) {
 
 // make errors list
 function prepareErrors(parameters) {
-    // check if parameters if array or object    
-    if (Array.isArray(parameters)) {
-        parameters.filter(p => p)
-        
-        causeError(parameters)
-    }
-    else if (typeof parameters === 'object' && parameters !== null) {
-        let errors = []
+    let errors = []
 
-        Object.keys(parameters).forEach(p => {
-            if (!parameters[p]) {
-                errors.push(`${p} is required`)
-            }
-        })
+    Object.keys(parameters).forEach(p => {
+        if (!parameters[p]) {
+            errors.push(`${p} is required`)
+        }
+    })
 
-        causeError(errors)
-    }
-
-
+    causeError(errors)
 }
 
 // check parameters function
 module.exports = (parameters) => {
-    // check if parametser is array or object
-    if (Array.isArray(parameters)) {
-        parameters.forEach(p => {
-            if (!p) {
-                prepareErrors(parameters)
-            }
-        })
-    }
-    else if (typeof parameters === 'object' && parameters !== null) {
+    // check if parameters is object
+    if (typeof parameters === 'object' && parameters !== null) {
         Object.keys(parameters).forEach(p => {
             if (!parameters[p]) {
                 prepareErrors(parameters)
@@ -46,6 +29,6 @@ module.exports = (parameters) => {
         })
     }
     else {
-        throw Error('Parameters it is neither an array nor an object')
+        throw Error('Parameters is not an object')
     }
 }
