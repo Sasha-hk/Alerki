@@ -2,11 +2,15 @@ const UserService = require('../service/UserService')
 const getDeviceName = require('../utils/deviceName')
 const GoogleOAuth = require('../oauth/GoogleOAuth')
 const AuthError = require('../exception/AuthError')
+const checkParameters = require('../utils/checkParameters')
+const atLastOneExists = require('../utils/atLastOneExists')
+const oneExists = require('../utils/oneExists')
 
 
 class AuthController {
     async register(req, res, next) {
         try {
+            const deviceName = getDeviceName(req)
             const {
                 email,
                 firstName,
@@ -15,7 +19,13 @@ class AuthController {
                 profileType
             } = req.body
 
-            const deviceName = getDeviceName(req)
+            checkParameters([
+                email,
+                firstName,
+                lastName,
+                password,
+                profileType
+            ])
 
             const userData = await UserService.register(
                 email,
@@ -40,13 +50,17 @@ class AuthController {
 
     async login(req, res, next) {
         try {
+            const deviceName = getDeviceName(req)
             const {
                 email,
                 password,
             } = req.body
 
-            const deviceName = getDeviceName(req)
-
+            checkParameters([
+                email,
+                password
+            ])
+            
             const userData = await UserService.login(email, password, deviceName)
 
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
@@ -63,12 +77,16 @@ class AuthController {
 
     async logout(req, res, next) {
         try {
+            const deviceName = getDeviceName(req)
             const {
                 accessToken,
                 refreshToken
             } = req.cookies
 
-            const deviceName = getDeviceName(req)
+            atLastOneExists({
+                accessToken,
+                refreshToken
+            })
 
             UserService.logout(accessToken, refreshToken, deviceName)
 
@@ -84,13 +102,16 @@ class AuthController {
 
     async refresh(req, res, next) {
         try {
-            const {refreshToken} = req.cookies
             const deviceName = getDeviceName(req)
-            const userData = await UserService.refresh(refreshToken, deviceName)
+            const {refreshToken} = req.cookies
 
+            oneExists({refreshToken})
+
+            const userData = await UserService.refresh(refreshToken, deviceName)
+            
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
-            
+        
             delete userData.refreshToken
 
             res.json(userData)
@@ -123,9 +144,7 @@ class AuthController {
         try {
             const {code} = req.body
 
-            if (!code) {
-                throw AuthError.BadRequestError(['code not specefied'])
-            }
+            oneExists({code})
 
             const deviceName = getDeviceName(req)
             const googleToken = await GoogleOAuth.obtainToken(code)
