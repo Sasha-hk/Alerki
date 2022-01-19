@@ -1,7 +1,7 @@
 const AppointmentService = require('../service/AppointmentService')
 const WorkerServiceService = require('../service/WorkerServicesService')
 const ProfileService = require('../service/ProfileService')
-const oneExists = requir('../utils/oneExists.js')
+const oneExists = require('../utils/oneExists.js')
 
 
 class AppointmentController {
