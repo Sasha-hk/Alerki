@@ -3,6 +3,7 @@ const ServiceService = require('../service/ServiceService')
 const UserService = require('../service/UserService')
 const AuthError = require('../exception/AuthError')
 const APIError = require('../exception/APIError')
+const checkParameters = require('../utils/checkParameters')
 
 
 class ProfileController {
@@ -10,9 +11,13 @@ class ProfileController {
         try {
             const {name, currency, price, location, duration} = req.body
 
-            if (!name || !currency || !price || !location || !duration) {
-                throw APIError.BadRequestError(['required data not specefied'])
-            }
+            checkParameters({
+                name,
+                currency,
+                price,
+                location,
+                duration,
+            })
 
             const {accessToken} = req.cookies
 

@@ -116,8 +116,8 @@ class UserService {
         }
 
         // check password
-        const passwordIsValid = bcrypt.compare(password, loginUser.password)
-
+        const passwordIsValid = await bcrypt.compare(password, loginUser.password)
+        
         if (!passwordIsValid) {
             throw AuthError.BadPasswordError()
         }

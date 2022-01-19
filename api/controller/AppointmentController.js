@@ -1,6 +1,7 @@
 const AppointmentService = require('../service/AppointmentService')
 const WorkerServiceService = require('../service/WorkerServicesService')
 const ProfileService = require('../service/ProfileService')
+const oneExists = requir('../utils/oneExists.js')
 
 
 class AppointmentController {
@@ -100,6 +101,8 @@ class AppointmentController {
         try {
             const {serviceID} = req.query
 
+            oneExists({serviceID})
+
             let workersResult = null
             const workerServices = await WorkerServiceService.findService(serviceID)
 
@@ -113,7 +116,6 @@ class AppointmentController {
             res.json(workersResult)
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }

@@ -1,4 +1,6 @@
 const ServiceService = require('../service/ServiceService')
+const oneExists = require('../utils/oneExists')
+
 
 
 class ServiceController {
@@ -18,6 +20,8 @@ class ServiceController {
     async createService(req, res, next) {
         try {
             const {name} = req.body
+
+            oneExists({name})
 
             const newService = await ServiceService.createService(name)
 
