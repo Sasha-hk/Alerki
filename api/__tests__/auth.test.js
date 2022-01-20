@@ -276,7 +276,7 @@ describe('Test profile', () => {
             expect(r.statusCode).toBe(200)
         })
 
-        test('create worker service with exists service', async () => {
+        test('create worker service with not exists service', async () => {
             const r = await request(app)
                 .post('/profile/create/service')
                 .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
@@ -313,7 +313,7 @@ describe('Test appointment', () => {
                 expect(services.statusCode).toBe(200)
                 // get workers
                 const workers = await request(app)
-                    .get('/appointment/find-worker')
+                    .get('/profile/find-worker')
                     .query({serviceID: services.body[0].id})
                 
                 expect(workers.statusCode).toBe(200)
@@ -330,7 +330,7 @@ describe('Test appointment', () => {
 
                 // get workers
                 const workers = await request(app)
-                    .get('/appointment/find-worker')
+                    .get('/profile/find-worker')
                 
                 expect(workers.statusCode).toBe(400)
             })
@@ -338,7 +338,7 @@ describe('Test appointment', () => {
             test('with not exists worker servcie', async () => {
                 // get workers
                 const workers = await request(app)
-                    .get('/appointment/find-worker')
+                    .get('/profile/find-worker')
                     .query({serviceID: '200'})
                 
                 expect(workers.statusCode).toBe(404)
@@ -347,7 +347,7 @@ describe('Test appointment', () => {
             test('with string serviceID', async () => {
                 // get workers
                 const workers = await request(app)
-                    .get('/appointment/find-worker')
+                    .get('/profile/find-worker')
                     .query({serviceID: 'not exists service name'})
                 
                 expect(workers.statusCode).toBe(400)

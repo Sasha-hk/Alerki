@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            shirtBiography: {
+            shortBiography: {
                 type: DataTypes.STRING(200),
             },
             instagramProfile: {
@@ -17,11 +17,32 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true,
             },
+            workingTimeFrom: {
+                type: DataTypes.INTEGER,
+            },
+            workingTimeTo: {
+                type: DataTypes.INTEGER,
+            },
+            weekendDaysID: {
+                type: DataTypes.INTEGER,
+            },
         },
         {
             tableName: 'WorkerProfiles'
         }
     )
+
+    WorkerProfileModel.associate = (models) => {
+        WorkerProfileModel.belongsTo(
+            models.WorkerWeekendDaysModel,
+            {
+                foreignKey: 'weekendDaysID',
+                onDelete: 'CASCADE',
+                allowNull: true,
+                defaultValue: null,
+            }
+        )
+    }
 
     return WorkerProfileModel
 }

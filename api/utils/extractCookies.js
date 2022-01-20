@@ -16,7 +16,7 @@ const extractCookies = headers => {
         }, {})
     }
     else {
-        throw Error('Cookies not fund')
+        return null
     }
 }
 

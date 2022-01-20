@@ -3,10 +3,6 @@ const AppointmentController = require('../controller/AppointmentController')
 const authMiddleware = require('../middleware/AuthMiddleware')
 const router = new Router()
 
-// for appointment
-router
-    .get('/find-worker', AppointmentController.findWorker)
-
 
 // client appointment
 router
@@ -14,7 +10,7 @@ router
         authMiddleware,
         AppointmentController.clientDetails
     )
-    .get('/client/list', 
+    .get('/client/list',
         authMiddleware,
         AppointmentController.clientList
     )
@@ -34,6 +30,7 @@ router
         authMiddleware,
         AppointmentController.clientCancel
     )
+
 
 // worker appointment
 router
@@ -59,5 +56,6 @@ router
         authMiddleware,
         AppointmentController.workerConfirm
     )
+
 
 module.exports = router

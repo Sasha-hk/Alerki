@@ -1,24 +1,17 @@
 const Router = require('express')
 const ProfileController = require('../controller/ProfileController')
-const authMiddlweare = require('../middleware/AuthMiddleware')
+const authMiddleware = require('../middleware/AuthMiddleware')
 const router = new Router()
 
 
-// router
-//     .get(
-//         '/worker/:username',
-//         ProfileController.getWorkerProfile
-//     )
-//     .get(
-//         '/client/:username', 
-//         authMiddleware,
-//         AppointmentController.clientList
-//     )
+router
+    .get('/find-worker', ProfileController.findWorker)
+    .get('/get-schedule', ProfileController.getSchedule)
 
 router
     .post(
         '/create/service',
-        authMiddlweare,
+        authMiddleware,
         ProfileController.createWorkerService
     )
 
