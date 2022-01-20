@@ -1,5 +1,3 @@
 # **Documentaiton**
 
-Content:
-
-- [`database`](./DATABASE.md "Database documentation")
+[`API documentation`](./api/README.md)
