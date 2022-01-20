@@ -2,33 +2,33 @@
 
 Endpoints:
 
-- /auth
-  - /register
-  - /log-in
-  - /log-out
-  - /refresh
-  - /callback/google
+- [x] /auth
+  - [x] /register
+  - [x] /log-in
+  - [x] /log-out
+  - [x] /refresh
+  - [x] /callback/google
 
-- /appointemtn
-  - /client
-    - /details/:slug
-    - /list
-    - /list/today
-    - /make
-    - /cancel/:slug
+- [ ] /appointemtn
+  - [ ] /client
+    - [ ] /details/:slug
+    - [ ] /list
+    - [ ] /list/today
+    - [ ] /make
+    - [ ] /cancel/:slug
 
-  - /worker
-    - /details/:slug
-    - /list
-    - /list/today
-    - /cancel/:slug
-    - /confirm/:slug
+  - [ ] /worker
+    - [ ] /details/:slug
+    - [ ] /list
+    - [ ] /list/today
+    - [ ] /cancel/:slug
+    - [ ] /confirm/:slug
 
-- /profile
-  - /find-worker
-  - /get-schedule
-  - /create/service
+- [x] /profile
+  - [x] /find-worker
+  - [ ] /get-schedule
+  - [x] /create/service
 
-- /services
-  - /find
-  - /create
+- [x] /services
+  - [x] /find
+  - [x] /create
