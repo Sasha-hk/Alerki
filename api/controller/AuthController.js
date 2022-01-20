@@ -13,28 +13,29 @@ class AuthController {
             const deviceName = getDeviceName(req)
             const {
                 email,
+                username,
                 firstName,
                 lastName,
                 password,
-                profileType
+                profileType,
             } = req.body
 
             checkParameters([
                 email,
-                firstName,
-                lastName,
+                username,
                 password,
                 profileType
             ])
 
-            const userData = await UserService.register(
+            const userData = await UserService.register({
                 email,
+                username,
                 firstName,
                 lastName,
                 password,
                 profileType,
                 deviceName,
-            )
+            })
 
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
@@ -61,7 +62,7 @@ class AuthController {
                 password
             ])
             
-            const userData = await UserService.login(email, password, deviceName)
+            const userData = await UserService.login({email, password, deviceName})
 
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
@@ -88,7 +89,7 @@ class AuthController {
                 refreshToken
             })
 
-            UserService.logout(accessToken, refreshToken, deviceName)
+            UserService.logout({accessToken, refreshToken, deviceName})
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
@@ -107,7 +108,7 @@ class AuthController {
 
             oneExists({refreshToken})
 
-            const userData = await UserService.refresh(refreshToken, deviceName)
+            const userData = await UserService.refresh({refreshToken, deviceName})
             
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
@@ -150,11 +151,11 @@ class AuthController {
             const googleToken = await GoogleOAuth.obtainToken(code)
             const profileData = await GoogleOAuth.getUserInfo(googleToken.access_token)
  
-            const userData = await UserService.withGoogle(
+            const userData = await UserService.withGoogle({
                 profileData,
                 deviceName,
                 googleToken
-            )
+            })
             
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})

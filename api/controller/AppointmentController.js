@@ -1,6 +1,9 @@
 const AppointmentService = require('../service/AppointmentService')
+const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
+const WorkerScheduleService = require('../service/WorkerScheduleService')
 const WorkerServiceService = require('../service/WorkerServicesService')
 const ProfileService = require('../service/ProfileService')
+const UserService = require('../service/UserService')
 const APIError = require('../exception/APIError')
 const oneExists = require('../utils/oneExists.js')
 
@@ -119,8 +122,30 @@ class AppointmentController {
             if (workersResult.length == 0) {
                 throw APIError.NotFoundError()
             }
-            
+            console.log(workersResult) 
             res.json(workersResult)
+        }
+        catch(e) {
+            res.status(e.status || 500).json(e.errors)
+        }
+    }
+
+    async getSchedule(req, res, next) {
+        try {
+            const from = req.query.from
+            const to = req.query.to
+            const workerProfileID = req.query.worker_id
+            
+            const workingDays = await WorkerWeekendDaysService.findWeekendDaysByID(workerProfileID)
+            const foundSchedules = await WorkerScheduleService.getSchedule({
+                dateRange: [from, to],
+                workerProfileID,
+            })
+
+            return {
+                workingDays,
+                foundSchedules
+            }
         }
         catch(e) {
             res.status(e.status || 500).json(e.errors)

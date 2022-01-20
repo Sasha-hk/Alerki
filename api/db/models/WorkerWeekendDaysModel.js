@@ -7,31 +7,31 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            weekend0: {
+            monday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend1: {
+            tuesday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend2: {
+            wednesday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend3: {
+            thursday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend4: {
+            friday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend5: {
+            saturday: {
                 type: DataTypes.BOOLEAN,
                 default: false
             },
-            weekend6: {
+            sunday: {
                 type: DataTypes.BOOLEAN,
                 default: true
             },

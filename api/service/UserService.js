@@ -20,6 +20,15 @@ class UserService {
 		return checkUserExists
 	}
 
+    async findUserByUsername({username}) {
+        const foundUser = await UserModel.findOne({
+            rew: true,
+            where: {
+                username,
+            }
+        })
+    }
+
     async findUserByID(id) {
         const user = await UserModel.findOne({
             raw: true,
@@ -55,26 +64,21 @@ class UserService {
         return {userData, ...tokens}	
 	}
 
-    async register(
+    async register({
         email, 
-        firstName, 
-        lastName, 
+        username,
+        firstName,
+        lastName,
         password, 
         profileType, 
         deviceName
-	) {
-        // check if all data specefied
-        if (!email || !firstName || !lastName || !password || !profileType) {
-            throw AuthError.BadRequestError(['required data not specefied'])
-        }
-        
-        // check if selected profile type
+	}) {    
+        // check profile type
         this.checkProfileType(profileType)
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
 
-        // if password exists hash it else save null
         const hashedPassword = bcrypt.hashSync(password, 1)
 
         // create profile
@@ -91,18 +95,19 @@ class UserService {
         // crete new user
         const newUser = await UserModel.create({
             email,
+            username,
             firstName,
             lastName,
             password: hashedPassword,
             profileType,
-            clientProfileID: clientProfile?.id || null,
-            workerProfileID: workerProfile?.id || null,
+            clientProfileID: clientProfile?.id,
+            workerProfileID: workerProfile?.id,
         })
 		
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
 
-    async login(email, password, deviceName) {
+    async login({email, password, deviceName}) {
         // check if user exists
         const loginUser = await UserModel.findOne({
             raw: true,
@@ -125,7 +130,7 @@ class UserService {
 		return await this.generateAndSaveTokens(loginUser, deviceName)
     }
 
-    async logout(accessToken, refreshToken, deviceName) {
+    async logout({accessToken, refreshToken, deviceName}) {
         // get user id from accessToken or refreshToken
         const decodedToken = accessToken 
             ? await AuthService.verifyAccessToken(accessToken)
@@ -140,7 +145,7 @@ class UserService {
             : null 
     }
 
-    async refresh(refreshToken, deviceName) {
+    async refresh({refreshToken, deviceName}) {
         // decode refreshToken
         const decodedToken = await AuthService.verifyRefreshToken(refreshToken)
         
@@ -176,7 +181,7 @@ class UserService {
 		return withPhoto
 	}
 
-	async withGoogle(profileData, deviceName, googleToken) {
+	async withGoogle({profileData, deviceName, googleToken}) {
 		if (!profileData.email) {
 			throw AuthError.BadRequestError(['code was invalid'])
 		}

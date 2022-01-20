@@ -1,4 +1,6 @@
 const {ClientProfileModel, WorkerProfileModel} = require('../db/models')
+const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+
 
 class ProfileService {
     async findWorkerByID(id) {
@@ -30,7 +32,10 @@ class ProfileService {
     }
 
     async createWorkerProfile() {
-        const newWorkerProfile = await WorkerProfileModel.create()
+        const newWeekendDays = await WorkerWeekendDaysService.createWeekendDays()
+        const newWorkerProfile = await WorkerProfileModel.create({
+            weekEndDaysID: newWeekendDays.id
+        })
 
         return newWorkerProfile.dataValues
     }

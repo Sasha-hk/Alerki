@@ -6,6 +6,7 @@ const router = new Router()
 // for appointment
 router
     .get('/find-worker', AppointmentController.findWorker)
+    .get('/get-schedule', AppointmentController.getSchedule)
 
 
 // client appointment
@@ -14,7 +15,7 @@ router
         authMiddleware,
         AppointmentController.clientDetails
     )
-    .get('/client/list', 
+    .get('/client/list',
         authMiddleware,
         AppointmentController.clientList
     )
@@ -34,6 +35,7 @@ router
         authMiddleware,
         AppointmentController.clientCancel
     )
+
 
 // worker appointment
 router
@@ -59,5 +61,6 @@ router
         authMiddleware,
         AppointmentController.workerConfirm
     )
+
 
 module.exports = router
