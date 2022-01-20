@@ -16,15 +16,15 @@ class WorkerServiceService {
 
         return foundServices
     }
-    async createWorkerService(
-        name,
+    
+    async createWorkerService({
         currency,
         price,
         location,
         duration,
         workerID,
         serviceID
-    ) {
+    }) {
         const newWorkerService = await WorkerServiceModel.create({
             currency,
             price,

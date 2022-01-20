@@ -3,11 +3,6 @@ const AppointmentController = require('../controller/AppointmentController')
 const authMiddleware = require('../middleware/AuthMiddleware')
 const router = new Router()
 
-// for appointment
-router
-    .get('/find-worker', AppointmentController.findWorker)
-    .get('/get-schedule', AppointmentController.getSchedule)
-
 
 // client appointment
 router
