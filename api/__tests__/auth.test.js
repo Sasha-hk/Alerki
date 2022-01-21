@@ -301,6 +301,7 @@ describe('Test profile', () => {
     })
 })
 
+let foundWorkers = null 
 describe('Test appointment', () => {
     describe('client make appointment', () => {
         describe('find worker', () => {
@@ -317,22 +318,7 @@ describe('Test appointment', () => {
                     .query({serviceID: services.body[0].id})
                 
                 expect(workers.statusCode).toBe(200)
-
-            })
-
-            test('without parameters', async () => {
-                // get services list
-                const services = await request(app)
-                    .get('/services/find')
-                    .query({name: newServiceName})
-                
-                expect(services.statusCode).toBe(200)
-
-                // get workers
-                const workers = await request(app)
-                    .get('/profile/find-worker')
-                
-                expect(workers.statusCode).toBe(400)
+                foundWorkers = workers.body
             })
 
             test('with not exists worker servcie', async () => {
@@ -351,6 +337,25 @@ describe('Test appointment', () => {
                     .query({serviceID: 'not exists service name'})
                 
                 expect(workers.statusCode).toBe(400)
+            })
+        })
+
+        describe('get schedule', () => {
+            test('with correct parameters', async () => {
+                console.log(foundWorkers)
+                const r = await request(app)
+                    .get('/profile/get-schedule')
+                    .query({
+                        worker_id: foundWorkers[0].id,
+                        year: new Date().getFullYear(),
+                        month: new Date().getMonth(),
+                        weekendDaysID: foundWorkers[0].weekendDaysID,
+                    })
+                
+                console.log(r.body)
+                console.log(r.statusCode)
+
+                expect(r.statusCode).toBe(200)
             })
         })
     })

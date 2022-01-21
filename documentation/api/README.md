@@ -24,7 +24,7 @@ Endpoints:
     - [ ] /cancel/:slug
     - [ ] /confirm/:slug
 
-- [x] /profile
+- [ ] /profile
   - [x] /find-worker
   - [ ] /get-schedule
   - [x] /create/service

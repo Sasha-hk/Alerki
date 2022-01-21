@@ -76,14 +76,14 @@ class AppointmentService {
     async makeAppointemnt(
         clientID,
         workerID,
-        serviceID,
+        workerServiceID,
         appointmentTime,
     ) {
-        if (!serviceID || !clientID || !workerID || !appointmentTime) {
+        if (!workerServiceID || !clientID || !workerID || !appointmentTime) {
             throw AppointmentError.BadRequestError([
                 !clientID && 'clientID is required',
                 !workerID && 'workerID is require',
-                !serviceID && 'serviceID is required',
+                !workerServiceID && 'serviceID is required',
                 !appointmentTime && 'appointmentTime is required'
             ].filter(e => e))
         }
@@ -91,7 +91,7 @@ class AppointmentService {
         const workerService = await WorkerServiceModel.findOne({
             raw: true,
             where: {
-                id: serviceID,
+                id: workerServiceID,
             }
         })
         
@@ -117,7 +117,7 @@ class AppointmentService {
             confirmed: false,
             clientID,
             workerID,
-            serviceID,
+            workerServiceID,
         })
 
         // generate notification

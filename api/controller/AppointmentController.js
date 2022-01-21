@@ -38,7 +38,7 @@ class AppointmentController {
         }
     }
 
-    async clientMake(req, res, next) {
+    async clientMakeAppointment(req, res, next) {
         try {
             
         }

@@ -69,37 +69,53 @@ class ProfileController {
 
             for (const w of workerServices) {
                 const foundWorker = await ProfileService.findWorkerByID(w.workerID)
-                workersResult.push({worker: foundWorker[0], workerService: w})
+                workersResult.push({...foundWorker[0], service: w})
             }
 
             if (workersResult.length == 0) {
                 throw APIError.NotFoundError()
             }
-            console.log(workersResult) 
             res.json(workersResult)
         }
         catch(e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
 
     async getSchedule(req, res, next) {
         try {
-            const from = req.query.from
-            const to = req.query.to
+            const year = req.query.year
+            const month = req.query.month
             const workerProfileID = req.query.worker_id
-            
-            const workingDays = await WorkerWeekendDaysService.findWeekendDaysByID(workerProfileID)
+            const weekendDaysID = req.query.weekendDaysID
+            checkParameters({
+                year,
+                month,
+                workerProfileID,
+                weekendDaysID,
+            })
+
+            const from = new Date()
+            from.setFullYear(year)
+            from.setMonth(month)
+            from.setDate(0)
+            from.setTime(0)
+            from.setHours(0)
+            from.setMinutes(0)
+            from.setSeconds(0)
+            from.setMilliseconds(0)
+            const to = new Date(from.getFullYear(), from.getMonth()+1, 0);
+
+            const workingDays = await WorkerWeekendDaysService.findWeekendDaysByID({id: weekendDaysID})
             const foundSchedules = await WorkerScheduleService.getSchedule({
                 dateRange: [from, to],
                 workerProfileID,
             })
 
-            return {
+            res.json({
                 workingDays,
                 foundSchedules
-            }
+            })
         }
         catch(e) {
             res.status(e.status || 500).json(e.errors)

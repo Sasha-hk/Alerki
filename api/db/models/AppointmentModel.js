@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
             },
-            serviceID: {
+            workerServiceID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },

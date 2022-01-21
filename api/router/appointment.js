@@ -20,9 +20,9 @@ router
     )
 
 router
-    .post('/client/make', 
+    .post('/client/make-appointment', 
         authMiddleware,
-        AppointmentController.clientMake
+        AppointmentController.clientMakeAppointment
     )
 
 router
