@@ -7,6 +7,7 @@ const rushUsers = usersData.rushUsers
 const badUsers = usersData.badUsers
 const sameEmail = usersData.sameEmail
 const userProfiles = usersData.userProfiles
+const weekDays = ['monday', 'tuesday', 'wednesday', 'rhursday', 'friday', 'saturday', 'sunday']
 
 
 async function registerUser(body) {
@@ -301,6 +302,9 @@ describe('Test profile', () => {
     })
 })
 
+let foundWorkers = null
+let foundSchedule = null
+
 describe('Test appointment', () => {
     describe('client make appointment', () => {
         describe('find worker', () => {
@@ -317,22 +321,7 @@ describe('Test appointment', () => {
                     .query({serviceID: services.body[0].id})
                 
                 expect(workers.statusCode).toBe(200)
-
-            })
-
-            test('without parameters', async () => {
-                // get services list
-                const services = await request(app)
-                    .get('/services/find')
-                    .query({name: newServiceName})
-                
-                expect(services.statusCode).toBe(200)
-
-                // get workers
-                const workers = await request(app)
-                    .get('/profile/find-worker')
-                
-                expect(workers.statusCode).toBe(400)
+                foundWorkers = workers.body
             })
 
             test('with not exists worker servcie', async () => {
@@ -351,6 +340,80 @@ describe('Test appointment', () => {
                     .query({serviceID: 'not exists service name'})
                 
                 expect(workers.statusCode).toBe(400)
+            })
+        })
+
+        describe('get schedule', () => {
+            test('with correct parameters', async () => {
+                const r = await request(app)
+                    .get('/profile/get-schedule')
+                    .query({
+                        worker_id: foundWorkers[0].id,
+                        year: new Date().getFullYear(),
+                        month: new Date().getMonth(),
+                        weekendDaysID: foundWorkers[0].weekendDaysID,
+                    })
+
+                foundSchedule = r.body
+                
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect parameters', async () => {
+                const r = await request(app)
+                    .get('/profile/get-schedule')
+                    .query({
+                        worker_id: foundWorkers[0].id,
+                        year: new Date().getFullYear(),
+                        month: new Date().getMonth(),
+                    })
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+
+        describe('make appointment', () => {
+            test('with correct parameters', async () => {
+                const appointmentStartTime = new Date()
+
+                appointmentStartTime.setDate(appointmentStartTime.getDate() + 1)
+
+                if (appointmentStartTime.getDay() == 5 || appointmentStartTime.getDay() == 6) {
+                    appointmentStartTime.setDate(appointmentStartTime.getDate() + 2)
+                }
+
+                const r = await request(app)
+                    .post('/appointment/client/make-appointment')
+                    .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                    .send({
+                        clientID: userProfiles.client.id,
+                        workerID: foundWorkers[0].id,
+                        workerServiceID: foundWorkers[0].service.id,
+                        appointmentStartTime,
+                    })
+
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with correct parameters', async () => {
+                const appointmentStartTime = new Date()
+
+                appointmentStartTime.setDate(appointmentStartTime.getDate() + 1)
+
+                if (appointmentStartTime.getDay() == 5 || appointmentStartTime.getDay() == 6) {
+                    appointmentStartTime.setDate(appointmentStartTime.getDate() + 2)
+                }
+
+                const r = await request(app)
+                    .post('/appointment/client/make-appointment')
+                    .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                    .send({
+                        clientID: 100,
+                        workerID: foundWorkers[0].id,
+                        appointmentStartTime,
+                    })
+
+                expect(r.statusCode).toBe(400)
             })
         })
     })

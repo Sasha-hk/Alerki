@@ -1,10 +1,26 @@
 const {AppointmentModel} = require('../db/models')
 const {WorkerServiceModel} = require('../db/models')
+const checkParameters = require('../utils/checkParameters')
+const oneExists = require('../utils/oneExists')
 const AppointmentError = require('../exception/AppointmentError') 
 const generateSlug = require('../utils/generateSlug')
 
 
 class AppointmentService { 
+    async findAppointmentsInRange({workerID, dateRange}) {
+        const foundAppointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                workerID,
+                appointmentStartTime: {
+                    between: dateRange
+                }
+            }
+        })
+
+        return foundAppointments
+    }
+
     async getDetails(slug) {
         const appointment = await AppointmentModel.findOne({
             raw: true,
@@ -28,12 +44,10 @@ class AppointmentService {
     }
 
     async clientAppointmentList(clientID, currentDate) {
-        if (!clientID || !currentDate) {
-            throw AppointmentError.BadRequestError([
-                !clientID && 'clientID is required',
-                !currentDate && 'currentDate is required'
-            ].filter(e => e))
-        }
+        checkParameters({
+            clientID,
+            currentDate,
+        })
 
         const orderDate = new Date(currentDate)
 
@@ -73,40 +87,32 @@ class AppointmentService {
         return appointmentsToday
     }
 
-    async makeAppointemnt(
+    async makeAppointment({
         clientID,
         workerID,
-        serviceID,
-        appointmentTime,
-    ) {
-        if (!serviceID || !clientID || !workerID || !appointmentTime) {
-            throw AppointmentError.BadRequestError([
-                !clientID && 'clientID is required',
-                !workerID && 'workerID is require',
-                !serviceID && 'serviceID is required',
-                !appointmentTime && 'appointmentTime is required'
-            ].filter(e => e))
-        }
-
+        workerServiceID,
+        appointmentStartTime,
+    }) {
         const workerService = await WorkerServiceModel.findOne({
             raw: true,
             where: {
-                id: serviceID,
+                id: workerServiceID,
             }
         })
+
         
         if (!workerService) {
             throw AppointmentError.BadRequest([
-                'service with id specefied not found'
+                'service with specefied id not found'
             ])
         }
 
         const slug = await generateSlug(AppointmentModel)
 
-        const appointmentStartTime = new Date(appointmentTime) 
-
-        appointmentEndTime = new Date(
-            appointmentStartTime.getTime() / 1000 + workerService.duration
+        const appointmentEndTime = new Date(appointmentStartTime)
+        
+        appointmentEndTime.setTime(
+            appointmentEndTime.getTime() + workerService.duration
         )
 
         const newAppointment = await AppointmentModel.create({
@@ -117,7 +123,7 @@ class AppointmentService {
             confirmed: false,
             clientID,
             workerID,
-            serviceID,
+            workerServiceID,
         })
 
         // generate notification
@@ -160,12 +166,10 @@ class AppointmentService {
     }
 
     async workerList(workerID, currentDate) {
-        if (!workerID || !currentDate) {
-            throw AppointmentError.BadRequestError([
-                !clientID && 'clientID is required',
-                !currentDate && 'currentDate is required'
-            ].filter(e => e))
-        }
+        checkParameters({
+            workerID,
+            currentDate,
+        })
 
         const orderDate = new Date(currentDate)
 
