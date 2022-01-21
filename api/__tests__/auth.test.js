@@ -7,6 +7,7 @@ const rushUsers = usersData.rushUsers
 const badUsers = usersData.badUsers
 const sameEmail = usersData.sameEmail
 const userProfiles = usersData.userProfiles
+const weekDays = ['monday', 'tuesday', 'wednesday', 'rhursday', 'friday', 'saturday', 'sunday']
 
 
 async function registerUser(body) {
@@ -301,7 +302,9 @@ describe('Test profile', () => {
     })
 })
 
-let foundWorkers = null 
+let foundWorkers = null
+let foundSchedule = null
+
 describe('Test appointment', () => {
     describe('client make appointment', () => {
         describe('find worker', () => {
@@ -342,7 +345,6 @@ describe('Test appointment', () => {
 
         describe('get schedule', () => {
             test('with correct parameters', async () => {
-                console.log(foundWorkers)
                 const r = await request(app)
                     .get('/profile/get-schedule')
                     .query({
@@ -351,11 +353,67 @@ describe('Test appointment', () => {
                         month: new Date().getMonth(),
                         weekendDaysID: foundWorkers[0].weekendDaysID,
                     })
+
+                foundSchedule = r.body
                 
-                console.log(r.body)
-                console.log(r.statusCode)
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect parameters', async () => {
+                const r = await request(app)
+                    .get('/profile/get-schedule')
+                    .query({
+                        worker_id: foundWorkers[0].id,
+                        year: new Date().getFullYear(),
+                        month: new Date().getMonth(),
+                    })
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+
+        describe('make appointment', () => {
+            test('with correct parameters', async () => {
+                const appointmentStartTime = new Date()
+
+                appointmentStartTime.setDate(appointmentStartTime.getDate() + 1)
+
+                if (appointmentStartTime.getDay() == 5 || appointmentStartTime.getDay() == 6) {
+                    appointmentStartTime.setDate(appointmentStartTime.getDate() + 2)
+                }
+
+                const r = await request(app)
+                    .post('/appointment/client/make-appointment')
+                    .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                    .send({
+                        clientID: userProfiles.client.id,
+                        workerID: foundWorkers[0].id,
+                        workerServiceID: foundWorkers[0].service.id,
+                        appointmentStartTime,
+                    })
 
                 expect(r.statusCode).toBe(200)
+            })
+
+            test('with correct parameters', async () => {
+                const appointmentStartTime = new Date()
+
+                appointmentStartTime.setDate(appointmentStartTime.getDate() + 1)
+
+                if (appointmentStartTime.getDay() == 5 || appointmentStartTime.getDay() == 6) {
+                    appointmentStartTime.setDate(appointmentStartTime.getDate() + 2)
+                }
+
+                const r = await request(app)
+                    .post('/appointment/client/make-appointment')
+                    .set('Cookie', ['accessToken=' + userProfiles.worker.accessToken])
+                    .send({
+                        clientID: 100,
+                        workerID: foundWorkers[0].id,
+                        appointmentStartTime,
+                    })
+
+                expect(r.statusCode).toBe(400)
             })
         })
     })

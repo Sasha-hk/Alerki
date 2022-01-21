@@ -1,3 +1,4 @@
+const AppointmentService = require('../service/AppointmentService')
 const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
 const WorkerScheduleService = require('../service/WorkerScheduleService')
 const WorkerServiceService = require('../service/WorkerServicesService')
@@ -88,6 +89,7 @@ class ProfileController {
             const month = req.query.month
             const workerProfileID = req.query.worker_id
             const weekendDaysID = req.query.weekendDaysID
+
             checkParameters({
                 year,
                 month,
@@ -98,23 +100,31 @@ class ProfileController {
             const from = new Date()
             from.setFullYear(year)
             from.setMonth(month)
-            from.setDate(0)
-            from.setTime(0)
+            from.setDate(1)
             from.setHours(0)
             from.setMinutes(0)
             from.setSeconds(0)
             from.setMilliseconds(0)
-            const to = new Date(from.getFullYear(), from.getMonth()+1, 0);
 
-            const workingDays = await WorkerWeekendDaysService.findWeekendDaysByID({id: weekendDaysID})
+            const to = new Date(from.getFullYear(), from.getMonth()+1, 0);
+            to.setHours(59)
+            to.setMinutes(59)
+            to.setSeconds(59)
+            to.setMilliseconds(59)
+
+            const weekendDays = await WorkerWeekendDaysService.findWeekendDaysByID({id: weekendDaysID})
             const foundSchedules = await WorkerScheduleService.getSchedule({
                 dateRange: [from, to],
                 workerProfileID,
             })
-
+            const foundAppointments = await AppointmentService.findAppointmentsInRange({
+                dateRange: [from, to],
+                workerID: workerProfileID,
+            })
             res.json({
-                workingDays,
-                foundSchedules
+                weekendDays,
+                schedule: foundSchedules,
+                appointments: foundAppointments
             })
         }
         catch(e) {

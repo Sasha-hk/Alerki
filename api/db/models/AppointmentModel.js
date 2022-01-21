@@ -31,15 +31,15 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
             },
-            workerServiceID: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             clientID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
             workerID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            workerServiceID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -57,20 +57,20 @@ module.exports = (sequelize, DataTypes) => {
                 onDelete: 'CASCADE',
             }
         )
-
-        AppointmentModel.belongsTo(
-            models.WorkerServiceModel, 
-            {
-                foreignKey: 'serviceID',
-                onDelete: 'CASCADE',
-            }
-        )
-
+        
         AppointmentModel.belongsTo(
             models.WorkerProfileModel, 
             {
                 foreignKey: 'workerID',
                 onDelete: 'CASCADE'
+            }
+        )
+
+        AppointmentModel.belongsTo(
+            models.WorkerServiceModel, 
+            {
+                foreignKey: 'workerServiceID',
+                onDelete: 'CASCADE',
             }
         )
     }

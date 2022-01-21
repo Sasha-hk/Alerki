@@ -3,7 +3,7 @@ const getDeviceName = require('../utils/deviceName')
 const GoogleOAuth = require('../oauth/GoogleOAuth')
 const AuthError = require('../exception/AuthError')
 const checkParameters = require('../utils/checkParameters')
-const atLastOneExists = require('../utils/atLastOneExists')
+const atLeastOneExists = require('../utils/atLeastOneExists')
 const oneExists = require('../utils/oneExists')
 
 
@@ -84,7 +84,7 @@ class AuthController {
                 refreshToken
             } = req.cookies
 
-            atLastOneExists({
+            atLeastOneExists({
                 accessToken,
                 refreshToken
             })
