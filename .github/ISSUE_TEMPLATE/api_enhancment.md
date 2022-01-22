@@ -1,5 +1,5 @@
 ---
-name: Enhancment
+name: Enhancement
 about: General task template
 title: '[API] '
 labels: 'api enhancment'
@@ -7,13 +7,12 @@ assignees: ''
 
 ---
 
-**Describe enhancment**
-A clear and concise description of what the enhancment.
-adsfadf
+**Describe enhamcement**
+A clear and concise description of what the enhancement.
 
 **Tasks:**
 
-1. mekt test below
+1. meke test below
 2. ...
 
 **Test endpoints:**
