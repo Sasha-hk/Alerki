@@ -10,7 +10,7 @@ class ServiceController {
 
             checkParams.all({name})
 
-            const foundServices = await ServiceService.findByName(name, limit, page)
+            const foundServices = await ServiceService.findByName({name, limit, page})
 
             if (foundServices.length == 0) {
                 throw APIError.NotFoundError()
@@ -29,7 +29,7 @@ class ServiceController {
 
             checkParams.all({name})
 
-            const newService = await ServiceService.create(name)
+            const newService = await ServiceService.create({name})
 
             res.json(newService)
         }

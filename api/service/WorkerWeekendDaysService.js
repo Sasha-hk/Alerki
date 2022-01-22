@@ -7,7 +7,10 @@ class WorkerWeekendDaysService {
             raw: true,
             where: {
                 id,
-            }
+            },
+            attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt'],
+            },
         })
 
         return foundDays
@@ -29,10 +32,10 @@ class WorkerWeekendDaysService {
         saturday,
         sunday,
     }) {
-        const checkExists = await this.findWeekendDaysByID({id})
+        const checkExists = await this.findByID({id})
 
         if (!checkExists) {
-            const newWeekendDays = await this.createWeekendDay({
+            const newWeekendDays = await this.create({
                 monday,
                 tuesday,
                 wednesday,
@@ -57,13 +60,14 @@ class WorkerWeekendDaysService {
                 },
                 {
                     raw: true,
+                    returning: true,
                     where: {
                         id
                     }
                 }
             )
 
-            return updatedWeekendDays
+            return updatedWeekendDays[1][0]
         }
     }
 }

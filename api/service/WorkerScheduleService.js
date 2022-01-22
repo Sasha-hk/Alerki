@@ -3,13 +3,13 @@ const {WorkerScheduleModel} = require('../db/models')
 
 class WorkerScheduleService {
     async checkExists({
-        workerProfileID,
+        workerID,
         date,
     }) {
         const foundSchedule = await WorkerScheduleModel.findOne({
             raw: true,
             where: {
-                workerProfileID,
+                workerID,
                 date
             }
         })
@@ -18,14 +18,14 @@ class WorkerScheduleService {
     }
 
     async create({
-        workerProfileID,
+        workerID,
         workingTimeFrom,
         workingTimeTo,
         weekendDay,
         date,
     }) {
         const newSchedule = await WorkerScheduleModel.create({
-            workerProfileID,
+            workerID,
             workingTimeFrom,
             workingTimeTo,
             weekendDay,
@@ -36,13 +36,13 @@ class WorkerScheduleService {
     }
     
     async getInRange({
+        workerID,
         dateRange,
-        workerProfileID,
     }) {
         const foundSchedule = await WorkerScheduleModel.findAll({
             raw: true,
             where: {
-                workerProfileID,
+                workerID,
                 date: {
                     between: dateRange,
                 }
@@ -53,20 +53,20 @@ class WorkerScheduleService {
     }
 
     async update({
-        workerProfileID,
+        workerID,
         workingTimeFrom,
         workingTimeTo,
         weekendDay,
         date,
     }) {
         const checkExistsSchedule = await this.checkExistsSchedule({
-            workerProfileID,
+            workerID,
             date
         })
 
         if (!checkExistsSchedule) {
             const newSchedule = await this.createSchedule({
-                workerProfileID,
+                workerID,
                 workingTimeFrom,
                 workingTimeTo,
                 weekendDay,
@@ -84,7 +84,7 @@ class WorkerScheduleService {
                 },
                 {
                     where: {
-                        workerProfileID,
+                        workerID,
                         date,
                     }
                 }
