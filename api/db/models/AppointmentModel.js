@@ -25,9 +25,16 @@ module.exports = (sequelize, DataTypes) => {
             duration: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                // in milliseconds
             },
-            confirmed: {
+            clientCancel: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false,
+            },
+            workerCancel: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false,
+            },
+            workerConfirm: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
             },
