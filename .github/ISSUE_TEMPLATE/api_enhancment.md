@@ -1,19 +1,18 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Enhancement
+about: General task template
 title: '[API] '
-labels: 'api enhancment'
+labels: ["api", "enhancement"]
 assignees: ''
 
 ---
 
-**Describe enhancment**
-A clear and concise description of what the enhancment.
-adsfadf
+**Describe enhancement**
+A clear and concise description of what the enhancement.
 
 **Tasks:**
 
-1. mekt test below
+1. make test below
 2. ...
 
 **Test endpoints:**
