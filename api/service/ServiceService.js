@@ -5,6 +5,10 @@ class ServiceService {
     async findByName(name, limit, page) {
         const results = await ServiceModel.findAll({
             raw: true,
+            attributes: [
+                'id',
+                'name',
+            ],
             where: {
                 name,
             },

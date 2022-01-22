@@ -105,3 +105,40 @@ describe('Test authenticatin', () => {
     })
 })
 
+describe('Test services', () => {
+    describe('create', () => {
+        test('with correct parameterss', async () => {
+            const r = await request(app)
+                .post('/services/create')
+                .send({name: 'heircut'})
+            
+            expect(r.statusCode).toBe(200)
+        })
+
+        test('with correct parameters', async () => {
+            const r = await request(app)
+                .post('/services/create')
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+
+    describe('find', () => {
+        test('with correct parameterss', async () => {
+            const r = await request(app)
+                .get('/services/find')
+                .query({name: 'heircut'})
+            
+            expect(r.statusCode).toBe(200)
+            expect(r.body[0].name).toBe('heircut')
+        })
+
+        test('with correct parameters', async () => {
+            const r = await request(app)
+                .get('/services/find')
+
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+})
