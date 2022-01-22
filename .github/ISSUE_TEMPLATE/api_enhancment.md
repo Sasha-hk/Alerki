@@ -1,6 +1,6 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Enhancment
+about: General task template
 title: '[API] '
 labels: 'api enhancment'
 assignees: ''
