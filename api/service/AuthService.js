@@ -2,6 +2,7 @@ const { AuthUserModel, UserModel } = require('../db/models')
 const AuthError = require('../exception/AuthError')
 const jwt = require('jsonwebtoken')
 
+
 class AuthService {
     async generateTokens(payload) {
         const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {expiresIn: '30m'})

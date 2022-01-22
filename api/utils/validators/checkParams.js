@@ -1,4 +1,4 @@
-const APIError = require('../exception/APIError')
+const APIError = require('../../exception/APIError')
 
 
 function causeError(errors) {

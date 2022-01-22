@@ -17,7 +17,7 @@ module.exports = async (req, res, next) => {
         }
 
         req.accessToken = decodedToken
-        
+
         next()
     }
     catch(e) {

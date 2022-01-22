@@ -3,7 +3,7 @@ const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
 
 
 class ProfileService {
-    async findWorkerByID(id) {
+    async findWorkerByID({id}) {
         const foundWorker = await WorkerProfileModel.findAll({
             raw: true,
             where: {

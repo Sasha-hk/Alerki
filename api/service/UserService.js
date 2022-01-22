@@ -1,24 +1,24 @@
 const { UserModel } = require('../db/models')
-const AuthError = require('../exception/AuthError')
-const UserDto = require('../dto/UserDto')
 const AuthService = require('./AuthService')
 const UserPictureService = require('./UserPictureService')
 const ProfileService = require('./ProfileService')
+const AuthError = require('../exception/AuthError')
+const UserDto = require('../dto/UserDto')
 const bcrypt = require('bcrypt')
 const request = require('request')
 
 
 class UserService {
-	async findUserByEmail(email) {
-		const checkUserExists = await UserModel.findOne({
-			raw: true,
-			where: {
-				email
-			}
-		})
+    async findUserByEmail(email) {
+        const checkUserExists = await UserModel.findOne({
+            raw: true,
+            where: {
+                email
+            }
+        })
 
-		return checkUserExists
-	}
+        return checkUserExists
+    }
 
     async findUserByUsername({username}) {
         const foundUser = await UserModel.findOne({
@@ -56,13 +56,13 @@ class UserService {
         }
     }
 
-	async generateAndSaveTokens(user, deviceName) {
-		const userData = new UserDto(user)
+    async generateAndSaveTokens(user, deviceName) {
+        const userData = new UserDto(user)
         const tokens = await AuthService.generateTokens({...userData})
         await AuthService.saveAuthData(userData.id, deviceName, tokens)
-		
+        
         return {userData, ...tokens}	
-	}
+    }
 
     async register({
         email, 
@@ -72,7 +72,7 @@ class UserService {
         password, 
         profileType, 
         deviceName
-	}) {    
+    }) {    
         // check profile type
         this.checkProfileType(profileType)
 
@@ -100,10 +100,10 @@ class UserService {
             lastName,
             password: hashedPassword,
             profileType,
-            clientProfileID: clientProfile?.id,
-            workerProfileID: workerProfile?.id,
+            clientProfileID: clientProfile?.id || null,
+            workerProfileID: workerProfile?.id || null,
         })
-		
+ 
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
 
@@ -127,7 +127,7 @@ class UserService {
             throw AuthError.BadPasswordError()
         }
 
-		return await this.generateAndSaveTokens(loginUser, deviceName)
+        return await this.generateAndSaveTokens(loginUser, deviceName)
     }
 
     async logout({accessToken, refreshToken, deviceName}) {
@@ -155,7 +155,7 @@ class UserService {
 
             // if user exists generate new tokens
             if (checkUser) {
-				return await this.generateAndSaveTokens(checkUser, deviceName)
+                return await this.generateAndSaveTokens(checkUser, deviceName)
             }
             else {
                 throw AuthError.BadRequestError(['User not exists'])
@@ -167,53 +167,53 @@ class UserService {
         }
     }
 
-	async savePhotoId(id, photoID) {
-		const withPhoto = await UserModel.update({
-				photoID,
-			},
-			{
-				where: {
-					id
-				}
-			}
-		)
+    async savePhotoId(id, photoID) {
+        const withPhoto = await UserModel.update({
+                photoID,
+            },
+            {
+                where: {
+                    id
+                }
+            }
+        )
 
-		return withPhoto
-	}
+        return withPhoto
+    }
 
-	async withGoogle({profileData, deviceName, googleToken}) {
-		if (!profileData.email) {
-			throw AuthError.BadRequestError(['code was invalid'])
-		}
-		const candedat = await this.findUserByEmail(profileData.email)
+    async withGoogle({profileData, deviceName, googleToken}) {
+        if (!profileData.email) {
+            throw AuthError.BadRequestError(['code was invalid'])
+        }
+        const candedat = await this.findUserByEmail(profileData.email)
 
-		if (candedat) {
-			return await this.generateAndSaveTokens(candedat, deviceName)
-		}
-		else {
-			const uploadAndSavePicture = async (pictureUrl) => {
-				const picture = request(pictureUrl)
-				const savedPicture = await UserPictureService.savePicture(picture, pictureUrl)
-				return savedPicture.dataValues.id
-			}
+        if (candedat) {
+            return await this.generateAndSaveTokens(candedat, deviceName)
+        }
+        else {
+            const uploadAndSavePicture = async (pictureUrl) => {
+                const picture = request(pictureUrl)
+                const savedPicture = await UserPictureService.savePicture(picture, pictureUrl)
+                return savedPicture.dataValues.id
+            }
 
-			const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
+            const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
 
-			const newUser = await UserModel.create({
-				email: profileData.email,
-				firstName: profileData.given_name,
-				lastName: profileData.family_name,
-				profileType: 'client',
-				deviceName,
-				pictureID: savedPicture,
-				googleAccessToken: googleToken.access_token,
-				googleRefreshToken: googleToken.refresh_token,
-				googleIdToken: googleToken.id_token,
-			})
+            const newUser = await UserModel.create({
+                email: profileData.email,
+                firstName: profileData.given_name,
+                lastName: profileData.family_name,
+                profileType: 'client',
+                deviceName,
+                pictureID: savedPicture,
+                googleAccessToken: googleToken.access_token,
+                googleRefreshToken: googleToken.refresh_token,
+                googleIdToken: googleToken.id_token,
+            })
 
-			return await this.generateAndSaveTokens(newUser, deviceName)
-		}
-	}
+            return await this.generateAndSaveTokens(newUser, deviceName)
+        }
+    }
 }
 
 

@@ -12,7 +12,7 @@ router
 router
     .post(
         '/create',
-        ServiceController.createService
+        ServiceController.create
     )
 
 

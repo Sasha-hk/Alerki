@@ -1,13 +1,7 @@
 const request = require('supertest')
 const {extractCookies} = require('../utils/extractCookies')
+const {UserModel} = require('../db/models')
 const app = require('../app')
-const usersData = require('./data/userData')
-
-const rushUsers = usersData.rushUsers
-const badUsers = usersData.badUsers
-const sameEmail = usersData.sameEmail
-const userProfiles = usersData.userProfiles
-const weekDays = ['monday', 'tuesday', 'wednesday', 'rhursday', 'friday', 'saturday', 'sunday']
 
 
 // async function registerUser(body) {

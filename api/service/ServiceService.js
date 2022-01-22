@@ -26,7 +26,7 @@ class ServiceService {
         return results
     }
 
-    async createService(name) {
+    async create(name) {
         const candedat = await this.findOneByName(name)
 
         if (!candedat) {

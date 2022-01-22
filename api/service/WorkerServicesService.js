@@ -1,9 +1,9 @@
 const {WorkerServiceModel} = require('../db/models')
-const {isNumber} = require('../utils/validators/hardTypes')
+const {isNumber} = require('../utils/validators/checkTypes')
 
 
 class WorkerServiceService {
-    async findService(serviceID) {
+    async find({serviceID}) {
         // check if serviceID is number
         isNumber(Number(serviceID), 'serviceID')
 
@@ -17,7 +17,7 @@ class WorkerServiceService {
         return foundServices
     }
     
-    async createWorkerService({
+    async create({
         currency,
         price,
         location,
