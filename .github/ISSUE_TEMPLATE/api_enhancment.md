@@ -2,7 +2,7 @@
 name: Enhancement
 about: General task template
 title: '[API] '
-labels: 'api enhancment'
+labels: ["api", "enhancement"]
 assignees: ''
 
 ---
