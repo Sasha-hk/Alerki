@@ -4,7 +4,8 @@ const AuthError = require('../exception/AuthError')
 
 module.exports = async (req, res, next) => {
     try {
-        const userData = await UserService.findUserByID(req.accessToken.id)
+
+        const userData = await UserService.findUserByID({id: req.accessToken.id})
 
         if (userData.profileType != 'worker') {
             throw AuthError.NotWorkerError()

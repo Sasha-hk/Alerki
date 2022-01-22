@@ -3,10 +3,10 @@ const {extractCookies} = require('../utils/extractCookies')
 const app = require('../app')
 
 
-const worker = {
+let worker = {
     email: 'email@gmail.com', username: 'workk', profileType: 'worker', password: 'pass'
 }
-const client = {
+let client = {
     email: 'em@gmail.com', username: 'client', profileType: 'client', password: 'pas'
 }
 

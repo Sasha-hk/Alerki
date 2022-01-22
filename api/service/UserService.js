@@ -4,6 +4,7 @@ const UserPictureService = require('./UserPictureService')
 const ProfileService = require('./ProfileService')
 const AuthError = require('../exception/AuthError')
 const UserDto = require('../dto/UserDto')
+const checkType = require('../utils/validators/checkTypes')
 const bcrypt = require('bcrypt')
 const request = require('request')
 
@@ -30,6 +31,7 @@ class UserService {
     }
 
     async findUserByID({id}) {
+        checkType.hardNumber(Number(id), 'in findUserByID')
         const user = await UserModel.findOne({
             raw: true,
             where: {
