@@ -4,57 +4,54 @@ const authMiddleware = require('../middleware/AuthMiddleware')
 const router = new Router()
 
 
-// client appointment
 router
-    .get('/client/details/:slug',
+    .get(
+        '/details/:slug',
         authMiddleware,
-        AppointmentController.clientDetails
     )
-    .get('/client/list',
+    .get(
+        '/clietn/appointments',
         authMiddleware,
-        AppointmentController.clientList
     )
-    .get('/client/list/today',
+    .get(
+        '/client/list',
         authMiddleware,
-        AppointmentController.clientListToday
+    )
+    .get(
+        '/client/list/today',
+        authMiddleware,
+    )
+    .get(
+        '/worker/appointments',
+        authMiddleware,
+    )
+    .get(
+        '/worker/list',
+        authMiddleware,
+    )
+    .get(
+        '/worker/list/today',
+        authMiddleware,
     )
 
 router
-    .post('/client/make-appointment', 
+    .post(
+        '/make-appointment',
         authMiddleware,
-        AppointmentController.clientMakeAppointment
     )
 
 router
-    .patch('/client/cancel/:slug', 
+    .patch(
+        '/client/cancel/:slug',
         authMiddleware,
-        AppointmentController.clientCancel
     )
-
-
-// worker appointment
-router
-    .get('/worker/details/:slug', 
+    .patch(
+        '/worker/confirm/:slug',
         authMiddleware,
-        AppointmentController.workerDetails
     )
-    .get('/worker/list', 
+    .patch(
+        '/worker/cancel/:slug',
         authMiddleware,
-        AppointmentController.workerList
-    )
-    .get('/worker/list/today', 
-        authMiddleware,
-        AppointmentController.workerListToday
-    )
-
-router
-    .patch('/worker/cancel/:slug', 
-        authMiddleware,
-        AppointmentController.workerCancel
-    )
-    .patch('/worker/confirm/:slug', 
-        authMiddleware,
-        AppointmentController.workerConfirm
     )
 
 
