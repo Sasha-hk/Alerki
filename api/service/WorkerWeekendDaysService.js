@@ -13,24 +13,8 @@ class WorkerWeekendDaysService {
         return foundDays
     }
 
-    async create({
-        monday,
-        tuesday,
-        wednesday,
-        thursday,
-        friday,
-        saturday,
-        sunday,
-    }) {
-        const newWeekendDays = await WorkerWeekendDaysModel.create({
-            monday,
-            tuesday,
-            wednesday,
-            thursday,
-            friday,
-            saturday,
-            sunday,
-        })
+    async create() {
+        const newWeekendDays = await WorkerWeekendDaysModel.create()
 
         return newWeekendDays.dataValues
     }

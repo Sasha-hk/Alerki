@@ -32,7 +32,7 @@ class ProfileService {
     }
 
     async createWorkerProfile() {
-        const newWeekendDays = await WorkerWeekendDaysService.createWeekendDays({})
+        const newWeekendDays = await WorkerWeekendDaysService.create()
         const newWorkerProfile = await WorkerProfileModel.create({
             weekendDaysID: newWeekendDays.id
         })
