@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**Describe enhamcement**
+**Describe enhancement**
 A clear and concise description of what the enhancement.
 
 **Tasks:**
