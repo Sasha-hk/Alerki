@@ -2,7 +2,7 @@ const {WorkerScheduleModel} = require('../db/models')
 
 
 class WorkerScheduleService {
-    async checkExistsSchedule({
+    async checkExists({
         workerProfileID,
         date,
     }) {
@@ -17,7 +17,7 @@ class WorkerScheduleService {
         return foundSchedule
     }
 
-    async createSchedule({
+    async create({
         workerProfileID,
         workingTimeFrom,
         workingTimeTo,
@@ -35,7 +35,7 @@ class WorkerScheduleService {
         return newSchedule.dataValues
     }
     
-    async getSchedule({
+    async getInRange({
         dateRange,
         workerProfileID,
     }) {
@@ -52,7 +52,7 @@ class WorkerScheduleService {
         return foundSchedule    
     }
 
-    async updateSchedule({
+    async update({
         workerProfileID,
         workingTimeFrom,
         workingTimeTo,

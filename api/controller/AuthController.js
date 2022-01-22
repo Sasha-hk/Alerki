@@ -1,10 +1,7 @@
 const UserService = require('../service/UserService')
 const getDeviceName = require('../utils/deviceName')
 const GoogleOAuth = require('../oauth/GoogleOAuth')
-const AuthError = require('../exception/AuthError')
-const checkParameters = require('../utils/checkParameters')
-const atLeastOneExists = require('../utils/atLeastOneExists')
-const oneExists = require('../utils/oneExists')
+const checkParams = require('../utils/validators/checkParams')
 
 
 class AuthController {
@@ -20,13 +17,13 @@ class AuthController {
                 profileType,
             } = req.body
 
-            checkParameters([
+            checkParams.all([
                 email,
                 username,
                 password,
                 profileType
             ])
-
+            
             const userData = await UserService.register({
                 email,
                 username,
@@ -57,7 +54,7 @@ class AuthController {
                 password,
             } = req.body
 
-            checkParameters([
+            checkParams.all([
                 email,
                 password
             ])
@@ -84,7 +81,7 @@ class AuthController {
                 refreshToken
             } = req.cookies
 
-            atLeastOneExists({
+            checkParams.atLeastOne({
                 accessToken,
                 refreshToken
             })
@@ -106,7 +103,7 @@ class AuthController {
             const deviceName = getDeviceName(req)
             const {refreshToken} = req.cookies
 
-            oneExists({refreshToken})
+            checkParams.all({refreshToken})
 
             const userData = await UserService.refresh({refreshToken, deviceName})
             
@@ -145,7 +142,7 @@ class AuthController {
         try {
             const {code} = req.body
 
-            oneExists({code})
+            checkParams.all({code})
 
             const deviceName = getDeviceName(req)
             const googleToken = await GoogleOAuth.obtainToken(code)

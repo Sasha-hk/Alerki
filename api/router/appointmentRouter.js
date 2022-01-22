@@ -1,6 +1,6 @@
 const Router = require('express')
 const AppointmentController = require('../controller/AppointmentController')
-const authMiddleware = require('../middleware/AuthMiddleware')
+const authMiddleware = require('../middleware/authMiddleware')
 const router = new Router()
 
 
@@ -10,27 +10,27 @@ router
         authMiddleware,
     )
     .get(
-        '/clietn/appointments',
+        '/client/for',
         authMiddleware,
     )
     .get(
-        '/client/list',
+        '/client/from-now',
         authMiddleware,
     )
     .get(
-        '/client/list/today',
+        '/client/today',
         authMiddleware,
     )
     .get(
-        '/worker/appointments',
+        '/worker/for',
         authMiddleware,
     )
     .get(
-        '/worker/list',
+        '/worker/from-now',
         authMiddleware,
     )
     .get(
-        '/worker/list/today',
+        '/worker/today',
         authMiddleware,
     )
 
@@ -46,11 +46,11 @@ router
         authMiddleware,
     )
     .patch(
-        '/worker/confirm/:slug',
+        '/worker/cancel/:slug',
         authMiddleware,
     )
     .patch(
-        '/worker/cancel/:slug',
+        '/worker/confirm/:slug',
         authMiddleware,
     )
 

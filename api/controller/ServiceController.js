@@ -1,6 +1,6 @@
 const ServiceService = require('../service/ServiceService')
 const APIError = require('../exception/APIError')
-const checkParameters = require('../utils/checkParameters')
+const checkParams = require('../utils/validators/checkParams')
 
 
 class ServiceController {
@@ -8,7 +8,7 @@ class ServiceController {
         try {
             const {name, limit, page} = req.query
 
-            checkParameters({name})
+            checkParams.all({name})
 
             const foundServices = await ServiceService.findByName(name, limit, page)
 
@@ -27,7 +27,7 @@ class ServiceController {
         try {
             const {name} = req.body
 
-            checkParameters({name})
+            checkParams.all({name})
 
             const newService = await ServiceService.createService(name)
 
