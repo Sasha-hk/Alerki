@@ -1,7 +1,6 @@
 const ServiceService = require('../service/ServiceService')
 const APIError = require('../exception/APIError')
-const oneExists = require('../utils/oneExists')
-
+const checkParameters = require('../utils/checkParameters')
 
 
 class ServiceController {
@@ -9,7 +8,7 @@ class ServiceController {
         try {
             const {name, limit, page} = req.query
 
-            oneExists({name})
+            checkParameters({name})
 
             const foundServices = await ServiceService.findByName(name, limit, page)
 
@@ -24,11 +23,11 @@ class ServiceController {
         }
     }
 
-    async createService(req, res, next) {
+    async create(req, res, next) {
         try {
             const {name} = req.body
 
-            oneExists({name})
+            checkParameters({name})
 
             const newService = await ServiceService.createService(name)
 

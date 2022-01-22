@@ -2,7 +2,7 @@ const {WorkerWeekendDaysModel} = require('../db/models')
 
 
 class WorkerWeekendDaysService {
-    async findWeekendDaysByID({id}) {
+    async findByID({id}) {
         const foundDays = await WorkerWeekendDaysModel.findOne({
             raw: true,
             where: {
@@ -12,7 +12,8 @@ class WorkerWeekendDaysService {
 
         return foundDays
     }
-    async createWeekendDays({
+
+    async create({
         monday,
         tuesday,
         wednesday,
@@ -34,7 +35,7 @@ class WorkerWeekendDaysService {
         return newWeekendDays.dataValues
     }
 
-    async updateWeekendDays({
+    async update({
         id,
         monday,
         tuesday,
