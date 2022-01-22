@@ -29,7 +29,7 @@ class ServiceController {
 
             checkParams.all({name})
 
-            const newService = await ServiceService.createService(name)
+            const newService = await ServiceService.create(name)
 
             res.json(newService)
         }
