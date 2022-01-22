@@ -1,10 +1,13 @@
 const {ClientProfileModel, WorkerProfileModel} = require('../db/models')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+const checkTypes = require('../utils/validators/checkTypes')
+const checkParams = require('../utils/validators/checkParams')
 
 
 class ProfileService {
     async findWorkerByID({id}) {
-        const foundWorker = await WorkerProfileModel.findAll({
+        checkTypes.hardNumber(Number(id), 'workerID')
+        const foundWorker = await WorkerProfileModel.findOne({
             raw: true,
             where: {
                 id,
@@ -38,6 +41,31 @@ class ProfileService {
         })
 
         return newWorkerProfile.dataValues
+    }
+
+    async updateWorker({
+        id,
+        workingTimeFrom,
+        workingTimeTo,
+        shortBiography,
+        instagramProfile
+    }) {
+        const updatedWorker = await WorkerProfileModel.update(
+            {
+                workingTimeFrom,
+                workingTimeTo,
+                shortBiography,
+                instagramProfile,
+            }, 
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return updatedWorker[1][0]
     }
 }
 

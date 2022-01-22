@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            workerProfileID: {
+            workerID: {
                 type: DataTypes.INTEGER,
             },
             workingTimeFrom: {
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         WorkerScheduleModel.belongsTo(
             models.WorkerProfileModel,
             {
-                foreignKey: 'workerProfileID',
+                foreignKey: 'workerID',
                 onDelete: 'CASCADE',
                 allowNull: false,
             }

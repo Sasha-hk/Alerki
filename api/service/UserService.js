@@ -4,6 +4,7 @@ const UserPictureService = require('./UserPictureService')
 const ProfileService = require('./ProfileService')
 const AuthError = require('../exception/AuthError')
 const UserDto = require('../dto/UserDto')
+const checkType = require('../utils/validators/checkTypes')
 const bcrypt = require('bcrypt')
 const request = require('request')
 
@@ -29,7 +30,8 @@ class UserService {
         })
     }
 
-    async findUserByID(id) {
+    async findUserByID({id}) {
+        checkType.hardNumber(Number(id), 'in findUserByID')
         const user = await UserModel.findOne({
             raw: true,
             where: {
@@ -38,6 +40,17 @@ class UserService {
         })
 
         return user
+    }
+
+    async findByWorkerID({workerID}) {
+        const foundUser = await UserModel.findOne({
+            raw: true,
+            where: {
+                workerID,
+            },
+        })
+
+        return foundUser
     }
 
     async checkEmailExists(email) {
@@ -101,7 +114,7 @@ class UserService {
             password: hashedPassword,
             profileType,
             clientProfileID: clientProfile?.id || null,
-            workerProfileID: workerProfile?.id || null,
+            workerID: workerProfile?.id || null,
         })
  
         return await this.generateAndSaveTokens(newUser, deviceName)
@@ -213,6 +226,24 @@ class UserService {
 
             return await this.generateAndSaveTokens(newUser, deviceName)
         }
+    }
+
+    async becomeWorker({id}) {
+        const workerProfile = await ProfileService.createWorkerProfile()
+        const update = await UserModel.update(
+            {
+                profileType: 'worker',
+                workerID: workerProfile.id,
+            },
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return update[1][0]
     }
 }
 

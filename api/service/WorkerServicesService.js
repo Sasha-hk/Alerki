@@ -1,22 +1,8 @@
-const {WorkerServiceModel} = require('../db/models')
+const {WorkerServiceModel, WorkerProfileModel} = require('../db/models')
 const {isNumber} = require('../utils/validators/checkTypes')
 
 
 class WorkerServiceService {
-    async find({serviceID}) {
-        // check if serviceID is number
-        isNumber(Number(serviceID), 'serviceID')
-
-        const foundServices = await WorkerServiceModel.findAll({
-            raw: true,
-            where: {
-                serviceID,
-            },
-        })
-
-        return foundServices
-    }
-    
     async create({
         currency,
         price,
@@ -35,6 +21,22 @@ class WorkerServiceService {
         })
 
         return newWorkerService.dataValues
+    }
+
+    async find({serviceID, limit, page}) {
+        // check if serviceID is number
+        isNumber(Number(serviceID), 'serviceID')
+
+        const foundServices = await WorkerServiceModel.findAll({
+            raw: true,
+            where: {
+                serviceID,
+            },
+            offset: page ? page * limit : 0,
+            limit: limit || 24,
+        })
+
+        return foundServices
     }
 }
 

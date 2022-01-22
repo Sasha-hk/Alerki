@@ -19,6 +19,14 @@ module.exports = (sequelize, DataTypes) => {
             },
             duration: {
                 type: DataTypes.INTEGER,
+            },
+            workerID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            serviceID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
             }
         },
         {
@@ -32,8 +40,6 @@ module.exports = (sequelize, DataTypes) => {
             {
                 foreignKey: 'workerID',
                 onDelete: 'CASCADE',
-                allowNull: true,
-                defaultValue: null,
             }
         )
 
@@ -42,8 +48,6 @@ module.exports = (sequelize, DataTypes) => {
             {
                 foreignKey: 'serviceID',
                 onDelete: 'CASCADE',
-                allowNull: true,
-                defaultValue: null,
             }
         )
     }

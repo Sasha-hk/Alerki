@@ -13,7 +13,7 @@ module.exports = class APIError extends Error {
         return new APIError(400, 'Bad request', errors)
     }
 
-    static NotFoundError() {
-        return new APIError(404, 'Resource not found', ['not found'])
+    static NotFoundError(errors = []) {
+        return new APIError(404, 'Not found', errors)
     }
 }
