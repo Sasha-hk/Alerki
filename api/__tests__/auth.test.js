@@ -12,6 +12,8 @@ let client = {
 
 let services = null
 
+const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+
 
 describe('Test authenticatin', () => {
     describe('registration', () => {
@@ -147,6 +149,7 @@ describe('Test services', () => {
 })
 
 let workerService = null
+let workerSchedule = null
 
 describe('Test profile', () => {
     describe('create worker service', () => {
@@ -239,7 +242,6 @@ describe('Test profile', () => {
                     }
                 })
             
-            console.log(r.body)
             expect(r.statusCode).toBe(200)
         })
 
@@ -273,8 +275,8 @@ describe('Test profile', () => {
                     worker_id: workerService[0].id,
                 })
             
-            console.log(r.body)
             expect(r.statusCode).toBe(200)
+            workerSchedule = r.body
         }) 
 
         test('without query', async () => {
@@ -326,4 +328,148 @@ describe('Test profile', () => {
             expect(r.statusCode).toBe(400)
         })
     })
+})
+
+let newAppointment = null
+let appointmentTime = null
+
+describe('Test appointments', () => {
+    describe('create', () => {
+        test('with correct parameters', async () => {
+            let timeCandedat = new Date()
+            timeCandedat.setHours(0)
+            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingTimeFrom)
+            
+            let weekendDaysMaxCound = 0 
+            for (const w of Object.keys(workerSchedule.weekendDays)) {
+                if (weekendDaysMaxCound == 7) {
+                    throw Error('All days is weekend')
+                }
+                if (workerSchedule.weekendDays[w]) {
+                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
+                        timeCandedat.setDate(timeCandedat.getDate() + 1)
+                    }
+                    weekendDaysMaxCound += 1
+                }
+                else {
+                    if (days.indexOf(w) == timeCandedat.getDay()) {
+                        break
+                    }
+                }
+            }
+
+            appointmentTime = timeCandedat
+            
+            const r = await request(app)
+                .post('/appointment/make-appointment')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+                .send({
+                    workerID: workerService[0].id,
+                    workerServiceID: workerService[0].service.id,
+                    appointmentStartTime: timeCandedat,
+                })
+            
+            expect(r.statusCode).toBe(200)
+            newAppointment = r.body
+        })
+
+        test('with not working time', async () => {
+            let timeCandedat = new Date()
+            timeCandedat.setDate(timeCandedat.getDate() + 4)
+            timeCandedat.setHours(0)
+            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingTimeFrom)
+            
+            let weekendDaysMaxCound = 0 
+            for (const w of Object.keys(workerSchedule.weekendDays)) {
+                if (weekendDaysMaxCound == 7) {
+                    throw Error('All days is weekend')
+                }
+                if (workerSchedule.weekendDays[w]) {
+                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
+                        timeCandedat.setDate(timeCandedat.getDate() + 1)
+                    }
+                    weekendDaysMaxCound += 1
+                }
+                else {
+                    if (days.indexOf(w) == timeCandedat.getDay()) {
+                        break
+                    }
+                }
+            }
+
+            timeCandedat.setHours(0)
+            
+            const r = await request(app)
+                .post('/appointment/make-appointment')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+                .send({
+                    workerID: workerService[0].id,
+                    workerServiceID: workerService[0].service.id,
+                    appointmentStartTime: timeCandedat,
+                })
+            
+            expect(r.statusCode).toBe(400)
+        })
+        
+        test('with weekend date', async () => {
+            let timeCandedat = new Date()
+            timeCandedat.getDate(timeCandedat.getDate() + 5)
+            timeCandedat.setHours(0)
+            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingTimeFrom)
+            
+            // generate appointemnt time to equeal worker weekend day
+            for (const w of Object.keys(workerSchedule.weekendDays)) {
+                if (workerSchedule.weekendDays[w]) {
+                    if (timeCandedat.getDay() == days.indexOf(w)) {
+                        break
+                    }
+                    else {
+                        timeCandedat.setDate(timeCandedat.getDate() + days.indexOf(w))
+                        break
+                    }
+                }
+            }
+            
+            const r = await request(app)
+                .post('/appointment/make-appointment')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+                .send({
+                    workerID: workerService[0].id,
+                    workerServiceID: workerService[0].service.id,
+                    appointmentStartTime: timeCandedat,
+                })
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+    describe('details', () => {
+        test('with not exists slug', async () => {
+            const r = await request(app)
+                .get('/appointment/details/asdeKK')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+
+            expect(r.statusCode).toBe(404)
+        })
+
+        test('with not exists slug', async () => {
+            const r = await request(app)
+                .get('/appointment/details/' + newAppointment.slug)
+                .set('Cookie', ['accessToken=' + client.accessToken])
+
+            expect(r.statusCode).toBe(200)
+            console.log(r.body)
+        })
+    })
+
+    // describe('for', () => {
+    //     test('with correct time', async () => {
+    //         const r = await request(app)
+    //             .get('/appointment/client/for')
+    //             .query({for_time: appointmentTime})
+    //             .set('Cookie', ['accessToken=' + client.accessToken])
+        
+    //         expect(r.statusCode).toBe(200)
+    //         console.log(r.body)
+    //     })
+    // })
 })

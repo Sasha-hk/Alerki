@@ -38,6 +38,17 @@ class WorkerServiceService {
 
         return foundServices
     }
+
+    async findByID({id}) {
+        const workerService = await WorkerServiceModel.findOne({
+            raw: true,
+            where: {
+                id,
+            },
+        })
+
+        return workerService
+    }
 }
 
 

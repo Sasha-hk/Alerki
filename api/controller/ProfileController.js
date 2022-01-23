@@ -133,7 +133,6 @@ class ProfileController {
             res.json(updatedWorker)
         }
         catch (e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors) 
         }
     }
@@ -160,14 +159,12 @@ class ProfileController {
             res.json(updateWeekendDays)
         }
         catch (e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
 
     async createWorkerService(req, res, next) {
         try {
-            console.log('=========')
             const {
                 name,
                 currency,
@@ -191,7 +188,6 @@ class ProfileController {
             res.json(newWorkerService)
         }
         catch (e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors) 
         }
     }
@@ -199,7 +195,7 @@ class ProfileController {
     async becomeWorker(req, res, next) {
         try {
             const id = req.accessToken.id
-            
+ 
             const userData = await UserService.findUserByID({id})
             const candedat = await ProfileService.findWorkerByID({id: userData.workerID})
             if (!candedat) {

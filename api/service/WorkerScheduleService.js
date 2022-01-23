@@ -34,6 +34,17 @@ class WorkerScheduleService {
 
         return newSchedule.dataValues
     }
+
+    async findByWorkerID({workerID}) {
+        const foundSchedule = await WorkerScheduleModel.findOne({
+            raw: true,
+            where: {
+                workerID,
+            }
+        })
+
+        return foundSchedule
+    }
     
     async getInRange({
         workerID,
