@@ -113,7 +113,7 @@ class UserService {
             lastName,
             password: hashedPassword,
             profileType,
-            clientProfileID: clientProfile?.id || null,
+            clientID: clientProfile?.id || null,
             workerID: workerProfile?.id || null,
         })
  

@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
             },
 
-            clientProfileID: {
+            clientID: {
                 type: DataTypes.INTEGER,
             },
             workerID: {
@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
         })
 
         UserModel.belongsTo(models.ClientProfileModel, {
-            foreignKey: 'clientProfileID',
+            foreignKey: 'clientID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,

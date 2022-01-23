@@ -12,8 +12,8 @@ A clear and concise description of what the enhancement.
 
 **Tasks:**
 
-1. make test below
-2. ...
+1. [ ] make test below
+2. [ ] ...
 
 **Test endpoints:**
 
