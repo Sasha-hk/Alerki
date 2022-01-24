@@ -151,6 +151,7 @@ describe('Test services', () => {
 let workerService = null
 let workerSchedule = null
 let weekendDay = null
+let workerScheduleDate = null
 
 describe('Test profile', () => {
     describe('create worker service', () => {
@@ -266,13 +267,76 @@ describe('Test profile', () => {
         })
     })
 
+    describe('set schedule', () => {
+        test('set weekend day => 200', async () => {
+            let scheduleDate = new Date()
+            scheduleDate.setDate(scheduleDate.getDate() + 15)
+
+            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
+                scheduleDate.setDate(scheduleDate.getDate() + 2)
+            }
+
+            workerScheduleDate = scheduleDate
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    date: scheduleDate,
+                    weekendDay: true
+                })
+            
+            expect(r.statusCode).toBe(200)
+            weekendDays = r.body
+        })
+
+        test('set working time => 200', async () => {
+            let scheduleDate = new Date()
+            scheduleDate.setDate(scheduleDate.getDate() + 8)
+
+            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
+                scheduleDate.setDate(scheduleDate.getDate() + 2)
+            }
+
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    workingStartTime: 6 * 60 * 60 * 1000,
+                    workingEndTime: 19 * 60 * 60 * 1000, 
+                    date: scheduleDate,
+                })
+            
+            expect(r.statusCode).toBe(200)
+            weekendDays = r.body
+        })
+
+        test('wiohout body date => 400', async () => {
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+            
+            expect(r.statusCode).toBe(400)
+        })
+
+        test('wiohout body parameters=> 400', async () => {
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    date: new Date(),
+                })
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+
     describe('get schedule', () => {
         test('with correct parameters => 200', async () => {
             const r = await request(app)
                 .get('/profile/get-schedule')
                 .query({
-                    year: 2004,
-                    month: 4,
+                    year: workerScheduleDate.getFullYear(),
+                    month: workerScheduleDate.getMonth(),
                     worker_id: workerService[0].id,
                 })
             
@@ -312,68 +376,6 @@ describe('Test profile', () => {
         })
     })
 
-    describe('set schedule', () => {
-        test('set weekend day => 200', async () => {
-            let scheduleDate = new Date()
-            scheduleDate.setDate(scheduleDate.getDate() + 7)
-
-            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
-                scheduleDate.setDate(scheduleDate.getDate() + 2)
-            }
-
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    date: scheduleDate,
-                    weekendDay: true
-                })
-            
-            expect(r.statusCode).toBe(200)
-            weekendDays = r.body
-        })
-
-        test('set working time => 200', async () => {
-            let scheduleDate = new Date()
-            scheduleDate.setDate(scheduleDate.getDate() + 7)
-
-            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
-                scheduleDate.setDate(scheduleDate.getDate() + 2)
-            }
-
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    workingStartTime: 6 * 60 * 60 * 1000,
-                    workingEndTime: 19 * 60 * 60 * 1000, 
-                    date: scheduleDate,
-                })
-            
-            expect(r.statusCode).toBe(200)
-            weekendDays = r.body
-        })
-
-        test('wiohout body date => 400', async () => {
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-            
-            expect(r.statusCode).toBe(400)
-        })
-
-        test('wiohout body parameters=> 400', async () => {
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    date: new Date(),
-                })
-            
-            expect(r.statusCode).toBe(400)
-        })
-    })
-
     describe('become worker', () => {
         test('with correct parameters => 200', async () => {
             const r = await request(app)
@@ -398,145 +400,161 @@ let appointmentTime = null
 
 describe('Test appointments', () => {
     describe('create', () => {
-        test('with correct parameters => 200', async () => {
-            let timeCandedat = new Date()
-            timeCandedat.setHours(0)
-            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
+        // test('with correct parameters => 200', async () => {
+        //     let timeCandedat = new Date()
+        //     timeCandedat.setHours(0)
+        //     timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
             
-            let weekendDaysMaxCound = 0 
-            for (const w of Object.keys(workerSchedule.weekendDays)) {
-                if (weekendDaysMaxCound == 7) {
-                    throw Error('All days is weekend')
-                }
-                if (workerSchedule.weekendDays[w]) {
-                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
-                        timeCandedat.setDate(timeCandedat.getDate() + 1)
-                    }
-                    weekendDaysMaxCound += 1
-                }
-                else {
-                    if (days.indexOf(w) == timeCandedat.getDay()) {
-                        break
-                    }
-                }
-            }
+        //     let weekendDaysMaxCound = 0 
+        //     for (const w of Object.keys(workerSchedule.weekendDays)) {
+        //         if (weekendDaysMaxCound == 7) {
+        //             throw Error('All days is weekend')
+        //         }
+        //         if (workerSchedule.weekendDays[w]) {
+        //             if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
+        //                 timeCandedat.setDate(timeCandedat.getDate() + 1)
+        //             }
+        //             weekendDaysMaxCound += 1
+        //         }
+        //         else {
+        //             if (days.indexOf(w) == timeCandedat.getDay()) {
+        //                 break
+        //             }
+        //         }
+        //     }
 
-            appointmentTime = timeCandedat
+        //     appointmentTime = timeCandedat
             
-            const r = await request(app)
-                .post('/appointment/make-appointment')
-                .set('Cookie', ['accessToken=' + client.accessToken])
-                .send({
-                    workerID: workerService[0].id,
-                    workerServiceID: workerService[0].service.id,
-                    appointmentStartTime: timeCandedat,
-                })
+        //     const r = await request(app)
+        //         .post('/appointment/make-appointment')
+        //         .set('Cookie', ['accessToken=' + client.accessToken])
+        //         .send({
+        //             workerID: workerService[0].id,
+        //             workerServiceID: workerService[0].service.id,
+        //             appointmentStartTime: timeCandedat,
+        //         })
             
-            expect(r.statusCode).toBe(200)
-            newAppointment = r.body
-        })
+        //     expect(r.statusCode).toBe(200)
+        //     newAppointment = r.body
+        // })
 
-        test('with not working time => 400', async () => {
-            let timeCandedat = new Date()
-            timeCandedat.setDate(timeCandedat.getDate() + 4)
-            timeCandedat.setHours(0)
-            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
+        // test('with not working time => 400', async () => {
+        //     let timeCandedat = new Date()
+        //     timeCandedat.setDate(timeCandedat.getDate() + 4)
+        //     timeCandedat.setHours(0)
+        //     timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
             
-            let weekendDaysMaxCound = 0 
-            for (const w of Object.keys(workerSchedule.weekendDays)) {
-                if (weekendDaysMaxCound == 7) {
-                    throw Error('All days is weekend')
-                }
-                if (workerSchedule.weekendDays[w]) {
-                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
-                        timeCandedat.setDate(timeCandedat.getDate() + 1)
-                    }
-                    weekendDaysMaxCound += 1
-                }
-                else {
-                    if (days.indexOf(w) == timeCandedat.getDay()) {
-                        break
-                    }
-                }
-            }
+        //     let weekendDaysMaxCound = 0 
+        //     for (const w of Object.keys(workerSchedule.weekendDays)) {
+        //         if (weekendDaysMaxCound == 7) {
+        //             throw Error('All days is weekend')
+        //         }
+        //         if (workerSchedule.weekendDays[w]) {
+        //             if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
+        //                 timeCandedat.setDate(timeCandedat.getDate() + 1)
+        //             }
+        //             weekendDaysMaxCound += 1
+        //         }
+        //         else {
+        //             if (days.indexOf(w) == timeCandedat.getDay()) {
+        //                 break
+        //             }
+        //         }
+        //     }
 
-            timeCandedat.setHours(0)
+        //     timeCandedat.setHours(0)
 
             
-            const r = await request(app)
-                .post('/appointment/make-appointment')
-                .set('Cookie', ['accessToken=' + client.accessToken])
-                .send({
-                    workerID: workerService[0].id,
-                    workerServiceID: workerService[0].service.id,
-                    appointmentStartTime: timeCandedat,
-                })
+        //     const r = await request(app)
+        //         .post('/appointment/make-appointment')
+        //         .set('Cookie', ['accessToken=' + client.accessToken])
+        //         .send({
+        //             workerID: workerService[0].id,
+        //             workerServiceID: workerService[0].service.id,
+        //             appointmentStartTime: timeCandedat,
+        //         })
             
-            expect(r.statusCode).toBe(400)
-        })
+        //     expect(r.statusCode).toBe(400)
+        // })
         
-        test('with weekend date => 400', async () => {
-            let timeCandedat = new Date()
-            timeCandedat.getDate(timeCandedat.getDate() + 5)
-            timeCandedat.setHours(0)
-            timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
+        // test('with weekend date => 400', async () => {
+        //     let timeCandedat = new Date()
+        //     timeCandedat.getDate(timeCandedat.getDate() + 5)
+        //     timeCandedat.setHours(0)
+        //     timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
             
-            // generate appointemnt time to equeal worker weekend day
-            for (const w of Object.keys(workerSchedule.weekendDays)) {
-                if (workerSchedule.weekendDays[w]) {
-                    if (timeCandedat.getDay() == days.indexOf(w)) {
-                        break
-                    }
-                    else {
-                        timeCandedat.setDate(timeCandedat.getDate() + (days.indexOf(w) - timeCandedat.getDay()))
-                        break
-                    }
-                }
-            }
+        //     // generate appointemnt time to equeal worker weekend day
+        //     for (const w of Object.keys(workerSchedule.weekendDays)) {
+        //         if (workerSchedule.weekendDays[w]) {
+        //             if (timeCandedat.getDay() == days.indexOf(w)) {
+        //                 break
+        //             }
+        //             else {
+        //                 timeCandedat.setDate(timeCandedat.getDate() + (days.indexOf(w) - timeCandedat.getDay()))
+        //                 break
+        //             }
+        //         }
+        //     }
             
+        //     const r = await request(app)
+        //         .post('/appointment/make-appointment')
+        //         .set('Cookie', ['accessToken=' + client.accessToken])
+        //         .send({
+        //             workerID: workerService[0].id,
+        //             workerServiceID: workerService[0].service.id,
+        //             appointmentStartTime: timeCandedat,
+        //         })
+            
+        //     expect(r.statusCode).toBe(400)
+        // })
+        
+        // test('with busy appointment time => 400', async () => {
+        //     const r = await request(app)
+        //         .post('/appointment/make-appointment')
+        //         .set('Cookie', ['accessToken=' + client.accessToken])
+        //         .send({
+        //             workerID: newAppointment.workerID,
+        //             workerServiceID: newAppointment.workerServiceID,
+        //             appointmentStartTime: appointmentTime,
+        //         })
+            
+        //     expect(r.statusCode).toBe(400)
+        // })
+
+        test('with schedule busy appointment time => 400', async () => {
+            let time = new Date(workerScheduleDate)
+            time.setHours(12)
+
             const r = await request(app)
                 .post('/appointment/make-appointment')
                 .set('Cookie', ['accessToken=' + client.accessToken])
-                .send({
+                .send({ 
                     workerID: workerService[0].id,
                     workerServiceID: workerService[0].service.id,
-                    appointmentStartTime: timeCandedat,
-                })
-            
-            expect(r.statusCode).toBe(400)
-        })
-        
-        test('with busy appointment time => 400', async () => {
-            const r = await request(app)
-                .post('/appointment/make-appointment')
-                .set('Cookie', ['accessToken=' + client.accessToken])
-                .send({
-                    workerID: newAppointment.workerID,
-                    workerServiceID: newAppointment.workerServiceID,
-                    appointmentStartTime: appointmentTime,
+                    appointmentStartTime: time,
                 })
             
             expect(r.statusCode).toBe(400)
         })
     })
 
-    describe('details', () => {
-        test('with not exists slug => 404', async () => {
-            const r = await request(app)
-                .get('/appointment/details/asdeKK')
-                .set('Cookie', ['accessToken=' + client.accessToken])
+    // describe('details', () => {
+    //     test('without slug => 404', async () => {
+    //         const r = await request(app)
+    //             .get('/appointment/details/asdeKK')
+    //             .set('Cookie', ['accessToken=' + client.accessToken])
 
-            expect(r.statusCode).toBe(404)
-        })
+    //         expect(r.statusCode).toBe(404)
+    //     })
 
-        test('with not exists slug => 200', async () => {
-            const r = await request(app)
-                .get('/appointment/details/' + newAppointment.slug)
-                .set('Cookie', ['accessToken=' + client.accessToken])
+    //     test('with not exists slug => 200', async () => {
+    //         const r = await request(app)
+    //             .get('/appointment/details/' + newAppointment.slug)
+    //             .set('Cookie', ['accessToken=' + client.accessToken])
 
-            expect(r.statusCode).toBe(200)
-        })
-    })
+    //         expect(r.statusCode).toBe(200)
+    //     })
+    // })
 
     // describe('for', () => {
     //     test('with correct time', async () => {

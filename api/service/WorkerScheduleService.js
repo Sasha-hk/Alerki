@@ -1,4 +1,4 @@
-const {WorkerScheduleModel} = require('../db/models')
+const {WorkerScheduleModel, Sequelize} = require('../db/models')
 
 
 class WorkerScheduleService {
@@ -45,6 +45,19 @@ class WorkerScheduleService {
 
         return foundSchedule
     }
+
+
+    async findByWorkerIDAndDate({workerID, date}) {
+        const foundSchedule = await WorkerScheduleModel.findOne({
+            raw: true,
+            where: {
+                workerID,
+                date,
+            }
+        })
+
+        return foundSchedule
+    }
     
     async getInRange({
         workerID,
@@ -55,7 +68,7 @@ class WorkerScheduleService {
             where: {
                 workerID,
                 date: {
-                    between: dateRange,
+                    [Sequelize.Op.between]: dateRange,
                 }
             }
         })

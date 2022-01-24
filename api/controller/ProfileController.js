@@ -76,7 +76,7 @@ class ProfileController {
             const weekendDays = await WorkerWeekendDaysService.findByID({id: workerProfile.weekendDaysID})
             const scheduleDays = await WorkerScheduleService.getInRange({
                 workerID: workerProfile.id,
-                range: [from, to],
+                dateRange: [from, to],
             })
 
             const schedule = {
@@ -249,7 +249,6 @@ class ProfileController {
             res.json(schedule)
         }
         catch (e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }

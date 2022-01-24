@@ -46,7 +46,6 @@ class AppointmentController {
             // res.json(foundAppointments)
         }
         catch (e) {
-            console.log(e)
             res.status(e.status || 500).json(e.errrors)
         }
     }
@@ -104,6 +103,7 @@ class AppointmentController {
                 workerServiceID,
                 appointmentStartTime,
             } = req.body
+            console.log(appointmentStartTime)
             
             checkParams.all({
                 workerID,
@@ -126,6 +126,7 @@ class AppointmentController {
             res.json(newAppointment)
         }
         catch (e) {
+            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
