@@ -126,8 +126,7 @@ class AppointmentController {
             res.json(newAppointment)
         }
         catch (e) {
-            console.log(e)
-            res.status(e.status || 500).json(e.errrors)
+            res.status(e.status || 500).json(e.errors)
         }
     }
 

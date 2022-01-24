@@ -19,15 +19,15 @@ class WorkerScheduleService {
 
     async create({
         workerID,
-        workingTimeFrom,
-        workingTimeTo,
+        workingStartTime,
+        workingEndTime,
         weekendDay,
         date,
     }) {
         const newSchedule = await WorkerScheduleModel.create({
             workerID,
-            workingTimeFrom,
-            workingTimeTo,
+            workingStartTime,
+            workingEndTime,
             weekendDay,
             date,
         })
@@ -63,23 +63,23 @@ class WorkerScheduleService {
         return foundSchedule    
     }
 
-    async update({
+    async updateOrCreate({
         workerID,
-        workingTimeFrom,
-        workingTimeTo,
+        workingStartTime,
+        workingEndTime,
         weekendDay,
         date,
     }) {
-        const checkExistsSchedule = await this.checkExistsSchedule({
+        const checkExistsSchedule = await this.checkExists({
             workerID,
             date
         })
 
         if (!checkExistsSchedule) {
-            const newSchedule = await this.createSchedule({
+            const newSchedule = await this.create({
                 workerID,
-                workingTimeFrom,
-                workingTimeTo,
+                workingStartTime,
+                workingEndTime,
                 weekendDay,
                 date,
             })
@@ -89,8 +89,8 @@ class WorkerScheduleService {
         else {
             const updatedSchedule = await WorkerScheduleModel.update(
                 {
-                    workingTimeFrom,
-                    workingTimeTo,
+                    workingStartTime,
+                    workingEndTime,
                     weekendDay,
                 },
                 {

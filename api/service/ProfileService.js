@@ -45,15 +45,15 @@ class ProfileService {
 
     async updateWorker({
         id,
-        workingTimeFrom,
-        workingTimeTo,
+        workingStartTime,
+        workingEndTime,
         shortBiography,
         instagramProfile
     }) {
         const updatedWorker = await WorkerProfileModel.update(
             {
-                workingTimeFrom,
-                workingTimeTo,
+                workingStartTime,
+                workingEndTime,
                 shortBiography,
                 instagramProfile,
             }, 

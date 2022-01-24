@@ -10,10 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             workerID: {
                 type: DataTypes.INTEGER,
             },
-            workingTimeFrom: {
+            workingStartTime: {
                 type: DataTypes.INTEGER,
             },
-            workingTimeTo: {
+            workingEndTime: {
                 type: DataTypes.INTEGER,
             },
             weekendDay: {

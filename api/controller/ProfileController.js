@@ -6,6 +6,7 @@ const ProfileService = require('../service/ProfileService')
 const UserService = require('../service/UserService')
 const ServiceService = require('../service/ServiceService')
 const APIError = require('../exception/APIError')
+const ProfileError = require('../exception/ProfileError')
 const checkParams = require('../utils/validators/checkParams')
 const GetWorkersDto = require('../dto/GetWorkersDto')
 
@@ -80,8 +81,8 @@ class ProfileController {
 
             const schedule = {
                 weekendDays,
-                workingTimeFrom: workerProfile.workingTimeFrom,
-                workingTimeTo: workerProfile.workingTimeTo,
+                workingStartTime: workerProfile.workingStartTime,
+                workingEndTime: workerProfile.workingEndTime,
                 schedule: scheduleDays,
             }
 
@@ -108,15 +109,15 @@ class ProfileController {
     async updateWorker(req, res, next) {
         try {
             const {
-                workingTimeFrom,
-                workingTimeTo,
+                workingStartTime,
+                workingEndTime,
                 shortBiography,
                 instagramProfile,
             } = req.body
             
             checkParams.atLeastOne({
-                workingTimeFrom,
-                workingTimeTo,
+                workingStartTime,
+                workingEndTime,
                 shortBiography,
                 instagramProfile,
             })
@@ -124,8 +125,8 @@ class ProfileController {
             
             const updatedWorker = await ProfileService.updateWorker({
                 id: req.user.workerID,
-                workingTimeFrom,
-                workingTimeTo,
+                workingStartTime,
+                workingEndTime,
                 shortBiography,
                 instagramProfile,
             })
@@ -208,6 +209,47 @@ class ProfileController {
             }
         }
         catch (e) {
+            res.status(e.status || 500).json(e.errors)
+        }
+    }
+
+    async setSchedule(req, res, next) {
+        try {
+            const {
+                workingStartTime,
+                workingEndTime,
+                weekendDay,
+                date
+            } = req.body
+
+            checkParams.all({
+                date,
+            })
+
+            checkParams.atLeastOne({
+                workingStartTime,
+                workingEndTime,
+                weekendDay,
+            })
+
+            if (workingStartTime || workingEndTime) {
+                if (!workingStartTime || !workingEndTime) {
+                    throw ProfileError.RequiredAllTimeError()
+                }
+            }
+
+            const schedule = await WorkerScheduleService.updateOrCreate({
+                workerID: req.accessToken.workerID,
+                workingStartTime,
+                workingEndTime,
+                weekendDay,
+                date,
+            })
+
+            res.json(schedule)
+        }
+        catch (e) {
+            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }

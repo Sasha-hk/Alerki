@@ -17,10 +17,10 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true,
             },
-            workingTimeFrom: {
+            workingStartTime: {
                 type: DataTypes.INTEGER,
             },
-            workingTimeTo: {
+            workingEndTime: {
                 type: DataTypes.INTEGER,
             },
             weekendDaysID: {

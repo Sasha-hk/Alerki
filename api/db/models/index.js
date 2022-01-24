@@ -14,7 +14,10 @@ let sequelize
 if (config.use_env_variable) {
     sequelize = new Sequelize(
         process.env[config.use_env_variable], 
-        {...config, logging:false}
+        {
+            ...config, 
+            logging: false,
+        }
     )
 }
 else {
@@ -22,7 +25,10 @@ else {
         config.database, 
         config.username, 
         config.password, 
-        {...config, logging:false}
+        {
+            ...config, 
+            logging:false,
+        }
     )
 }
 
