@@ -521,7 +521,7 @@ describe('Test appointments', () => {
     })
 
     describe('details', () => {
-        test('with not exists slug', async () => {
+        test('with not exists slug => 404', async () => {
             const r = await request(app)
                 .get('/appointment/details/asdeKK')
                 .set('Cookie', ['accessToken=' + client.accessToken])
@@ -529,7 +529,7 @@ describe('Test appointments', () => {
             expect(r.statusCode).toBe(404)
         })
 
-        test('with not exists slug', async () => {
+        test('with not exists slug => 200', async () => {
             const r = await request(app)
                 .get('/appointment/details/' + newAppointment.slug)
                 .set('Cookie', ['accessToken=' + client.accessToken])
