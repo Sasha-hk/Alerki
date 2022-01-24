@@ -520,23 +520,23 @@ describe('Test appointments', () => {
         })
     })
 
-    // describe('details', () => {
-    //     test('with not exists slug', async () => {
-    //         const r = await request(app)
-    //             .get('/appointment/details/asdeKK')
-    //             .set('Cookie', ['accessToken=' + client.accessToken])
+    describe('details', () => {
+        test('with not exists slug', async () => {
+            const r = await request(app)
+                .get('/appointment/details/asdeKK')
+                .set('Cookie', ['accessToken=' + client.accessToken])
 
-    //         expect(r.statusCode).toBe(404)
-    //     })
+            expect(r.statusCode).toBe(404)
+        })
 
-    //     test('with not exists slug', async () => {
-    //         const r = await request(app)
-    //             .get('/appointment/details/' + newAppointment.slug)
-    //             .set('Cookie', ['accessToken=' + client.accessToken])
+        test('with not exists slug', async () => {
+            const r = await request(app)
+                .get('/appointment/details/' + newAppointment.slug)
+                .set('Cookie', ['accessToken=' + client.accessToken])
 
-    //         expect(r.statusCode).toBe(200)
-    //     })
-    // })
+            expect(r.statusCode).toBe(200)
+        })
+    })
 
     // describe('for', () => {
     //     test('with correct time', async () => {
