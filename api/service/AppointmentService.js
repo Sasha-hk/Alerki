@@ -1,4 +1,4 @@
-const {AppointmentModel} = require('../db/models')
+const {AppointmentModel, Sequelize} = require('../db/models')
 const WorkerServicesService = require('./WorkerServicesService')
 const WorkerScheduleService = require('./WorkerScheduleService')
 const ProfileService = require('./ProfileService')
@@ -11,8 +11,8 @@ const weekDays = ['monday', 'thuesday', 'wednesday', 'thursday', 'friday', 'satu
 
 class AppointmentService { 
     async checkEntryAppointments({
-        startTime, 
-        endTime, 
+        startTime,
+        endTime,
         workerID,
     }) {
         const byStartTime = await AppointmentModel.findAll({
@@ -20,21 +20,21 @@ class AppointmentService {
             where: {
                 workerID,
                 appointmentStartTime: {
-                    between: [startTime, endTime],
+                    [Sequelize.Op.between]: [startTime, endTime],
                 },
             }
         })
-
+        
         const byEndTime = await AppointmentModel.findAll({
             raw: true,
             where: {
                 workerID,
                 appointmentEndTime: {
-                    between: [startTime, endTime]
-                }
+                    [Sequelize.Op.between]: [startTime, endTime]
+                },
             }
         })
-
+        
         if (byStartTime.length != 0 || byEndTime.length != 0) {
             throw AppointmentError.BusyTimeError()
         }
@@ -65,7 +65,7 @@ class AppointmentService {
         }
     }
 
-    async checkWorkingTime({
+    checkWorkingTime({
         appointmentStartTime,
         appointmentEndTime,
         worker,
@@ -83,8 +83,8 @@ class AppointmentService {
         toMilliseconds += appointmentEndTime.getMilliseconds()
 
         if (
-            (worker.workingStartTime < toMilliseconds || worker.workingEndTime < toMilliseconds) &&
-            (worker.workingEndTime > toMilliseconds || worker.workingEndTime > toMilliseconds)
+            worker.workingStartTime > fromMilliseconds || worker.workingStartTime > toMilliseconds ||
+            worker.workingEndTime < fromMilliseconds || worker.workingEndTime < toMilliseconds
         ) {
             throw AppointmentError.OutOfWorkingTimeError()
         }
@@ -132,6 +132,7 @@ class AppointmentService {
             appointmentEndTime,
             worker,
         })
+        
         await this.checkEntryAppointments({
             startTime: appointmentStartTime, 
             endTime: appointmentEndTime,
