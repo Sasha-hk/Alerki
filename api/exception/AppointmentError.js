@@ -40,4 +40,8 @@ module.exports = class AppointmentError extends Error {
     static OutOfWorkingTimeError() {
         return new AppointmentError(400, 'Appointment time is out of worker working time', ['appointment time is out of worker working time'])
     }
+
+    static WeekendDayError() {
+        return new AppointmentError(400, 'You cannot make an appointment for a weekend', ['cannot make an appointment for a weekend'])
+    }
 }

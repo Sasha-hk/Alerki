@@ -10,6 +10,53 @@ const AppointmentError = require('../exception/AppointmentError')
 const weekDays = ['monday', 'thuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
 class AppointmentService { 
+    async checkScheduleDays({
+        worker,
+        workerID,
+        weekendDaysID,
+        appointmentStartTime,
+        appointmentEndTime
+    }) {
+        const workerSchedule = await WorkerScheduleService.findByWorkerIDAndDate({
+            workerID,
+            date: appointmentStartTime,
+        })
+
+        if (workerSchedule) {
+            if (workerSchedule.workingStartTime) {
+                this.checkWorkingTime({
+                    appointmentStartTime,
+                    appointmentEndTime,
+                    worker: {
+                        workingStartTime: workerSchedule.workingStartTime,
+                        workingEndTime: workerSchedule.workingEndTime
+                    },
+                })
+            }
+            if (workerSchedule.weekendDay) {
+                throw AppointmentError.WeekendDayError()
+            }
+            else {
+                await this.checkWeekendDays({
+                    weekendDaysID,
+                    appointmentStartTime,
+                })
+            }
+        }
+        else {
+            this.checkWorkingTime({
+                appointmentStartTime,
+                appointmentEndTime,
+                worker,
+            })
+
+            await this.checkWeekendDays({
+                weekendDaysID,
+                appointmentStartTime,
+            })
+        }
+    }
+
     async checkEntryAppointments({
         startTime,
         endTime,
@@ -52,17 +99,6 @@ class AppointmentService {
                 }
             }
         })
-    }
-
-    async checkScheduleDays({
-        workerID,
-        appointmentStartTime
-    }) {
-        const workerSchedule = await WorkerScheduleService.findByWorkerID({workerID})
-
-        if (workerSchedule) {
-            console.log('there are few schedules')
-        }
     }
 
     checkWorkingTime({
@@ -127,26 +163,18 @@ class AppointmentService {
         appointmentEndTime.setTime(appointmentEndTime.getTime() + workerService.duration)
 
         // checks
-        this.checkWorkingTime({
-            appointmentStartTime,
-            appointmentEndTime,
-            worker,
-        })
-        
         await this.checkEntryAppointments({
             startTime: appointmentStartTime, 
             endTime: appointmentEndTime,
             workerID,
         })
 
-        await this.checkWeekendDays({
+        await this.checkScheduleDays({
+            worker,
+            workerID: worker.id,
             weekendDaysID: worker.weekendDaysID,
             appointmentStartTime,
-        })
-
-        await this.checkScheduleDays({
-            workerID: worker.id,
-            appointmentStartTime
+            appointmentEndTime
         })
 
         // create appointment

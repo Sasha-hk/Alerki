@@ -151,6 +151,7 @@ describe('Test services', () => {
 let workerService = null
 let workerSchedule = null
 let weekendDay = null
+let workerScheduleDate = null
 
 describe('Test profile', () => {
     describe('create worker service', () => {
@@ -266,13 +267,76 @@ describe('Test profile', () => {
         })
     })
 
+    describe('set schedule', () => {
+        test('set weekend day => 200', async () => {
+            let scheduleDate = new Date()
+            scheduleDate.setDate(scheduleDate.getDate() + 15)
+
+            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
+                scheduleDate.setDate(scheduleDate.getDate() + 2)
+            }
+
+            workerScheduleDate = scheduleDate
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    date: scheduleDate,
+                    weekendDay: true
+                })
+            
+            expect(r.statusCode).toBe(200)
+            weekendDays = r.body
+        })
+
+        test('set working time => 200', async () => {
+            let scheduleDate = new Date()
+            scheduleDate.setDate(scheduleDate.getDate() + 8)
+
+            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
+                scheduleDate.setDate(scheduleDate.getDate() + 2)
+            }
+
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    workingStartTime: 6 * 60 * 60 * 1000,
+                    workingEndTime: 19 * 60 * 60 * 1000, 
+                    date: scheduleDate,
+                })
+            
+            expect(r.statusCode).toBe(200)
+            weekendDays = r.body
+        })
+
+        test('wiohout body date => 400', async () => {
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+            
+            expect(r.statusCode).toBe(400)
+        })
+
+        test('wiohout body parameters=> 400', async () => {
+            const r = await request(app)
+                .post('/profile/worker/set-schedule')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+                .send({
+                    date: new Date(),
+                })
+            
+            expect(r.statusCode).toBe(400)
+        })
+    })
+
     describe('get schedule', () => {
         test('with correct parameters => 200', async () => {
             const r = await request(app)
                 .get('/profile/get-schedule')
                 .query({
-                    year: 2004,
-                    month: 4,
+                    year: workerScheduleDate.getFullYear(),
+                    month: workerScheduleDate.getMonth(),
                     worker_id: workerService[0].id,
                 })
             
@@ -306,68 +370,6 @@ describe('Test profile', () => {
                     year: 2004,
                     month: 4,
                     worker_id: 'asdfds',
-                })
-            
-            expect(r.statusCode).toBe(400)
-        })
-    })
-
-    describe('set schedule', () => {
-        test('set weekend day => 200', async () => {
-            let scheduleDate = new Date()
-            scheduleDate.setDate(scheduleDate.getDate() + 7)
-
-            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
-                scheduleDate.setDate(scheduleDate.getDate() + 2)
-            }
-
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    date: scheduleDate,
-                    weekendDay: true
-                })
-            
-            expect(r.statusCode).toBe(200)
-            weekendDays = r.body
-        })
-
-        test('set working time => 200', async () => {
-            let scheduleDate = new Date()
-            scheduleDate.setDate(scheduleDate.getDate() + 7)
-
-            if (scheduleDate.getDate() == 5 || scheduleDate.getDate() == 6) {
-                scheduleDate.setDate(scheduleDate.getDate() + 2)
-            }
-
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    workingStartTime: 6 * 60 * 60 * 1000,
-                    workingEndTime: 19 * 60 * 60 * 1000, 
-                    date: scheduleDate,
-                })
-            
-            expect(r.statusCode).toBe(200)
-            weekendDays = r.body
-        })
-
-        test('wiohout body date => 400', async () => {
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-            
-            expect(r.statusCode).toBe(400)
-        })
-
-        test('wiohout body parameters=> 400', async () => {
-            const r = await request(app)
-                .post('/profile/worker/set-schedule')
-                .set('Cookie', ['accessToken=' + worker.accessToken])
-                .send({
-                    date: new Date(),
                 })
             
             expect(r.statusCode).toBe(400)
@@ -518,10 +520,26 @@ describe('Test appointments', () => {
             
             expect(r.statusCode).toBe(400)
         })
+
+        test('with schedule busy appointment time => 400', async () => {
+            let time = new Date(workerScheduleDate)
+            time.setHours(12)
+
+            const r = await request(app)
+                .post('/appointment/make-appointment')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+                .send({ 
+                    workerID: workerService[0].id,
+                    workerServiceID: workerService[0].service.id,
+                    appointmentStartTime: time,
+                })
+            
+            expect(r.statusCode).toBe(400)
+        })
     })
 
     describe('details', () => {
-        test('with not exists slug => 404', async () => {
+        test('without slug => 404', async () => {
             const r = await request(app)
                 .get('/appointment/details/asdeKK')
                 .set('Cookie', ['accessToken=' + client.accessToken])
