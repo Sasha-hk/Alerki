@@ -54,6 +54,7 @@ router
     .patch(
         '/worker/confirm/:slug',
         authMiddleware,
+        isWorkerMiddleware,
         AppointmentController.workerConfirm
     )
 

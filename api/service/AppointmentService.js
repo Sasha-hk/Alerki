@@ -303,6 +303,102 @@ class AppointmentService {
 
         return dayAppointments
     }
+
+    async clientCancel({clientID, slug}) {
+        const candedat = await AppointmentModel.findOne({
+            raw: true,
+            where: {
+                slug,
+            },
+        })
+        
+        if (candedat) {
+            if (clientID != candedat.clientID) {
+                throw AppointmentError.NotBelongsToUserError()
+            }
+
+            const updatedAppointment = await AppointmentModel.update(
+                {
+                    clientConfirm: false,
+                },
+                {
+                    returning: true,
+                    where: {
+                        slug,
+                    },
+                }
+            )
+
+            return updatedAppointment[1][0]
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+
+    async workerCancel({workerID, slug}) {
+        const candedat = await AppointmentModel.findOne({
+            raw: true,
+            where: {
+                slug,
+            },
+        })
+        
+        if (candedat) {
+            if (workerID != candedat.workerID) {
+                throw AppointmentError.NotBelongsToUserError()
+            }
+
+            const updatedAppointment = await AppointmentModel.update(
+                {
+                    workerConfirm: false,
+                },
+                {
+                    returning: true,
+                    where: {
+                        slug,
+                    },
+                }
+            )
+
+            return updatedAppointment[1][0]
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
+
+    async workerConfirm({workerID, slug}) {
+        const candedat = await AppointmentModel.findOne({
+            raw: true,
+            where: {
+                slug,
+            },
+        })
+        
+        if (candedat) {
+            if (workerID != candedat.workerID) {
+                throw AppointmentError.NotBelongsToUserError()
+            }
+
+            const updatedAppointment = await AppointmentModel.update(
+                {
+                    workerConfirm: true,
+                },
+                {
+                    returning: true,
+                    where: {
+                        slug,
+                    },
+                }
+            )
+
+            return updatedAppointment[1][0]
+        }
+        else {
+            throw AppointmentError.NotFoundError()
+        }
+    }
 }
 
 

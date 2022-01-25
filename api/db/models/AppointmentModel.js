@@ -26,13 +26,9 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            clientCancel: {
+            clientConfirm: {
                 type: DataTypes.BOOLEAN,
-                defaultValue: false,
-            },
-            workerCancel: {
-                type: DataTypes.BOOLEAN,
-                defaultValue: false,
+                defaultValue: true,
             },
             workerConfirm: {
                 type: DataTypes.BOOLEAN,
