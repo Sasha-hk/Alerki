@@ -25,25 +25,20 @@ class AppointmentController {
         }
     }
 
-    async clientFor(req, res, next) {
+    async clientGetDay(req, res, next) {
         try {
-            // const for_time = req.query.for_time
+            const date = req.query.date
+    
+            checkParams.all({
+                date
+            })
 
-            // checkParams.all({
-            //     for_time
-            // })
-            // const forTime = new Date(for_time)
-            // forTime.setHours(0)
-            // forTime.setMinutes(0)
-            // forTime.setSeconds(0)
-            // forTime.setMilliseconds(1)
+            const dayAppointments = await AppointmentService.clientGetDay({
+                clientID: req.accessToken.clientID, 
+                date,
+            })
 
-            // const foundAppointments = await AppointmentService.clientFor({
-            //     clientID: req.accessToken.clientID, 
-            //     forTime,
-            // })
-
-            // res.json(foundAppointments)
+            res.json(dayAppointments)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)
@@ -52,25 +47,38 @@ class AppointmentController {
 
     async clientFromNow(req, res, next) {
         try {
+            const now = req.query.now
 
-        }
-        catch (e) {
-            res.status(e.status || 500).json(e.errors)
-        }
-    }
+            checkParams.all({
+                now,
+            })
 
-    async clientToday(req, res, next) {
-        try {
+            const foundAppointments = await AppointmentService.clientFromNow({
+                clientID: req.accessToken.clientID,
+                now,
+            })
 
+            res.json(foundAppointments)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)
         }
     }
 
-    async workerFor(req, res, next) {
+    async workerGetDay(req, res, next) {
         try {
+            const date = req.query.date
+    
+            checkParams.all({
+                date
+            })
 
+            const dayAppointments = await AppointmentService.workerGetDay({
+                workerID: req.accessToken.workerID, 
+                date,
+            })
+
+            res.json(dayAppointments)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)
@@ -79,16 +87,18 @@ class AppointmentController {
 
     async workerFromNow(req, res, next) {
         try {
+            const now = req.query.now
 
-        }
-        catch (e) {
-            res.status(e.status || 500).json(e.errrors)
-        }
-    }
+            checkParams.all({
+                now,
+            })
 
-    async workerToday(req, res, next) {
-        try {
+            const foundAppointments = await AppointmentService.workerFromNow({
+                workerID: req.accessToken.workerID,
+                now,
+            })
 
+            res.json(foundAppointments)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)

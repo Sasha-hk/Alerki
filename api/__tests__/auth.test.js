@@ -556,15 +556,125 @@ describe('Test appointments', () => {
         })
     })
 
-    // describe('for', () => {
-    //     test('with correct time', async () => {
-    //         const r = await request(app)
-    //             .get('/appointment/client/for')
-    //             .query({for_time: appointmentTime})
-    //             .set('Cookie', ['accessToken=' + client.accessToken])
-        
-    //         expect(r.statusCode).toBe(200)
-    //         console.log(r.body)
-    //     })
-    // })
+    describe('get day', () => {
+        describe('client', () => {
+            test('with correct time => 200', async () => {
+                const r = await request(app)
+                    .get('/appointment/client/get-day')
+                    .query({date: appointmentTime})
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/client/get-day')
+                    .query({date: 'asfdasfd'})
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+
+            test('without time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/client/get-day')
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+
+        describe('worker', () => {
+            test('with correct time => 200', async () => {
+                const r = await request(app)
+                    .get('/appointment/worker/get-day')
+                    .query({date: appointmentTime})
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/worker/get-day')
+                    .query({date: 'asfdasfd'})
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+
+            test('without time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/worker/get-day')
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+    })
+
+    describe('from now', () => {
+        describe('client', () => {
+            test('with correct time => 200', async () => {
+                const date = new Date()
+                date.setHours(1)
+
+                const r = await request(app)
+                    .get('/appointment/client/from-now')
+                    .query({now: date})
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/client/from-now')
+                    .query({now: 'asfdasfd'})
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+
+            test('without time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/client/from-now')
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+
+        describe('worker', () => {
+            test('with correct time => 200', async () => {
+                const date = new Date()
+                date.setHours(1)
+
+                const r = await request(app)
+                    .get('/appointment/worker/from-now')
+                    .query({now: date})
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(200)
+            })
+
+            test('with incorrect time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/worker/from-now')
+                    .query({now: 'asfdasfd'})
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+
+            test('without time => 400', async () => {
+                const r = await request(app)
+                    .get('/appointment/worker/from-now')
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+        })
+    })
 })

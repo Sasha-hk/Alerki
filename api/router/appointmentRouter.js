@@ -1,6 +1,7 @@
 const Router = require('express')
 const AppointmentController = require('../controller/AppointmentController')
 const authMiddleware = require('../middleware/authMiddleware')
+const isWorkerMiddleware = require('../middleware/isWorkerMiddlware')
 const router = new Router()
 
 
@@ -11,9 +12,9 @@ router
         AppointmentController.details
     )
     .get(
-        '/client/for',
+        '/client/get-day',
         authMiddleware,
-        AppointmentController.clientFor
+        AppointmentController.clientGetDay
     )
     .get(
         '/client/from-now',
@@ -21,25 +22,16 @@ router
         AppointmentController.clientFromNow
     )
     .get(
-        '/client/today',
+        '/worker/get-day',
         authMiddleware,
-        AppointmentController.clientToday
-    )
-    .get(
-        '/worker/for',
-        authMiddleware,
-        AppointmentController.workerFor
+        isWorkerMiddleware,
+        AppointmentController.workerGetDay
     )
     .get(
         '/worker/from-now',
         authMiddleware,
         AppointmentController.workerFromNow
-    )
-    .get(
-        '/worker/today',
-        authMiddleware,
-        AppointmentController.workerToday
-    )
+    ) 
 
 router
     .post(
