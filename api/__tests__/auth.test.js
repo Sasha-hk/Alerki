@@ -688,6 +688,14 @@ describe('Test appointments', () => {
                 expect(r.statusCode).toBe(200)
             })
 
+            test('with other user => 400', async () => {
+                const r = await request(app)
+                    .patch('/appointment/client/cancel/' + newAppointment.slug)
+                    .set('Cookie', ['accessToken=' + worker.accessToken])
+                
+                expect(r.statusCode).toBe(400)
+            })
+
             test('with not exists slug => 404', async () => {
                 const r = await request(app)
                     .patch('/appointment/client/cancel/' + 'incorrect-slug')
@@ -712,6 +720,14 @@ describe('Test appointments', () => {
                     .set('Cookie', ['accessToken=' + worker.accessToken])
                 
                 expect(r.statusCode).toBe(200)
+            })
+
+            test('with other user => 400', async () => {
+                const r = await request(app)
+                    .patch('/appointment/worker/cancel/' + newAppointment.slug)
+                    .set('Cookie', ['accessToken=' + client.accessToken])
+                
+                expect(r.statusCode).toBe(400)
             })
 
             test('with not exissts slug => 404', async () => {
@@ -739,6 +755,14 @@ describe('Test appointments', () => {
                 .set('Cookie', ['accessToken=' + worker.accessToken])
             
             expect(r.statusCode).toBe(200)
+        })
+
+        test('with client not worker => 400', async () => {
+            const r = await request(app)
+                .patch('/appointment/worker/confirm/' + newAppointment.slug)
+                .set('Cookie', ['accessToken=' + client.accessToken])
+            
+            expect(r.statusCode).toBe(400)
         })
 
         test('with not exists slug => 404', async () => {
