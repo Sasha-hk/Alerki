@@ -301,8 +301,6 @@ class AppointmentService {
             }
         })
 
-        console.log(dayAppointments)
-
         return dayAppointments
     }
 }
