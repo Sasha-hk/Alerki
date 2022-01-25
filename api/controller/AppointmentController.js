@@ -141,7 +141,18 @@ class AppointmentController {
 
     async clientCancel(req, res, next) {
         try {
+            const slug = req.params.slug
 
+            checkParams.all({
+                slug
+            })
+
+            const updatedAppointment = await AppointmentService.clientCancel({
+                clientID: req.accessToken.clientID,
+                slug,
+            })
+
+            res.json(updatedAppointment)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)
@@ -150,7 +161,18 @@ class AppointmentController {
 
     async workerCancel(req, res, next) {
         try {
+            const slug = req.params.slug
 
+            checkParams.all({
+                slug
+            })
+
+            const updatedAppointment = await AppointmentService.workerCancel({
+                workerID: req.accessToken.workerID,
+                slug
+            })
+            
+            res.json(updatedAppointment)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)
@@ -159,7 +181,18 @@ class AppointmentController {
 
     async workerConfirm(req, res, next) {
         try {
+            const slug = req.params.slug
 
+            checkParams.all({
+                slug
+            })
+
+            const updatedAppointment = await AppointmentService.workerConfirm({
+                workerID: req.accessToken.workerID,
+                slug
+            })
+            
+            res.json(updatedAppointment)
         }
         catch (e) {
             res.status(e.status || 500).json(e.errrors)

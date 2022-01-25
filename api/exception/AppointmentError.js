@@ -44,4 +44,8 @@ module.exports = class AppointmentError extends Error {
     static WeekendDayError() {
         return new AppointmentError(400, 'You cannot make an appointment for a weekend', ['cannot make an appointment for a weekend'])
     }
+
+    static NotBelongsToUserError() {
+        return new AppointmentError(400, 'Appointment not belongs to user', ['appointment not belongs to you'])
+    }
 }
