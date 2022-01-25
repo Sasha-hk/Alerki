@@ -6,7 +6,7 @@ module.exports = (dateObject) => {
         if (isNaN(dateObject.getTime())) {
             throw APIError.IncorrectDateError()
         } else {
-            console.log(12)
+            return true
         }
     } 
     else {
