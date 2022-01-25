@@ -16,4 +16,8 @@ module.exports = class APIError extends Error {
     static NotFoundError(errors = []) {
         return new APIError(404, 'Not found', errors)
     }
+
+    static IncorrectDateError() {
+        return new APIError(400, 'Date is incorrect', ['incorrect date'])
+    }
 }

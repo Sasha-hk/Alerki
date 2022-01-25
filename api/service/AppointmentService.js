@@ -5,6 +5,7 @@ const ProfileService = require('./ProfileService')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
 const generateSlug = require('../utils/generateSlug')
 const AppointmentError = require('../exception/AppointmentError')
+const checkDate = require('../utils/validators/checkDate')
 
 
 const weekDays = ['monday', 'thuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
@@ -189,6 +190,118 @@ class AppointmentService {
         })
 
         return newAppointment.dataValues
+    }
+
+    async clientGetDay({
+        clientID,
+        date
+    }) {
+        // prepare dates
+        const startDate = new Date(date)
+
+        checkDate(startDate)
+        
+        startDate.setHours(0)
+        startDate.setMinutes(0)
+        startDate.setSeconds(0)
+        startDate.setMilliseconds(0)
+
+        const endDate = new Date(startDate)
+        endDate.setDate(endDate.getDate() + 1)
+        endDate.setMilliseconds(-1)
+
+        const dayAppointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                clientID,
+                appointmentStartTime: {
+                    [Sequelize.Op.between]: [startDate, endDate],
+                },
+                appointmentEndTime: {
+                    [Sequelize.Op.between]: [startDate, endDate],
+                },
+            }
+        })
+
+        return dayAppointments
+    }
+
+    async workerGetDay({
+        workerID,
+        date
+    }) {
+        // prepare dates
+        const startDate = new Date(date)
+
+        checkDate(startDate)
+        
+        startDate.setHours(0)
+        startDate.setMinutes(0)
+        startDate.setSeconds(0)
+        startDate.setMilliseconds(0)
+
+        const endDate = new Date(startDate)
+        endDate.setDate(endDate.getDate() + 1)
+        endDate.setHours(0)
+
+        const dayAppointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                workerID,
+                appointmentStartTime: {
+                    [Sequelize.Op.between]: [startDate, endDate],
+                },
+                appointmentEndTime: {
+                    [Sequelize.Op.between]: [startDate, endDate],
+                },
+            }
+        })
+
+        return dayAppointments
+    }
+
+    async workerFromNow({
+        workerID,
+        now
+    }) {
+        // prepare dates
+        const nowDate = new Date(now)
+
+        checkDate(nowDate)
+
+        const dayAppointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                workerID,
+                appointmentStartTime: {
+                    [Sequelize.Op.gte]: nowDate,
+                },
+            }
+        })
+
+        return dayAppointments
+    }
+
+    async clientFromNow({
+        clientID,
+        now
+    }) {
+        // prepare dates
+        const nowDate = new Date(now)
+
+        checkDate(nowDate)
+
+        const dayAppointments = await AppointmentModel.findAll({
+            raw: true,
+            where: {
+                clientID,
+                appointmentStartTime: {
+                    [Sequelize.Op.gte]: nowDate,
+                },
+            }
+        })
+
+        return dayAppointments
     }
 }
 
