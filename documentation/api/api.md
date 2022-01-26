@@ -200,93 +200,71 @@ User need to be authenticated
 ### **Find service**
 
 ```http
-POST /auth/register
+POST /services/find
 ```
 
-**Body:**
+**Querys:**
 
-```json
-{
-    "email": "email",
-    "username": "username",
-    "profileType": "worker",
-    "password": "qwerty"
-}
-```
+- name
+- limit
+- page
 
-| **Parameter** | **Type** | **Requeired** | **Options** |
-| :--- | :--- | :--- | :--- |
-| `email` | string | true | | |
-| `username` | string | true | |
-| `firstName` | string | false | |
-| `lastName` | string | false | |
-| `profileType` | string | true | worker \ client |
-| `password` | string | true | |
+| **Query** | **Requeired** | **Default** |
+| :--- | :--- | :--- |
+| `name` | true | |
+| `limit` | false | 20 |
+| `page` | false | 0 |
 
 **Response:**
 
 ```json
-{
-    "id": "1",
-    "email": "email",
-    "clientID": 1,
-    "workerID": 1,
-    "accessToken": "token..."
-}
+[ 
+    { 
+        "id": 1, 
+        "name": "heircut" 
+    }
+]
 ```
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `id` | int | |
-| `email` | string | |
-| `clientID` | int | client profile id |
-| `workerID` | int | worker profile id |
-| `accessToken` | string | access token |
+| `id` | int | service id |
+| `name` | string | service name |
 
 ---
 
 ### **Create service**
 
 ```http
-POST /auth/register
+POST /services/create
 ```
 
 **Body:**
 
 ```json
 {
-    "email": "email",
-    "username": "username",
-    "profileType": "worker",
-    "password": "qwerty"
+    "name": "name"
 }
 ```
 
-| **Parameter** | **Type** | **Requeired** | **Options** |
+| **Parameter** | **Type** | **Requeired** | **Description** |
 | :--- | :--- | :--- | :--- |
-| `email` | string | true | | |
-| `username` | string | true | |
-| `firstName` | string | false | |
-| `lastName` | string | false | |
-| `profileType` | string | true | worker \ client |
-| `password` | string | true | |
+| `name` | string | true | new service name |
 
 **Response:**
 
 ```json
 {
-    "id": "1",
-    "email": "email",
-    "clientID": 1,
-    "workerID": 1,
-    "accessToken": "token..."
+    "id": 1,
+    "name": "heircut",
+    "updatedAt": "2022-01-26T22:49:53.391Z",
+    "createdAt": "2022-01-26T22:49:53.391Z"
 }
 ```
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
 | `id` | int | |
-| `email` | string | |
-| `clientID` | int | client profile id |
-| `workerID` | int | worker profile id |
-| `accessToken` | string | access token |
+| `name` | string | new service name |
+| `updatedAt` | string | creation time |
+| `createdAt` | string | updation time |
