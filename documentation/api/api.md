@@ -37,7 +37,9 @@ Endpoints list:
   - [`/find`](./)
   - [`/create`](./)
 
-## **Registration**
+## **Auth endpoints**
+
+### **Registration**
 
 ```http
 POST /auth/register
@@ -88,7 +90,7 @@ POST /auth/register
 - accessToken
 - refreshToken
 
-## **Log-in**
+### **Log-in**
 
 ```http
 POST /auth/log-in
@@ -133,11 +135,15 @@ POST /auth/log-in
 - accessToken
 - refreshToken
 
-## **Log-out**
+### **Log-out**
 
 ```http
 GET /auth/log-out
 ```
+
+**Requirements:**
+
+User need to be authenticated
 
 **Response:**
 
@@ -150,13 +156,14 @@ GET /auth/log-out
 - remove - accessToken
 - remove - refreshToken
 
-## **Refresh**
+### **Refresh**
 
 ```http
 GET /auth/refresh
 ```
 
-**Requeirements:**
+**Requirements:**
+
 User need to be authenticated
 
 **Response:**
@@ -183,4 +190,3 @@ User need to be authenticated
 
 - accessToken
 - refreshToken
-
