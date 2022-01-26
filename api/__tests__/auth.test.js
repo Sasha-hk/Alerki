@@ -136,7 +136,6 @@ describe('Test services', () => {
             expect(r.statusCode).toBe(200)
             expect(r.body[0].name).toBe('heircut')
             services = r.body
-            console.log(r.body)
         })
 
         test('with incorrect parameters => 400', async () => {

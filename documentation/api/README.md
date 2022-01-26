@@ -7,8 +7,8 @@ API based on such technologies:
 - [`Sequelize`](https://sequelize.org/) - ORM
 - [`Jest`](https://jestjs.io/) - for testing
 
-Moro about dependencies read [`here`](../../api/package.json)
+More about dependencies read [`here`](../../api/package.json)
 
 ## **API endpoints**
 
-Documentation read [`here`](./api.md)
+Read documentation [`here`](./api.md)
