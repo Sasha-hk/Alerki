@@ -23,7 +23,11 @@ class WorkerServiceService {
         return newWorkerService.dataValues
     }
 
-    async find({serviceID, limit, page}) {
+    async find({
+        serviceID, 
+        limit, 
+        page
+    }) {
         // check if serviceID is number
         isNumber(Number(serviceID), 'serviceID')
 
