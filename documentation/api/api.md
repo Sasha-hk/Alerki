@@ -33,9 +33,9 @@ Endpoints list:
     - [`/update/weekend-days`](./)
     - [`/become-worker`](./)
 
-- [`/services`](./)
-  - [`/find`](./)
-  - [`/create`](./)
+- [`/services`](#Services)
+  - [`/find`](#Find+service)
+  - [`/create`](#Create+service)
 
 ## **Auth endpoints**
 
@@ -90,6 +90,8 @@ POST /auth/register
 - accessToken
 - refreshToken
 
+---
+
 ### **Log-in**
 
 ```http
@@ -134,6 +136,8 @@ POST /auth/log-in
 
 - accessToken
 - refreshToken
+
+---
 
 ### **Log-out**
 
@@ -190,3 +194,99 @@ User need to be authenticated
 
 - accessToken
 - refreshToken
+
+## **Services**
+
+### **Find service**
+
+```http
+POST /auth/register
+```
+
+**Body:**
+
+```json
+{
+    "email": "email",
+    "username": "username",
+    "profileType": "worker",
+    "password": "qwerty"
+}
+```
+
+| **Parameter** | **Type** | **Requeired** | **Options** |
+| :--- | :--- | :--- | :--- |
+| `email` | string | true | | |
+| `username` | string | true | |
+| `firstName` | string | false | |
+| `lastName` | string | false | |
+| `profileType` | string | true | worker \ client |
+| `password` | string | true | |
+
+**Response:**
+
+```json
+{
+    "id": "1",
+    "email": "email",
+    "clientID": 1,
+    "workerID": 1,
+    "accessToken": "token..."
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | |
+| `email` | string | |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `accessToken` | string | access token |
+
+---
+
+### **Create service**
+
+```http
+POST /auth/register
+```
+
+**Body:**
+
+```json
+{
+    "email": "email",
+    "username": "username",
+    "profileType": "worker",
+    "password": "qwerty"
+}
+```
+
+| **Parameter** | **Type** | **Requeired** | **Options** |
+| :--- | :--- | :--- | :--- |
+| `email` | string | true | | |
+| `username` | string | true | |
+| `firstName` | string | false | |
+| `lastName` | string | false | |
+| `profileType` | string | true | worker \ client |
+| `password` | string | true | |
+
+**Response:**
+
+```json
+{
+    "id": "1",
+    "email": "email",
+    "clientID": 1,
+    "workerID": 1,
+    "accessToken": "token..."
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | |
+| `email` | string | |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `accessToken` | string | access token |
