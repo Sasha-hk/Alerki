@@ -1,34 +1,14 @@
 # **API documentation**
 
-Endpoints:
+API based on such technologies:
 
-- [x] /auth
-  - [x] /register
-  - [x] /log-in
-  - [x] /log-out
-  - [x] /refresh
-  - [x] /callback/google
+- [`Node.js`](https://node.nodejs.org) - platform
+- [`Express`](https://expressjs.com/) - web framework
+- [`Sequelize`](https://sequelize.org/) - ORM
+- [`Jest`](https://jestjs.io/) - for testing
 
-- [ ] /appointemtn
-  - [ ] /client
-    - [ ] /details/:slug
-    - [ ] /list
-    - [ ] /list/today
-    - [ ] /make
-    - [ ] /cancel/:slug
+More about dependencies read [`here`](../../api/package.json)
 
-  - [ ] /worker
-    - [ ] /details/:slug
-    - [ ] /list
-    - [ ] /list/today
-    - [ ] /cancel/:slug
-    - [ ] /confirm/:slug
+## **API endpoints**
 
-- [ ] /profile
-  - [x] /find-worker
-  - [ ] /get-schedule
-  - [x] /create/service
-
-- [x] /services
-  - [x] /find
-  - [x] /create
+Read documentation [`here`](./api.md)
