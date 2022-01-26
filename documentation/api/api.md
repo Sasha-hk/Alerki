@@ -34,8 +34,8 @@ Endpoints list:
     - [`/become-worker`](./)
 
 - [`/services`](#Services)
-  - [`/find`](#Find+service)
-  - [`/create`](#Create+service)
+  - [`/find`](#Find-service)
+  - [`/create`](#Create-service)
 
 ## **Auth endpoints**
 
