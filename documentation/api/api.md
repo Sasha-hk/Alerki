@@ -5,8 +5,8 @@ Endpoints list:
 - [`/auth`](./)
   - [`/register`](#Registration)
   - [`/log-in`](#Log-in)
-  - [`/log-out`](./)
-  - [`/refresh`](./)
+  - [`/log-out`](#Log-out)
+  - [`/refresh`](#Refresh)
 
 - [`/appointments`](./)
   - [`/details/:slug`](./)
@@ -90,6 +90,10 @@ POST /auth/register
 
 ## **Log-in**
 
+```http
+POST /auth/log-in
+```
+
 **Body:**
 
 ```json
@@ -128,3 +132,55 @@ POST /auth/register
 
 - accessToken
 - refreshToken
+
+## **Log-out**
+
+```http
+GET /auth/log-out
+```
+
+**Response:**
+
+```http
+200 OK
+```
+
+**Cookies:**
+
+- remove - accessToken
+- remove - refreshToken
+
+## **Refresh**
+
+```http
+GET /auth/refresh
+```
+
+**Requeirements:**
+User need to be authenticated
+
+**Response:**
+
+```json
+{
+    "id": "1",
+    "email": "email",
+    "clientID": 1,
+    "workerID": 1,
+    "accessToken": "token..."
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | |
+| `email` | string | |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `accessToken` | string | access token |
+
+**Cookies:**
+
+- accessToken
+- refreshToken
+
