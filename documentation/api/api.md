@@ -13,11 +13,11 @@ Endpoints list:
   - `/client`
     - [`/get-day`](#Get-appointments-for)
     - [`/from-now`](#Get-appointments-from-now)
-    - [`/cancel/:slug`](#Get-cancel-appointment)
+    - [`/cancel/:slug`](#Cancel-appointment)
   - `/worker`
     - [`/get-day`](#Get-appointments-for)
     - [`/from-now`](#Get-appointments-from-now)
-    - [`/cancel/:slug`](#Get-cancel-appointment)
+    - [`/cancel/:slug`](#Cancel-appointment)
     - [`/confirm/:slug`](#Worker-confirm-appointment)
   - [`/make-appointment`](#Make-appointment)
 
@@ -758,6 +758,169 @@ GET /profile/worker/from-now?now=date
 | **Query** | **Type** | **Description** |
 | :--- | :--- | :--- |
 | `now` | string | date |
+
+**Response:**
+
+```json
+
+[
+    {
+        "id": 1,
+        "slug": "qp9gexFaRRV",
+        "appointmentStartTime": "2022-01-28T09:36:49.930Z",
+        "appointmentEndTime": "2022-01-28T09:56:49.930Z",
+        "duration": 1200000,
+        "clientConfirm": true,
+        "workerConfirm": false,
+        "clientID": 2,
+        "workerID": 1,
+        "workerServiceID": 1
+    }
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
+
+---
+
+### **Cancel appointmetn**
+
+**For client:**
+
+```http
+PATCH /profile/client/cancel/:slug
+```
+
+**For worker:**
+
+```http
+PATCH /profile/worker/cancel/:slug
+```
+
+**Query:**
+
+- slug
+
+| **Query** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `slug` | string | appointment slug |
+
+**Response:**
+
+```json
+
+[
+    {
+        "id": 1,
+        "slug": "qp9gexFaRRV",
+        "appointmentStartTime": "2022-01-28T09:36:49.930Z",
+        "appointmentEndTime": "2022-01-28T09:56:49.930Z",
+        "duration": 1200000,
+        "clientConfirm": false,
+        "workerConfirm": false,
+        "clientID": 2,
+        "workerID": 1,
+        "workerServiceID": 1
+    }
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
+
+---
+
+### **Worker confirm appointmetn**
+
+```http
+PATCH /profile/worker/confirm/:slug
+```
+
+**Query:**
+
+- slug
+
+| **Query** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `slug` | string | appointment slug |
+
+**Response:**
+
+```json
+
+[
+    {
+        "id": 1,
+        "slug": "qp9gexFaRRV",
+        "appointmentStartTime": "2022-01-28T09:36:49.930Z",
+        "appointmentEndTime": "2022-01-28T09:56:49.930Z",
+        "duration": 1200000,
+        "clientConfirm": false,
+        "workerConfirm": true,
+        "clientID": 2,
+        "workerID": 1,
+        "workerServiceID": 1
+    }
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
+
+---
+
+### **Make an appointment**
+
+```http
+POST /profile/make-appointment
+```
+
+**Body:**
+
+```json
+{
+    "workerID": 1,
+    "workerServiceID": 1,
+    "appointmentStartTime": "2022-01-28T09:57:58.032Z"
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
+| `appointmentStartTime` | string | appointment start time |
 
 **Response:**
 
