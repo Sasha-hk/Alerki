@@ -3,7 +3,7 @@ name: Frotnend enhancement
 about: General task template
 title: '[FRONTEND] '
 labels: ["frontend", "enhancement"]
-assignees: 'Sashs-hk'
+assignees: 'Sasha-hk'
 
 ---
 
