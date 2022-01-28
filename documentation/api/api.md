@@ -633,3 +633,48 @@ PATCH /profile/worker/update/weekend-days
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
 | `moonday ... sunday` | bool | weekend day |
+
+---
+
+### **Appointment details**
+
+```http
+GET /profile/details/:slug
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `workingStartTime` | string | service price |
+| `workingEndTime` | string | service location |
+| `weekendDay` | int | service duration |
+| `date` | int | worker id |
+
+**Response:**
+
+```json
+{
+    "id": 1,
+    "slug": "zs1PVskK9U2",
+    "appointmentStartTime": "2022-01-28T09:17:46.678Z",
+    "appointmentEndTime": "2022-01-28T09:37:46.678Z",
+    "duration": 1200000,
+    "clientConfirm": true,
+    "workerConfirm": false,
+    "clientID": 2,
+    "workerID": 1,
+    "workerServiceID": 1
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `worekrServiceID` | int | worker service id |
