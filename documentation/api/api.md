@@ -12,7 +12,7 @@ Endpoints list:
   - [`/details/:slug`](#Appointment-details)
   - `/client`
     - [`/get-day`](#Get-appointments-for)
-    - [`/from-now`](#Get-appointments-from-not)
+    - [`/from-now`](#Get-appointments-from-now)
     - [`/cancel/:slug`](#Get-cancel-appointment)
   - `/worker`
     - [`/get-day`](#Get-appointments-for)
@@ -634,7 +634,7 @@ PATCH /profile/worker/update/weekend-days
 | :--- | :--- | :--- |
 | `moonday ... sunday` | bool | weekend day |
 
----
+## **Appointments**
 
 ### **Appointment details**
 
@@ -679,6 +679,8 @@ GET /profile/details/:slug
 | `workerID` | int | worker id |
 | `workerServiceID` | int | worker service id |
 
+---
+
 ### **Get appointments for**
 
 **For client:**
@@ -710,6 +712,63 @@ GET /profile/worker/get-day?date=date
         "slug": "SEXblVKcAme",
         "appointmentStartTime": "2022-01-28T09:26:39.915Z",
         "appointmentEndTime": "2022-01-28T09:46:39.915Z",
+        "duration": 1200000,
+        "clientConfirm": true,
+        "workerConfirm": false,
+        "clientID": 2,
+        "workerID": 1,
+        "workerServiceID": 1
+    }
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
+
+---
+
+### **Get appointments from now**
+
+**For client:**
+
+```http
+GET /profile/client/from-now?now=date
+```
+
+**For worker:**
+
+```http
+GET /profile/worker/from-now?now=date
+```
+
+**Query:**
+
+- now
+
+| **Query** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `now` | string | date |
+
+**Response:**
+
+```json
+
+[
+    {
+        "id": 1,
+        "slug": "qp9gexFaRRV",
+        "appointmentStartTime": "2022-01-28T09:36:49.930Z",
+        "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": true,
         "workerConfirm": false,
