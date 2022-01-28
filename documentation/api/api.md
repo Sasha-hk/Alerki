@@ -8,18 +8,18 @@ Endpoints list:
   - [`/log-out`](#Log-out)
   - [`/refresh`](#Refresh)
 
-- [`/appointments`](#)
-  - [`/details/:slug`](#)
+- [`/appointments`](#Appointments)
+  - [`/details/:slug`](#Appointment-details)
   - `/client`
-    - [`/get-day`](#)
-    - [`/from-now`](#)
-    - [`/cancel/:slug`](#)
+    - [`/get-day`](#Client-appointments-for)
+    - [`/from-now`](#Client-appointments-from-not)
+    - [`/cancel/:slug`](#Client-cancel-appointment)
   - `/worker`
-    - [`/get-day`](#)
-    - [`/from-now`](#)
-    - [`/cancel/:slug`](#)
-    - [`/confirm/:slug`](#)
-  - [`/make-appointment`](#)
+    - [`/get-day`](#Worker-appointments-for)
+    - [`/from-now`](#Worker-appointments-from-now)
+    - [`/cancel/:slug`](#Worker-cancel-appointment)
+    - [`/confirm/:slug`](#Worker-confirm-appointment)
+  - [`/make-appointment`](#Make-appointment)
 
 - [`/profile`](#Profile)
   - [`/find-worker`](#Find-worker)

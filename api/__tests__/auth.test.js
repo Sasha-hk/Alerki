@@ -245,7 +245,6 @@ describe('Test profile', () => {
                 })
             
             expect(r.statusCode).toBe(200)
-            console.log(r.body)
         })
 
         test('without body => 400', async () => {
