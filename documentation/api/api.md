@@ -30,7 +30,7 @@ Endpoints list:
   - `/worker`
     - [`/set-schdule`](#Set-worker-schedule)
     - [`/update`](#Update-worker-profile)
-    - [`/update/weekend-days`](#)
+    - [`/update/weekend-days`](#Update-weekend-days)
 
 - [`/services`](#Services)
   - [`/find`](#Find-service)
@@ -545,10 +545,12 @@ POST /profile/set-schedule
 | `weekendDay` | int | service duration |
 | `date` | int | worker id |
 
+---
+
 ### **Update worker profile**
 
 ```http
-POST /profile/worker/update
+PATCH /profile/worker/update
 ```
 
 **Body:**
@@ -590,3 +592,44 @@ POST /profile/worker/update
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
 | `date` | int | worker id |
+
+---
+
+### **Update weekend days**
+
+```http
+PATCH /profile/worker/update/weekend-days
+```
+
+**Body:**
+
+```json
+{
+    "weekendDays": {
+        "friday": true
+    }
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `weekendDays` | object | weekend days object |
+| `weekendDays.monday ... sunday` | bool | weekend day |
+
+**Response:**
+
+```json
+{
+    "monday": null,
+    "tuesday": null,
+    "wednesday": null,
+    "thursday": null,
+    "friday": true,
+    "saturday": null,
+    "sunday": null,
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `moonday ... sunday` | bool | weekend day |

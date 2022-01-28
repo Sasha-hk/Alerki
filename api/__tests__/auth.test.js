@@ -245,6 +245,7 @@ describe('Test profile', () => {
                 })
             
             expect(r.statusCode).toBe(200)
+            console.log(r.body)
         })
 
         test('without body => 400', async () => {
@@ -287,7 +288,6 @@ describe('Test profile', () => {
             
             expect(r.statusCode).toBe(200)
             weekendDays = r.body
-            console.log(r.body)
         })
 
         test('set working time => 200', async () => {
