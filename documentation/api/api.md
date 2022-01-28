@@ -794,7 +794,7 @@ GET /profile/worker/from-now?now=date
 
 ---
 
-### **Cancel appointmetn**
+### **Cancel appointment**
 
 **For client:**
 
@@ -851,7 +851,7 @@ PATCH /profile/worker/cancel/:slug
 
 ---
 
-### **Worker confirm appointmetn**
+### **Worker confirm appointment**
 
 ```http
 PATCH /profile/worker/confirm/:slug
