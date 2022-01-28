@@ -1,4 +1,4 @@
-const { UserModel } = require('../db/models')
+const {UserModel, Sequelize} = require('../db/models')
 const AuthService = require('./AuthService')
 const UserPictureService = require('./UserPictureService')
 const ProfileService = require('./ProfileService')
