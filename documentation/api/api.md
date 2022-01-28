@@ -28,8 +28,8 @@ Endpoints list:
   - [`/create/service`](#Create-worker-service)
   - [`/become-worker`](#Become-worker)
   - `/worker`
-    - [`/set-schdule`](#)
-    - [`/update`](#)
+    - [`/set-schdule`](#Set-worker-schedule)
+    - [`/update`](#Update-worker-profile)
     - [`/update/weekend-days`](#)
 
 - [`/services`](#Services)
@@ -498,3 +498,95 @@ PATCH /profile/become-worker
 You need to be authenticated
 
 ---
+
+### **Set worker schedule**
+
+```http
+POST /profile/set-schedule
+```
+
+**Body:**
+
+```json
+{
+    "workingStartTime": null,
+    "workingEndTime": null,
+    "weekendDay": true,
+    "date": "2022-01-28T10:55:09.601Z",
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `workingStartTime` | string | service price |
+| `workingEndTime` | string | service location |
+| `weekendDay` | int | service duration |
+| `date` | int | worker id |
+
+**Response:**
+
+```json
+{
+    "id": 1,
+    "workerID": 1,
+    "workingStartTime": null,
+    "workingEndTime": null,
+    "weekendDay": true,
+    "date": "2022-02-12",
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | worker service id |
+| `workerID` | string | service currency |
+| `workingStartTime` | string | service price |
+| `workingEndTime` | string | service location |
+| `weekendDay` | int | service duration |
+| `date` | int | worker id |
+
+### **Update worker profile**
+
+```http
+POST /profile/worker/update
+```
+
+**Body:**
+
+```json
+{
+    "workingStartTime": null,
+    "workingEndTime": null,
+    "weekendDay": true,
+    "date": "2022-01-28T10:55:09.601Z",
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `workingStartTime` | string | service price |
+| `workingEndTime` | string | service location |
+| `weekendDay` | int | service duration |
+| `date` | int | worker id |
+
+**Response:**
+
+```json
+{
+    "id": 1,
+    "workerID": 1,
+    "workingStartTime": null,
+    "workingEndTime": null,
+    "weekendDay": true,
+    "date": "2022-02-12",
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | worker service id |
+| `workerID` | string | service currency |
+| `workingStartTime` | string | service price |
+| `workingEndTime` | string | service location |
+| `weekendDay` | int | service duration |
+| `date` | int | worker id |
