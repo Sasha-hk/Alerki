@@ -383,6 +383,7 @@ describe('Test profile', () => {
                 .set('Cookie', ['accessToken=' + client.accessToken])
             
             expect(r.statusCode).toBe(200)
+            console.log(r.body)
         })
 
         test('create one more worker => return 400', async () => {
