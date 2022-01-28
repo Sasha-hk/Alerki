@@ -23,7 +23,7 @@ Endpoints list:
 
 - [`/profile`](#Profile)
   - [`/find-worker`](#Find-worker)
-  - [`/get-schedule`](#Get-schedule)
+  - [`/get-schedule`](#Get-worker-schedule)
   - [`/picture`](#Picture)
   - [`/create/service`](#Create-worker-service)
   - [`/become-worker`](#Become-worker)
@@ -31,7 +31,6 @@ Endpoints list:
     - [`/set-schdule`](#)
     - [`/update`](#)
     - [`/update/weekend-days`](#)
-    - [`/become-worker`](#)
 
 - [`/services`](#Services)
   - [`/find`](#Find-service)
@@ -499,5 +498,3 @@ PATCH /profile/become-worker
 You need to be authenticated
 
 ---
-
-
