@@ -900,7 +900,7 @@ PATCH /profile/worker/confirm/:slug
 
 ---
 
-### **Make an appointment**
+### **Make appointment**
 
 ```http
 POST /profile/make-appointment
