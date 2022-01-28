@@ -11,13 +11,13 @@ Endpoints list:
 - [`/appointments`](#Appointments)
   - [`/details/:slug`](#Appointment-details)
   - `/client`
-    - [`/get-day`](#Client-appointments-for)
-    - [`/from-now`](#Client-appointments-from-not)
-    - [`/cancel/:slug`](#Client-cancel-appointment)
+    - [`/get-day`](#Get-appointments-for)
+    - [`/from-now`](#Get-appointments-from-not)
+    - [`/cancel/:slug`](#Get-cancel-appointment)
   - `/worker`
-    - [`/get-day`](#Worker-appointments-for)
-    - [`/from-now`](#Worker-appointments-from-now)
-    - [`/cancel/:slug`](#Worker-cancel-appointment)
+    - [`/get-day`](#Get-appointments-for)
+    - [`/from-now`](#Get-appointments-from-now)
+    - [`/cancel/:slug`](#Get-cancel-appointment)
     - [`/confirm/:slug`](#Worker-confirm-appointment)
   - [`/make-appointment`](#Make-appointment)
 
@@ -677,4 +677,58 @@ GET /profile/details/:slug
 | `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `worekrServiceID` | int | worker service id |
+| `workerServiceID` | int | worker service id |
+
+### **Get appointments for**
+
+**For client:**
+
+```http
+GET /profile/client/get-day?date=date
+```
+
+**For worker:**
+
+```http
+GET /profile/worker/get-day?date=date
+```
+
+**Query:**
+
+- date
+
+| **Query** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `date` | string | date |
+
+**Response:**
+
+```json
+[
+    {
+        "id": 1,
+        "slug": "SEXblVKcAme",
+        "appointmentStartTime": "2022-01-28T09:26:39.915Z",
+        "appointmentEndTime": "2022-01-28T09:46:39.915Z",
+        "duration": 1200000,
+        "clientConfirm": true,
+        "workerConfirm": false,
+        "clientID": 2,
+        "workerID": 1,
+        "workerServiceID": 1
+    }
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | appointment id |
+| `slug` | string | slug |
+| `appointmentStartTime` | string | start time |
+| `appointmentEndTime` | string | end time |
+| `duration` | int | service duration |
+| `clientConfirm` | bool | client confirm |
+| `workerConfirm` | bool | worekr confirm |
+| `clientID` | int | client id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
