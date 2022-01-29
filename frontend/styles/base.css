@@ -5,6 +5,32 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-:root {
-    --link: #007194;
+/* XS / Extra small */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+
+}
+
+/* SM / Small */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+
+}
+
+/* MD / Medium */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+   
+}
+
+/* LG / Large */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+   
+}
+
+/* XL / Extra large */
+@media only screen and (min-width: 1201px) and (max-width: 1400px) {
+
+}
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+
 }
