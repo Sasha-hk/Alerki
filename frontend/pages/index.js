@@ -1,7 +1,11 @@
-export default function Home() {
+import { useTheme } from 'next-themes'
+
+const Home = () => {
     return (
         <div>
-            Hello Next.js
+            Hello
         </div>
     )
 }
+
+export default Home
