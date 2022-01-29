@@ -1,9 +1,13 @@
+/* light theme */
 :root {
-  --background: white;
-  --foreground: black;
+    --bg-general: #EAF7FF;
+    --bg-block: #fff;
+    --color: #000;
 }
 
+/* dark theme */
 [data-theme='dark'] {
-  --background: black;
-  --foreground: white;
+    --bg-genera: #16171A;
+    --bg-block: #000;
+    --color: #fff;
 }

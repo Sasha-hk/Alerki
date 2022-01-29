@@ -1,10 +1,12 @@
 import { useTheme } from 'next-themes'
+import FluidFrame from '../components/frames/FluidFrame'
+
 
 const Home = () => {
     return (
-        <div>
-            Hello
-        </div>
+        <FluidFrame>
+            
+        </FluidFrame>
     )
 }
 
