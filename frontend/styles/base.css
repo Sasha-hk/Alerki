@@ -77,9 +77,9 @@ section:not(:last-child) {
 @media only screen and (min-width: 1201px) and (max-width: 1400px) {
     :root {
         --navbar-height: 70px;
-        --frame-padding: 16px;
+        --frame-padding: 60px;
         --frame-fix-navbar: 80px;
-        --continer-width: 1117px;
+        --continer-width: 1059px;
     }
 }
 
@@ -87,8 +87,8 @@ section:not(:last-child) {
 @media only screen and (min-width: 1401px) {
     :root {
         --navbar-height: 70px;
-        --frame-padding: 16px;
+        --frame-padding: 60px;
         --frame-fix-navbar: 80px;
-        --continer-width: 1117px;
+        --continer-width: 1059px;
     }
 }

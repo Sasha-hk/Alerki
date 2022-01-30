@@ -2,7 +2,7 @@
 .nav-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     background: var(--bg-block);
     height: var(--navbar-height);
     width: 100%;
