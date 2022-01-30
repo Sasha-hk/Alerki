@@ -1,13 +1,13 @@
-/* light theme */
+/* light */
 :root {
     --bg-general: #EAF7FF;
     --bg-block: #fff;
     --color: #000;
 }
 
-/* dark theme */
+/* dark */
 [data-theme='dark'] {
-    --bg-genera: #16171A;
+    --bg-general: #16171A;
     --bg-block: #000;
     --color: #fff;
 }

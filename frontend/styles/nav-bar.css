@@ -1,19 +1,69 @@
+/* general */
 .nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: var(--bg-block);
+    height: var(--navbar-height);
     width: 100%;
-    height: 70px;
+    padding: 0 var(--frame-padding);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
 }
-.nav-bar a img {
-    fill: var(--color);
-    stroke: var(--color);
+
+/* logo */
+.nav-bar-logo {
+    font-size: 30px;
+    font-weight: 500;
+    line-height: 35px;
+}
+
+/* nav buttons */
+nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.nav-bar a svg {
     width: 29px;
     height: 29px;
-    background: blue;
+}
+.nav-bar .home {
+    fill: var(--color);
+    stroke: var(--color);
+}
+.nav-bar .notification {
+    fill: var(--color);
+}
+.nav-bar .profile {
+    fill: var(--color);
+    width: 33px;
+    height: 33px;
+}
+.nav-bar a {
+    display: block;
+    height: min-content;
+    width: min-content;
+}
+.nav-bar a:not(:last-child) {
+    margin-right: 60px;
 }
 
 /* XS / Extra small */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
+    /* nav bar */
+    .nav-bar {
+        justify-content: center;
+        top: auto;
+        bottom: 0;
+    }
 
+    /* logo */
+    .nav-bar-logo {
+        display: none;
+    }
 }
 
 /* SM / Small */

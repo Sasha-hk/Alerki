@@ -3,25 +3,44 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    color: var(--color);
+}
+
+:root {
+    --navbar-height: 70px;
+    --frame-padding: 16px;
+    --frame-fix-navbar: 80px;
 }
 
 body {
     background: var(--bg-general);
 }
 
+/* containers */
+section {
+    width: 100%;
+}
+section:not(:last-child) {
+    margin-bottom: 16px;
+}
+
 /* XS / Extra small */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
-
+    * {
+        --frame-padding: 16px;
+    }
 }
 
 /* SM / Small */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-
+    * {
+        --frame-padding: 16px;
+    }
 }
 
 /* MD / Medium */
 @media only screen and (min-width: 769px) and (max-width: 992px) {
-   
+
 }
 
 /* LG / Large */
