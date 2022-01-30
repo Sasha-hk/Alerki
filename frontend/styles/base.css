@@ -5,14 +5,12 @@
     font-family: 'Montserrat', sans-serif;
     color: var(--color);
 }
-
 :root {
     --navbar-height: 70px;
     --frame-padding: 16px;
     --frame-fix-navbar: 80px;
     --continer-width: 100%;
 }
-
 body {
     background: var(--bg-general);
 }
@@ -24,13 +22,18 @@ section {
 section:not(:last-child) {
     margin-bottom: 16px;
 }
-
-.container {
-    width: var(--continer-width);
+.block {
+    width: 100%;
+}
+.block:not(:last-child) {
+    margin-bottom: 16px;
 }
 .balance {
     display: flex;
     justify-content: center;
+}
+.container {
+    width: var(--continer-width);
 }
 
 /* XS / Extra small */
