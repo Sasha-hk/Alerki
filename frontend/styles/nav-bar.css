@@ -68,25 +68,35 @@ nav {
 
 /* SM / Small */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-
+    .nav-bar .balance {
+        justify-content: space-between;
+    }
 }
 
 /* MD / Medium */
 @media only screen and (min-width: 769px) and (max-width: 992px) {
-   
+    .nav-bar .balance {
+        justify-content: space-between;
+    }
 }
 
 /* LG / Large */
 @media only screen and (min-width: 993px) and (max-width: 1200px) {
-   
+    .nav-bar .balance {
+        justify-content: space-between;
+    }
 }
 
 /* XL / Extra large */
 @media only screen and (min-width: 1201px) and (max-width: 1400px) {
-
+    .nav-bar .balance {
+        justify-content: space-between;
+    }
 }
 
 /* XXL / Extra extra large */
 @media only screen and (min-width: 1401px) {
-
+    .nav-bar .balance {
+        justify-content: space-between;
+    }
 }
