@@ -23,7 +23,22 @@ services:
             - db
         env_file: .env.test
         ports:
-            - "3000:3000"
+            - "3001:3001"
         volumes:
             - ../:/app
         working_dir: /app/api
+
+
+    # frontnend:
+    #     build:
+    #         context: ../frontend/
+    #         dockerfile: Dockerfile
+    #     container_name: frontend
+    #     command: bash -c "npm run test"
+    #     depends_on:
+    #         - backend
+    #     ports:
+    #         - "3000:3000"
+    #     volumes:
+    #         - ../:/app
+    #     working_dir: /app/frontend

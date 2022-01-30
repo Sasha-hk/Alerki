@@ -1,0 +1,47 @@
+.scroll-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* XS / Extra small */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+    .fluid-frame {
+        padding: var(--frame-padding) var(--frame-padding) var(--frame-fix-navbar) var(--frame-padding);
+    }
+}
+
+/* SM / Small */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    .fluid-frame {
+        padding: var(--frame-fix-navbar) var(--frame-padding) var(--frame-padding) var(--frame-padding);
+    }
+}
+
+/* MD / Medium */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+    .fluid-frame {
+        padding: var(--frame-fix-navbar) var(--frame-padding) var(--frame-padding) var(--frame-padding);
+    }
+}
+
+/* LG / Large */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+    .fluid-frame {
+        padding: var(--frame-fix-navbar) var(--frame-padding) var(--frame-padding) var(--frame-padding);
+    }
+}
+
+/* XL / Extra large */
+@media only screen and (min-width: 1201px) and (max-width: 1400px) {
+    .fluid-frame {
+        padding: var(--frame-fix-navbar) var(--frame-padding) var(--frame-padding) var(--frame-padding);
+    }
+}
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+    .fluid-frame {
+        padding: var(--frame-fix-navbar) var(--frame-padding) var(--frame-padding) var(--frame-padding);
+    }
+}

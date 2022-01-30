@@ -3,34 +3,95 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+    color: var(--color);
+}
+:root {
+    --navbar-height: 70px;
+    --frame-padding: 16px;
+    --frame-fix-navbar: 80px;
+    --continer-width: 100%;
+}
+body {
+    background: var(--bg-general);
+}
+
+/* containers */
+section {
+    width: 100%;
+}
+section:not(:last-child) {
+    margin-bottom: 16px;
+}
+.block {
+    width: 100%;
+}
+.block:not(:last-child) {
+    margin-bottom: 16px;
+}
+.balance {
+    display: flex;
+    justify-content: center;
+}
+.container {
+    width: var(--continer-width);
 }
 
 /* XS / Extra small */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
-
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 16px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 100%;
+    }
 }
 
 /* SM / Small */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 16px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 100%;
+    }
 }
 
 /* MD / Medium */
 @media only screen and (min-width: 769px) and (max-width: 992px) {
-   
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 16px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 100%;
+    }
 }
 
 /* LG / Large */
 @media only screen and (min-width: 993px) and (max-width: 1200px) {
-   
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 16px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 100%;
+    }
 }
 
 /* XL / Extra large */
 @media only screen and (min-width: 1201px) and (max-width: 1400px) {
-
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 60px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 1059px;
+    }
 }
 
 /* XXL / Extra extra large */
 @media only screen and (min-width: 1401px) {
-
+    :root {
+        --navbar-height: 70px;
+        --frame-padding: 60px;
+        --frame-fix-navbar: 80px;
+        --continer-width: 1059px;
+    }
 }
