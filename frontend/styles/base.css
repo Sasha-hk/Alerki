@@ -36,7 +36,7 @@ section:not(:last-child) {
     width: var(--continer-width);
 }
 
-/* XS / Extra small */
+/* XS / Extra little */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
     :root {
         --navbar-height: 70px;
@@ -46,7 +46,7 @@ section:not(:last-child) {
     }
 }
 
-/* SM / Small */
+/* SM / little */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
     :root {
         --navbar-height: 70px;

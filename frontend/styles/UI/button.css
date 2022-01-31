@@ -1,21 +1,54 @@
+/* general */
 button {
     border: none;
     border-radius: 4px;
     color: var(--btn-color);
+    font-weight: 500;
     outline: none;
-    padding: 7px 24px;
+    text-align: center;
 }
 
+/* sizes */
 button.little {
     font-size: 14px;
+    padding: 7px 24px;
 }
 button.middle {
     font-size: 16px;
+    padding: 9px 30px;
 }
 button.big {
     font-size: 18px;
+    padding: 13px 40px;
 }
 
+button.compact.little {
+    padding: 7px 24px;
+}
+button.compact.middle {
+    padding: 9px 24px;
+}
+button.compact.big {
+    padding: 13px 24px;
+}
+
+button.stratch {
+    width: 100%;
+}
+
+/* colors */
 button.primary {
     background: var(--btn-primary);
+}
+button.black {
+    background: var(--btn-black-bg);
+    color: var(--btn-black-color);
+}
+button.google {
+    background: #D7503F;
+    color: #fff;
+    display: flex;
+    border: none;
+    align-items: center;
+    justify-content: center;
 }

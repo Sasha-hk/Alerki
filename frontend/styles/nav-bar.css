@@ -30,28 +30,31 @@ nav {
     width: 29px;
     height: 29px;
 }
-.nav-bar .home {
+.nav-bar nav .home {
     fill: var(--color);
     stroke: var(--color);
 }
-.nav-bar .notification {
+.nav-bar nav .notification {
     fill: var(--color);
 }
-.nav-bar .profile {
+.nav-bar nav .profile {
     fill: var(--color);
     width: 33px;
     height: 33px;
 }
-.nav-bar a {
+.nav-bar nav a {
     display: block;
-    height: min-content;
-    width: min-content;
 }
-.nav-bar a:not(:last-child) {
+.nav-bar nav a:not(:last-child) {
     margin-right: 60px;
 }
 
-/* XS / Extra small */
+.no-authorized-nav {
+    display: flex;
+    flex-direction: row;
+}
+
+/* XS / Extra little */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
     /* nav bar */
     .nav-bar {
@@ -66,7 +69,7 @@ nav {
     }
 }
 
-/* SM / Small */
+/* SM / little */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
     .nav-bar .balance {
         justify-content: space-between;

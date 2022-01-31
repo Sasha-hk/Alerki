@@ -33,6 +33,9 @@ const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
         case types.NAE_FAIL_ATTACHED_NEWS:
             return 1
+        
+        case 'NEXT':
+            return {name: 'Next.js lox'}
 
         default:
             return state

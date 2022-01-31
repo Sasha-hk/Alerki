@@ -1,16 +1,27 @@
 input {
-    border: none;
+    border: var(--input-border);
     border-radius: 4px;
+    font-weight: 500;
     outline: none;
-    padding: 7px 10px;
+    background: none;
+}
+input::placeholder {
+    color: var(--input-placeholder-color);
 }
 
 input.little {
     font-size: 14px;
+    padding: 7px 8px;
 }
 input.middle {
     font-size: 16px;
+    padding: 9px 11px;
 }
 input.big {
     font-size: 18px;
+    padding: 13px 15px;
+}
+
+input.stratch {
+    width: 100%;
 }
