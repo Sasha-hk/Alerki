@@ -9,7 +9,7 @@ let store
 
 function initStore(initialState) {
     return createStore(
-        // rootReducer,
+        rootReducer,
         composeWithDevTools(applyMiddleware(thunkMiddleware))
     )
 }

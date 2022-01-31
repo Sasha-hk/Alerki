@@ -10,6 +10,8 @@ import '../styles/margins-paddings.css'
 import '../styles/typography.css'
 import '../styles/frames/fluid-frame.css'
 import '../styles/frames/scroll-frame.css'
+import '../styles/UI/button.css'
+import '../styles/UI/input.css'
 
 
 function App({ Component, pageProps }) {

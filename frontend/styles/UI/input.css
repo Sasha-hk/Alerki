@@ -1,0 +1,16 @@
+input {
+    border: none;
+    border-radius: 4px;
+    outline: none;
+    padding: 7px 10px;
+}
+
+input.little {
+    font-size: 14px;
+}
+input.middle {
+    font-size: 16px;
+}
+input.big {
+    font-size: 18px;
+}

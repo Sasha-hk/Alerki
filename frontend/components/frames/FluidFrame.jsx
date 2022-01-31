@@ -10,11 +10,11 @@ function FludFrame({children}) {
         fluidFrame.style.minHeight = '0'
         fluidFrame.style.height = vh * 100 + 'px'
         
-        window.addEventListener('resize', () => {
-            vh = window.innerHeight * 0.01;
-            fluidFrame.style.minHeight = '0'
-            fluidFrame.style.height = vh * 100 + 'px'
-        })
+        // window.addEventListener('resize', () => {
+        //     vh = window.innerHeight * 0.01;
+        //     fluidFrame.style.minHeight = '0'
+        //     fluidFrame.style.height = vh * 100 + 'px'
+        // })
     }, [])
 
     return (

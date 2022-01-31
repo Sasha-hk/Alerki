@@ -1,5 +1,7 @@
 /* light */
 :root {
+    --btn-primary: #5d75ff;
+    --btn-color: #fff;
     --bg-general: #EAF7FF;
     --bg-block: #fff;
     --color: #000;
@@ -7,6 +9,8 @@
 
 /* dark */
 [data-theme='dark'] {
+    --btn-primary: #3449B9;
+    --btn-color: #fff;
     --bg-general: #16171A;
     --bg-block: #000;
     --color: #fff;

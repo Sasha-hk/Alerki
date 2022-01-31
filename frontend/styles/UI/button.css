@@ -1,0 +1,21 @@
+button {
+    border: none;
+    border-radius: 4px;
+    color: var(--btn-color);
+    outline: none;
+    padding: 7px 24px;
+}
+
+button.little {
+    font-size: 14px;
+}
+button.middle {
+    font-size: 16px;
+}
+button.big {
+    font-size: 18px;
+}
+
+button.primary {
+    background: var(--btn-primary);
+}
