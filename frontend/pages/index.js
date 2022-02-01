@@ -5,12 +5,14 @@ import { initializeStore } from '../store'
 import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
+import Cookies from 'js-cookie'
 
 
 const Home = () => {
     const {theme, setTheme} = useTheme()
 
     // const profile = useSelector((store) => store.profile)
+    console.log(Cookies.get('accessToken'))
 
     return (
         <FluidFrame navigation={true}>
@@ -27,12 +29,6 @@ const Home = () => {
 Home.getInitialProps = (ctx) => {
     const reduxStore = initializeStore()
     const {dispatch} = reduxStore
-
-    console.log(dispatch({type: 'NEXT'}))
-
-    console.log(reduxStore.getState())
-
-    Object.keys(ctx).forEach(k => console.log('   ', k))
 
     return {props: {}}
 }

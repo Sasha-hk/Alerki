@@ -1,8 +1,8 @@
-import { useTheme } from 'next-themes'
 import FluidFrame from '../components/frames/FluidFrame'
+import Link from 'next/link'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
-import classes from '../styles/pages/continue.module.css'
+import classes from '../styles/pages/sign-in.module.css'
 
 
 const Continue = () => {
@@ -11,11 +11,13 @@ const Continue = () => {
             <div className={classes.form_wrapper}>
                 <form>
                     <span className="text-big text-center text-500 mb-4">Sign-in</span>
-                    <Input className="big stratch mb-2" placeholder="email"/>
-                    <Input className="big stratch mb-4" placeholder="password"/>
+                    <Input className="big stratch mb-2" placeholder="email" required />
+                    <Input className="big stratch mb-4" placeholder="password" required />
                     <Button className="big primary stratch mb-2">sign-in</Button>
                     <span className="text-little text-muted">Don't have an account? </span>
-                    <a href="" className="text-little">Create a new one</a>
+                    <Link href="/register">
+                        <a className="text-little">Create a new one</a>
+                    </Link>
 
                     <div className={['mb-4', 'mt-4', classes.or_wrapper].join(' ')}>
                         <hr className={classes.hr} />

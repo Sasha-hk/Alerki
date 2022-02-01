@@ -51,7 +51,7 @@ a {
     * {
         --text-little: 14px;
         --text-normal: 2.5vw;
-        --text-middle: 3.5vw;
+        --text-middle: 18px;
         --text-big: 4vw;
     }
 }
@@ -61,7 +61,7 @@ a {
     * {
         --text-little: 14px;
         --text-normal: 2.5vw;
-        --text-middle: 3.5vw;
+        --text-middle: 18px;
         --text-big: 4vw;
     }
 }
@@ -71,7 +71,7 @@ a {
     * {
         --text-little: 14px;
         --text-normal: 2.5vw;
-        --text-middle: 3.5vw;
+        --text-middle: 18px;
         --text-big: 4vw;
     }
 }
@@ -81,7 +81,7 @@ a {
     * {
         --text-little: 14px;
         --text-normal: 2vw;
-        --text-middle: 2.5vw;
+        --text-middle: 18px;
         --text-big: 3vw;
     }
 }
@@ -91,7 +91,7 @@ a {
     * {
         --text-little: 14px;
         --text-normal: 2vw;
-        --text-middle: 2.5vw;
+        --text-middle: 18px;
         --text-big: 3vw;
     }
 }

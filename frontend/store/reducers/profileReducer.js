@@ -41,8 +41,3 @@ const profileReducer = (state = defaultProfileState, action) => {
 
 
 export default profileReducer
-
-// const makeStore = context => createStore(profileReducer);
-
-// // export an assembled wrapper
-// export const wrapper = createWrapper(makeStore, {debug: true});

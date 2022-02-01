@@ -3,6 +3,7 @@ import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
+import Cookies from 'js-cookie'
 
 
 const NavBar = () => {
@@ -55,7 +56,7 @@ const NavBar = () => {
                 <span className="nav-bar-logo">Alerki</span>
 
                 {
-                    true //profile.authenticated
+                    (Cookies.get('accessToken') || Cookies.get('refreshToken'))
                         ? navigationButtons
                         : continueButtons
                 }

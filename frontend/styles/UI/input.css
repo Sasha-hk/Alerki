@@ -1,3 +1,4 @@
+/* general */
 input {
     border: var(--input-border);
     border-radius: 4px;
@@ -5,10 +6,11 @@ input {
     outline: none;
     background: none;
 }
-input::placeholder {
-    color: var(--input-placeholder-color);
+input.stratch {
+    width: 100%;
 }
 
+/* text input */
 input.little {
     font-size: 14px;
     padding: 7px 8px;
@@ -21,7 +23,16 @@ input.big {
     font-size: 18px;
     padding: 13px 15px;
 }
+input::placeholder {
+    color: var(--input-placeholder-color);
+}
 
-input.stratch {
-    width: 100%;
+
+/* radio button */
+input[type="radio"] {
+    margin: 0 10px 0 10px;
+    font: inherit;
+    color: currentColor;
+    width: 22px;
+    height: 22px;
 }
