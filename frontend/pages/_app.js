@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import { ThemeProvider } from 'next-themes'
 import { Provider } from 'react-redux'
 import useStore from '../store'

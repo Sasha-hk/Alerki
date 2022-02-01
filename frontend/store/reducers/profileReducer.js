@@ -31,9 +31,6 @@ const defaultProfileState = {
 
 const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
-        case types.NAE_FAIL_ATTACHED_NEWS:
-            return 1
-        
         case 'NEXT':
             return {name: 'Next.js lox'}
 
@@ -44,3 +41,8 @@ const profileReducer = (state = defaultProfileState, action) => {
 
 
 export default profileReducer
+
+// const makeStore = context => createStore(profileReducer);
+
+// // export an assembled wrapper
+// export const wrapper = createWrapper(makeStore, {debug: true});
