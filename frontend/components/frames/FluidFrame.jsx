@@ -2,7 +2,7 @@ import {useEffect} from 'react'
 import NavBar from '../NavBar/NavBar'
 
 
-function FludFrame({children}) {
+function FludFrame({children, navigation}) {
     useEffect(() => {
         let vh = window.innerHeight * 0.01;
         const fluidFrame = document.querySelector('.fluid-frame')
@@ -20,7 +20,11 @@ function FludFrame({children}) {
     return (
         <>
             {/* navigation */}
-            <NavBar />
+            {
+                navigation
+                    ? <NavBar />
+                    : null
+            }
 
             {/* content block */}
             <div className="fluid-frame">

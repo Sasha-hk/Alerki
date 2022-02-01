@@ -1,13 +1,29 @@
 /* light */
 :root {
+    --btn-primary: #5d75ff;
+    --btn-color: #fff;
+    --btn-black-bg: #000;
+    --btn-black-color: #fff;
+    --input-border: 2px solid #D9D9D9;
+    --input-placeholder-color: #A6A6A6;
     --bg-general: #EAF7FF;
     --bg-block: #fff;
     --color: #000;
+    --color-muted: #cacaca;
+    --color-link: #1E78FF;
 }
 
 /* dark */
 [data-theme='dark'] {
+    --btn-primary: #3449B9;
+    --btn-color: #fff;
+    --btn-black-bg: #fff;
+    --btn-black-color: #000;
+    --input-border: 2px solid #D9D9D9;
+    --input-placeholder-color: #A6A6A6;
     --bg-general: #16171A;
     --bg-block: #000;
     --color: #fff;
+    --color-muted: #838383;
+    --color-link: #1E78FF;
 }
