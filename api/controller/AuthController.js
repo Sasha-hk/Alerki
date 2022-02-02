@@ -51,16 +51,21 @@ class AuthController {
             const deviceName = getDeviceName(req)
             const {
                 email,
+                username,
                 password,
             } = req.body
 
             checkParams.all([
-                email,
                 password
             ])
-            
-            const userData = await UserService.login({email, password, deviceName})
 
+            checkParams.atLeastOne({
+                email,
+                username,
+            })
+            
+            const userData = await UserService.login({email, username, password, deviceName})
+            
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
 
