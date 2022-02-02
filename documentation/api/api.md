@@ -107,11 +107,11 @@ POST /auth/log-in
 }
 ```
 
-| **Parameter** | **Type** | **Requeired** |
-| :--- | :--- | :--- |
+| **Parameter** | **Type** | **Requeired** | **Description** |
+| :--- | :--- | :--- | :--- |
 | `email` | string | true | email not required if you specify an username |
 | `username` | string | true | username not required if you specify an email |
-| `password` | string | true |
+| `password` | string | true | |
 
 **Response:**
 
