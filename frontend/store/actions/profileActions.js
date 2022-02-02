@@ -47,7 +47,7 @@ const register = ({email, username, profileType, password}) => {
 const logIn = ({email, username, password}) => {
     return async dispatch => {
         dispatch(makeAction(types.PROFILE_LOGIN))
-        
+        console.log(API_URL)
         await axios({
             method: 'post',
             url: API_URL + '/auth/log-in',
@@ -69,6 +69,7 @@ const logIn = ({email, username, password}) => {
             })
             .catch(e => {
                 console.log(e)
+                alert(e)
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e.response?.data))
             }) 
     }
