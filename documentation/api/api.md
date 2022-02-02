@@ -102,13 +102,15 @@ POST /auth/log-in
 ```json
 {
     "email": "email",
+    "username": "username",
     "password": "qwerty"
 }
 ```
 
 | **Parameter** | **Type** | **Requeired** |
 | :--- | :--- | :--- |
-| `email` | string | true | |
+| `email` | string | true | email not required if you specify an username |
+| `username` | string | true | username not required if you specify an email |
 | `password` | string | true |
 
 **Response:**

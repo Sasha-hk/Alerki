@@ -120,12 +120,15 @@ class UserService {
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
 
-    async login({email, password, deviceName}) {
+    async login({email, username, password, deviceName}) {
         // check if user exists
         const loginUser = await UserModel.findOne({
             raw: true,
             where: {
-                email,
+                [Sequelize.Op.or]: {
+                    email: email || null,
+                    username: username || null,
+                }
             },
         })
 
