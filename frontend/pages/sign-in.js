@@ -7,7 +7,6 @@ import Link from 'next/link'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import classes from '../styles/pages/sign-in.module.css'
-import Cookies from 'js-cookie'
 
 
 const Continue = () => {
@@ -20,13 +19,9 @@ const Continue = () => {
         password: null,
     })
     
-    const signIn = (e) => {
+    const signIn = async (e) => {
         e.preventDefault()
         dispatch(profileActions.logIn(form))
-
-        if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
-            Router.push('/')
-        }
     }
 
     return (

@@ -7,6 +7,7 @@ import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import classes from '../styles/pages/register.module.css'
+import Cookies from 'js-cookie'
 
 
 const Register = () => {

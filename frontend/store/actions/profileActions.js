@@ -1,5 +1,7 @@
 import axios from 'axios'
 import * as types from '../types/profileTypes'
+import Cookies from 'js-cookie'
+import Router from 'next/router'
 
 
 const API_URL = process.env.API_URL
@@ -59,6 +61,11 @@ const logIn = ({email, username, password}) => {
             .then(r => {
                 console.log(r)
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_SUCCESS, r.data.userData))
+
+                console.log(Cookies.get('accessToken'), Cookies.get('refreshToken'))
+                if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
+                    Router.push('/')
+                }
             })
             .catch(e => {
                 console.log(e)
