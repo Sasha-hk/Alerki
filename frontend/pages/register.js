@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
+import profileActions from '../store/actions/profileActions'
+import { useDispatch, useSelector } from 'react-redux'
+import Router from 'next/router'
 import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
@@ -7,6 +10,9 @@ import classes from '../styles/pages/register.module.css'
 
 
 const Register = () => {
+    const dispatch = useDispatch()
+    const profile = useSelector(store => store.profile)
+
     const [form, setForm] = useState({
         username: null,
         email: null,
@@ -15,7 +21,11 @@ const Register = () => {
     })
     const register = (e) => {
         e.preventDefault()
-        
+        dispatch(profileActions.register(form))
+
+        if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
+            Router.push('/')
+        }
     }
 
     return (
@@ -43,7 +53,7 @@ const Register = () => {
                         id="password" 
                         type="password" 
                         placeholder="password" 
-                        minlength="6" 
+                        minLength="6" 
                         required
                         onChange={(e) => setForm({...form, password: e.target.value})}
                     />

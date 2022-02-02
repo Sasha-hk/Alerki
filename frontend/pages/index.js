@@ -11,8 +11,6 @@ import Cookies from 'js-cookie'
 const Home = () => {
     const {theme, setTheme} = useTheme()
 
-    // const profile = useSelector((store) => store.profile)
-    console.log(Cookies.get('accessToken'))
 
     return (
         <FluidFrame navigation={true}>

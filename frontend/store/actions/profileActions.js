@@ -6,53 +6,69 @@ const API_URL = process.env.API_URL
 
 const makeAction = (action) => {
     return {
-        type: action
+        type: action,
     }
 }
 const makeActionWithPayload = (action, payload) => {
     return {
         type: action,
-        payload
+        payload,
     }
 }
 
 // register
-export const register = ({email, username, password}) => {
+const register = ({email, username, profileType, password}) => {
     return async dispatch => {
-        dispatch(makeAction(PROFILE_REGISTER))
+        dispatch(makeAction(types.PROFILE_REGISTER))
         
         await axios({
-            method: 'get',
-            url: API_URL + '/auth/register'
+            method: 'post',
+            url: API_URL + '/auth/register',
+            data: {
+                email,
+                username,
+                password,
+                profileType,
+            }
         })
             .then(r => {
+                console.log(r.data)
                 dispatch(makeActionWithPayload(types.PROFILE_REGISTER_SUCCESS, r.data))
             })
             .catch(e => {
-                dispatch(makeAction(types.PROFILE_REGISTER_ERROR))
+                dispatch(makeActionWithPayload(types.PROFILE_REGISTER_ERROR, e.response.data))
             }) 
     }
 }
 
 // log-in
-export const logIn = ({email, username, password}) => {
+const logIn = ({email, username, password}) => {
     return async dispatch => {
-        dispatch(makeAction(PROFILE_LOGIN))
+        dispatch(makeAction(types.PROFILE_LOGIN))
         
         await axios({
-            method: 'get',
+            method: 'post',
             url: API_URL + '/auth/log-in',
-            body: {
+            data: {
                 email,
                 username,
                 password,
-            }
+            },
+            withCredentials: true
         })
             .then(r => {
-                dispatch(makeActionWithPayload(types.PROFILE_LOGIN_SUCCESS, r.data))
+                console.log(r)
+                dispatch(makeActionWithPayload(types.PROFILE_LOGIN_SUCCESS, r.data.userData))
             })
             .catch(e => {
-                dispatch(makeAction(types.PROFILE_LOGIN_ERROR))
+                console.log(e)
+                dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e.response?.data))
             }) 
     }
+}
+
+
+export default {
+    register,
+    logIn,
 }
