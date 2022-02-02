@@ -28,6 +28,8 @@ class UserService {
                 username,
             }
         })
+
+        return foundUser
     }
 
     async findUserByID({id}) {
@@ -55,6 +57,16 @@ class UserService {
 
     async checkEmailExists(email) {
         const checkUserExists = await this.findUserByEmail(email)
+
+        if (checkUserExists) {
+            throw AuthError.EmailExistsError()
+        }
+
+        return checkUserExists
+    }
+
+    async checkUsernameExists(username) {
+        const checkUserExists = await this.findUserByUsername({username})
 
         if (checkUserExists) {
             throw AuthError.EmailExistsError()
@@ -91,6 +103,8 @@ class UserService {
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
+        console.log(username)
+        await this.checkUsernameExists(username)
 
         const hashedPassword = bcrypt.hashSync(password, 1)
 

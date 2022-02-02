@@ -17,12 +17,12 @@ class AuthController {
                 profileType,
             } = req.body
 
-            checkParams.all([
+            checkParams.all({
                 email,
                 username,
                 password,
                 profileType
-            ])
+            })
             
             const userData = await UserService.register({
                 email,
@@ -42,6 +42,7 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
+            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
@@ -55,9 +56,9 @@ class AuthController {
                 password,
             } = req.body
 
-            checkParams.all([
+            checkParams.all({
                 password
-            ])
+            })
 
             checkParams.atLeastOne({
                 email,
