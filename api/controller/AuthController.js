@@ -56,9 +56,9 @@ class AuthController {
                 password,
             } = req.body
 
-            checkParams.all([
+            checkParams.all({
                 password
-            ])
+            })
 
             checkParams.atLeastOne({
                 email,
