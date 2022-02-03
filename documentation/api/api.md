@@ -6,6 +6,7 @@ Endpoints list:
   - [`/register`](#Registration)
   - [`/log-in`](#Log-in)
   - [`/log-out`](#Log-out)
+  - [`/callback/google`](#With-Google)
   - [`/refresh`](#Refresh)
 
 - [`/appointments`](#Appointments)
@@ -160,6 +161,49 @@ User need to be authenticated
 
 - remove - accessToken
 - remove - refreshToken
+
+---
+
+### **With Google**
+
+```http
+POST /auth/callback/google
+```
+
+**Query:**
+
+- code
+
+| **Query** | **Type** | **Requeired** | **Details** |
+| :--- | :--- | :--- | :--- |
+| `code` | string | true | Google OAuth2.0 code / read about this [`here`](https://developers.google.com/identity/protocols/oauth2/web-server#redirecting "Google OAuth2.0 documentation") |
+
+**Response:**
+
+```json
+{
+    "id": "1",
+    "email": "email",
+    "clientID": 1,
+    "workerID": 1,
+    "accessToken": "token..."
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | |
+| `email` | string | |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `accessToken` | string | access token |
+
+**Cookies:**
+
+- accessToken
+- refreshToken
+
+---
 
 ### **Refresh**
 

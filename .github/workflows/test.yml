@@ -3,12 +3,28 @@ name: Test API
 on:   
   push:
     branches:
+      - '!**'
       - main
+
+    paths-ignore:
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
 
   pull_request:
     branches:
+      - '!**'
       - main
       - dev
+
+    paths-ignore:
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
 
 jobs:
   push:
