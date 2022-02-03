@@ -234,7 +234,7 @@ class UserService {
                 lastName: profileData.family_name,
                 profileType: 'client',
                 deviceName,
-                pictureID: savedPicture,
+                pictureID: savedPicture?.id,
                 googleAccessToken: googleToken.access_token,
                 googleRefreshToken: googleToken.refresh_token,
                 googleIdToken: googleToken.id_token,

@@ -13,7 +13,9 @@ class UserDto {
         this.firstName = user.firstName
         this.lastName = user.lastName
         this.clientID = user.clientID
-        this.puctureID = user.puctureID
+        if (user.pictureID) {
+            this.puctureID = user.puctureID
+        }
         if (user.workerID) {
             this.workerID = user.workerID
         }
