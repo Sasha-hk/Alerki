@@ -1,6 +1,6 @@
 FROM node
 
-WORKDIR /app/api
+WORKDIR /app/frontnend
 
 COPY package*.json ./
 
@@ -8,4 +8,4 @@ RUN npm update && npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE 3000

@@ -69,11 +69,23 @@ describe('Test authenticatin', () => {
     })
 
     describe('login', () => {
-        test('with correct parameters => 200', async () => {
+        test('with email => 200', async () => {
             const r = await request(app)
                 .post('/auth/log-in')
                 .send({
-                    ...worker,
+                    email: worker.email,
+                    password: worker.password,
+                })
+            
+            expect(r.statusCode).toBe(200)
+        })
+
+        test('with username => 200', async () => {
+            const r = await request(app)
+                .post('/auth/log-in')
+                .send({
+                    username: worker.username,
+                    password: worker.password,
                 })
             
             expect(r.statusCode).toBe(200)
@@ -411,8 +423,8 @@ describe('Test appointments', () => {
                     throw Error('All days is weekend')
                 }
                 if (workerSchedule.weekendDays[w]) {
-                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
-                        timeCandedat.setDate(timeCandedat.getDate() + 1)
+                    if (days.indexOf(w) == timeCandedat.getDay()) {
+                        timeCandedat.setDate(timeCandedat.getDate() + 2)
                     }
                     weekendDaysMaxCound += 1
                 }

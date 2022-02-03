@@ -11,7 +11,7 @@ class GoogleOAuth {
                         code: code,
                         client_id: process.env.GOOGLE_CLIENT_ID,
                         client_secret: process.env.GOOGLE_CLIENT_SECRET,
-                        redirect_uri: 'http://localhost:3000/auth/callback/google',
+                        redirect_uri: process.env.GOOGLE_REDIRECT_URL,
                         grant_type: 'authorization_code',
                     },
                     headers: {
