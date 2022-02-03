@@ -34,7 +34,6 @@ const register = ({email, username, profileType, password}) => {
             }
         })
             .then(r => {
-                console.log(r.data)
                 dispatch(makeActionWithPayload(types.PROFILE_REGISTER_SUCCESS, r.data))
             })
             .catch(e => {
@@ -47,7 +46,7 @@ const register = ({email, username, profileType, password}) => {
 const logIn = ({email, username, password}) => {
     return async dispatch => {
         dispatch(makeAction(types.PROFILE_LOGIN))
-        console.log(API_URL)
+        
         await axios({
             method: 'post',
             url: API_URL + '/auth/log-in',
@@ -59,24 +58,43 @@ const logIn = ({email, username, password}) => {
             withCredentials: true
         })
             .then(r => {
-                console.log(r)
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_SUCCESS, r.data.userData))
 
-                console.log(Cookies.get('accessToken'), Cookies.get('refreshToken'))
                 if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
                     Router.push('/')
                 }
             })
             .catch(e => {
-                console.log(e)
                 alert(e)
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e.response?.data))
             }) 
     }
 }
 
+// with Google
+const withGoogle = (code) => {
+    return async dispatch => {
+        dispatch(makeAction(types.PROFILE_WITH_GOOGLE))
+        
+        await axios({
+            method: 'get',
+            url: API_URL + '/auth/callback/google',
+            params: {
+                code,
+            },
+            withCredentials: true
+        })
+            .then(r => {
+                dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_SUCCESS, r.data.userData))
+            })
+            .catch(e => {
+                dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_ERROR, e.response?.data))
+            }) 
+    }
+}
 
 export default {
     register,
     logIn,
+    withGoogle,
 }
