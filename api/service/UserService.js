@@ -103,7 +103,6 @@ class UserService {
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
-        console.log(username)
         await this.checkUsernameExists(username)
 
         const hashedPassword = bcrypt.hashSync(password, 1)
@@ -235,7 +234,7 @@ class UserService {
                 lastName: profileData.family_name,
                 profileType: 'client',
                 deviceName,
-                pictureID: savedPicture,
+                pictureID: savedPicture?.id,
                 googleAccessToken: googleToken.access_token,
                 googleRefreshToken: googleToken.refresh_token,
                 googleIdToken: googleToken.id_token,

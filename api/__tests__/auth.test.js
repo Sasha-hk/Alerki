@@ -423,8 +423,8 @@ describe('Test appointments', () => {
                     throw Error('All days is weekend')
                 }
                 if (workerSchedule.weekendDays[w]) {
-                    if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
-                        timeCandedat.setDate(timeCandedat.getDate() + 1)
+                    if (days.indexOf(w) == timeCandedat.getDay()) {
+                        timeCandedat.setDate(timeCandedat.getDate() + 2)
                     }
                     weekendDaysMaxCound += 1
                 }

@@ -6,7 +6,7 @@ const router = require('./router')
 
 const app = express()
 const corsOptions ={
-    origin: ['http://localhost:3000', process.env.API_URL],
+    origin: ['http://localhost:3000', 'http://192.168.1.11:3000', process.env.API_URL],
     credentials: true,
     optionSuccessStatus: 200
 }
@@ -15,6 +15,7 @@ const corsOptions ={
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors(corsOptions))
+
 
 // routers
 router(app)
