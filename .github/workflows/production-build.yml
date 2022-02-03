@@ -8,6 +8,9 @@ on:
     paths-ignore:
       - 'documentation/**'
       - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
 
   pull_request:
     branches:
