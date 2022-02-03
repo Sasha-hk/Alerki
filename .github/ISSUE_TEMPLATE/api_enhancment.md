@@ -1,9 +1,9 @@
 ---
-name: Enhancement
+name: API enhancement
 about: General task template
 title: '[API] '
 labels: ["api", "enhancement"]
-assignees: ''
+assignees: 'Sashs-hk'
 
 ---
 
