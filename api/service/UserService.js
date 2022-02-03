@@ -103,7 +103,6 @@ class UserService {
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
-        console.log(username)
         await this.checkUsernameExists(username)
 
         const hashedPassword = bcrypt.hashSync(password, 1)
