@@ -1,16 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux'
 import {useRouter} from 'next/router'
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
 import Cookies from 'js-cookie'
 
 
 const NavBar = () => {
-    const router = useRouter()
-
-    // const profile = useSelector((store) => store.profile)
-    
     const navigationButtons = (
         <nav>
             <Link href="/">
@@ -40,7 +36,7 @@ const NavBar = () => {
         </nav>
     )
 
-    const continueButtons = (
+    const signInButton = (
         <div className="no-authorized-nav">
             <Link href="/sign-in">
                 <a>
@@ -50,16 +46,23 @@ const NavBar = () => {
         </div>
     )
 
+    // this crutch to fix "React hydration error"
+    const [hyratedNavigation, setHydratedNavigation] = useState(null)
+
+    useEffect(() => {
+        setHydratedNavigation(
+            Cookies.get('authenticated')
+                ? navigationButtons
+                : signInButton 
+        )
+    }, [])
+
     return (
         <div className="nav-bar">
             <div className="container balance">
                 <span className="nav-bar-logo">Alerki</span>
 
-                {
-                    (Cookies.get('accessToken') || Cookies.get('refreshToken'))
-                        ? navigationButtons
-                        : continueButtons
-                }
+                {hyratedNavigation}
             </div>
         </div>
     )

@@ -36,6 +36,7 @@ class AuthController {
 
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             delete userData.refreshToken
 
@@ -68,6 +69,7 @@ class AuthController {
             
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             delete userData.refreshToken
 
@@ -95,6 +97,7 @@ class AuthController {
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             res.sendStatus(200)
         }
@@ -114,6 +117,7 @@ class AuthController {
             
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
         
             delete userData.refreshToken
 
@@ -160,9 +164,10 @@ class AuthController {
             
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
             
             delete userData.refreshToken
-
+            
             res.json(userData)
         }
         catch(e) {
