@@ -26,7 +26,10 @@ describe('Test authenticatin', () => {
             expect(w.body).toBeTruthy()
             expect(w.body.accessToken).toBeTruthy()
 
-            worker.accessToken = w.body.accessToken
+            worker = {
+                ...worker,
+                ...w.body
+            }
             worker.refreshToken = extractCookies(w.headers).refreshToken.value
 
             const c = await request(app)
@@ -37,7 +40,10 @@ describe('Test authenticatin', () => {
             expect(c.body).toBeTruthy()
             expect(c.body.accessToken).toBeTruthy()
 
-            client.accessToken = c.body.accessToken
+            client = {
+                ...client,
+                ...c.body
+            }
             client.refreshToken = extractCookies(c.headers).refreshToken.value
         })
 
@@ -166,6 +172,25 @@ let weekendDay = null
 let workerScheduleDate = null
 
 describe('Test profile', () => {
+    describe('get profile', () => {
+        test('with exists profile => 200', async () => {
+            console.log(worker.username)
+            const r = await request(app)
+                .get('/profile/' + worker.username)
+            
+            expect(r.statusCode).toBe(200)
+            expect(r.body.workerID).toBeTruthy()
+            expect(r.body.worker).toBeTruthy()
+        })
+
+        test('with exists profile => 404', async () => {
+            console.log(worker.username)
+            const r = await request(app)
+                .get('/profile/not-exists')
+             
+            expect(r.statusCode).toBe(404)
+        })
+    })
     describe('create worker service', () => {
         test('with exists service and worker => 200', async () => {
             const r = await request(app)

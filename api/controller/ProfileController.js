@@ -9,9 +9,38 @@ const APIError = require('../exception/APIError')
 const ProfileError = require('../exception/ProfileError')
 const checkParams = require('../utils/validators/checkParams')
 const GetWorkersDto = require('../dto/GetWorkersDto')
+const ProfileDto = require('../dto/ProfileDto')
 
 
 class ProfileController { 
+    async getProfile(req, res, next) {
+        try {
+            const {username} = req.params
+            
+            checkParams.all({
+                username,
+            })
+
+            const foundUser = await UserService.findUserByUsername({username})
+
+            if (!foundUser) {
+                throw APIError.NotFoundError()
+            }
+
+            let profileData = new ProfileDto(foundUser)
+
+            if (foundUser.workerID) {
+                const workerProfile = await ProfileService.findWorkerByID({id: profileData.workerID})
+                profileData.addWorkerProfile(workerProfile)
+            }
+
+            res.json({...profileData})
+        }
+        catch (e) {
+            res.status(e.status || 500).json(e.errors) 
+        }
+    }
+
     async findWorker(req, res, next) {
         try {
             const {service_id, limit, page} = req.query
