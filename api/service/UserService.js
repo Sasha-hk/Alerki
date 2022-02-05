@@ -23,11 +23,13 @@ class UserService {
 
     async findUserByUsername({username}) {
         const foundUser = await UserModel.findOne({
-            rew: true,
+            raw: true,
             where: {
                 username,
             }
         })
+
+        return foundUser
     }
 
     async findUserByID({id}) {
