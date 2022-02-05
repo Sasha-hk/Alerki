@@ -18,6 +18,31 @@ const makeActionWithPayload = (action, payload) => {
     }
 }
 
+// upload profile
+const upload = ({email, username, profileType, password}) => {
+    return async dispatch => {
+        dispatch(makeAction(types.PROFILE_UPLOAD))
+        
+        await api({
+            method: 'post',
+            url: API_URL + '/auth/register',
+            data: {
+                email,
+                username,
+                password,
+                profileType,
+            }
+        })
+            .then(r => { 
+                dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SUCCESS, r.data))
+                Router.push('/')
+            })
+            .catch(e => {
+                dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_ERROR, e?.response?.data))
+            }) 
+    }
+}
+
 // register
 const register = ({email, username, profileType, password}) => {
     return async dispatch => {

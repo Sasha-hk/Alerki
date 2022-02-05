@@ -30,6 +30,35 @@ const defaultProfileState = {
 
 const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
+            // with Google
+        case types.PROFILE_UPLOAD:
+            return {
+                ...state,
+                loading: true,
+                error: false,
+                errorMessage: null,
+            }
+        
+        case types.PROFILE_UPLOAD_SUCCESS:
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
+                loading: false,
+                error: false,
+                errorMessage: null,
+            }
+
+        case types.PROFILE_UPLOAD_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: true,
+                errorMessage: action.payload,
+            }
+
         // register
         case types.PROFILE_REGISTER:
             return {

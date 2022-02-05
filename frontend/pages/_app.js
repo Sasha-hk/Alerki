@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { ThemeProvider } from 'next-themes'
-import { Provider } from 'react-redux'
+import { useDispatch, Provider } from 'react-redux'
+import profileActions from '../store/actions/profileActions'
 import useStore from '../store'
 import Cookies from 'js-cookie'
 import api from '../http'
@@ -27,6 +28,8 @@ function App({ Component, pageProps }) {
                 '/auth/refresh',
             )
         }
+
+        // dispatch(profileActions.upload())
     }, [])
 
     return (
