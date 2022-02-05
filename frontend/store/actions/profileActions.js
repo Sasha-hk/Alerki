@@ -85,7 +85,6 @@ const withGoogle = (code) => {
             withCredentials: true
         })
             .then(r => {
-                console.log('>>> 1')
                 dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_SUCCESS, r.data.userData))
                 Router.push('/')
             })

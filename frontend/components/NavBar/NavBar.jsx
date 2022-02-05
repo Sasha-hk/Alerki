@@ -4,6 +4,7 @@ import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
 import Cookies from 'js-cookie'
+import useFixHydrate from '../../hooks/useFixHydrate.js'
 
 
 const NavBar = () => {
@@ -46,23 +47,19 @@ const NavBar = () => {
         </div>
     )
 
-    // this crutch to fix "React hydration error"
-    const [hyratedNavigation, setHydratedNavigation] = useState(null)
-
-    useEffect(() => {
-        setHydratedNavigation(
-            Cookies.get('authenticated')
-                ? navigationButtons
-                : signInButton 
-        )
-    }, [])
+    // crutch to fix "React hydration error"
+    const hydratedNavigation = useFixHydrate(
+        Cookies.get('authenticated')
+            ? navigationButtons
+            : signInButton
+    )
 
     return (
         <div className="nav-bar">
             <div className="container balance">
                 <span className="nav-bar-logo">Alerki</span>
 
-                {hyratedNavigation}
+                {hydratedNavigation}
             </div>
         </div>
     )
