@@ -23,6 +23,7 @@ Endpoints list:
   - [`/make-appointment`](#Make-appointment)
 
 - [`/profile`](#Profile)
+  - [`/:username`](#Get-profile)
   - [`/find-worker`](#Find-worker)
   - [`/get-schedule`](#Get-worker-schedule)
   - [`/picture`](#Picture)
@@ -315,6 +316,51 @@ POST /services/create
 | `createdAt` | string | updation time |
 
 ## **Profile**
+
+### **Get profile**
+
+```http
+GET /profile/:username
+```
+
+**Response:**
+
+```json
+{
+    "id": 1,
+    "username": "username",
+    "firstName": "firts name",
+    "lastName": "last name",
+    "clientID": 1,
+    "workerID": 1,
+    "pictureID": null,
+    "worker": {
+        "shortBiography": null,
+        "instagramProfile": null,
+        "workingStartTime": null,
+        "workingEndTime": null
+    }
+}
+```
+
+In response, we receive an array of users with the specified service in the request
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | user id |
+| `username` | string | username |
+| `firstName` | string | user first name |
+| `lastName` | string | user last name |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `pictureID` | int | user picture id |request |
+| `worker` | string | worker information |
+| `worker.shortBiography` | string | about worker |
+| `worker.instagramProfile` | string | link to instagram profile if exists |
+| `worker.workerStartTime` | string | worker start time |
+| `worker.workerEndTime` | string | worker end time |
+
+---
 
 ### **Find worker**
 
