@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { Provider } from 'react-redux'
 import useStore from '../store'
@@ -16,7 +17,11 @@ import '../styles/UI/input.css'
 
 function App({ Component, pageProps }) {
     const store = useStore(pageProps.initialReduxState)
-    
+
+    useEffect(() => {
+        console.log(123)
+    }, [])
+
     return (
         <Provider store={store}>
             <ThemeProvider>

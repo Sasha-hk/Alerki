@@ -23,10 +23,6 @@ const Register = () => {
     const register = (e) => {
         e.preventDefault()
         dispatch(profileActions.register(form))
-
-        if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
-            Router.push('/')
-        }
     }
 
     return (
@@ -67,6 +63,7 @@ const Register = () => {
                                 name="profileType"
                                 id="worker"
                                 onChange={(e) => setForm({ ...form, profileType: e.target.id })}
+                                required
                             />
                             worker
                         </label>
@@ -77,6 +74,7 @@ const Register = () => {
                                 name="profileType"
                                 id="client"
                                 onChange={(e) => setForm({ ...form, profileType: e.target.id })}
+                                required
                             />
                             client
                         </label>

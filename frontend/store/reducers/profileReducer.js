@@ -120,7 +120,7 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
         
-        case types.PROFILE_LOGOUT_SUCCESS:
+        case types.PROFILE_WITH_GOOGLE_SUCCESS:
             return {
                 ...state,
                 ...action.payload,
@@ -129,12 +129,12 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
 
-        case types.PROFILE_LOGOUT_ERROR:
+        case types.PROFILE_WITH_GOOGLE_ERROR:
             return {
                 ...state,
                 loading: false,
                 error: true,
-                errorMessage: action.paylod,
+                errorMessage: action.payload,
             }
 
         default:

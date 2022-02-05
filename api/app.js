@@ -6,7 +6,7 @@ const router = require('./router')
 
 const app = express()
 const corsOptions ={
-    origin: ['http://localhost:3000', 'http://192.168.1.11:3000', process.env.API_URL],
+    origin: process.env.CLIENT_HOST,
     credentials: true,
     optionSuccessStatus: 200
 }
