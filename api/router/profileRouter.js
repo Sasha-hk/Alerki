@@ -16,6 +16,10 @@ router
         '/picture',
         ProfileController.getPicture
     )
+    .get(
+        '/:username',
+        ProfileController.getProfile
+    )
 
 router
     .post(
