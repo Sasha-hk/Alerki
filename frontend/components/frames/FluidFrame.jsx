@@ -3,6 +3,8 @@ import NavBar from '../NavBar/NavBar'
 
 
 function FludFrame({children, navigation}) {
+
+    // dynamicly change full frame height
     useEffect(() => {
         let vh = window.innerHeight * 0.01;
         const fluidFrame = document.querySelector('.fluid-frame')
@@ -15,7 +17,6 @@ function FludFrame({children, navigation}) {
             fluidFrame.style.minHeight = '0'
             fluidFrame.style.height = vh * 100 + 'px'
         })
-
     }, [])
 
     return (

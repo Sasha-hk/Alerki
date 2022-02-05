@@ -30,6 +30,35 @@ const defaultProfileState = {
 
 const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
+        // upload
+        case types.PROFILE_UPLOAD:
+            return {
+                ...state,
+                loading: true,
+                error: false,
+                errorMessage: null,
+            }
+        
+        case types.PROFILE_UPLOAD_SUCCESS:
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
+                loading: false,
+                error: false,
+                errorMessage: null,
+            }
+
+        case types.PROFILE_UPLOAD_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: true,
+                errorMessage: action.payload,
+            }
+
         // register
         case types.PROFILE_REGISTER:
             return {
@@ -42,7 +71,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_REGISTER_SUCCESS:
             return {
                 ...state,
-                profile: action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
@@ -97,7 +129,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_LOGOUT_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
@@ -123,7 +158,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_WITH_GOOGLE_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
