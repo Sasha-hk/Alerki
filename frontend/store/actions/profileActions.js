@@ -19,23 +19,16 @@ const makeActionWithPayload = (action, payload) => {
 }
 
 // upload profile
-const upload = ({email, username, profileType, password}) => {
+const upload = ({username}) => {
     return async dispatch => {
         dispatch(makeAction(types.PROFILE_UPLOAD))
-        
+
         await api({
-            method: 'post',
-            url: API_URL + '/auth/register',
-            data: {
-                email,
-                username,
-                password,
-                profileType,
-            }
+            method: 'get',
+            url: '/profile/' + username
         })
             .then(r => { 
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SUCCESS, r.data))
-                Router.push('/')
             })
             .catch(e => {
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_ERROR, e?.response?.data))
@@ -50,7 +43,7 @@ const register = ({email, username, profileType, password}) => {
         
         await api({
             method: 'post',
-            url: API_URL + '/auth/register',
+            url: '/auth/register',
             data: {
                 email,
                 username,
@@ -75,7 +68,7 @@ const logIn = ({email, username, password}) => {
         
         await api({
             method: 'post',
-            url: API_URL + '/auth/log-in',
+            url: '/auth/log-in',
             data: {
                 email,
                 username,
@@ -87,7 +80,7 @@ const logIn = ({email, username, password}) => {
                 Router.push('/')
             })
             .catch(e => {
-                dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e.response?.data))
+                dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e?.response?.data))
             }) 
     }
 }
@@ -99,7 +92,7 @@ const withGoogle = (code) => {
         
         await api({
             method: 'get',
-            url: API_URL + '/auth/callback/google',
+            url: '/auth/callback/google',
             params: {
                 code,
             }
@@ -109,12 +102,13 @@ const withGoogle = (code) => {
                 Router.push('/')
             })
             .catch(e => {
-                dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_ERROR, e.response?.data))
+                dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_ERROR, e?.response?.data))
             })
     }
 }
 
 export default {
+    upload,
     register,
     logIn,
     withGoogle,

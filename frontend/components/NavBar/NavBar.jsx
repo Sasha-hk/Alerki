@@ -1,6 +1,6 @@
+import {useEffect, useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import {useRouter} from 'next/router'
-import {useEffect, useState} from 'react'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
 import Cookies from 'js-cookie'
@@ -8,6 +8,9 @@ import useFixHydrate from '../../hooks/useFixHydrate.js'
 
 
 const NavBar = () => {
+    const profile = useSelector(store => store.profile)
+    
+    // navigatino views
     const navigationButtons = (
         <nav>
             <Link href="/">
@@ -28,11 +31,15 @@ const NavBar = () => {
             </Link>
 
             <Link href="/">
-                <a>
-                    <svg className="profile" width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="14.5" cy="14.5" r="14.5" />
-                    </svg>
-                </a>
+                {
+                    profile.pictureID
+                        ? <span>1</span>
+                        : <a>
+                            <svg className="profile" width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="14.5" cy="14.5" r="14.5" />
+                            </svg>
+                        </a>
+                }
             </Link>
         </nav>
     )
@@ -47,12 +54,15 @@ const NavBar = () => {
         </div>
     )
 
-    // crutch to fix "React hydration error"
-    const hydratedNavigation = useFixHydrate(
-        Cookies.get('authenticated')
-            ? navigationButtons
-            : signInButton
-    )
+    
+    const hydratedNavigation = useFixHydrate(() => {
+        if (Cookies.get('authenticated')) {
+            return navigationButtons
+        }
+        else {
+            return signInButton
+        }
+    }, [profile])
 
     return (
         <div className="nav-bar">

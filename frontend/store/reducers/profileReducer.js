@@ -30,7 +30,7 @@ const defaultProfileState = {
 
 const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
-            // with Google
+        // upload
         case types.PROFILE_UPLOAD:
             return {
                 ...state,

@@ -21,16 +21,17 @@ import '../styles/UI/input.css'
 function App({ Component, pageProps }) {
     const store = useStore(pageProps.initialReduxState)
 
-    // refresh if accessToken has expired
     useEffect(() => {
+        // refresh if accessToken has expired
         if (Cookies.get('authenticated') && Cookies.get('accessToken') == undefined) {
             api.get(
                 '/auth/refresh',
             )
         }
 
-        // dispatch(profileActions.upload())
-    }, [])
+        // upload profile data
+        store.dispatch(profileActions.upload({username: 'css'}))
+    }, [store])
 
     return (
         <Provider store={store}>
