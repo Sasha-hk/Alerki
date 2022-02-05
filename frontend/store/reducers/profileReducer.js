@@ -42,7 +42,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_REGISTER_SUCCESS:
             return {
                 ...state,
-                profile: action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
@@ -97,7 +100,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_LOGOUT_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
@@ -123,7 +129,10 @@ const profileReducer = (state = defaultProfileState, action) => {
         case types.PROFILE_WITH_GOOGLE_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
