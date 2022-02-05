@@ -14,6 +14,7 @@ class ProfileDto {
         if (user.workerID) {
             this.workerID = user.workerID
         }
+        this.pictureID = user.pictureID
     }
 
     addWorkerProfile(worker) {
