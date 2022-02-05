@@ -6,6 +6,7 @@ Endpoints list:
   - [`/register`](#Registration)
   - [`/log-in`](#Log-in)
   - [`/log-out`](#Log-out)
+  - [`/callback/google`](#With-Google)
   - [`/refresh`](#Refresh)
 
 - [`/appointments`](#Appointments)
@@ -22,6 +23,7 @@ Endpoints list:
   - [`/make-appointment`](#Make-appointment)
 
 - [`/profile`](#Profile)
+  - [`/:username`](#Get-profile)
   - [`/find-worker`](#Find-worker)
   - [`/get-schedule`](#Get-worker-schedule)
   - [`/picture`](#Picture)
@@ -161,6 +163,49 @@ User need to be authenticated
 - remove - accessToken
 - remove - refreshToken
 
+---
+
+### **With Google**
+
+```http
+POST /auth/callback/google
+```
+
+**Query:**
+
+- code
+
+| **Query** | **Type** | **Requeired** | **Details** |
+| :--- | :--- | :--- | :--- |
+| `code` | string | true | Google OAuth2.0 code / read about this [`here`](https://developers.google.com/identity/protocols/oauth2/web-server#redirecting "Google OAuth2.0 documentation") |
+
+**Response:**
+
+```json
+{
+    "id": "1",
+    "email": "email",
+    "clientID": 1,
+    "workerID": 1,
+    "accessToken": "token..."
+}
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | |
+| `email` | string | |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `accessToken` | string | access token |
+
+**Cookies:**
+
+- accessToken
+- refreshToken
+
+---
+
 ### **Refresh**
 
 ```http
@@ -271,6 +316,51 @@ POST /services/create
 | `createdAt` | string | updation time |
 
 ## **Profile**
+
+### **Get profile**
+
+```http
+GET /profile/:username
+```
+
+**Response:**
+
+```json
+{
+    "id": 1,
+    "username": "username",
+    "firstName": "firts name",
+    "lastName": "last name",
+    "clientID": 1,
+    "workerID": 1,
+    "pictureID": null,
+    "worker": {
+        "shortBiography": null,
+        "instagramProfile": null,
+        "workingStartTime": null,
+        "workingEndTime": null
+    }
+}
+```
+
+In response, we receive an array of users with the specified service in the request
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | user id |
+| `username` | string | username |
+| `firstName` | string | user first name |
+| `lastName` | string | user last name |
+| `clientID` | int | client profile id |
+| `workerID` | int | worker profile id |
+| `pictureID` | int | user picture id |request |
+| `worker` | string | worker information |
+| `worker.shortBiography` | string | about worker |
+| `worker.instagramProfile` | string | link to instagram profile if exists |
+| `worker.workerStartTime` | string | worker start time |
+| `worker.workerEndTime` | string | worker end time |
+
+---
 
 ### **Find worker**
 

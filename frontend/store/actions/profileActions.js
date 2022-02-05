@@ -1,7 +1,7 @@
+import Router, { useRouter } from 'next/router'
+import Cookies from 'js-cookie'
 import axios from 'axios'
 import * as types from '../types/profileTypes'
-import Cookies from 'js-cookie'
-import Router from 'next/router'
 
 
 const API_URL = process.env.API_URL
@@ -31,13 +31,17 @@ const register = ({email, username, profileType, password}) => {
                 username,
                 password,
                 profileType,
-            }
+            },
+            withCredentials: true
         })
-            .then(r => {
+            .then(r => { 
                 dispatch(makeActionWithPayload(types.PROFILE_REGISTER_SUCCESS, r.data))
+                Router.push('/')
             })
             .catch(e => {
-                dispatch(makeActionWithPayload(types.PROFILE_REGISTER_ERROR, e.response.data))
+                console.log(e.response, 1)
+                console.log(123123)
+                dispatch(makeActionWithPayload(types.PROFILE_REGISTER_ERROR, e?.response?.data))
             }) 
     }
 }
@@ -59,13 +63,9 @@ const logIn = ({email, username, password}) => {
         })
             .then(r => {
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_SUCCESS, r.data.userData))
-
-                if (Cookies.get('accessToken') || Cookies.get('refreshToken')) {
-                    Router.push('/')
-                }
+                Router.push('/')
             })
             .catch(e => {
-                alert(e)
                 dispatch(makeActionWithPayload(types.PROFILE_LOGIN_ERROR, e.response?.data))
             }) 
     }
@@ -85,11 +85,13 @@ const withGoogle = (code) => {
             withCredentials: true
         })
             .then(r => {
+                console.log('>>> 1')
                 dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_SUCCESS, r.data.userData))
+                Router.push('/')
             })
             .catch(e => {
                 dispatch(makeActionWithPayload(types.PROFILE_WITH_GOOGLE_ERROR, e.response?.data))
-            }) 
+            })
     }
 }
 

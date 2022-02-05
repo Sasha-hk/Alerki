@@ -15,10 +15,11 @@ function FludFrame({children, navigation}) {
             fluidFrame.style.minHeight = '0'
             fluidFrame.style.height = vh * 100 + 'px'
         })
+
     }, [])
 
     return (
-        <>
+        <div>
             {/* navigation */}
             {
                 navigation
@@ -30,7 +31,7 @@ function FludFrame({children, navigation}) {
             <div className="fluid-frame">
                 {children}
             </div>
-        </>
+        </div>
     )
 }
 
