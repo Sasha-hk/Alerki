@@ -17,12 +17,12 @@ class AuthController {
                 profileType,
             } = req.body
 
-            checkParams.all([
+            checkParams.all({
                 email,
                 username,
                 password,
                 profileType
-            ])
+            })
             
             const userData = await UserService.register({
                 email,
@@ -36,6 +36,7 @@ class AuthController {
 
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             delete userData.refreshToken
 
@@ -51,18 +52,24 @@ class AuthController {
             const deviceName = getDeviceName(req)
             const {
                 email,
+                username,
                 password,
             } = req.body
 
-            checkParams.all([
-                email,
+            checkParams.all({
                 password
-            ])
-            
-            const userData = await UserService.login({email, password, deviceName})
+            })
 
+            checkParams.atLeastOne({
+                email,
+                username,
+            })
+            
+            const userData = await UserService.login({email, username, password, deviceName})
+            
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             delete userData.refreshToken
 
@@ -90,6 +97,7 @@ class AuthController {
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
 
             res.sendStatus(200)
         }
@@ -109,6 +117,7 @@ class AuthController {
             
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
         
             delete userData.refreshToken
 
@@ -130,7 +139,7 @@ class AuthController {
                 'state=state_parameter_passthrough_value&' +
                 'redirect_uri=http://localhost:3000/auth/callback/google&' +
                 'client_id=' + process.env.GOOGLE_CLIENT_ID
-            
+             
             res.redirect(redirect_url)
         }
         catch(e) {
@@ -140,10 +149,9 @@ class AuthController {
 
     async withGoogle(req, res, next) {
         try {
-            const {code} = req.body
+            const {code} = req.query
 
             checkParams.all({code})
-
             const deviceName = getDeviceName(req)
             const googleToken = await GoogleOAuth.obtainToken(code)
             const profileData = await GoogleOAuth.getUserInfo(googleToken.access_token)
@@ -156,11 +164,11 @@ class AuthController {
             
             res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
             res.cookie('accessToken', userData.accessToken, {maxAge: 30 * 60 * 1000})
+            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
             
             delete userData.refreshToken
-
+            
             res.json(userData)
-
         }
         catch(e) {
             res.status(e.status || 500).json(e.errors)

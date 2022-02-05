@@ -5,9 +5,23 @@ on:
     branches:
       - main
 
+    paths-ignore:
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
+
   pull_request:
     branches:
       - main
+
+    paths-ignore:
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
 
 jobs:
   push:

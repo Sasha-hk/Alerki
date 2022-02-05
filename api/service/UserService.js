@@ -65,6 +65,16 @@ class UserService {
         return checkUserExists
     }
 
+    async checkUsernameExists(username) {
+        const checkUserExists = await this.findUserByUsername({username})
+
+        if (checkUserExists) {
+            throw AuthError.EmailExistsError()
+        }
+
+        return checkUserExists
+    }
+
     checkProfileType(profileType) {
         if (profileType != 'client' && profileType != 'worker') {
             throw AuthError.BadRequestError()
@@ -93,6 +103,7 @@ class UserService {
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
+        await this.checkUsernameExists(username)
 
         const hashedPassword = bcrypt.hashSync(password, 1)
 
@@ -122,12 +133,15 @@ class UserService {
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
 
-    async login({email, password, deviceName}) {
+    async login({email, username, password, deviceName}) {
         // check if user exists
         const loginUser = await UserModel.findOne({
             raw: true,
             where: {
-                email,
+                [Sequelize.Op.or]: {
+                    email: email || null,
+                    username: username || null,
+                }
             },
         })
 
@@ -220,7 +234,7 @@ class UserService {
                 lastName: profileData.family_name,
                 profileType: 'client',
                 deviceName,
-                pictureID: savedPicture,
+                pictureID: savedPicture?.id,
                 googleAccessToken: googleToken.access_token,
                 googleRefreshToken: googleToken.refresh_token,
                 googleIdToken: googleToken.id_token,

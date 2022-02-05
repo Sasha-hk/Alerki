@@ -1,0 +1,97 @@
+.text-little {
+    font-size: var(--text-little) !important;
+}
+
+.text-normal {
+    font-size: var(--text-normal) !important;
+}
+
+.text-middle {
+    font-size: var(--text-middle) !important;
+}
+
+.text-big {
+    font-size: var(--text-big) !important;
+}
+
+.text-muted {
+    color: var(--color-muted);
+}
+
+/* links */
+a {
+    text-decoration: none;
+    color: var(--color-link);
+}
+
+/* position */
+.text-center {
+    display: block;
+    text-align: center;
+}
+
+/* font weight */
+.text-500 {
+    font-weight: 500;
+}
+
+
+/* XS / Extra little */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 16px;
+        --text-middle: 18px;
+        --text-big: 20px;
+    }
+}
+
+/* SM / little */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 2.5vw;
+        --text-middle: 18px;
+        --text-big: 4vw;
+    }
+}
+
+/* MD / Medium */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 2.5vw;
+        --text-middle: 18px;
+        --text-big: 4vw;
+    }
+}
+
+/* LG / Large */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 2.5vw;
+        --text-middle: 18px;
+        --text-big: 4vw;
+    }
+}
+
+/* XL / Extra large */
+@media only screen and (min-width: 1201px) and (max-width: 1400px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 2vw;
+        --text-middle: 18px;
+        --text-big: 3vw;
+    }
+}
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+    * {
+        --text-little: 14px;
+        --text-normal: 2vw;
+        --text-middle: 18px;
+        --text-big: 3vw;
+    }
+}

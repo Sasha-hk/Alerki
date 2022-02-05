@@ -29,11 +29,6 @@ router
         ProfileController.createWorkerService
     )
     .post(
-        '/become-worker',
-        authMiddleware,
-        ProfileController.becomeWorker
-    )
-    .post(
         '/worker/set-schedule',
         authMiddleware,
         isWorkerMiddleware,
