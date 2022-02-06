@@ -1,19 +1,19 @@
 ---
 name: API enhancement
-about: General task template
+about: Make come changes or enhancements in API
 title: '[API] '
 labels: ["api", "enhancement"]
-assignees: 'Sashs-hk'
+assignees: 'Sasha-hk'
 
 ---
 
-**Describe enhancement**
+**Task description**
 A clear and concise description of what the enhancement.
 
 **Tasks:**
 
-1. [ ] make test below
-2. [ ] ...
+- [ ] make test below
+- [ ] ...
 
 **Test endpoints:**
 
