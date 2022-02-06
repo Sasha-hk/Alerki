@@ -13,22 +13,8 @@ import { useAuth } from '../provider/AuthProvider'
 const Home = () => {
     const {theme, setTheme} = useTheme()
 
-    const {isAuthenticated, register, data} = useAuth()
+    const {isAuthenticated, register, authData} = useAuth()
 
-    console.log(isAuthenticated())
-    register()
-    
-    // const router = useRouter()
-
-    // const dispatch = useDispatch()
-
-    // useEffect(() => {
-    //     if (router.isReady) {
-    //         if (router?.query?.code) {
-    //             dispatch(profileActions.withGoogle(router.query.code))
-    //         }
-    //     }
-    // }, [router.isReady])
 
     const hydratedTheme = useFixHydrate(theme)
 

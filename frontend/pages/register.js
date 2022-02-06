@@ -1,34 +1,33 @@
 import { useState } from 'react'
 import profileActions from '../store/actions/profileActions'
-import { useDispatch, useSelector } from 'react-redux'
-import Router from 'next/router'
 import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import WithGoogle from '../components/UI/Button/WithGoogle.jsx'
 import Input from '../components/UI/Input/Input'
 import classes from '../styles/pages/register.module.css'
-import Cookies from 'js-cookie'
+import { useAuth } from '../provider/AuthProvider'
 
 
 const Register = () => {
-    const dispatch = useDispatch()
-    const profile = useSelector(store => store.profile)
+    // const {authData, register} = useAuth()
+    const {isAuthenticated, register, authData} = useAuth()
 
+    
     const [form, setForm] = useState({
         username: null,
         email: null,
         password: null,
         profileType: null
     })
-    const register = (e) => {
+    const registerWrapper = (e) => {
         e.preventDefault()
-        dispatch(profileActions.register(form))
+        register(form)
     }
 
     return (
         <FluidFrame>
             <div className={classes.form_wrapper}>
-                <form onSubmit={register}>
+                <form onSubmit={registerWrapper}>
                     <span className="text-big text-center text-500 mb-4">Register</span>
                     <Input
                         className="big stratch mb-2"
