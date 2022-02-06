@@ -39,15 +39,6 @@ const defaultAuthData = {
 export const AuthProvider = ({children}) => {
     const [authData, setAuthData] = useState(defaultAuthData)
     const router = useRouter()
-
-    // remove navigation twitch for firs few seconds
-    if (authData.initRender && Cookies.get('authenticated')) {
-        setAuthData({
-            ...authData,
-            initRender: false,
-            authenticated: true,
-        })
-    }
     
     const setData = () => {
         const token = parseToken(Cookies.get('accessToken'))
