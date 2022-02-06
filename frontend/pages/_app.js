@@ -22,21 +22,6 @@ import '../styles/UI/input.css'
 function App({ Component, pageProps }) {
     const store = useStore(pageProps.initialReduxState)
 
-    useEffect(() => {
-        // refresh if accessToken has expired
-        // if (Cookies.get('authenticated') && Cookies.get('accessToken') == undefined) {
-        //     api.get(
-        //         '/auth/refresh',
-        //     )
-        // }
-
-        // if (Cookies.get('authenticated')) {
-        //     // JSON.parse(atob(Cookies.get('accessToken').split('.')[1]))
-        //     // upload profile data
-        //     store.dispatch(profileActions.upload({username: JSON.parse(atob(Cookies.get('accessToken').split('.')[1])).username}))
-        // }
-    }, [store])
-
     return (
         <AuthProvider>
             <Provider store={store}>

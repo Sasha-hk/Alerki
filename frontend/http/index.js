@@ -13,15 +13,16 @@ api.interceptors.response.use(
     (config) => {
         return config;
     },
-    async (error) => {
-        const originalRequest = error.config;
-        if (error.response.status == 401 && Cookies.get('authenticated')) {
-            originalRequest._isRetry = true;
+    // async (error) => {
+    //     const originalRequest = error.config;
+    //     if (error.response.status == 401 && Cookies.get('authenticated')) {
+    //         originalRequest._isRetry = true;
             
-            const response = await axios.get(`${API_URL}/authe/refresh`, {withCredentials: true})
-            return api.request(originalRequest);
-        }
-    }
+    //         const response = await axios.get(`${API_URL}/authe/refresh`, {withCredentials: true})
+    //         return api.request(originalRequest);
+    //     }
+    //     return api.request(originalRequest)
+    // }
 )
 
 
