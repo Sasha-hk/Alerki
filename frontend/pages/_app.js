@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { useDispatch, Provider } from 'react-redux'
+import { AuthProvider } from '../provider/AuthProvider'
 import profileActions from '../store/actions/profileActions'
 import useStore from '../store'
 import Cookies from 'js-cookie'
@@ -21,24 +22,14 @@ import '../styles/UI/input.css'
 function App({ Component, pageProps }) {
     const store = useStore(pageProps.initialReduxState)
 
-    useEffect(() => {
-        // refresh if accessToken has expired
-        if (Cookies.get('authenticated') && Cookies.get('accessToken') == undefined) {
-            api.get(
-                '/auth/refresh',
-            )
-        }
-
-        // upload profile data
-        store.dispatch(profileActions.upload({username: 'css'}))
-    }, [store])
-
     return (
-        <Provider store={store}>
-            <ThemeProvider>
-                <Component {...pageProps} />
-            </ThemeProvider>
-        </Provider>
+        <AuthProvider>
+            <Provider store={store}>
+                <ThemeProvider>
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </Provider>
+        </AuthProvider>
     )
 }
 

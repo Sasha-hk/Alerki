@@ -5,11 +5,15 @@ import Link from 'next/link'
 import Button from '../UI/Button/Button'
 import Cookies from 'js-cookie'
 import useFixHydrate from '../../hooks/useFixHydrate.js'
+import { useAuth } from '../../provider/AuthProvider.js'
 
 
 const NavBar = () => {
-    const profile = useSelector(store => store.profile)
-    
+    const {
+        isAuthenticated,
+        authData,
+    } = useAuth()
+
     // navigatino views
     const navigationButtons = (
         <nav>
@@ -32,7 +36,7 @@ const NavBar = () => {
 
             <Link href="/">
                 {
-                    profile.pictureID
+                    authData.pictureID
                         ? <span>1</span>
                         : <a>
                             <svg className="profile" width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -54,15 +58,14 @@ const NavBar = () => {
         </div>
     )
 
-    
     const hydratedNavigation = useFixHydrate(() => {
-        if (Cookies.get('authenticated')) {
+        if (isAuthenticated()) {
             return navigationButtons
         }
         else {
             return signInButton
         }
-    }, [profile])
+    }, [authData])
 
     return (
         <div className="nav-bar">

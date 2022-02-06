@@ -228,8 +228,22 @@ class UserService {
 
             const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
 
+            // generate unique username from email
+            let candedatUsername = profileData.email.split('@')[0]
+
+            while (true) {
+                const checkUsername = await this.findUserByUsername({username: candedatUsername})
+
+                if (!checkUsername) {
+                    break
+                }
+
+                candedatUsername += '_'
+            }
+
             const newUser = await UserModel.create({
                 email: profileData.email,
+                username: candedatUsername,
                 firstName: profileData.given_name,
                 lastName: profileData.family_name,
                 profileType: 'client',

@@ -97,7 +97,7 @@ class AuthController {
 
             res.clearCookie('accessToken')
             res.clearCookie('refreshToken')
-            res.cookie('authenticated', true, {maxAge: 30 * 24 * 60 * 60 * 1000})
+            res.clearCookie('authenticated')
 
             res.sendStatus(200)
         }
@@ -124,6 +124,8 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
+            res.clearCookie('refreshToken')
+            res.clearCookie('authenticated')
             res.status(e.status || 500).json(e.errors)
         }
     }
@@ -155,7 +157,6 @@ class AuthController {
             const deviceName = getDeviceName(req)
             const googleToken = await GoogleOAuth.obtainToken(code)
             const profileData = await GoogleOAuth.getUserInfo(googleToken.access_token)
- 
             const userData = await UserService.withGoogle({
                 profileData,
                 deviceName,

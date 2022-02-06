@@ -7,12 +7,12 @@ import Link from 'next/link'
 import Button from '../components/UI/Button/Button'
 import WithGoogle from '../components/UI/Button/WithGoogle.jsx'
 import Input from '../components/UI/Input/Input'
+import { useAuth } from '../provider/AuthProvider'
 import classes from '../styles/pages/sign-in.module.css'
 
 
 const Continue = () => {
-    const dispatch = useDispatch()
-    const router = useRouter()
+    const {authData, login} = useAuth()
     
     const [form, setForm] = useState({
         email: null,
@@ -20,16 +20,16 @@ const Continue = () => {
         password: null,
     })
     
-    const signIn = async (e) => {
+    const signInWrapper = async (e) => {
         e.preventDefault()
-        dispatch(profileActions.logIn(form))
+        login(form)
     }
 
     return (
         <FluidFrame>
             <div
                 className={classes.form_wrapper}
-                onSubmit={signIn}
+                onSubmit={signInWrapper}
             >
                 <form>
                     <span className="text-big text-center text-500 mb-4">Sign-in</span>
