@@ -39,10 +39,10 @@ a {
 /* XS / Extra little */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
     * {
-        --text-little: 14px;
-        --text-normal: 16px;
-        --text-middle: 18px;
-        --text-big: 20px;
+        --text-little: 16px;
+        --text-normal: 18px;
+        --text-middle: 20px;
+        --text-big: 26px;
     }
 }
 

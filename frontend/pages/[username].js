@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
+import Link from 'next/link'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
 import Button from '../components/UI/Button/Button.jsx'
@@ -23,10 +24,11 @@ const Profile = () => {
   useEffect(() => {
     if (router.isReady) {
       if (router.query.username) {
-        dispatch(profileActions.upload({username: router.query.username}))
+        console.log('upload profile data...')
+        dispatch(profileActions.upload({username: router.query.username})) 
       }
     }
-  }, [router.isReady])
+  }, [router.isReady, router.query.username])
 
   // general view for master and client
   const headerView = (balance = false) => (
@@ -53,23 +55,28 @@ const Profile = () => {
       }
 
       <div className={cls.header_info}>
-        <span className="text-big">{profile.firstName} {profile.lastName}</span><br></br>
+        <span className="text-big">{profile.firstName} {profile.lastName}</span>
         <span className="text-little text-muted">{profile.username}</span>
+        <div className={cls.settings_button}>
+          <Link href="/settings">
+            <Button className="little sceleton br-3">settings</Button>
+          </Link>
+        </div>
       </div>
     </div>
   )
-
+  
   // view only for master
   const extendedView = (
     <>
       {headerView()}
 
       <div className={cls.about}>
-        1
+        <span>{profile.worker?.shortBiography}</span>
       </div>
 
-      <div className="services">
-
+      <div className={cls.services}>
+        <span className="text-big">Services</span>
       </div>
     </>
   )
