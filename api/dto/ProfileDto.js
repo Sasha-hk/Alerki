@@ -1,3 +1,6 @@
+const WorkerServiceDto = require('./WorkerServiceDto')
+
+
 class ProfileDto {
     id
     username
@@ -29,7 +32,7 @@ class ProfileDto {
     }
 
     setWorkerServices(workerServices) {
-        this.worker.services = workerServices
+        this.worker.services = new WorkerServiceDto(workerServices).services
     }
 }
 
