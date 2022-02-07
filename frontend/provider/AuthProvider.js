@@ -129,17 +129,18 @@ export const AuthProvider = ({children}) => {
                 Router.push('/')
             })
             .catch(e => {
+                console.log(e.response)
                 console.log(e)
             })
     }
 
-    const refresh = () => {
-        api({
+    const refresh = async () => {
+        await api({
             method: 'get',
             url: '/auth/refresh'
         })
             .then(r => {
-                setAuthData({
+                setData({
                     ...authData,
                     authenticated: true,
                 })
@@ -174,6 +175,7 @@ export const AuthProvider = ({children}) => {
             authData,
             isAuthenticated,
             register,
+            refresh,
             login,
             logout,
             withGoogle,

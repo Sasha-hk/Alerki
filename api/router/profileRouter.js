@@ -41,6 +41,11 @@ router
 
 router
     .patch(
+        '/update',
+        authMiddleware,
+        ProfileController.updateProfile
+    )
+    .patch(
         '/worker/update',
         authMiddleware,
         isWorkerMiddleware,

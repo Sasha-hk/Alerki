@@ -24,7 +24,7 @@ const Home = () => {
                 The current theme is: {hydratedTheme} 
                 <Button onClick={() => setTheme('light')} className="little primary mr-3">Light Mode</Button>
                 <Button onClick={() => setTheme('dark')} className="little primary mb-3 mr-3">Dark Mode</Button>
-                <Input className="middle" placeholder="name" />
+                <p>{authData.username}</p>
             </div>
         </FluidFrame>
     )

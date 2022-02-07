@@ -162,6 +162,10 @@ class ProfileController {
     async updateWorker(req, res, next) {
         try {
             const {
+                username,
+                firstName,
+                lastName,
+                picture,
                 workingStartTime,
                 workingEndTime,
                 shortBiography,
@@ -169,6 +173,10 @@ class ProfileController {
             } = req.body
             
             checkParams.atLeastOne({
+                username,
+                firstName,
+                lastName,
+                picture,
                 workingStartTime,
                 workingEndTime,
                 shortBiography,
@@ -178,6 +186,10 @@ class ProfileController {
             
             const updatedWorker = await ProfileService.updateWorker({
                 id: req.user.workerID,
+                username,
+                firstName,
+                lastName,
+                picture,
                 workingStartTime,
                 workingEndTime,
                 shortBiography,
@@ -187,6 +199,38 @@ class ProfileController {
             res.json(updatedWorker)
         }
         catch (e) {
+            res.status(e.status || 500).json(e.errors) 
+        }
+    }
+
+    async updateProfile(req, res, next) {
+        try {
+            const {
+                username,
+                firstName,
+                lastName,
+                picture,
+            } = req.body
+            
+            checkParams.atLeastOne({
+                username,
+                firstName,
+                lastName,
+                picture,
+            })
+            
+            const updatedWorker = await UserService.updateProfile({
+                id: req.accessToken.id,
+                username,
+                firstName,
+                lastName,
+                picture,
+            })
+            
+            res.json(updatedWorker)
+        }
+        catch (e) {
+            console.log(e)
             res.status(e.status || 500).json(e.errors) 
         }
     }

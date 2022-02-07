@@ -1,0 +1,67 @@
+.header {
+    display: flex;
+    justify-content: center;
+}
+.plug_user_picture {
+    fill: var(--color);
+    width: 100px;
+    height: 100px;
+}
+.user_picture {
+    border-radius: 100%;
+    flex-shrink: 1;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+.header_info {
+    
+}
+
+.balance_header {
+    height: 300px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* XS / Extra little */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+    }
+    .user_picture,
+    .plug_user_picture {
+        margin-bottom: 20px;
+    }
+    .header_info {
+        text-align: center;
+    }
+}
+
+/* SM / little */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+
+}
+
+/* MD / Medium */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+
+}
+
+/* LG / Large */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+
+}
+
+/* XL / Extra large */
+@media only screen and (min-width: 1201px) and (max-width: 1400px) {
+
+}
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+
+}
