@@ -4,6 +4,7 @@ class ProfileDto {
     firstName
     lastName
     clientID
+    profileType
 
     constructor(user) {
         this.id = user.id
@@ -11,6 +12,7 @@ class ProfileDto {
         this.firstName = user.firstName
         this.lastName = user.lastName
         this.clientID = user.clientID
+        this.profileType = user.profileType
         if (user.workerID) {
             this.workerID = user.workerID
         }
@@ -23,6 +25,11 @@ class ProfileDto {
         this.worker.instagramProfile = worker.instagramProfile
         this.worker.workingStartTime = worker.workingStartTime
         this.worker.workingEndTime = worker.workingEndTime
+        this.worker.services = []
+    }
+
+    setWorkerServices(workerServices) {
+        this.worker.services = workerServices
     }
 }
 

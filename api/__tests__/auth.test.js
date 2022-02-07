@@ -174,7 +174,6 @@ let workerScheduleDate = null
 describe('Test profile', () => {
     describe('get profile', () => {
         test('with exists profile => 200', async () => {
-            console.log(worker.username)
             const r = await request(app)
                 .get('/profile/' + worker.username)
             
@@ -184,13 +183,13 @@ describe('Test profile', () => {
         })
 
         test('with exists profile => 404', async () => {
-            console.log(worker.username)
             const r = await request(app)
                 .get('/profile/not-exists')
              
             expect(r.statusCode).toBe(404)
         })
     })
+
     describe('create worker service', () => {
         test('with exists service and worker => 200', async () => {
             const r = await request(app)
@@ -227,6 +226,32 @@ describe('Test profile', () => {
                 .post('/profile/create/service')
                 .set('Cookie', ['accessToken=' + client.accessToken])
 
+            expect(r.statusCode).toBe(400)
+        })
+    })
+
+    describe('get worker services', () => {
+        test('with exists profile => 200', async () => {
+            const r = await request(app)
+                .get('/profile/services/' + worker.userData.workerID)
+            
+            expect(r.statusCode).toBe(200)
+            console.log(r.body)
+        })
+
+        test('with not exists worker id => 404', async () => {
+            const r = await request(app)
+                .get('/profile/services/100')
+             
+            console.log(r.statusCode)
+            expect(r.statusCode).toBe(404)
+        })
+
+        test('with string => 400', async () => {
+            const r = await request(app)
+                .get('/profile/services/not-exists')
+             
+            console.log(r.statusCode)
             expect(r.statusCode).toBe(400)
         })
     })
