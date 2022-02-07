@@ -236,14 +236,12 @@ describe('Test profile', () => {
                 .get('/profile/services/' + worker.userData.workerID)
             
             expect(r.statusCode).toBe(200)
-            console.log(r.body)
         })
 
         test('with not exists worker id => 404', async () => {
             const r = await request(app)
                 .get('/profile/services/100')
              
-            console.log(r.statusCode)
             expect(r.statusCode).toBe(404)
         })
 
@@ -251,7 +249,6 @@ describe('Test profile', () => {
             const r = await request(app)
                 .get('/profile/services/not-exists')
              
-            console.log(r.statusCode)
             expect(r.statusCode).toBe(400)
         })
     })
