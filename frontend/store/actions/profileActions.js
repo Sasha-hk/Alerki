@@ -1,10 +1,6 @@
-import Router, { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
 import api from '../../http'
 import * as types from '../types/profileTypes'
 
-
-const API_URL = process.env.API_URL
 
 const makeAction = (action) => {
     return {
