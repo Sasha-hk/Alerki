@@ -1,28 +1,43 @@
+/* header */
 .header {
+    --user-picture-size: 100px;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 .plug_user_picture {
     fill: var(--color);
-    width: 100px;
-    height: 100px;
+    width: var(--user-picture-size);
+    height: var(--user-picture-size);
 }
 .user_picture {
     border-radius: 100%;
     flex-shrink: 1;
-    width: 100px;
-    height: 100px;
+    width: var(--user-picture-size);
+    height: var(--user-picture-size);
     object-fit: cover;
 }
 .header_info {
-    
-}
-
-.balance_header {
-    height: 300px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
 }
+.settings_button {
+    margin-top: 16px;
+}
+
+/* about */
+.about {
+    text-align: center;
+}
+
+/* services */
+.services { 
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+}
+
 
 
 /* XS / Extra little */
@@ -43,25 +58,55 @@
 
 /* SM / little */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-
+    .header {
+        --user-picture-size: 120px;
+        margin-top: 40px;
+    }
+    .header_info {
+        margin-left: 20px;
+    }
 }
 
 /* MD / Medium */
 @media only screen and (min-width: 769px) and (max-width: 992px) {
-
+    .header {
+        margin-top: 40px;
+        --user-picture-size: 120px;
+    }
+    .header_info {
+        margin-left: 30px;
+    }
 }
 
 /* LG / Large */
 @media only screen and (min-width: 993px) and (max-width: 1200px) {
-
+    .header {
+        margin-top: 40px;
+        --user-picture-size: 120px;
+    }
+    .header_info {
+        margin-left: 40px;
+    }
 }
 
 /* XL / Extra large */
 @media only screen and (min-width: 1201px) and (max-width: 1400px) {
-
+    .header {
+        margin-top: 40px;
+        --user-picture-size: 120px;
+    }
+    .header_info {
+        margin-left: 40px;
+    }
 }
 
 /* XXL / Extra extra large */
 @media only screen and (min-width: 1401px) {
-
+    .header {
+        margin-top: 40px;
+        --user-picture-size: 160px;
+    }
+    .header_info {
+        margin-left: 40px;
+    }
 }

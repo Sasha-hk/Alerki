@@ -11,6 +11,8 @@
     --color: #000;
     --color-muted: #cacaca;
     --color-link: #1E78FF;
+
+    --corporate-color: rgb(0, 153, 255);
 }
 
 /* dark */
@@ -26,4 +28,6 @@
     --color: #fff;
     --color-muted: #838383;
     --color-link: #1E78FF;
+
+    --corporate-color: rgb(0, 153, 255);
 }

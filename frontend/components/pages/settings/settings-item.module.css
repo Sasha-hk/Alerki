@@ -1,0 +1,27 @@
+/* settings item */
+.settings_item {
+  display: flex;
+}
+.settings_block {
+  border-radius: 7px;
+  padding: 12px 12px;
+  width: 100%;
+}
+.settings_item:not(:last-child) {
+  margin-bottom: 4px;
+}
+.active_indicator {
+  display: block;
+  width: 7px;
+  height: auto;
+  margin: 3px 5px 3px 0;
+  border-radius: 3px;
+}
+
+/* setting item active */
+.settings_item.active .active_indicator {
+  background: var(--corporate-color);
+}
+.settings_item.active .settings_block {
+  background: rgba(255, 255, 255, 0.1);
+}
