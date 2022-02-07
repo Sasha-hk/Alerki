@@ -24,6 +24,7 @@ Endpoints list:
 
 - [`/profile`](#Profile)
   - [`/:username`](#Get-profile)
+  - [`/:workerID`](#Get-services)
   - [`/find-worker`](#Find-worker)
   - [`/get-schedule`](#Get-worker-schedule)
   - [`/picture`](#Picture)
@@ -359,6 +360,40 @@ In response, we receive an array of users with the specified service in the requ
 | `worker.instagramProfile` | string | link to instagram profile if exists |
 | `worker.workerStartTime` | string | worker start time |
 | `worker.workerEndTime` | string | worker end time |
+
+---
+
+### **Get services**
+
+```http
+GET /profile/services/:workerID
+```
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1,
+    "currency": "UAN",
+    "price": "100",
+    "location": null,
+    "duration": 1200000,
+    "workerID": 1,
+    "serviceID": 1
+  },
+]
+```
+
+| **Parameter** | **Type** | **Description** |
+| :--- | :--- | :--- |
+| `id` | int | user id |
+| `currency` | string | service currency |
+| `price` | string | service price |
+| `locations` | string | service lication |
+| `duration` | int | service duration |
+| `workerID` | int | worker id |
+| `serviceID` | int | service id |
 
 ---
 

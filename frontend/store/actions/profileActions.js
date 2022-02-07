@@ -1,10 +1,7 @@
-import Router, { useRouter } from 'next/router'
-import Cookies from 'js-cookie'
+import { useSelector } from 'react'
 import api from '../../http'
 import * as types from '../types/profileTypes'
 
-
-const API_URL = process.env.API_URL
 
 const makeAction = (action) => {
     return {
@@ -28,10 +25,31 @@ const upload = ({username}) => {
             url: '/profile/' + username
         })
             .then(r => { 
+                console.log(r.data)
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SUCCESS, r.data))
             })
             .catch(e => {
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_ERROR, e?.response?.data))
+            }) 
+    }
+}
+
+// upload services
+const updaloadServices = () => {
+    return async dispatch => {
+        const profile = useSelector(store => store.profile)
+
+        dispatch(makeAction(types.PROFILE_UPLOAD_SERVICES))
+
+        await api({
+            method: 'get',
+            url: '/profile/services' + profile.profile.workerID,
+        })
+            .then(r => { 
+                dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SERVICES_SUCCESS, r.data))
+            })
+            .catch(e => {
+                dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SERVICES_ERROR, e?.response?.data))
             }) 
     }
 }

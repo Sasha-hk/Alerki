@@ -10,6 +10,10 @@ router
         '/find-worker',
         ProfileController.findWorker)
     .get(
+        '/services/:workerID',
+        ProfileController.findServicesForWorker
+    )
+    .get(
         '/get-schedule',
         ProfileController.getSchedule)
     .get(

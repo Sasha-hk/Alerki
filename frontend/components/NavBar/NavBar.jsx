@@ -13,7 +13,7 @@ const NavBar = () => {
         isAuthenticated,
         authData,
     } = useAuth()
-
+    
     // navigatino views
     const navigationButtons = (
         <nav>
@@ -34,7 +34,7 @@ const NavBar = () => {
                 </a>
             </Link>
 
-            <Link href="/">
+            <Link href={`/${authData.username}/`}>
                 {
                     authData.pictureID
                         ? <span>1</span>

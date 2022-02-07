@@ -10,6 +10,7 @@ const ProfileError = require('../exception/ProfileError')
 const checkParams = require('../utils/validators/checkParams')
 const GetWorkersDto = require('../dto/GetWorkersDto')
 const ProfileDto = require('../dto/ProfileDto')
+const WorkerServiceDto = require('../dto/WorkerServiceDto')
 
 
 class ProfileController { 
@@ -26,18 +27,41 @@ class ProfileController {
             if (!foundUser) {
                 throw APIError.NotFoundError()
             }
-
             let profileData = new ProfileDto(foundUser)
-
+            
             if (foundUser.workerID) {
                 const workerProfile = await ProfileService.findWorkerByID({id: profileData.workerID})
+                const workerServices = await WorkerServiceService.findForWorker({workerID: workerProfile.id})
                 profileData.addWorkerProfile(workerProfile)
+                profileData.setWorkerServices(workerServices)
             }
 
             res.json({...profileData})
         }
         catch (e) {
             res.status(e.status || 500).json(e.errors) 
+        }
+    }
+
+    async findServicesForWorker(req, res, next) {
+        try {
+            const {workerID} = req.params
+            
+            checkParams.all({
+                workerID,
+            })
+
+            const workerServices = await WorkerServiceService.findForWorker({workerID})
+            if (!workerServices || workerServices.length == 0) {
+                throw APIError.NotFoundError()
+            }
+            const servicesData = new WorkerServiceDto(workerServices)
+            
+            res.json(servicesData.services ? servicesData.services : servicesData)
+        }
+        catch (e) {
+            console.log(e)
+            res.status(e.status || 500).json(e.errors)
         }
     }
 

@@ -6,22 +6,10 @@ const defaultProfileState = {
         username: null,
         firstName: null,
         lastName: null,
-        email: null,
         pictureID: null,
-        
-        client: {
-            id: null,
-            available: null,
-        },
-        worker: {
-            id: null,
-            shortBiography: null,
-            instagramProfile: null,
-            available: null,
-            workingStartTime: null,
-            workingEndTime: null,
-            weekendDaysID: null,
-        },
+        clientID: null,
+        workerID: null,
+        profileType: null,
     },
     loading: false,
     error: false,
@@ -52,6 +40,38 @@ const profileReducer = (state = defaultProfileState, action) => {
             }
 
         case types.PROFILE_UPLOAD_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: true,
+                errorMessage: action.payload,
+            }
+
+        // upload services
+        case types.PROFILE_UPLOAD_SERVICES:
+            return {
+                ...state,
+                loading: true,
+                error: false,
+                errorMessage: null,
+            }
+        
+        case types.PROFILE_UPLOAD_SERVICES_SUCCESS:
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    worker: {
+                        ...state.worker,
+                        services: action.payload,
+                    }
+                },
+                loading: false,
+                error: false,
+                errorMessage: null,
+            }
+
+        case types.PROFILE_UPLOAD_SERVICES_ERROR:
             return {
                 ...state,
                 loading: false,

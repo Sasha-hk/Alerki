@@ -16,13 +16,7 @@ const AuthContext = createContext({
     data: {},
 })
 
-export const useAuth = () => {
-    const context = useContext(AuthContext)
-    // console.log(context)
-
-    return context
-}
-const API_URL = process.env.API_URL
+export const useAuth = () => useContext(AuthContext)
 
 const defaultAuthData = {
     id: null,
@@ -33,7 +27,6 @@ const defaultAuthData = {
     pictureID: null,
     clientID: null,
     authenticated: false,
-    initRender: true,
 }
 
 export const AuthProvider = ({children}) => {
@@ -164,7 +157,7 @@ export const AuthProvider = ({children}) => {
         }
         else if (Cookies.get('authenticated') && authData.authenticated === false) {
             setData()
-        } 
+        }
     }, [])
     
     // handle authentication with Google
