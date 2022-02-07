@@ -58,8 +58,8 @@ const Profile = () => {
         <span className="text-big">{profile.firstName} {profile.lastName}</span>
         <span className="text-little text-muted">{profile.username}</span>
         <div className={cls.settings_button}>
-          <Link href="/settings">
-            <Button className="little sceleton br-3">settings</Button>
+          <Link href="/settings/profile">
+            <Button className="little sceleton br-3"><span>settings</span></Button>
           </Link>
         </div>
       </div>
