@@ -14,6 +14,7 @@ const defaultProfileState = {
     loading: false,
     error: false,
     errorMessage: null,
+    initRender: true,
 }
 
 const profileReducer = (state = defaultProfileState, action) => {
@@ -72,6 +73,38 @@ const profileReducer = (state = defaultProfileState, action) => {
             }
 
         case types.PROFILE_UPLOAD_SERVICES_ERROR:
+            return {
+                ...state,
+                loading: false,
+                error: true,
+                errorMessage: action.payload,
+            }
+
+        case 'CLEAR':
+            return defaultProfileState
+
+        // update
+        case types.PROFILE_UPDATE:
+            return {
+                ...state,
+                loading: true,
+                error: false,
+                errorMessage: null,
+            }
+        
+        case types.PROFILE_UPDATE_SUCCESS:
+            return {
+                ...state,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
+                loading: false,
+                error: false,
+                errorMessage: null,
+            }
+
+        case types.PROFILE_UPDATE_ERROR:
             return {
                 ...state,
                 loading: false,

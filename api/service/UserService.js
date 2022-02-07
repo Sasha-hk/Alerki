@@ -275,6 +275,34 @@ class UserService {
 
         return update[1][0]
     }
+
+    async updateProfile({
+        id,
+        username,
+        firstName,
+        lastName,
+        picture,
+    }) {
+        const updatedUser = await UserModel.update(
+            {
+                username,
+                firstName,
+                lastName,
+            }, 
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        if (picture) {
+            await UserPictureService.update({id: updatedUser[1][0].pictureID, picture})
+        }
+
+        return updatedUser[1][0]
+    }
 }
 
 

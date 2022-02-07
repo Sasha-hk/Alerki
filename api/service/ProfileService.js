@@ -1,5 +1,7 @@
 const {ClientProfileModel, WorkerProfileModel} = require('../db/models')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+const UserService = require('./UserService')
+const UserPictureService = require('./UserPictureService')
 const checkTypes = require('../utils/validators/checkTypes')
 const checkParams = require('../utils/validators/checkParams')
 
@@ -48,7 +50,7 @@ class ProfileService {
         workingStartTime,
         workingEndTime,
         shortBiography,
-        instagramProfile
+        instagramProfile,
     }) {
         const updatedWorker = await WorkerProfileModel.update(
             {

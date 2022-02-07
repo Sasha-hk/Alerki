@@ -1,4 +1,5 @@
 import { useSelector } from 'react'
+import {useAuth} from '../../provider/AuthProvider'
 import api from '../../http'
 import * as types from '../types/profileTypes'
 
@@ -50,6 +51,37 @@ const updaloadServices = () => {
             })
             .catch(e => {
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SERVICES_ERROR, e?.response?.data))
+            }) 
+    }
+}
+
+// update
+const update = ({
+    username,
+    firstName,
+    lastName,
+    picture,
+}) => {
+    return async dispatch => {
+        dispatch(makeAction(types.PROFILE_UPDATE))
+        const {refresh} = useAuth()
+
+        await api({
+            method: 'get',
+            url: '/profile/update' + profile.profile.workerID,
+            data: {
+                username,
+                firstName,
+                lastName,
+                picture,
+            }
+        })
+            .then(r => { 
+                dispatch(makeActionWithPayload(types.PROFILE_UPDATE_SUCCESS, r.data))
+                refresh()
+            })
+            .catch(e => {
+                dispatch(makeActionWithPayload(types.PROFILE_UPDATE_ERROR, e?.response?.data))
             }) 
     }
 }

@@ -1,56 +1,92 @@
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import FluidFrame from '../components/frames/FluidFrame.jsx'
-import {useAuth} from '../provider/AuthProvider'
-import profileActions from '../store/actions/profileActions'
 import { useDispatch, useSelector } from 'react-redux'
+import Router, { useRouter } from 'next/router'
+import ScrollFrame from '../components/frames/ScrollFrame.jsx'
+import profileActions from '../store/actions/profileActions'
+import Button from '../components/UI/Button/Button.jsx'
+import Input from '../components/UI/Input/Input.jsx'
+import {useAuth} from '../provider/AuthProvider'
+import api from '../http'
+
+import cls from '../styles/pages/profile.module.css'
 
 
 const API_URL = process.env.API_URL
 
 const Profile = () => {
-    const router = useRouter()
-    const dispatch = useDispatch()
-    const profileStore = useSelector(store => store.profile)
-    const profile = profileStore.profile
+  const profileStore = useSelector(store => store.profile)
+  const profile = profileStore.profile
+  const dispatch = useDispatch()
+  const router = useRouter()
 
-    useEffect(() => {
-        if (router.isReady) {
-            const username = router.query.username
-            
-            dispatch(profileActions.upload({username}))
-        }
-    }, [router.isReady])
+  // upload user info
+  useEffect(() => {
+    if (router.isReady) {
+      if (router.query.username) {
+        dispatch(profileActions.upload({username: router.query.username}))
+      }
+    }
+  }, [router.isReady])
 
-    // console.log(profile)
+  // general view for master and client
+  const headerView = (balance = false) => (
+    <div className={[
+      cls.header, 
+      balance ? cls.balance_header : null
+      ].join(' ')
+    }>
+      {
+        profile.pictureID
+          ? <img
+            className={cls.user_picture}
+            src={`${API_URL}/profile/picture/${profile.pictureID}`}
+            alt=""
+          />
+        : <svg 
+          className={cls.plug_user_picture}
+          viewBox="0 0 29 29"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="14.5" cy="14.5" r="14.5" />
+        </svg>
+      }
 
-    const profileView = <div>
-        {
-            profile.pictureID
-                ? <img src={API_URL + '/profle/picture/' + profile.pictureID} alt="" />
-                : null
-        }
-
-        <b>{profile.username}</b>
-
-        {
-            profile.profileType == 'worker'
-                ? <p>{profile.worker.shordBiograpy}</p>
-                : null
-        } 
+      <div className={cls.header_info}>
+        <span className="text-big">{profile.firstName} {profile.lastName}</span><br></br>
+        <span className="text-little text-muted">{profile.username}</span>
+      </div>
     </div>
-    
-    return (
-        <FluidFrame navigation={true}>
-            <div className="container">
-                {
-                    profileStore.loading
-                        ? <b>loading</b>
-                        : profileView
-                }
-            </div>
-        </FluidFrame>
-    )
+  )
+
+  // view only for master
+  const extendedView = (
+    <>
+      {headerView()}
+
+      <div className={cls.about}>
+        1
+      </div>
+
+      <div className="services">
+
+      </div>
+    </>
+  )
+
+  return (
+    <ScrollFrame navigation={true}>
+        <div className="container">
+          {
+            profileStore.loading && profileStore.initRender
+              ? <b>loading</b>
+              : profile.profileType == 'worker'
+                ? extendedView
+                : headerView(true)
+          }
+        </div>
+    </ScrollFrame>
+  )
 }
 
 

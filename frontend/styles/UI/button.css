@@ -37,6 +37,17 @@ button.stratch {
     width: 100%;
 }
 
+/* border */
+button.br-1 {
+    border-radius: 4px;
+}
+button.br-2 {
+    border-radius: 7px;
+}
+button.br-3 {
+    border-radius: 100px;
+}
+
 /* colors */
 button.primary {
     background: var(--btn-primary);
@@ -52,4 +63,8 @@ button.google {
     border: none;
     align-items: center;
     justify-content: center;
+}
+button.sceleton {
+    background: none;
+    border: 1.5px solid var(--color);
 }
