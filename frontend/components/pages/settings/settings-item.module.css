@@ -1,21 +1,25 @@
 /* settings item */
 .settings_item {
   display: flex;
+  cursor: pointer;
 }
 .settings_block {
-  border-radius: 7px;
-  padding: 12px 12px;
+  border-radius: 8px;
+  padding: 10px 12px;
   width: 100%;
+}
+.settings_block span {
+  user-select: none;
 }
 .settings_item:not(:last-child) {
   margin-bottom: 4px;
 }
 .active_indicator {
   display: block;
-  width: 7px;
+  width: 6px;
   height: auto;
-  margin: 3px 5px 3px 0;
-  border-radius: 3px;
+  margin: 5px 5px 5px 0;
+  border-radius: 10px;
 }
 
 /* setting item active */

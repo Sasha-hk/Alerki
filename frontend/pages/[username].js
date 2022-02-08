@@ -59,7 +59,9 @@ const Profile = () => {
         <span className="text-little text-muted">{profile.username}</span>
         <div className={cls.settings_button}>
           <Link href="/settings/profile">
-            <Button className="little sceleton br-3"><span>settings</span></Button>
+            <a>
+              <Button className="little sceleton br-3"><span>settings</span></Button>
+            </a>
           </Link>
         </div>
       </div>

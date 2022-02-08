@@ -1,5 +1,3 @@
-import { useSelector } from 'react'
-import {useAuth} from '../../provider/AuthProvider'
 import api from '../../http'
 import * as types from '../types/profileTypes'
 
@@ -26,7 +24,6 @@ const upload = ({username}) => {
             url: '/profile/' + username
         })
             .then(r => { 
-                console.log(r.data)
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SUCCESS, r.data))
             })
             .catch(e => {
@@ -38,13 +35,11 @@ const upload = ({username}) => {
 // upload services
 const updaloadServices = () => {
     return async dispatch => {
-        const profile = useSelector(store => store.profile)
-
         dispatch(makeAction(types.PROFILE_UPLOAD_SERVICES))
 
         await api({
             method: 'get',
-            url: '/profile/services' + profile.profile.workerID,
+            url: '/profile/services',
         })
             .then(r => { 
                 dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SERVICES_SUCCESS, r.data))
@@ -64,11 +59,10 @@ const update = ({
 }) => {
     return async dispatch => {
         dispatch(makeAction(types.PROFILE_UPDATE))
-        const {refresh} = useAuth()
-
+        
         await api({
-            method: 'get',
-            url: '/profile/update' + profile.profile.workerID,
+            method: 'patch',
+            url: '/profile/update',
             data: {
                 username,
                 firstName,
@@ -78,7 +72,6 @@ const update = ({
         })
             .then(r => { 
                 dispatch(makeActionWithPayload(types.PROFILE_UPDATE_SUCCESS, r.data))
-                refresh()
             })
             .catch(e => {
                 dispatch(makeActionWithPayload(types.PROFILE_UPDATE_ERROR, e?.response?.data))
@@ -88,4 +81,5 @@ const update = ({
 
 export default {
     upload,
+    update
 }

@@ -24,10 +24,16 @@
     font-size: var(--text-big) !important;
 }
 
+
+/* colors */
 .text-muted {
     color: var(--color-muted);
 }
+.text-form-item {
+    color: var(--color-form-item-heading);
+}
 
+/* weight */
 b {
     font-weight: 600;
 }

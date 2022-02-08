@@ -17,6 +17,7 @@ import '../styles/frames/fluid-frame.css'
 import '../styles/frames/scroll-frame.css'
 import '../styles/UI/button.css'
 import '../styles/UI/input.css'
+import '../styles/forms.css'
 
 
 function App({ Component, pageProps }) {
