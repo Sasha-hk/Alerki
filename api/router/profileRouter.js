@@ -2,6 +2,8 @@ const Router = require('express')
 const ProfileController = require('../controller/ProfileController')
 const authMiddleware = require('../middleware/authMiddleware')
 const isWorkerMiddleware = require('../middleware/isWorkerMiddlware')
+const multer = require('multer')
+const upload = multer({dest: 'tmp', dest: 'uploads/'})
 const router = new Router()
 
 
@@ -43,6 +45,7 @@ router
     .patch(
         '/update',
         authMiddleware,
+        // upload.array('files'), 
         ProfileController.updateProfile
     )
     .patch(

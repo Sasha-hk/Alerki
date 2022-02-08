@@ -1,4 +1,5 @@
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
 const router = require('./router')
@@ -13,6 +14,7 @@ const corsOptions ={
 
 // middlewares
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(cors(corsOptions))
 
