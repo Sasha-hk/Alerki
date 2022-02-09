@@ -1,7 +1,6 @@
 const request = require('supertest')
 const {extractCookies} = require('../utils/extractCookies')
-const {http} = require('../app')
-const app = http
+const app = require('../app')
 
 let worker = {
     email: 'email@gmail.com', username: 'workk', profileType: 'worker', password: 'pass'
@@ -125,6 +124,39 @@ describe('Test authenticatin', () => {
             expect(r.statusCode).toBe(400)
         })
     })
+
+    describe('get user data', () =>  {
+        test('with accessToken => 200', async () => {
+            const w = await request(app)
+                .get('/auth/user')
+                .set('Cookie', ['accessToken=' + worker.accessToken])
+            
+            expect(w.statusCode).toBe(200)
+
+            worker = {
+                ...worker,
+                userData: w.body
+            }
+
+            const c = await request(app)
+                .get('/auth/user')
+                .set('Cookie', ['accessToken=' + client.accessToken])
+            
+            expect(c.statusCode).toBe(200)
+
+            client = {
+                ...client,
+                userData: c.body
+            }
+        })
+
+        test('without accessToken => 401', async () => {
+            const r = await request(app)
+                .get('/auth/user')
+            
+            expect(r.statusCode).toBe(401)
+        })
+    })
 })
 
 describe('Test services', () => {
@@ -241,7 +273,7 @@ describe('Test profile', () => {
         test('with not exists worker id => 404', async () => {
             const r = await request(app)
                 .get('/profile/services/100')
-             
+            
             expect(r.statusCode).toBe(404)
         })
 
@@ -289,7 +321,7 @@ describe('Test profile', () => {
                     workingStartTime: 1000 * 60 * 60 * 9,
                     workingEndTime: 1000 * 60 * 60 * 16,
                 })
-            
+                
             expect(r.statusCode).toBe(200)
         })
 
