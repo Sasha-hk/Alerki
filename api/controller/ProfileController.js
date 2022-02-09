@@ -11,6 +11,7 @@ const checkParams = require('../utils/validators/checkParams')
 const GetWorkersDto = require('../dto/GetWorkersDto')
 const ProfileDto = require('../dto/ProfileDto')
 const WorkerServiceDto = require('../dto/WorkerServiceDto')
+const WorkerProfileDto = require('../dto/WorkerProfileDto')
 
 
 class ProfileController { 
@@ -50,7 +51,6 @@ class ProfileController {
       checkParams.all({
         workerID,
       })
-
       const workerServices = await WorkerServiceService.findForWorker({workerID})
       if (!workerServices || workerServices.length == 0) {
         throw APIError.NotFoundError()
@@ -60,7 +60,6 @@ class ProfileController {
       res.json(servicesData.services ? servicesData.services : servicesData)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors)
     }
   }
@@ -186,17 +185,15 @@ class ProfileController {
       
       const updatedWorker = await ProfileService.updateWorker({
         id: req.user.workerID,
-        username,
-        firstName,
-        lastName,
-        picture,
         workingStartTime,
         workingEndTime,
         shortBiography,
         instagramProfile,
       })
+
+      const workerData = new WorkerProfileDto(updatedWorker)
       
-      res.json(updatedWorker)
+      res.json(workerData)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
@@ -346,6 +343,7 @@ class ProfileController {
       res.json(schedule)
     }
     catch (e) {
+      console.log(e, '<<<<<<<<<<<<')
       res.status(e.status || 500).json(e.errors)
     }
   }

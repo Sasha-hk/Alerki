@@ -48,7 +48,7 @@ class WorkerWeekendDaysService {
             return newWeekendDays
         }
         else {
-            const updatedWeekendDays = await WorkerWeekendDaysModel.update(
+            await WorkerWeekendDaysModel.update(
                 {
                     monday,
                     tuesday,
@@ -59,15 +59,20 @@ class WorkerWeekendDaysService {
                     sunday,
                 },
                 {
-                    raw: true,
-                    returning: true,
                     where: {
                         id
                     }
                 }
             )
 
-            return updatedWeekendDays[1][0]
+            const updatedWeekendDays = WorkerWeekendDaysModel.findOne({
+                raw: true,
+                where: {
+                    id,
+                },
+            })
+
+            return updatedWeekendDays
         }
     }
 }

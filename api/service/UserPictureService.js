@@ -2,31 +2,10 @@ const {UserPictureModel} = require('../db/models')
 
 
 class UserPictureService {
-    async savePicture(picture, pictureSourceUrl) {
+    async savePicture(picture) {
         return await UserPictureModel.create({
             picture,
-            pictureSourceUrl
         })
-    }
-
-    async update({id, picture}) {
-        const checkExists = await this.getByID({id})
-
-        if (checkExists) {
-            return await UserPictureModel.update(
-                {
-                    picture,
-                },
-                {
-                    where: {
-                        id,
-                    },
-                }
-            )
-        }
-        else {
-            return await this.savePicture(picture)
-        }
     }
 
     async getByID({id}) {
@@ -37,7 +16,38 @@ class UserPictureService {
             },
             appribures: ['picture']
         })
+
+        return foundPicture
     }
+
+    async update({id, picture}) {
+        const checkExists = await this.getByID({id})
+
+        if (checkExists) {
+            await UserPictureModel.update(
+                {
+                    picture,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                }
+            )
+
+            const updatedData = await UserPicture.findOne({
+                raw: true,
+                where: {
+                    id,
+                },
+            })
+
+            return updatedData
+        }
+        else {
+            return await this.savePicture(picture)
+        }
+    }    
 }
 
 

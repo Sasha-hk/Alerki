@@ -2,6 +2,7 @@ const UserService = require('../service/UserService')
 const getDeviceName = require('../utils/deviceName')
 const GoogleOAuth = require('../oauth/GoogleOAuth')
 const checkParams = require('../utils/validators/checkParams')
+const UserDto = require('../dto/UserDto')
 
 
 class AuthController {
@@ -172,6 +173,22 @@ class AuthController {
             res.json(userData)
         }
         catch(e) {
+            res.status(e.status || 500).json(e.errors)
+        }
+    }
+
+    async user(req, res, next) {
+        try {
+            const user = await UserService.findUserByID({
+                id: req.accessToken.id,
+            })
+            
+            const userData = new UserDto(user)
+
+            res.json(userData)
+        }
+        catch(e) {
+            console.log(e)
             res.status(e.status || 500).json(e.errors)
         }
     }
