@@ -1,7 +1,7 @@
 const request = require('supertest')
 const {extractCookies} = require('../utils/extractCookies')
-const app = require('../app')
-
+const {http} = require('../app')
+const app = http
 
 let worker = {
     email: 'email@gmail.com', username: 'workk', profileType: 'worker', password: 'pass'

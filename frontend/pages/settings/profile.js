@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Rotuer, { useRouter } from 'next/router'
+import { io } from 'socket.io-client'
 import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
@@ -10,7 +11,7 @@ import { useAuth } from '../../provider/AuthProvider'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
-
+const socket = io('http://192.168.1.11:3001')
 const Settings = () => {
   const {authData, refresh} = useAuth()
   const profileData = useSelector(store => store.profile) 
@@ -43,16 +44,19 @@ const Settings = () => {
     }
   }, [profileData])
 
-  const updateProfile = (e) => {
+  const updateProfile = async (e) => {
     e.preventDefault()
-    const formData = new FormData()
-    console.log(updateProfileData)
-    console.log(updateProfileData.picture)
-    // dispatch(profileActions.update(updateProfileData))
-    // refresh()
+    
+    if (updateProfileData.picture) {
+      socket.io.emit("e", () => {
+        console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+      });
+    }
+    await dispatch(profileActions.update(updateProfileData))
+    refresh()
   }
 
-  return (
+ return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
         <span className="text-big mb-3">Profile</span>
@@ -65,8 +69,15 @@ const Settings = () => {
             <Input 
               type="file"
               className="middle"
-              onChange={e => setUpdateProfileData({...updateProfileData, picture: 12})}
-              // onChange={e => {console.log(e.target.files[0])}}
+              onChange={e => { 
+                const file = new FileReader()
+
+                file.onload = (e) => {
+                  setUpdateProfileData({...updateProfileData, picture: e.target.result})
+                }
+
+                file.readAsDataURL(e.target.files[0])
+              }}
             />
           </div>
           
@@ -102,7 +113,6 @@ const Settings = () => {
 
           <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
         </form>
-
       </SettingsWrapper>
     </ScrollFrame>
   )
