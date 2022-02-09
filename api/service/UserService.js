@@ -298,7 +298,9 @@ class UserService {
         )
 
         if (picture) {
-            await UserPictureService.update({id: updatedUser[1][0].pictureID, picture})
+            cnosole.log('Save Picture')
+            // const preparePicture = new Buffer(picture, 'base64')
+            // await UserPictureService.update({id: updatedUser[1][0].pictureID, picture})
         }
 
         return updatedUser[1][0]

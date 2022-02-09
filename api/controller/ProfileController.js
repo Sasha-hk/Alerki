@@ -211,7 +211,7 @@ class ProfileController {
         lastName,
         picture,
       } = req.body
-      
+
       checkParams.atLeastOne({
         username,
         firstName,

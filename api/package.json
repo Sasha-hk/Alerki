@@ -27,6 +27,7 @@
         "request": "^2.88.2",
         "request-promise": "^4.2.6",
         "sequelize": "^6.12.5",
+        "socket.io": "^4.4.1",
         "uuid": "^7.0.3"
     },
     "devDependencies": {
