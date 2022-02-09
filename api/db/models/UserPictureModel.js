@@ -13,9 +13,6 @@ module.exports = (sequelize, DataTypes) => {
             slug: {
                 type: DataTypes.STRING(11),
             },
-            pictureSourceUrl: {
-                type: DataTypes.STRING(255),
-            },
         },
         {
             tableName: 'UserPictures',

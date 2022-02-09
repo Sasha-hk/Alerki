@@ -75,14 +75,13 @@ class UserService {
         return checkUserExists
     }
 
-    checkProfileType(profileType) {
-        if (profileType != 'client' && profileType != 'worker') {
-            throw AuthError.BadRequestError()
-        }
-    }
-
     async generateAndSaveTokens(user, deviceName) {
-        const userData = new UserDto(user)
+        const userData = {
+            id: user.id,
+            email: user.email,
+            workerID: user.workerID,
+            clientID: user.clientID,
+        }
         const tokens = await AuthService.generateTokens({...userData})
         await AuthService.saveAuthData(userData.id, deviceName, tokens)
         
@@ -99,7 +98,9 @@ class UserService {
         deviceName
     }) {    
         // check profile type
-        this.checkProfileType(profileType)
+        if (profileType != 'client' && profileType != 'worker') {
+            throw AuthError.BadRequestError()
+        }
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
@@ -281,7 +282,6 @@ class UserService {
         username,
         firstName,
         lastName,
-        picture,
     }) {
         const updatedUser = await UserModel.update(
             {
@@ -296,12 +296,6 @@ class UserService {
                 },
             }
         )
-
-        if (picture) {
-            cnosole.log('Save Picture')
-            // const preparePicture = new Buffer(picture, 'base64')
-            // await UserPictureService.update({id: updatedUser[1][0].pictureID, picture})
-        }
 
         return updatedUser[1][0]
     }

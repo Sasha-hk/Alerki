@@ -52,7 +52,7 @@ class ProfileService {
         shortBiography,
         instagramProfile,
     }) {
-        const updatedWorker = await WorkerProfileModel.update(
+        await WorkerProfileModel.update(
             {
                 workingStartTime,
                 workingEndTime,
@@ -60,14 +60,20 @@ class ProfileService {
                 instagramProfile,
             }, 
             {
-                returning: true,
                 where: {
                     id,
                 },
             }
         )
 
-        return updatedWorker[1][0]
+        const updatedWorker = await WorkerProfileModel.findOne({
+            raw: true,
+            where: {
+                id,
+            },
+        })
+
+        return updatedWorker
     }
 }
 
