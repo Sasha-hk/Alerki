@@ -1,3 +1,13 @@
+/* general */
+* {
+    font-weight: 400;
+    --text-little: 16px;
+    --text-normal: 18px;
+    --text-middle: 20px;
+    --text-big: 26px;
+}
+
+/* text size */
 .text-little {
     font-size: var(--text-little) !important;
 }
@@ -14,8 +24,18 @@
     font-size: var(--text-big) !important;
 }
 
+
+/* colors */
 .text-muted {
     color: var(--color-muted);
+}
+.text-form-item {
+    color: var(--color-form-item-heading);
+}
+
+/* weight */
+b {
+    font-weight: 600;
 }
 
 /* links */
@@ -38,60 +58,30 @@ a {
 
 /* XS / Extra little */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 16px;
-        --text-middle: 18px;
-        --text-big: 20px;
-    }
+
 }
 
 /* SM / little */
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 2.5vw;
-        --text-middle: 18px;
-        --text-big: 4vw;
-    }
+    
 }
 
 /* MD / Medium */
 @media only screen and (min-width: 769px) and (max-width: 992px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 2.5vw;
-        --text-middle: 18px;
-        --text-big: 4vw;
-    }
+
 }
 
 /* LG / Large */
 @media only screen and (min-width: 993px) and (max-width: 1200px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 2.5vw;
-        --text-middle: 18px;
-        --text-big: 4vw;
-    }
+
 }
 
 /* XL / Extra large */
 @media only screen and (min-width: 1201px) and (max-width: 1400px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 2vw;
-        --text-middle: 18px;
-        --text-big: 3vw;
-    }
+    
 }
 
 /* XXL / Extra extra large */
 @media only screen and (min-width: 1401px) {
-    * {
-        --text-little: 14px;
-        --text-normal: 2vw;
-        --text-middle: 18px;
-        --text-big: 3vw;
-    }
+
 }

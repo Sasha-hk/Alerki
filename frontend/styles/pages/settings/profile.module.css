@@ -1,0 +1,7 @@
+.settings_block {
+  display: flex;
+  flex-direction: column;
+}
+.settings_block:not(:last-child) {
+  margin-bottom: 12px;
+}

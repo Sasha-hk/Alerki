@@ -1,0 +1,71 @@
+.settings {
+
+}
+.settings_items {
+
+}
+.settings_view {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+  .settings {
+    display: flex;
+  }
+  .settings_items {
+    width: 300px;
+    margin-right: 30px;
+  }
+  /* .settings_view {
+    width: 100%;
+  } */
+}
+
+/* XL / Extra large */
+@media only screen and (max-width: 1400px) {
+  .settings {
+    display: flex;
+  }
+  .settings_items {
+    width: 300px;
+    margin-right: 30px;
+  }
+  /* .settings_view{
+    width: 100%;
+  } */
+}
+
+/* LG / Large */
+@media only screen and (max-width: 1200px) {
+
+}
+
+/* MD / Medium */
+@media only screen and (max-width: 992px) {
+
+}
+
+/* SM / little */
+@media only screen and (max-width: 768px) {
+  .settings_items {
+    width: 200px;
+    margin-bottom: 48px;
+  } 
+}
+
+/* XS / Extra little */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+  .settings {
+    flex-direction: column;
+  }
+  .settings_items {
+    width: 100%;
+    margin-bottom: 48px;
+  } 
+  .settings_view{
+    width: 100%;
+  }
+}

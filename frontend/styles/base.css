@@ -9,7 +9,7 @@
     --navbar-height: 70px;
     --frame-padding: 16px;
     --frame-fix-navbar: 80px;
-    --continer-width: 100%;
+    --container-width: 100%;
 }
 body {
     background: var(--bg-general);
@@ -33,8 +33,9 @@ section:not(:last-child) {
     justify-content: center;
 }
 .container {
-    width: var(--continer-width);
+    width: var(--container-width);
 }
+
 
 /* XS / Extra little */
 @media only screen and (min-width: 0px) and (max-width: 480px) {
@@ -42,7 +43,7 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 16px;
         --frame-fix-navbar: 80px;
-        --continer-width: 100%;
+        --container-width: 100%;
     }
 }
 
@@ -52,7 +53,7 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 16px;
         --frame-fix-navbar: 80px;
-        --continer-width: 100%;
+        --container-width: 100%;
     }
 }
 
@@ -62,7 +63,7 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 16px;
         --frame-fix-navbar: 80px;
-        --continer-width: 100%;
+        --container-width: 100%;
     }
 }
 
@@ -72,7 +73,7 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 16px;
         --frame-fix-navbar: 80px;
-        --continer-width: 100%;
+        --container-width: 100%;
     }
 }
 
@@ -82,7 +83,7 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 60px;
         --frame-fix-navbar: 80px;
-        --continer-width: 1059px;
+        --container-width: 1059px;
     }
 }
 
@@ -92,6 +93,6 @@ section:not(:last-child) {
         --navbar-height: 70px;
         --frame-padding: 60px;
         --frame-fix-navbar: 80px;
-        --continer-width: 1059px;
+        --container-width: 1059px;
     }
 }

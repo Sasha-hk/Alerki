@@ -1,5 +1,5 @@
 const {WorkerServiceModel, WorkerProfileModel} = require('../db/models')
-const {isNumber} = require('../utils/validators/checkTypes')
+const {isNumber, hardNumber} = require('../utils/validators/checkTypes')
 
 
 class WorkerServiceService {
@@ -38,6 +38,21 @@ class WorkerServiceService {
             },
             offset: page ? page * limit : 0,
             limit: limit || 24,
+        })
+
+        return foundServices
+    }
+
+    async findForWorker({
+        workerID
+    }) {
+        hardNumber(Number(workerID), 'workerID')
+
+        const foundServices = await WorkerServiceModel.findAll({
+            raw: true,
+            where: {
+                workerID,
+            },
         })
 
         return foundServices

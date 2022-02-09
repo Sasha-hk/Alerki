@@ -9,6 +9,26 @@ class UserPictureService {
         })
     }
 
+    async update({id, picture}) {
+        const checkExists = await this.getByID({id})
+
+        if (checkExists) {
+            return await UserPictureModel.update(
+                {
+                    picture,
+                },
+                {
+                    where: {
+                        id,
+                    },
+                }
+            )
+        }
+        else {
+            return await this.savePicture(picture)
+        }
+    }
+
     async getByID({id}) {
         const foundPicture = await UserPictureModel.findOne({
             raw: true,

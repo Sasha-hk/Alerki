@@ -6,6 +6,7 @@ on:
       - main
 
     paths-ignore:
+      - 'frontend/**'
       - 'documentation/**'
       - '.github/**'
       - 'README.md'
@@ -18,6 +19,7 @@ on:
       - dev
 
     paths-ignore:
+      - 'frontend/**'
       - 'documentation/**'
       - '.github/**'
       - 'README.md'

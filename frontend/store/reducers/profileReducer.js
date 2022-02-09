@@ -6,32 +6,21 @@ const defaultProfileState = {
         username: null,
         firstName: null,
         lastName: null,
-        email: null,
         pictureID: null,
-        
-        client: {
-            id: null,
-            available: null,
-        },
-        worker: {
-            id: null,
-            shortBiography: null,
-            instagramProfile: null,
-            available: null,
-            workingStartTime: null,
-            workingEndTime: null,
-            weekendDaysID: null,
-        },
+        clientID: null,
+        workerID: null,
+        profileType: null,
     },
     loading: false,
     error: false,
     errorMessage: null,
+    initRender: true,
 }
 
 const profileReducer = (state = defaultProfileState, action) => {
     switch (action.type) {
-        // register
-        case types.PROFILE_REGISTER:
+        // upload
+        case types.PROFILE_UPLOAD:
             return {
                 ...state,
                 loading: true,
@@ -39,33 +28,7 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
         
-        case types.PROFILE_REGISTER_SUCCESS:
-            return {
-                ...state,
-                profile: action.payload,
-                loading: false,
-                error: false,
-                errorMessage: null,
-            }
-
-        case types.PROFILE_REGISTER_ERROR:
-            return {
-                ...state,
-                loading: false,
-                error: true,
-                errorMessage: action.payload,
-            }
-        
-        // login
-        case types.PROFILE_LOGIN:
-            return {
-                ...state,
-                loading: true,
-                error: false,
-                errorMessage: null,
-            }
-        
-        case types.PROFILE_LOGIN_SUCCESS:
+        case types.PROFILE_UPLOAD_SUCCESS:
             return {
                 ...state,
                 profile: {
@@ -77,7 +40,7 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
 
-        case types.PROFILE_LOGIN_ERROR:
+        case types.PROFILE_UPLOAD_ERROR:
             return {
                 ...state,
                 loading: false,
@@ -85,8 +48,8 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: action.payload,
             }
 
-        // logout
-        case types.PROFILE_LOGOUT:
+        // upload services
+        case types.PROFILE_UPLOAD_SERVICES:
             return {
                 ...state,
                 loading: true,
@@ -94,16 +57,22 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
         
-        case types.PROFILE_LOGOUT_SUCCESS:
+        case types.PROFILE_UPLOAD_SERVICES_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    worker: {
+                        ...state.worker,
+                        services: action.payload,
+                    }
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
             }
 
-        case types.PROFILE_LOGOUT_ERROR:
+        case types.PROFILE_UPLOAD_SERVICES_ERROR:
             return {
                 ...state,
                 loading: false,
@@ -111,8 +80,11 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: action.payload,
             }
 
-        // with Google
-        case types.PROFILE_WITH_GOOGLE:
+        case 'CLEAR':
+            return defaultProfileState
+
+        // update
+        case types.PROFILE_UPDATE:
             return {
                 ...state,
                 loading: true,
@@ -120,16 +92,19 @@ const profileReducer = (state = defaultProfileState, action) => {
                 errorMessage: null,
             }
         
-        case types.PROFILE_WITH_GOOGLE_SUCCESS:
+        case types.PROFILE_UPDATE_SUCCESS:
             return {
                 ...state,
-                ...action.payload,
+                profile: {
+                    ...state.profile,
+                    ...action.payload,
+                },
                 loading: false,
                 error: false,
                 errorMessage: null,
             }
 
-        case types.PROFILE_WITH_GOOGLE_ERROR:
+        case types.PROFILE_UPDATE_ERROR:
             return {
                 ...state,
                 loading: false,

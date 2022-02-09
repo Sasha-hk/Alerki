@@ -1,12 +1,16 @@
 import NavBar from '../NavBar/NavBar'
 
 
-function ScrollFrame({children}) {
+function ScrollFrame({children, navigation}) {
     return (
         <div>
             <>
                 {/* navigation */}
-                <NavBar />
+                {
+                    navigation
+                        ? <NavBar />
+                        : null
+                }
 
                 {/* content block */}
                 <div className="scroll-frame">

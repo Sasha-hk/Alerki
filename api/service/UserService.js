@@ -228,8 +228,22 @@ class UserService {
 
             const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
 
+            // generate unique username from email
+            let candedatUsername = profileData.email.split('@')[0]
+
+            while (true) {
+                const checkUsername = await this.findUserByUsername({username: candedatUsername})
+
+                if (!checkUsername) {
+                    break
+                }
+
+                candedatUsername += '_'
+            }
+
             const newUser = await UserModel.create({
                 email: profileData.email,
+                username: candedatUsername,
                 firstName: profileData.given_name,
                 lastName: profileData.family_name,
                 profileType: 'client',
@@ -260,6 +274,36 @@ class UserService {
         )
 
         return update[1][0]
+    }
+
+    async updateProfile({
+        id,
+        username,
+        firstName,
+        lastName,
+        picture,
+    }) {
+        const updatedUser = await UserModel.update(
+            {
+                username,
+                firstName,
+                lastName,
+            }, 
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        if (picture) {
+            cnosole.log('Save Picture')
+            // const preparePicture = new Buffer(picture, 'base64')
+            // await UserPictureService.update({id: updatedUser[1][0].pictureID, picture})
+        }
+
+        return updatedUser[1][0]
     }
 }
 

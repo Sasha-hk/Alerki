@@ -1,7 +1,11 @@
 import { useEffect } from 'react'
 import { ThemeProvider } from 'next-themes'
-import { Provider } from 'react-redux'
+import { useDispatch, Provider } from 'react-redux'
+import { AuthProvider } from '../provider/AuthProvider'
+import profileActions from '../store/actions/profileActions'
 import useStore from '../store'
+import Cookies from 'js-cookie'
+import api from '../http'
 
 // CSS
 import '../styles/base.css'
@@ -13,21 +17,20 @@ import '../styles/frames/fluid-frame.css'
 import '../styles/frames/scroll-frame.css'
 import '../styles/UI/button.css'
 import '../styles/UI/input.css'
+import '../styles/forms.css'
 
 
 function App({ Component, pageProps }) {
     const store = useStore(pageProps.initialReduxState)
 
-    useEffect(() => {
-        console.log(123)
-    }, [])
-
     return (
-        <Provider store={store}>
-            <ThemeProvider>
-                <Component {...pageProps} />
-            </ThemeProvider>
-        </Provider>
+        <AuthProvider>
+            <Provider store={store}>
+                <ThemeProvider>
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </Provider>
+        </AuthProvider>
     )
 }
 
