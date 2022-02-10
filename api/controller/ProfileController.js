@@ -12,6 +12,7 @@ const GetWorkersDto = require('../dto/GetWorkersDto')
 const ProfileDto = require('../dto/ProfileDto')
 const WorkerServiceDto = require('../dto/WorkerServiceDto')
 const WorkerProfileDto = require('../dto/WorkerProfileDto')
+const UserDto = require('../dto/UserDto')
 
 
 class ProfileController { 
@@ -202,6 +203,7 @@ class ProfileController {
 
   async updateProfile(req, res, next) {
     try {
+      const id = req.accessToken.id
       const {
         username,
         firstName,
@@ -215,18 +217,26 @@ class ProfileController {
         lastName,
         picture,
       })
-      
+     
+      if (picture) {
+        var updatedPicture = await UserPictureService.update({id, picture})
+        console.log('There are picture')
+      }
+
       const updatedWorker = await UserService.updateProfile({
-        id: req.accessToken.id,
+        id,
         username,
         firstName,
         lastName,
-        picture,
+        pictureID: updatedPicture?.id
       })
+
+      const userData = new UserDto(updatedWorker)
       
-      res.json(updatedWorker)
+      res.json(userData)
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }

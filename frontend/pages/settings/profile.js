@@ -45,7 +45,7 @@ const Settings = () => {
     //   });
     // }
 
-    await dispatch(userActions.update(updateUserData))
+    dispatch(userActions.update(updateUserData))
   }
 
  return (

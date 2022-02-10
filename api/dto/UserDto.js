@@ -18,14 +18,12 @@ class UserDto {
             this.firstName = user.firstName
             this.lastName = user.lastName
             this.clientID = user.clientID
-            if (user.workerID) {
+            if (user.profileType === 'worker') {
                 this.workerID = user.workerID
             }
             this.phoneNumber = user.phoneNumber
             this.profileType = user.profileType
-            if (user.pictureID) {
-                this.puctureID = user.puctureID
-            }
+            this.puctureID = user.pictureID
         }
     }
 }

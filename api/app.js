@@ -29,6 +29,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(cors(corsOptions))
 
+
 // routers
 router(app)
 
