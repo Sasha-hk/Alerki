@@ -9,14 +9,16 @@ const router = new Router()
 router
   .get(
     '/find-worker',
-    ProfileController.findWorker)
+    ProfileController.findWorker
+  )
   .get(
     '/services/:workerID',
     ProfileController.findServicesForWorker
   )
   .get(
     '/get-schedule',
-    ProfileController.getSchedule)
+    ProfileController.getSchedule
+  )
   .get(
     '/picture',
     ProfileController.getPicture
