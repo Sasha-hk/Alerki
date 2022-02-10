@@ -147,7 +147,7 @@ class ProfileController {
  
   async getPicture(req, res, next) {
     try {
-      const {id} = req.query
+      const {id} = req.params
 
       const picture = await UserPictureService.getByID({id})
 
