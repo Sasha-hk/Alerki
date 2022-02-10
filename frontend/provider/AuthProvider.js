@@ -72,7 +72,6 @@ export const AuthProvider = ({children}) => {
                 Router.push('/')
             })
             .catch(e => {
-                console.log(e)
                 return e?.response?.data
             }) 
     }
@@ -96,7 +95,6 @@ export const AuthProvider = ({children}) => {
                 Router.push('/')
             })
             .catch(e => {
-                console.log(e.response.data)
                 return e?.response?.data
             }) 
     }
@@ -107,8 +105,6 @@ export const AuthProvider = ({children}) => {
             url: '/auth/log-out',
         })
             .then(r => {
-                console.log(r)
-                console.log(r.response)
                 Router.push('/')
             })
             .catch(e => {
@@ -129,7 +125,6 @@ export const AuthProvider = ({children}) => {
                 Router.push('/')
             })
             .catch(e => {
-                console.log(e.response)
                 console.log(e)
             })
     }

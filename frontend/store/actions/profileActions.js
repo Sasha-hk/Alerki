@@ -1,18 +1,10 @@
-import api from '../../http'
 import * as types from '../types/profileTypes'
+import api from '../../http'
+import {
+  makeAction,
+  makeActionWithPayload,
+} from '../../utils/createAction.js'
 
-
-const makeAction = (action) => {
-  return {
-    type: action,
-  }
-}
-const makeActionWithPayload = (action, payload) => {
-  return {
-    type: action,
-    payload,
-  }
-}
 
 // upload profile
 const upload = ({username}) => {
@@ -72,11 +64,11 @@ const update = ({
         dispatch(makeActionWithPayload(types.PROFILE_UPDATE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response)
         dispatch(makeActionWithPayload(types.PROFILE_UPDATE_ERROR, e?.response?.data))
       }) 
   }
 }
+
 
 export default {
   upload,

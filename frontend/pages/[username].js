@@ -24,8 +24,9 @@ const Profile = () => {
   useEffect(() => {
     if (router.isReady) {
       if (router.query.username) {
-        console.log('upload profile data...')
-        dispatch(profileActions.upload({username: router.query.username})) 
+        if (router.query.username != profile.username) {
+          dispatch(profileActions.upload({username: router.query.username})) 
+        }
       }
     }
   }, [router.isReady, router.query.username])

@@ -6,54 +6,46 @@ import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
 import Input from '../../components/UI/Input/Input.jsx'
-import profileActions from '../../store/actions/profileActions'
+import userActions from '../../store/actions/userActions'
 import { useAuth } from '../../provider/AuthProvider'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
-const socket = io('http://192.168.1.11:3001')
 const Settings = () => {
-  const {authData, refresh} = useAuth()
-  const profileData = useSelector(store => store.profile) 
+  const {authData} = useAuth()
+  const userData = useSelector(store => store.user) 
   const dispatch = useDispatch()
-  const profile = profileData.profile
+  const user = userData.user
 
-  const [updateProfileData, setUpdateProfileData] = useState({
-    username: profile.username,
-    firstName: profile.firstName,
-    lastName: profile.lastName,
-    picture: profile.pictureID,
+  const [updateUserData, setUpdateUserData] = useState({
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    picture: user.pictureID,
   })
 
   useEffect(() => {
-    if (authData.username) {
-      dispatch(profileActions.upload({
-          username: authData.username,
-      }))
-    }
-  }, [authData])
-
-  useEffect(() => {
-    if (!profileData.loading) {
-      setUpdateProfileData({
-        username: profile.username,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        picture: profile.pictureID,
+    if (!userData.loading) {
+      setUpdateUserData({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        picture: user.pictureID,
       })
     }
-  }, [profileData])
+  }, [userData])
 
   const updateProfile = async (e) => {
     e.preventDefault()
     
-    if (updateProfileData.picture) {
-      socket.io.emit("e", () => {
-        console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-      });
-    }
-    await dispatch(profileActions.update(updateProfileData))
-    refresh()
+    // const socket = io('http://192.168.1.11:3001')
+    // if (updateUserData.picture) {
+    //   socket.io.emit("e", () => {
+    //     console.log(socket.id); // x8WIv7-mJelg7on_ALbx
+    //   });
+    // }
+
+    await dispatch(userActions.update(updateUserData))
   }
 
  return (
@@ -73,7 +65,7 @@ const Settings = () => {
                 const file = new FileReader()
 
                 file.onload = (e) => {
-                  setUpdateProfileData({...updateProfileData, picture: e.target.result})
+                  setUpdateUserData({...updateUserData, picture: e.target.result})
                 }
 
                 file.readAsDataURL(e.target.files[0])
@@ -85,8 +77,8 @@ const Settings = () => {
             <label>Username:</label>
             <Input 
               className="middle"
-              value={updateProfileData.username || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, username: e.target.value})}
+              value={updateUserData.username || ''}
+              onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
               placeholder="username"
             />
           </div>
@@ -95,8 +87,8 @@ const Settings = () => {
             <label>First name:</label>
             <Input 
               className="middle"
-              value={updateProfileData.firstName || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, firstName: e.target.value})}
+              value={updateUserData.firstName || ''}
+              onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
               placeholder="username"
             />
           </div>
@@ -105,8 +97,8 @@ const Settings = () => {
             <label>Last name:</label>
             <Input 
               className="middle"
-              value={updateProfileData.lastName || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, lastName: e.target.value})}
+              value={updateUserData.lastName || ''}
+              onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
               placeholder="username"
             />
           </div>

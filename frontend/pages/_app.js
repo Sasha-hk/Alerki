@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { ThemeProvider } from 'next-themes'
 import { useDispatch, Provider } from 'react-redux'
 import { AuthProvider } from '../provider/AuthProvider'
-import profileActions from '../store/actions/profileActions'
+import userAction from '../store/actions/userActions'
 import useStore from '../store'
 import Cookies from 'js-cookie'
 import api from '../http'
@@ -21,17 +21,22 @@ import '../styles/forms.css'
 
 
 function App({ Component, pageProps }) {
-    const store = useStore(pageProps.initialReduxState)
+  const store = useStore(pageProps.initialReduxState)
 
-    return (
-        <AuthProvider>
-            <Provider store={store}>
-                <ThemeProvider>
-                    <Component {...pageProps} />
-                </ThemeProvider>
-            </Provider>
-        </AuthProvider>
-    )
+  // upload user data
+  useEffect(() => {
+    store.dispatch(userAction.upload())
+  }, [])
+  
+  return (
+    <AuthProvider>
+      <Provider store={store}>
+        <ThemeProvider>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </Provider>
+    </AuthProvider>
+  )
 }
 
 

@@ -227,7 +227,6 @@ class ProfileController {
       res.json(updatedWorker)
     }
     catch (e) {
-      console.log(e, "<<<")
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -343,7 +342,6 @@ class ProfileController {
       res.json(schedule)
     }
     catch (e) {
-      console.log(e, '<<<<<<<<<<<<')
       res.status(e.status || 500).json(e.errors)
     }
   }
