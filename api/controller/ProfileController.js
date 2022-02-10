@@ -13,6 +13,7 @@ const ProfileDto = require('../dto/ProfileDto')
 const WorkerServiceDto = require('../dto/WorkerServiceDto')
 const WorkerProfileDto = require('../dto/WorkerProfileDto')
 const UserDto = require('../dto/UserDto')
+const FileType = require('file-type')
 
 
 class ProfileController { 
@@ -152,9 +153,17 @@ class ProfileController {
 
       const picture = await UserPictureService.getByID({id})
 
-      res.send(picture)
+      if (!picture) {
+        throw APIError.NotFoundError()
+      }
+      console.log('=====================')
+      const contentType = await FileType.fromBuffer(picture.picture)
+      console.log(contentType)
+      // res.type(contentType)
+      res.send(picture.picture);
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -204,6 +213,7 @@ class ProfileController {
   async updateProfile(req, res, next) {
     try {
       const id = req.accessToken.id
+      console.log(req.files, '\n<<< file')
       const {
         username,
         firstName,
