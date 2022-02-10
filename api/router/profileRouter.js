@@ -18,7 +18,7 @@ router
     '/get-schedule',
     ProfileController.getSchedule)
   .get(
-    '/picture',
+    '/picture/:id',
     ProfileController.getPicture
   )
   .get(
