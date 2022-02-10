@@ -1,18 +1,10 @@
-import api from '../../http'
 import * as types from '../types/profileTypes'
+import api from '../../http'
+import {
+  makeAction,
+  makeActionWithPayload,
+} from '../../utils/createAction.js'
 
-
-const makeAction = (action) => {
-  return {
-    type: action,
-  }
-}
-const makeActionWithPayload = (action, payload) => {
-  return {
-    type: action,
-    payload,
-  }
-}
 
 // upload profile
 const upload = ({username}) => {
@@ -77,6 +69,7 @@ const update = ({
       }) 
   }
 }
+
 
 export default {
   upload,

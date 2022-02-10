@@ -1,45 +1,44 @@
-import * as types from '../types/profileTypes'
+import * as types from '../types/userTypes'
 
 
-const defaultProfileState = {
-  profile: {
+const defaultUserState = {
+  user: {
+    id: null,
     username: null,
+    email: null,
     firstName: null,
     lastName: null,
-    pictureID: null,
-    clientID: null,
-    workerID: null,
-    profileType: null,
+    profileType: null, 
   },
   loading: false,
   error: false,
   errors: null,
 }
 
-const profileReducer = (state = defaultProfileState, action) => {
+const userReducer = (state = defaultUserState, action) => {
   switch (action.type) {
     // upload
-    case types.PROFILE_UPLOAD:
+    case types.USER_UPLOAD:
       return {
         ...state,
         loading: true,
         error: false,
         errors: null,
       }
-    
-    case types.PROFILE_UPLOAD_SUCCESS:
+
+    case types.USER_UPLOAD_SUCCESS:
       return {
         ...state,
-        profile: {
-          ...state.profile,
+        user: {
+          ...state.user,
           ...action.payload,
         },
         loading: false,
         error: false,
-        errorMessage: null,
+        errors: null,
       }
-
-    case types.PROFILE_UPLOAD_ERROR:
+    
+    case types.USER_UPLOAD_ERROR:
       return {
         ...state,
         loading: false,
@@ -47,42 +46,39 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: action.payload,
       }
 
-    // upload services
-    case types.PROFILE_UPLOAD_SERVICES:
+    // update
+    case types.USER_UPDATE:
       return {
         ...state,
         loading: true,
         error: false,
         errors: null,
       }
-    
-    case types.PROFILE_UPLOAD_SERVICES_SUCCESS:
+
+    case types.USER_UPDATE_SUCCESS:
       return {
         ...state,
-        profile: {
-          ...state.profile,
-          worker: {
-            ...state.worker,
-            services: action.payload,
-          }
+        user: {
+          ...state.user,
+          ...action.payload,
         },
         loading: false,
         error: false,
         errors: null,
       }
 
-    case types.PROFILE_UPLOAD_SERVICES_ERROR:
+    case types.USER_UPDATE_ERROR:
       return {
         ...state,
         loading: false,
         error: true,
         errors: action.payload,
       }
-    
+
     default:
       return state
   }
 }
 
 
-export default profileReducer
+export default userReducer

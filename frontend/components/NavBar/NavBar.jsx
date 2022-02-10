@@ -1,9 +1,6 @@
-import {useEffect, useState} from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import {useRouter} from 'next/router'
+import { useSelector } from 'react-redux'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
-import Cookies from 'js-cookie'
 import useFixHydrate from '../../hooks/useFixHydrate.js'
 import { useAuth } from '../../provider/AuthProvider.js'
 
@@ -13,7 +10,9 @@ const NavBar = () => {
         isAuthenticated,
         authData,
     } = useAuth()
-    
+
+    const user = useSelector(store => store.user).user
+
     // navigatino views
     const navigationButtons = (
         <nav>
@@ -34,7 +33,7 @@ const NavBar = () => {
                 </a>
             </Link>
 
-            <Link href={`/${authData.username}/`}>
+            <Link href={`/${user.username}/`}>
                 {
                     authData.pictureID
                         ? <span>1</span>
@@ -65,7 +64,7 @@ const NavBar = () => {
         else {
             return signInButton
         }
-    }, [authData])
+    }, [authData, user])
 
     return (
         <div className="nav-bar">
