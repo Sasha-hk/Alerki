@@ -19,7 +19,6 @@ const upload = () => {
         dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
       }) 
   }
@@ -39,7 +38,6 @@ const update = (updateData) => {
         dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
       }) 
   }

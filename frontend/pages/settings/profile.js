@@ -11,7 +11,6 @@ import { useAuth } from '../../provider/AuthProvider'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
-// const socket = io('http://192.168.1.11:3001')
 const Settings = () => {
   const {authData} = useAuth()
   const userData = useSelector(store => store.user) 
@@ -24,10 +23,6 @@ const Settings = () => {
     lastName: user.lastName,
     picture: user.pictureID,
   })
-
-  // useEffect(() => {
-  //   dispatch(userActions.upload())
-  // }, [user])
 
   useEffect(() => {
     if (!userData.loading) {
@@ -43,14 +38,14 @@ const Settings = () => {
   const updateProfile = async (e) => {
     e.preventDefault()
     
+    // const socket = io('http://192.168.1.11:3001')
     // if (updateUserData.picture) {
     //   socket.io.emit("e", () => {
     //     console.log(socket.id); // x8WIv7-mJelg7on_ALbx
     //   });
     // }
-    console.log(updateUserData)
+
     await dispatch(userActions.update(updateUserData))
-    // refresh()
   }
 
  return (

@@ -64,7 +64,6 @@ const update = ({
         dispatch(makeActionWithPayload(types.PROFILE_UPDATE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response)
         dispatch(makeActionWithPayload(types.PROFILE_UPDATE_ERROR, e?.response?.data))
       }) 
   }

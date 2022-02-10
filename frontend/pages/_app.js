@@ -23,8 +23,8 @@ import '../styles/forms.css'
 function App({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
 
+  // upload user data
   useEffect(() => {
-    console.log('user upload')
     store.dispatch(userAction.upload())
   }, [])
   
