@@ -156,10 +156,9 @@ class ProfileController {
       if (!picture) {
         throw APIError.NotFoundError()
       }
-      console.log('=====================')
+      
       const contentType = await FileType.fromBuffer(picture.picture)
-      console.log(contentType)
-      // res.type(contentType)
+      res.type(contentType.mime)
       res.send(picture.picture);
     }
     catch (e) {
@@ -227,11 +226,12 @@ class ProfileController {
         lastName,
         picture,
       })
-     
-      if (picture) {
-        var updatedPicture = await UserPictureService.update({id, picture})
+      console.log(12) 
+      // if (req.files.length != 0) {
+        var updatedPicture = await UserPictureService.update({id, picture: req.files.myFile.data})
+        console.log(updatedPicture)
         console.log('There are picture')
-      }
+      // }
 
       const updatedWorker = await UserService.updateProfile({
         id,
