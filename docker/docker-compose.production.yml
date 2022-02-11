@@ -32,7 +32,7 @@ services:
             context: ../frontend/
             dockerfile: Dockerfile
         container_name: frontend
-        command: bash -c "npm run start"
+        command: bash -c "npm run build && npm run start"
         depends_on:
             - backend
         ports:

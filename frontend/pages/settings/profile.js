@@ -12,6 +12,8 @@ import api from '../../http'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
+const API_URL = process.env.API_URL
+
 const Settings = () => {
   const {authData} = useAuth()
   const userData = useSelector(store => store.user) 
@@ -49,6 +51,10 @@ const Settings = () => {
     dispatch(userActions.update(formData))
   }
 
+  const truggerUploadFile = () => {
+    document.querySelector('input[name="picture"]').click()
+  }
+
   return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
@@ -59,10 +65,16 @@ const Settings = () => {
         >
           <div className={cls.settings_block}>
             <label>Picture:</label>
+            <img
+              className={cls.user_picture_preview}
+              src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
+              alt="user picture"
+              onClick={e => truggerUploadFile()}
+            />
             <Input
               type="file"
-              className="middle"
               name="picture"
+              className="none"
             />
           </div>
           

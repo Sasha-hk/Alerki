@@ -1,0 +1,23 @@
+.toggle {
+  display: flex;
+  width: min-content;
+  padding: 4px;
+  background: var(--toggle-bg);
+  border-radius: 100px;
+}
+
+.toggle_button {
+  color: var(--toggle-button-inactive-color);
+  font-size: 16px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  user-select: none;
+}
+.toggle_button:last-child {
+  margin-left: 4px;
+}
+.toggle_button.active {
+  background: var(--toggle-button-bg);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1), inset 0px -1px 1px rgba(0, 0, 0, 0.1), inset 0px 1px 1px rgba(255, 255, 255, 0.15);;
+  color: var(--toggle-button-active-color);
+}

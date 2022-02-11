@@ -17,9 +17,7 @@ const Home = () => {
     return (
         <FluidFrame navigation={true}>
             <div className="container">
-                The current theme is: {hydratedTheme} 
-                <Button onClick={() => setTheme('light')} className="little primary mr-3">Light Mode</Button>
-                <Button onClick={() => setTheme('dark')} className="little primary mb-3 mr-3">Dark Mode</Button>
+                <span className="text-big">Planned:</span> 
             </div>
         </FluidFrame>
     )
