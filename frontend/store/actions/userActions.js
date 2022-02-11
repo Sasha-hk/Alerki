@@ -30,7 +30,7 @@ const update = (updateData) => {
   return async dispatch => {
     dispatch(makeAction(types.USER_UPLOAD))
 
-    await api({
+    const x = await api({
       method: 'patch',
       url: '/profile/update',
       data: updateData,

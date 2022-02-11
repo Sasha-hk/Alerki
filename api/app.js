@@ -36,16 +36,16 @@ app.use(cors(corsOptions))
 router(app)
 
 // socket
-io.on('connection', (socket) => {
-  socket.on('message', (message) => {
-    console.log(message)
-    console.log(`message from ${socket.id} : ${message.message}`);
-  })
+// io.on('connection', (socket) => {
+//   socket.on('message', (message) => {
+//     console.log(message)
+//     console.log(`message from ${socket.id} : ${message.message}`);
+//   })
 
-  socket.on('disconnect', () => {
-    console.log(`socket ${socket.id} disconnected`);
-  })
-})
+//   socket.on('disconnect', () => {
+//     console.log(`socket ${socket.id} disconnected`);
+//   })
+// })
 
 
 
