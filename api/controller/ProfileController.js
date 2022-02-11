@@ -156,8 +156,13 @@ class ProfileController {
       if (!picture) {
         throw APIError.NotFoundError()
       }
-      
+ 
       const contentType = await FileType.fromBuffer(picture.picture)
+      
+      if (!contentType) {
+        throw APIError.ServerError()
+      }
+
       res.type(contentType.mime)
       res.send(picture.picture);
     }
@@ -212,26 +217,23 @@ class ProfileController {
   async updateProfile(req, res, next) {
     try {
       const id = req.accessToken.id
-      console.log(req.files, '\n<<< file')
+      const picture = req.files?.picture?.data
       const {
         username,
         firstName,
         lastName,
-        picture,
       } = req.body
+
 
       checkParams.atLeastOne({
         username,
         firstName,
         lastName,
-        picture,
       })
-      console.log(12) 
-      // if (req.files.length != 0) {
-        var updatedPicture = await UserPictureService.update({id, picture: req.files.myFile.data})
-        console.log(updatedPicture)
-        console.log('There are picture')
-      // }
+      
+      if (picture) {
+        var updatedPicture = await UserPictureService.update({id, picture})
+      }
 
       const updatedWorker = await UserService.updateProfile({
         id,
@@ -246,7 +248,6 @@ class ProfileController {
       res.json(userData)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }

@@ -23,7 +23,7 @@ class UserDto {
             }
             this.phoneNumber = user.phoneNumber
             this.profileType = user.profileType
-            this.puctureID = user.pictureID
+            this.pictureID = user.pictureID
         }
     }
 }

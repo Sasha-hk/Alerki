@@ -38,67 +38,37 @@ const Settings = () => {
 
   const updateProfile = async (e) => {
     e.preventDefault()
-    console.log(e)
-    const files = e.target.files
     const formData = new FormData()
-    formData.append('myFile', files[0])
+    const picture = e.target['0']?.files[0]
 
-    api({
-      method: 'post',
-      url: '/profile/update',
-      data: {...formData, updateUserData},
-    })
-    
-    // const socket = io('http://192.168.1.11:3001')
-    // if (updateUserData.picture) {
-    //   socket.io.emit("e", () => {
-    //     console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-    //   });
-    // }
-    console.log(updateUserData.picture)
+    formData.append('picture', picture)
+    formData.append('username', updateUserData.username)
+    formData.append('firstName', updateUserData.firstName)
+    formData.append('lastName', updateUserData.lastName)
 
-    dispatch(userActions.update(updateUserData))
+    dispatch(userActions.update(formData))
   }
 
- return (
+  return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
         <span className="text-big mb-3">Profile</span>
-        
+
         <form
           onSubmit={updateProfile}
         >
           <div className={cls.settings_block}>
             <label>Picture:</label>
-            <Input 
+            <Input
               type="file"
               className="middle"
-              onChange={e => { 
-                // const file = new FileReader()
-
-                const files = e.target.files
-                const formData = new FormData()
-                formData.append('myFile', files[0])
-                formData.append('username', 'Sasha')
-
-                api({
-                  method: 'patch',
-                  url: '/profile/update',
-                  data: formData,
-                })
-                  .then(r => console.log(r))
-
-                // file.onload = (e) => {
-                //   setUpdateUserData({...updateUserData, picture: e.target.result})
-                // }
-                // console.log(e.target.files[0])
-                // file.readAsDataURL(e.target.files[0])
-              }}
+              name="picture"
             />
           </div>
           
           <div className={cls.settings_block}>
             <label>Username:</label>
+
             <Input 
               className="middle"
               value={updateUserData.username || ''}
@@ -109,6 +79,7 @@ const Settings = () => {
 
           <div className={cls.settings_block}>
             <label>First name:</label>
+
             <Input 
               className="middle"
               value={updateUserData.firstName || ''}
@@ -119,6 +90,7 @@ const Settings = () => {
 
           <div className={cls.settings_block}>
             <label>Last name:</label>
+
             <Input 
               className="middle"
               value={updateUserData.lastName || ''}

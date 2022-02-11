@@ -7,14 +7,10 @@ import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import useFixHydrate from '../hooks/useFixHydrate'
-import { useAuth } from '../provider/AuthProvider'
 
 
 const Home = () => {
     const {theme, setTheme} = useTheme()
-
-    const {isAuthenticated, register, authData} = useAuth()
-
 
     const hydratedTheme = useFixHydrate(theme)
 
@@ -24,7 +20,6 @@ const Home = () => {
                 The current theme is: {hydratedTheme} 
                 <Button onClick={() => setTheme('light')} className="little primary mr-3">Light Mode</Button>
                 <Button onClick={() => setTheme('dark')} className="little primary mb-3 mr-3">Dark Mode</Button>
-                <p>{authData.username}</p>
             </div>
         </FluidFrame>
     )
