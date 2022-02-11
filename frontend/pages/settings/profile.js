@@ -8,6 +8,7 @@ import Button from '../../components/UI/Button/Button.jsx'
 import Input from '../../components/UI/Input/Input.jsx'
 import userActions from '../../store/actions/userActions'
 import { useAuth } from '../../provider/AuthProvider'
+import api from '../../http'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
@@ -37,6 +38,16 @@ const Settings = () => {
 
   const updateProfile = async (e) => {
     e.preventDefault()
+    console.log(e)
+    const files = e.target.files
+    const formData = new FormData()
+    formData.append('myFile', files[0])
+
+    api({
+      method: 'post',
+      url: '/profile/update',
+      data: {...formData, updateUserData},
+    })
     
     // const socket = io('http://192.168.1.11:3001')
     // if (updateUserData.picture) {
@@ -44,8 +55,9 @@ const Settings = () => {
     //     console.log(socket.id); // x8WIv7-mJelg7on_ALbx
     //   });
     // }
+    console.log(updateUserData.picture)
 
-    await dispatch(userActions.update(updateUserData))
+    dispatch(userActions.update(updateUserData))
   }
 
  return (
@@ -62,13 +74,25 @@ const Settings = () => {
               type="file"
               className="middle"
               onChange={e => { 
-                const file = new FileReader()
+                // const file = new FileReader()
 
-                file.onload = (e) => {
-                  setUpdateUserData({...updateUserData, picture: e.target.result})
-                }
+                const files = e.target.files
+                const formData = new FormData()
+                formData.append('myFile', files[0])
+                formData.append('username', 'Sasha')
 
-                file.readAsDataURL(e.target.files[0])
+                api({
+                  method: 'patch',
+                  url: '/profile/update',
+                  data: formData,
+                })
+                  .then(r => console.log(r))
+
+                // file.onload = (e) => {
+                //   setUpdateUserData({...updateUserData, picture: e.target.result})
+                // }
+                // console.log(e.target.files[0])
+                // file.readAsDataURL(e.target.files[0])
               }}
             />
           </div>

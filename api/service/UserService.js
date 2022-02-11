@@ -282,14 +282,17 @@ class UserService {
         username,
         firstName,
         lastName,
+        pictureID,
     }) {
         const updatedUser = await UserModel.update(
             {
                 username,
                 firstName,
                 lastName,
+                pictureID,
             }, 
             {
+                raw: true,
                 returning: true,
                 where: {
                     id,

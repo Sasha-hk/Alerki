@@ -147,7 +147,7 @@ export const AuthProvider = ({children}) => {
 
     
     // refresh or set authData from accessToken
-    useEffect(() => {
+    useEffect(async () => {
         if (Cookies.get('accessToken') === undefined && Cookies.get('authenticated')) {
             refresh()
         }

@@ -4,6 +4,7 @@ import { useDispatch, Provider } from 'react-redux'
 import { AuthProvider } from '../provider/AuthProvider'
 import userAction from '../store/actions/userActions'
 import useStore from '../store'
+import { useAuth } from '../provider/AuthProvider'
 import Cookies from 'js-cookie'
 import api from '../http'
 
@@ -24,8 +25,8 @@ function App({ Component, pageProps }) {
   const store = useStore(pageProps.initialReduxState)
 
   // upload user data
-  useEffect(() => {
-    store.dispatch(userAction.upload())
+  useEffect(async () => {
+    await store.dispatch(userAction.upload())
   }, [])
   
   return (

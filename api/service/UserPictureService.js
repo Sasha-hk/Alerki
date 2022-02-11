@@ -35,7 +35,7 @@ class UserPictureService {
                 }
             )
 
-            const updatedData = await UserPicture.findOne({
+            const updatedData = await UserPictureModel.findOne({
                 raw: true,
                 where: {
                     id,

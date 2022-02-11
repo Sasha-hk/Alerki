@@ -12,6 +12,8 @@ const GetWorkersDto = require('../dto/GetWorkersDto')
 const ProfileDto = require('../dto/ProfileDto')
 const WorkerServiceDto = require('../dto/WorkerServiceDto')
 const WorkerProfileDto = require('../dto/WorkerProfileDto')
+const UserDto = require('../dto/UserDto')
+const FileType = require('file-type')
 
 
 class ProfileController { 
@@ -151,9 +153,16 @@ class ProfileController {
 
       const picture = await UserPictureService.getByID({id})
 
-      res.send(picture)
+      if (!picture) {
+        throw APIError.NotFoundError()
+      }
+      
+      const contentType = await FileType.fromBuffer(picture.picture)
+      res.type(contentType.mime)
+      res.send(picture.picture);
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -202,6 +211,8 @@ class ProfileController {
 
   async updateProfile(req, res, next) {
     try {
+      const id = req.accessToken.id
+      console.log(req.files, '\n<<< file')
       const {
         username,
         firstName,
@@ -215,18 +226,27 @@ class ProfileController {
         lastName,
         picture,
       })
-      
+      console.log(12) 
+      // if (req.files.length != 0) {
+        var updatedPicture = await UserPictureService.update({id, picture: req.files.myFile.data})
+        console.log(updatedPicture)
+        console.log('There are picture')
+      // }
+
       const updatedWorker = await UserService.updateProfile({
-        id: req.accessToken.id,
+        id,
         username,
         firstName,
         lastName,
-        picture,
+        pictureID: updatedPicture?.id
       })
+
+      const userData = new UserDto(updatedWorker)
       
-      res.json(updatedWorker)
+      res.json(userData)
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }

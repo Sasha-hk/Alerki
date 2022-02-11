@@ -1,5 +1,6 @@
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const express = require('express')
 const app = express()
 const http = require('http');
@@ -26,8 +27,10 @@ const corsOptions ={
 // middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(fileUpload())
 app.use(cookieParser())
 app.use(cors(corsOptions))
+
 
 // routers
 router(app)
