@@ -4,16 +4,17 @@ import {
   makeAction,
   makeActionWithPayload,
 } from '../../utils/createAction.js'
+import Cookies from 'js-cookie'
 
 
 // upload
 const upload = () => {
   return async dispatch => {
     dispatch(makeAction(types.USER_UPLOAD))
-
+    
     await api({
       method: 'get',
-      url: '/auth/user'
+      url: '/auth/user',
     })
       .then(r => {
         dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
