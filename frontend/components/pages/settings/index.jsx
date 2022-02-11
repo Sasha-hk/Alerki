@@ -25,6 +25,11 @@ const SettingsWrapper = ({children}) => {
               url="profile-type"
               active={router.pathname == '/settings/profile-type'}
             />
+            <SettingsItem 
+              name="theme" 
+              url="theme"
+              active={router.pathname == '/settings/theme'}
+            />
           </div>
         </div>
 

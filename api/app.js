@@ -5,15 +5,15 @@ const express = require('express')
 const app = express()
 const http = require('http');
 const server = http.createServer(app);
-const socketIO = require('socket.io')
-const io = socketIO(server, {
-  transports:['polling'],
-  cors:{
-    cors: {
-      origin: "http://192.168.1.11:3000/"
-    }
-  }
-})
+// const socketIO = require('socket.io')
+// const io = socketIO(server, {
+//   transports:['polling'],
+//   cors:{
+//     cors: {
+//       origin: "http://192.168.1.11:3000/"
+//     }
+//   }
+// })
 
 
 const router = require('./router')

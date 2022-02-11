@@ -65,6 +65,7 @@ button.google {
     justify-content: center;
 }
 button.sceleton {
+    color: var(--color);
     background: none;
     border: 1.5px solid var(--color);
 }

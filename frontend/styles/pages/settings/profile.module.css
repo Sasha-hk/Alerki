@@ -5,3 +5,21 @@
 .settings_block:not(:last-child) {
   margin-bottom: 12px;
 }
+
+.user_picture_preview {
+  border-radius: 500px;
+  max-width: 200px;
+}
+
+/* @media screen and (min-width: 0) and (max-width: 480px) {
+  .user_picture_preview {
+    width: 100%;
+  }
+} */
+
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+  .user_picture_preview {
+    max-width: none;
+    width: 70%;
+  }
+}
