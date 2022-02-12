@@ -19,15 +19,15 @@ class ProfileService {
         return foundWorker
     }
 
-    async findClientByID(id) {
-        const foundWorker = await ClientProfileModel({
+    async findClientByID({id}) {
+        const foundClient = await ClientProfileModel.findOne({
             raw: true,
             where: {
                 id,
             },
         })
 
-        return foundWorker
+        return foundClient
     }
 
     async createClientProfile() {
@@ -74,6 +74,46 @@ class ProfileService {
         })
 
         return updatedWorker
+    }
+
+    async makeNotAvailableMaster({id}) {
+        const candedat = await this.findWorkerByID({id})
+
+        if (candedat) {
+            const blockedMaster = await WorkerProfileModel.update(
+                {
+                    available: false,
+                },
+                {
+                    raw: true,
+                    returning: true,
+                    where: {
+                        id,
+                    },
+                }
+            )
+            return blockedMaster[1][0]
+        }
+    }
+
+    async makeAvailableMaster({id}) {
+        const candedat = await this.findWorkerByID({id})
+
+        if (candedat) {
+            const blockedMaster = await WorkerProfileModel.update(
+                {
+                    available: true,
+                },
+                {
+                    raw: true,
+                    returning: true,
+                    where: {
+                        id,
+                    },
+                }
+            )
+            return blockedMaster[1][0]
+        }
     }
 }
 

@@ -61,9 +61,14 @@ router
     ProfileController.updateWorkerWeekendDays
   )
   .patch(
-    '/become-worker',
+    '/become-master',
     authMiddleware,
-    ProfileController.becomeWorker
+    ProfileController.becomeMaster
+  )
+  .patch(
+    '/become-client',
+    authMiddleware,
+    ProfileController.becomeClient
   )
 
 

@@ -10,6 +10,19 @@ const request = require('request')
 
 
 class UserService {
+    async setProfileType({id, type}) {
+        await UserModel.update(
+            {
+                profileType: type,
+            },
+            {
+                where: {
+                    id,
+                },
+            },
+        )
+    }
+
     async findUserByEmail(email) {
         const checkUserExists = await UserModel.findOne({
             raw: true,
@@ -261,12 +274,32 @@ class UserService {
 
     async becomeWorker({id}) {
         const workerProfile = await ProfileService.createWorkerProfile()
+
         const update = await UserModel.update(
             {
                 profileType: 'worker',
                 workerID: workerProfile.id,
             },
             {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return update[1][0]
+    }
+
+    async becomeClient({id}) {
+        const clientProfile = await ProfileService.createClientProfile()
+        const update = await UserModel.update(
+            {
+                profileType: 'client',
+                clientID: clientProfile.id,
+            },
+            {
+                raw: true,
                 returning: true,
                 where: {
                     id,

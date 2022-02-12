@@ -307,22 +307,52 @@ class ProfileController {
     }
   }
 
-  async becomeWorker(req, res, next) {
+  async becomeMaster(req, res, next) {
     try {
       const id = req.accessToken.id
- 
-      const userData = await UserService.findUserByID({id})
-      const candedat = await ProfileService.findWorkerByID({id: userData.workerID})
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findWorkerByID({id: user.workerID})
       if (!candedat) {
-        const updatedToWorker = await UserService.becomeWorker({id})
-
-        res.json({workerID: updatedToWorker.workerID})
+        await UserService.becomeWorker({id})
       }
       else {
-        throw APIError.BadRequestError(['for this user worker allready exists'])
+        await ProfileService.makeAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'worker'})
       }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
     }
     catch (e) {
+      res.status(e.status || 500).json(e.errors)
+    }
+  }
+
+  async becomeClient(req, res, next) {
+    try {
+      const id = req.accessToken.id 
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findClientByID({id: user.clientID})
+      if (!candedat) {
+        await UserService.becomeClient({id})
+      }
+      else {
+        if (user.workerID) {
+          await ProfileService.makeNotAvailableMaster({id: user.workerID})
+        }
+        await ProfileService.makeNotAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'client'})
+      }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
+    }
+    catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors)
     }
   }

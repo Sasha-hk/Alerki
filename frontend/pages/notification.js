@@ -16,7 +16,7 @@ const Notification = () => {
         <ScrollFrame navigation={true}>
             <div className="container">
                 <span className="text-big">
-                    Notofication
+                    Notification
                 </span>
             </div>
         </ScrollFrame>

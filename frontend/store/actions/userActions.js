@@ -44,8 +44,46 @@ const update = (updateData) => {
   }
 }
 
+// become client
+const becomeClient = () => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_BECOME_CLIENT))
+
+    await api({
+      method: 'patch',
+      url: '/profile/become-client',
+    })
+      .then(r => {
+        dispatch(makeActionWithPayload(types.USER_BECOME_CLIENT_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_BECOME_CLIENT_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
+// become master
+const becomeMaster = () => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_BECOME_MASTER))
+
+    await api({
+      method: 'patch',
+      url: '/profile/become-master',
+    })
+      .then(r => {
+        dispatch(makeActionWithPayload(types.USER_BECOME_MASTER_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_BECOME_MASTER_ERROR, e?.response?.data))
+      })
+  }
+}
+
 
 export default {
   upload,
   update,
+  becomeMaster,
+  becomeClient,
 }
