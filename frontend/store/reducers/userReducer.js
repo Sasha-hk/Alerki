@@ -75,6 +75,64 @@ const userReducer = (state = defaultUserState, action) => {
         errors: action.payload,
       }
 
+    // become client
+    case types.USER_BECOME_CLIENT:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_BECOME_CLIENT_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_BECOME_CLIENT_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+
+    // become master
+    case types.USER_BECOME_MASTER:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_BECOME_MASTER_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_BECOME_MASTER_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+
     default:
       return state
   }
