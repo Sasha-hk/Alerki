@@ -313,7 +313,7 @@ class ProfileController {
       const user = await UserService.findUserByID({id})
       const candedat = await ProfileService.findWorkerByID({id: user.workerID})
       if (!candedat) {
-        const updatedToWorker = await UserService.becomeWorker({id})
+        await UserService.becomeWorker({id})
       }
       else {
         await ProfileService.makeAvailableMaster({id: user.id})
@@ -336,7 +336,7 @@ class ProfileController {
       const user = await UserService.findUserByID({id})
       const candedat = await ProfileService.findClientByID({id: user.clientID})
       if (!candedat) {
-        const newClientProfile = await UserService.becomeClient({id})
+        await UserService.becomeClient({id})
       }
       else {
         if (user.workerID) {
