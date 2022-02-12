@@ -76,13 +76,33 @@ class ProfileService {
         return updatedWorker
     }
 
-    async blockMaster({id}) {
+    async makeNotAvailableMaster({id}) {
         const candedat = await this.findWorkerByID({id})
 
         if (candedat) {
             const blockedMaster = await WorkerProfileModel.update(
                 {
                     available: false,
+                },
+                {
+                    raw: true,
+                    returning: true,
+                    where: {
+                        id,
+                    },
+                }
+            )
+            return blockedMaster[1][0]
+        }
+    }
+
+    async makeAvailableMaster({id}) {
+        const candedat = await this.findWorkerByID({id})
+
+        if (candedat) {
+            const blockedMaster = await WorkerProfileModel.update(
+                {
+                    available: true,
                 },
                 {
                     raw: true,

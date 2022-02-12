@@ -310,17 +310,20 @@ class ProfileController {
   async becomeMaster(req, res, next) {
     try {
       const id = req.accessToken.id
-      const userData = await UserService.findUserByID({id})
-      const candedat = await ProfileService.findWorkerByID({id: userData.workerID})
-
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findWorkerByID({id: user.workerID})
       if (!candedat) {
         const updatedToWorker = await UserService.becomeWorker({id})
-
-        res.json({workerID: updatedToWorker.workerID})
       }
       else {
-        res.json({workerID: candedat.id})
+        await ProfileService.makeAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'worker'})
       }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors)
@@ -330,20 +333,23 @@ class ProfileController {
   async becomeClient(req, res, next) {
     try {
       const id = req.accessToken.id 
-      const userData = await UserService.findUserByID({id})
-      const candedat = await ProfileService.findClientByID({id: userData.clientID})
-      
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findClientByID({id: user.clientID})
       if (!candedat) {
-        const updatedToClient = await UserService.becomeClient({id})
-        await ProfileService.blockMaster({id: candedat.id})
-        
-        res.json({clientID: updatedToClient.id})
+        const newClientProfile = await UserService.becomeClient({id})
       }
       else {
-        await ProfileService.blockMaster({id: userData.id})
-
-        res.json({clientID: candedat.id})
+        if (user.workerID) {
+          await ProfileService.makeNotAvailableMaster({id: user.workerID})
+        }
+        await ProfileService.makeNotAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'client'})
       }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
     }
     catch (e) {
       console.log(e)
