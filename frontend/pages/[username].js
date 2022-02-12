@@ -32,12 +32,8 @@ const Profile = () => {
   }, [router.isReady, router.query.username])
 
   // general view for master and client
-  const headerView = (balance = false) => (
-    <div className={[
-      cls.header, 
-      balance ? cls.balance_header : null
-      ].join(' ')
-    }>
+  const headerView = (
+    <div className={cls.header}>
       {
         profile.pictureID
           ? <img
@@ -72,7 +68,7 @@ const Profile = () => {
   // view only for master
   const extendedView = (
     <>
-      {headerView()}
+      {headerView}
 
       <div className={cls.about}>
         <span>{profile.worker?.shortBiography}</span>
@@ -92,7 +88,7 @@ const Profile = () => {
               ? <b>loading</b>
               : profile.profileType == 'worker'
                 ? extendedView
-                : headerView(true)
+                : headerView
           }
         </div>
     </ScrollFrame>

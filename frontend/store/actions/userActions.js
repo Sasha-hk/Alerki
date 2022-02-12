@@ -76,7 +76,7 @@ const becomeMaster = () => {
       })
       .catch(e => {
         dispatch(makeActionWithPayload(types.USER_BECOME_MASTER_ERROR, e?.response?.data))
-      }) 
+      })
   }
 }
 
