@@ -37,7 +37,7 @@ section:not(:last-child) {
 }
 
 .none {
-    display: none;
+    display: none !important;
 }
 
 

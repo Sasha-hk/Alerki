@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
 import ScrollFrame from '../../frames/ScrollFrame'
 import SettingsItem from '../../pages/settings/SettingsItem'
 
@@ -7,6 +8,9 @@ import cls from '../../../styles/pages/settings/base.module.css'
 
 const SettingsWrapper = ({children}) => {
   const router = useRouter()
+  const userProfile = useSelector(store => store.user)
+  const user = userProfile.user
+  console.log(user.profileType)
 
   return (
     <div className="container">
@@ -30,6 +34,18 @@ const SettingsWrapper = ({children}) => {
               url="theme"
               active={router.pathname == '/settings/theme'}
             />
+
+            {
+              user.profileType == 'worker'
+                ? <>
+                  <SettingsItem 
+                    name="master" 
+                    url="master"
+                    active={router.pathname == '/settings/master'}
+                  />
+                </>
+                : null
+            }
           </div>
         </div>
 
