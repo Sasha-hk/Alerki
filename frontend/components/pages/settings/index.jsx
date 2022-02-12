@@ -10,7 +10,6 @@ const SettingsWrapper = ({children}) => {
   const router = useRouter()
   const userProfile = useSelector(store => store.user)
   const user = userProfile.user
-  console.log(user.profileType)
 
   return (
     <div className="container">
