@@ -307,22 +307,46 @@ class ProfileController {
     }
   }
 
-  async becomeWorker(req, res, next) {
+  async becomeMaster(req, res, next) {
     try {
       const id = req.accessToken.id
- 
       const userData = await UserService.findUserByID({id})
       const candedat = await ProfileService.findWorkerByID({id: userData.workerID})
+
       if (!candedat) {
         const updatedToWorker = await UserService.becomeWorker({id})
 
         res.json({workerID: updatedToWorker.workerID})
       }
       else {
-        throw APIError.BadRequestError(['for this user worker allready exists'])
+        res.json({workerID: candedat.id})
       }
     }
     catch (e) {
+      res.status(e.status || 500).json(e.errors)
+    }
+  }
+
+  async becomeClient(req, res, next) {
+    try {
+      const id = req.accessToken.id 
+      const userData = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findClientByID({id: userData.clientID})
+      
+      if (!candedat) {
+        const updatedToClient = await UserService.becomeClient({id})
+        await ProfileService.blockMaster({id: candedat.id})
+        
+        res.json({clientID: updatedToClient.id})
+      }
+      else {
+        await ProfileService.blockMaster({id: userData.id})
+
+        res.json({clientID: candedat.id})
+      }
+    }
+    catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors)
     }
   }

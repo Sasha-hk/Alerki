@@ -277,6 +277,24 @@ class UserService {
         return update[1][0]
     }
 
+    async becomeClient({id}) {
+        const workerProfile = await ProfileService.createWorkerProfile()
+        const update = await UserModel.update(
+            {
+                profileType: 'client',
+                workerID: workerProfile.id,
+            },
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return update[1][0]
+    }
+
     async updateProfile({
         id,
         username,
