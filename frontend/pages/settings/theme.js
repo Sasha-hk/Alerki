@@ -7,10 +7,10 @@ import Toggle from '../../components/UI/Toggle/Toggle.jsx'
 
 const Settings = () => {
   const {theme, setTheme} = useTheme()
-  const [toggle, setToggle] = useState(theme == 'light' ? [true, false] : [false, true])
+  const [toggle, setToggle] = useState(theme == 'light')
 
   useEffect(() => {
-    if (toggle[0]) {
+    if (toggle) {
       setTheme('light')
     }
     else {
