@@ -78,7 +78,7 @@ class ProfileController {
 
       const workerServices = await WorkerServiceService.find({serviceID: service_id, limit, page })
       for (const service of workerServices) {
-        const worker = await UserService.findByWorkerID({workerID: service.workerID})
+        const worker = await UserService.findByMasterID({workerID: service.workerID})
         const dto = new GetWorkersDto({worker, service})
         workers.push({...dto})
       }

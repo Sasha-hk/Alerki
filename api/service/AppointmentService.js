@@ -18,7 +18,7 @@ class AppointmentService {
         appointmentStartTime,
         appointmentEndTime
     }) {
-        const workerSchedule = await MasterScheduleService.findByWorkerIDAndDate({
+        const workerSchedule = await MasterScheduleService.findByMasterIDAndDate({
             workerID,
             date: appointmentStartTime,
         })

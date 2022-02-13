@@ -35,7 +35,7 @@ class MasterScheduleService {
         return newSchedule.dataValues
     }
 
-    async findByWorkerID({workerID}) {
+    async findByMasterID({workerID}) {
         const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
@@ -47,7 +47,7 @@ class MasterScheduleService {
     }
 
 
-    async findByWorkerIDAndDate({workerID, date}) {
+    async findByMasterIDAndDate({workerID, date}) {
         const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {

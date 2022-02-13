@@ -57,7 +57,7 @@ class UserService {
         return user
     }
 
-    async findByWorkerID({workerID}) {
+    async findByMasterID({workerID}) {
         const foundUser = await UserModel.findOne({
             raw: true,
             where: {
