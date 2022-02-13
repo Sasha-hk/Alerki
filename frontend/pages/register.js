@@ -60,11 +60,11 @@ const Register = () => {
                             <Input
                                 type="radio"
                                 name="profileType"
-                                id="worker"
+                                id="master"
                                 onChange={(e) => setForm({ ...form, profileType: e.target.id })}
                                 required
                             />
-                            worker
+                            master
                         </label>
 
                         <label>

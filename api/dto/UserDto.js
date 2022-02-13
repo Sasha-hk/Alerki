@@ -5,7 +5,7 @@ class UserDto {
     firstName
     lastName
     clientID
-    workerID
+    masterID
     phoneNumber
     profileType
     pictureID
@@ -18,8 +18,8 @@ class UserDto {
             this.firstName = user.firstName
             this.lastName = user.lastName
             this.clientID = user.clientID
-            if (user.profileType === 'worker') {
-                this.workerID = user.workerID
+            if (user.profileType === 'master') {
+                this.masterID = user.masterID
             }
             this.phoneNumber = user.phoneNumber
             this.profileType = user.profileType

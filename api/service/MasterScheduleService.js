@@ -1,15 +1,15 @@
-const {WorkerScheduleModel, Sequelize} = require('../db/models')
+const {MasterScheduleModel, Sequelize} = require('../db/models')
 
 
-class WorkerScheduleService {
+class MasterScheduleService {
     async checkExists({
-        workerID,
+        masterID,
         date,
     }) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date
             }
         })
@@ -18,14 +18,14 @@ class WorkerScheduleService {
     }
 
     async create({
-        workerID,
+        masterID,
         workingStartTime,
         workingEndTime,
         weekendDay,
         date,
     }) {
-        const newSchedule = await WorkerScheduleModel.create({
-            workerID,
+        const newSchedule = await MasterScheduleModel.create({
+            masterID,
             workingStartTime,
             workingEndTime,
             weekendDay,
@@ -35,11 +35,11 @@ class WorkerScheduleService {
         return newSchedule.dataValues
     }
 
-    async findByWorkerID({workerID}) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+    async findByMasterID({masterID}) {
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
             }
         })
 
@@ -47,11 +47,11 @@ class WorkerScheduleService {
     }
 
 
-    async findByWorkerIDAndDate({workerID, date}) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+    async findByMasterIDAndDate({masterID, date}) {
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date,
             }
         })
@@ -60,13 +60,13 @@ class WorkerScheduleService {
     }
     
     async getInRange({
-        workerID,
+        masterID,
         dateRange,
     }) {
-        const foundSchedule = await WorkerScheduleModel.findAll({
+        const foundSchedule = await MasterScheduleModel.findAll({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date: {
                     [Sequelize.Op.between]: dateRange,
                 }
@@ -77,20 +77,20 @@ class WorkerScheduleService {
     }
 
     async updateOrCreate({
-        workerID,
+        masterID,
         workingStartTime,
         workingEndTime,
         weekendDay,
         date,
     }) {
         const checkExistsSchedule = await this.checkExists({
-            workerID,
+            masterID,
             date
         })
 
         if (!checkExistsSchedule) {
             const newSchedule = await this.create({
-                workerID,
+                masterID,
                 workingStartTime,
                 workingEndTime,
                 weekendDay,
@@ -100,7 +100,7 @@ class WorkerScheduleService {
             return newSchedule
         }
         else {
-            const updatedSchedule = await WorkerScheduleModel.update(
+            const updatedSchedule = await MasterScheduleModel.update(
                 {
                     workingStartTime,
                     workingEndTime,
@@ -108,7 +108,7 @@ class WorkerScheduleService {
                 },
                 {
                     where: {
-                        workerID,
+                        masterID,
                         date,
                     }
                 }
@@ -120,4 +120,4 @@ class WorkerScheduleService {
 }
 
 
-module.exports = new WorkerScheduleService()
+module.exports = new MasterScheduleService()

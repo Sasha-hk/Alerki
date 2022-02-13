@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-    const WorkerScheduleModel = sequelize.define(
-        'WorkerScheduleModel',
+    const MasterScheduleModel = sequelize.define(
+        'MasterScheduleModel',
         {
             id: {
                 type: DataTypes.INTEGER,
                 autoIncrement: true,
                 primaryKey: true,
             },
-            workerID: {
+            masterID: {
                 type: DataTypes.INTEGER,
             },
             workingStartTime: {
@@ -25,20 +25,20 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: 'WorkersSchedule',
+            tableName: 'MasterSchedule',
         }
     )
 
-    WorkerScheduleModel.associate = (models) => {
-        WorkerScheduleModel.belongsTo(
-            models.WorkerProfileModel,
+    MasterScheduleModel.associate = (models) => {
+        MasterScheduleModel.belongsTo(
+            models.MasterProfileModel,
             {
-                foreignKey: 'workerID',
+                foreignKey: 'masterID',
                 onDelete: 'CASCADE',
                 allowNull: false,
             }
         )
     }
 
-    return WorkerScheduleModel
+    return MasterScheduleModel
 }

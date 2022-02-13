@@ -1,19 +1,19 @@
-class GetWorkersDto {
+class GetMastersDto {
     id
-    workerID
+    masterID
     username
     firstName
     lastName
     pictureID
     service
 
-    constructor({worker, service}) {
-        this.id = worker.id,
-        this.workerID = worker.workerID,
-        this.username = worker.username,
-        this.firstName = worker.firstName,
-        this.lastName = worker.lastName,
-        this.pictureID = worker.pictureID
+    constructor({master, service}) {
+        this.id = master.id,
+        this.masterID = master.masterID,
+        this.username = master.username,
+        this.firstName = master.firstName,
+        this.lastName = master.lastName,
+        this.pictureID = master.pictureID
 
         this.service = {
             id: service.id,
@@ -27,4 +27,4 @@ class GetWorkersDto {
 }
 
 
-module.exports = GetWorkersDto
+module.exports = GetMastersDto

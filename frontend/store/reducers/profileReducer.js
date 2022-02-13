@@ -8,7 +8,7 @@ const defaultProfileState = {
     lastName: null,
     pictureID: null,
     clientID: null,
-    workerID: null,
+    masterID: null,
     profileType: null,
   },
   loading: false,
@@ -61,8 +61,8 @@ const profileReducer = (state = defaultProfileState, action) => {
         ...state,
         profile: {
           ...state.profile,
-          worker: {
-            ...state.worker,
+          master: {
+            ...state.master,
             services: action.payload,
           }
         },

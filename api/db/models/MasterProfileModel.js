@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const WorkerProfileModel = sequelize.define(
-        'WorkerProfileModel',
+    const MasterProfileModel = sequelize.define(
+        'MasterProfileModel',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -28,13 +28,13 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: 'WorkerProfiles'
+            tableName: 'MasterProfiles'
         }
     )
 
-    WorkerProfileModel.associate = (models) => {
-        WorkerProfileModel.belongsTo(
-            models.WorkerWeekendDaysModel,
+    MasterProfileModel.associate = (models) => {
+        MasterProfileModel.belongsTo(
+            models.MasterWeekendDaysModel,
             {
                 foreignKey: 'weekendDaysID',
                 onDelete: 'CASCADE',
@@ -44,5 +44,5 @@ module.exports = (sequelize, DataTypes) => {
         )
     }
 
-    return WorkerProfileModel
+    return MasterProfileModel
 }

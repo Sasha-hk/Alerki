@@ -37,7 +37,7 @@ module.exports = class AuthError extends Error {
         return new AuthError(400, 'Bad request', errors)
     }
 
-    static NotWorkerError() {
-        return new AuthError(400, 'Bad User is not a worker', ['user not a worker'])
+    static NotMasterError() {
+        return new AuthError(400, 'Bad User is not a master', ['user not a master'])
     }
 }

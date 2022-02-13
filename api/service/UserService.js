@@ -57,11 +57,11 @@ class UserService {
         return user
     }
 
-    async findByWorkerID({workerID}) {
+    async findByMasterID({masterID}) {
         const foundUser = await UserModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
             },
         })
 
@@ -92,7 +92,7 @@ class UserService {
         const userData = {
             id: user.id,
             email: user.email,
-            workerID: user.workerID,
+            masterID: user.masterID,
             clientID: user.clientID,
         }
         const tokens = await AuthService.generateTokens({...userData})
@@ -111,7 +111,7 @@ class UserService {
         deviceName
     }) {    
         // check profile type
-        if (profileType != 'client' && profileType != 'worker') {
+        if (profileType != 'client' && profileType != 'master') {
             throw AuthError.BadRequestError()
         }
 
@@ -123,13 +123,13 @@ class UserService {
 
         // create profile
         let clientProfile = null
-        let workerProfile = null
+        let masterProfile = null
         if (profileType == 'client') {
             clientProfile = await ProfileService.createClientProfile()
         }
         else {
             clientProfile = await ProfileService.createClientProfile()
-            workerProfile = await ProfileService.createWorkerProfile()
+            masterProfile = await ProfileService.createMasterProfile()
         }
         
         // crete new user
@@ -141,7 +141,7 @@ class UserService {
             password: hashedPassword,
             profileType,
             clientID: clientProfile?.id || null,
-            workerID: workerProfile?.id || null,
+            masterID: masterProfile?.id || null,
         })
  
         return await this.generateAndSaveTokens(newUser, deviceName)
@@ -272,13 +272,13 @@ class UserService {
         }
     }
 
-    async becomeWorker({id}) {
-        const workerProfile = await ProfileService.createWorkerProfile()
+    async becomeMaster({id}) {
+        const masterProfile = await ProfileService.createMasterProfile()
 
         const update = await UserModel.update(
             {
-                profileType: 'worker',
-                workerID: workerProfile.id,
+                profileType: 'master',
+                masterID: masterProfile.id,
             },
             {
                 returning: true,

@@ -1,5 +1,5 @@
-const {ClientProfileModel, WorkerProfileModel} = require('../db/models')
-const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+const {ClientProfileModel, MasterProfileModel} = require('../db/models')
+const MasterWeekendDaysService = require('./MasterWeekendDaysService')
 const UserService = require('./UserService')
 const UserPictureService = require('./UserPictureService')
 const checkTypes = require('../utils/validators/checkTypes')
@@ -7,16 +7,16 @@ const checkParams = require('../utils/validators/checkParams')
 
 
 class ProfileService {
-    async findWorkerByID({id}) {
-        checkTypes.hardNumber(Number(id), 'workerID')
-        const foundWorker = await WorkerProfileModel.findOne({
+    async findMasterByID({id}) {
+        checkTypes.hardNumber(Number(id), 'masterID')
+        const foundMaster = await MasterProfileModel.findOne({
             raw: true,
             where: {
                 id,
             },
         })
 
-        return foundWorker
+        return foundMaster
     }
 
     async findClientByID({id}) {
@@ -36,23 +36,23 @@ class ProfileService {
         return newClientProfile.dataValues
     }
 
-    async createWorkerProfile() {
-        const newWeekendDays = await WorkerWeekendDaysService.create()
-        const newWorkerProfile = await WorkerProfileModel.create({
+    async createMasterProfile() {
+        const newWeekendDays = await MasterWeekendDaysService.create()
+        const newMasterProfile = await MasterProfileModel.create({
             weekendDaysID: newWeekendDays.id
         })
 
-        return newWorkerProfile.dataValues
+        return newMasterProfile.dataValues
     }
 
-    async updateWorker({
+    async updateMaster({
         id,
         workingStartTime,
         workingEndTime,
         shortBiography,
         instagramProfile,
     }) {
-        await WorkerProfileModel.update(
+        await MasterProfileModel.update(
             {
                 workingStartTime,
                 workingEndTime,
@@ -66,21 +66,21 @@ class ProfileService {
             }
         )
 
-        const updatedWorker = await WorkerProfileModel.findOne({
+        const updatedMaster = await MasterProfileModel.findOne({
             raw: true,
             where: {
                 id,
             },
         })
 
-        return updatedWorker
+        return updatedMaster
     }
 
     async makeNotAvailableMaster({id}) {
-        const candedat = await this.findWorkerByID({id})
+        const candedat = await this.findMasterByID({id})
 
         if (candedat) {
-            const blockedMaster = await WorkerProfileModel.update(
+            const blockedMaster = await MasterProfileModel.update(
                 {
                     available: false,
                 },
@@ -97,10 +97,10 @@ class ProfileService {
     }
 
     async makeAvailableMaster({id}) {
-        const candedat = await this.findWorkerByID({id})
+        const candedat = await this.findMasterByID({id})
 
         if (candedat) {
-            const blockedMaster = await WorkerProfileModel.update(
+            const blockedMaster = await MasterProfileModel.update(
                 {
                     available: true,
                 },
