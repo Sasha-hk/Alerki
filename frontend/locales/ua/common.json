@@ -1,3 +1,7 @@
 {
-
+  "languages": {
+    "en": "EN",
+    "ru": "RU",
+    "ua": "UA"
+  }
 }

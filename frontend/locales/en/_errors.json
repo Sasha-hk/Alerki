@@ -1,3 +1,8 @@
 {
-
+  "wrong password": "wrong password",
+  "user with this username not exists": "user with this username not exists",
+  "user with this username already exists": "user with this username already exists",
+  "usesr with specefied data not exists": "usesr with specefied data not exists",
+  "user with this email not exists": "user with this email not exists",
+  "user with this email already exists": "user with this email already exists"
 }
