@@ -26,6 +26,7 @@ const Settings = () => {
     lastName: user.lastName,
     picture: user.pictureID,
   })
+  const [updatePicturePreview, setUpdatePicturePreview] = useState(null)
 
   useEffect(() => {
     if (!userData.loading) {
@@ -51,8 +52,16 @@ const Settings = () => {
     dispatch(userActions.update(formData))
   }
 
-  const truggerUploadFile = () => {
+  const handleUpdalodPictureClick = (e) => {
     document.querySelector('input[name="picture"]').click()
+  }
+
+  const makePicturePreview = (e) => {
+    const reader = new FileReader()
+    reader.onload = function(e) {
+      setUpdatePicturePreview(e.target.result)
+    }
+    reader.readAsDataURL(e.target.files[0])
   }
 
   return (
@@ -62,21 +71,37 @@ const Settings = () => {
 
         <div>
           <form
+            className={cls.form}
             onSubmit={updateProfile}
           >
             <div className={cls.settings_block}>
               <label>Picture:</label>
-              <img
-                className={cls.user_picture_preview}
-                src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
-                alt="user picture"
-                onClick={e => truggerUploadFile()}
-              />
+              {
+                updatePicturePreview 
+                  ? <img
+                  className={cls.user_picture_preview}
+                  src={updatePicturePreview} 
+                  alt="user picture"
+                />
+                  : user.pictureID
+                    ? <img
+                      className={cls.user_picture_preview}
+                      src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
+                      alt="user picture"
+                    />
+                    : null
+              }
+
               <Input
                 type="file"
                 name="picture"
                 className="none"
+                onChange={e => makePicturePreview(e)}
               />
+              <Button
+                className="middle sceleton br-1 mt-4"
+                onClick={e => handleUpdalodPictureClick(e)}
+              >select photo</Button>
             </div>
             <div className={cls.settings_block}>
               <label>Username:</label>

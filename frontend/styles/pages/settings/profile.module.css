@@ -1,3 +1,6 @@
+.form {
+  width: 100%;
+}
 .settings_block {
   display: flex;
   flex-direction: column;
@@ -8,7 +11,10 @@
 
 .user_picture_preview {
   border-radius: 500px;
-  max-width: 200px;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 1;
+  object-fit: cover;
 }
 
 /* @media screen and (min-width: 0) and (max-width: 480px) {
@@ -16,10 +22,3 @@
     width: 100%;
   }
 } */
-
-@media only screen and (min-width: 0px) and (max-width: 480px) {
-  .user_picture_preview {
-    max-width: none;
-    width: 70%;
-  }
-}
