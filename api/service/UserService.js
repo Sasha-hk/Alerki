@@ -82,7 +82,7 @@ class UserService {
         const checkUserExists = await this.findUserByUsername({username})
 
         if (checkUserExists) {
-            throw AuthError.EmailExistsError()
+            throw AuthError.UsernameExistsError()
         }
 
         return checkUserExists
@@ -160,7 +160,7 @@ class UserService {
         })
 
         if (!loginUser) {
-            throw AuthError.EmailNotExistsError()
+            throw AuthError.UserWithSpecefiedDataNodeExistsError()
         }
 
         // check password

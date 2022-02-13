@@ -14,15 +14,47 @@ module.exports = class AuthError extends Error {
     }
 
     static EmailExistsError() {
-        return new AuthError(400, 'User with this email already exists', ['user with this email already exists'])
+        return new AuthError(
+            400, 
+            'User with this email already exists',
+            {email: 'user with this email already exists'}
+        )
     }
 
     static EmailNotExistsError() {
-        return new AuthError(400, 'User with this email not exists', ['user with this email not exists'])
+        return new AuthError(
+            400, 
+            'User with this email not exists', 
+            {email: 'user with this email not exists'}
+        )
+    }
+
+    static UsernameExistsError() {
+        return new AuthError(
+            400, 
+            'User with this username already exists',
+            {username: 'user with this username already exists'}
+        )
+    }
+
+    static UserWithSpecefiedDataNodeExistsError() {
+        return new AuthError(
+            400, 
+            'User with this username already exists',
+            {usernameOrEmail: 'usesr with specefied data not exists'}
+        )
+    }
+
+    static UsernameNotExistsError() {
+        return new AuthError(
+            400, 
+            'User with this username not exists', 
+            {username: 'user with this username not exists'}
+        )
     }
 
     static BadPasswordError() {
-        return new AuthError(400, 'Wrong password', ['wrong password'])
+        return new AuthError(400, 'Wrong password', {password: 'wrong password'})
     }
     
     static BadAccessToken() {

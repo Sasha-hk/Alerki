@@ -18,7 +18,7 @@ module.exports = class AppointmentError extends Error {
     }
 
     static BusyTimeError() {
-        return new AppointmentError(400, 'This appointment time is budy', ['start or end appointment time is busy'])
+        return new AppointmentError(400, 'This appointment time is busy', ['start or end appointment time is busy'])
     }
 
     static ForHimselfError() {
