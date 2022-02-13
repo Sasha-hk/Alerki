@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: 'MasterSchedule',
+            tableName: 'MastersSchedule',
         }
     )
 
