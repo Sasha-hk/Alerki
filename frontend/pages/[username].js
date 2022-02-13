@@ -71,7 +71,7 @@ const Profile = () => {
       {headerView}
 
       <div className={cls.about}>
-        <span>{profile.worker?.shortBiography}</span>
+        <span>{profile.master?.shortBiography}</span>
       </div>
 
       <div className={cls.services}>
@@ -86,7 +86,7 @@ const Profile = () => {
           {
             profileStore.loading && profileStore.initRender
               ? <b>loading</b>
-              : profile.profileType == 'worker'
+              : profile.profileType == 'master'
                 ? extendedView
                 : headerView
           }

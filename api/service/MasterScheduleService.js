@@ -3,13 +3,13 @@ const {MasterScheduleModel, Sequelize} = require('../db/models')
 
 class MasterScheduleService {
     async checkExists({
-        workerID,
+        masterID,
         date,
     }) {
         const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date
             }
         })
@@ -18,14 +18,14 @@ class MasterScheduleService {
     }
 
     async create({
-        workerID,
+        masterID,
         workingStartTime,
         workingEndTime,
         weekendDay,
         date,
     }) {
         const newSchedule = await MasterScheduleModel.create({
-            workerID,
+            masterID,
             workingStartTime,
             workingEndTime,
             weekendDay,
@@ -35,11 +35,11 @@ class MasterScheduleService {
         return newSchedule.dataValues
     }
 
-    async findByMasterID({workerID}) {
+    async findByMasterID({masterID}) {
         const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
             }
         })
 
@@ -47,11 +47,11 @@ class MasterScheduleService {
     }
 
 
-    async findByMasterIDAndDate({workerID, date}) {
+    async findByMasterIDAndDate({masterID, date}) {
         const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date,
             }
         })
@@ -60,13 +60,13 @@ class MasterScheduleService {
     }
     
     async getInRange({
-        workerID,
+        masterID,
         dateRange,
     }) {
         const foundSchedule = await MasterScheduleModel.findAll({
             raw: true,
             where: {
-                workerID,
+                masterID,
                 date: {
                     [Sequelize.Op.between]: dateRange,
                 }
@@ -77,20 +77,20 @@ class MasterScheduleService {
     }
 
     async updateOrCreate({
-        workerID,
+        masterID,
         workingStartTime,
         workingEndTime,
         weekendDay,
         date,
     }) {
         const checkExistsSchedule = await this.checkExists({
-            workerID,
+            masterID,
             date
         })
 
         if (!checkExistsSchedule) {
             const newSchedule = await this.create({
-                workerID,
+                masterID,
                 workingStartTime,
                 workingEndTime,
                 weekendDay,
@@ -108,7 +108,7 @@ class MasterScheduleService {
                 },
                 {
                     where: {
-                        workerID,
+                        masterID,
                         date,
                     }
                 }

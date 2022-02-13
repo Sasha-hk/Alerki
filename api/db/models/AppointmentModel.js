@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            workerID: {
+            masterID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         AppointmentModel.belongsTo(
             models.MasterProfileModel, 
             {
-                foreignKey: 'workerID',
+                foreignKey: 'masterID',
                 onDelete: 'CASCADE'
             }
         )

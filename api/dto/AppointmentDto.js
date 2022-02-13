@@ -7,7 +7,7 @@ class AppointmentDto{
     clientConfirm
     masterConfirm
     clientID
-    workerID
+    masterID
     masterServiceID
 
     constructor({appointment}) {
@@ -19,7 +19,7 @@ class AppointmentDto{
         this.clientConfirm = appointment.clientConfirm
         this.masterConfirm = appointment.masterConfirm
         this.clientID = appointment.clientID
-        this.workerID = appointment.workerId
+        this.masterID = appointment.masterId
         this.masterServiceID = appointment.masterServiceID
     }
 }

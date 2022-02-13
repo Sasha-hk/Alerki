@@ -35,7 +35,7 @@ const SettingsWrapper = ({children}) => {
             />
 
             {
-              user.profileType == 'worker'
+              user.profileType == 'master'
                 ? <>
                   <SettingsItem 
                     name="master" 

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             duration: {
                 type: DataTypes.INTEGER,
             },
-            workerID: {
+            masterID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         MasterServiceModel.belongsTo(
             models.MasterProfileModel, 
             {
-                foreignKey: 'workerID',
+                foreignKey: 'masterID',
                 onDelete: 'CASCADE',
             }
         )

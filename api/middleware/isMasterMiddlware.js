@@ -7,8 +7,8 @@ module.exports = async (req, res, next) => {
 
         const userData = await UserService.findUserByID({id: req.accessToken.id})
 
-        if (userData.profileType != 'worker') {
-            throw AuthError.NotWorkerError()
+        if (userData.profileType != 'master') {
+            throw AuthError.NotMasterError()
         }
         
         req.user = userData

@@ -2,25 +2,25 @@ const {MasterServiceModel, MasterProfileModel} = require('../db/models')
 const {isNumber, hardNumber} = require('../utils/validators/checkTypes')
 
 
-class WorkerServiceService {
+class MasterServiceService {
     async create({
         currency,
         price,
         location,
         duration,
-        workerID,
+        masterID,
         serviceID
     }) {
-        const newWorkerService = await MasterServiceModel.create({
+        const newMasterService = await MasterServiceModel.create({
             currency,
             price,
             location,
             duration,
-            workerID,
+            masterID,
             serviceID,
         })
 
-        return newWorkerService.dataValues
+        return newMasterService.dataValues
     }
 
     async find({
@@ -43,15 +43,15 @@ class WorkerServiceService {
         return foundServices
     }
 
-    async findForWorker({
-        workerID
+    async findForMaster({
+        masterID
     }) {
-        hardNumber(Number(workerID), 'workerID')
+        hardNumber(Number(masterID), 'masterID')
 
         const foundServices = await MasterServiceModel.findAll({
             raw: true,
             where: {
-                workerID,
+                masterID,
             },
         })
 
@@ -59,16 +59,16 @@ class WorkerServiceService {
     }
 
     async findByID({id}) {
-        const workerService = await MasterServiceModel.findOne({
+        const masterService = await MasterServiceModel.findOne({
             raw: true,
             where: {
                 id,
             },
         })
 
-        return workerService
+        return masterService
     }
 }
 
 
-module.exports = new WorkerServiceService()
+module.exports = new MasterServiceService()
