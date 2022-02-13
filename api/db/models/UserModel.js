@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
             },
             profileType: {
                 type: DataTypes.ENUM,
-                values: ['client', 'worker'],
+                values: ['client', 'master'],
             },
             pictureID: {
                 type: DataTypes.INTEGER,
@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
             clientID: {
                 type: DataTypes.INTEGER,
             },
-            workerID: {
+            masterID: {
                 type: DataTypes.INTEGER,
             },
 
@@ -77,8 +77,8 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
         })
 
-        UserModel.belongsTo(models.WorkerProfileModel, {
-            foreignKey: 'workerID',
+        UserModel.belongsTo(models.MasterProfileModel, {
+            foreignKey: 'masterID',
             onDelete: 'CASCADE',
             allowNull: true,
             defaultValue: null,
