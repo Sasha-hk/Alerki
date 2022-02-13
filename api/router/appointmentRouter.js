@@ -1,7 +1,7 @@
 const Router = require('express')
 const AppointmentController = require('../controller/AppointmentController')
 const authMiddleware = require('../middleware/authMiddleware')
-const isMasterMiddleware = require('../middleware/isMasterMiddlware')
+const isWorkerMiddleware = require('../middleware/isWorkerMiddlware')
 const router = new Router()
 
 
@@ -22,15 +22,15 @@ router
         AppointmentController.clientFromNow
     )
     .get(
-        '/master/get-day',
+        '/worker/get-day',
         authMiddleware,
-        isMasterMiddleware,
-        AppointmentController.masterGetDay
+        isWorkerMiddleware,
+        AppointmentController.workerGetDay
     )
     .get(
-        '/master/from-now',
+        '/worker/from-now',
         authMiddleware,
-        AppointmentController.masterFromNow
+        AppointmentController.workerFromNow
     ) 
 
 router
@@ -47,15 +47,15 @@ router
         AppointmentController.clientCancel
     )
     .patch(
-        '/master/cancel/:slug',
+        '/worker/cancel/:slug',
         authMiddleware,
-        AppointmentController.masterCancel
+        AppointmentController.workerCancel
     )
     .patch(
-        '/master/confirm/:slug',
+        '/worker/confirm/:slug',
         authMiddleware,
-        isMasterMiddleware,
-        AppointmentController.masterConfirm
+        isWorkerMiddleware,
+        AppointmentController.workerConfirm
     )
 
 

@@ -15,24 +15,24 @@ Endpoints list:
     - [`/get-day`](#Get-appointments-for)
     - [`/from-now`](#Get-appointments-from-now)
     - [`/cancel/:slug`](#Cancel-appointment)
-  - `/master`
+  - `/worker`
     - [`/get-day`](#Get-appointments-for)
     - [`/from-now`](#Get-appointments-from-now)
     - [`/cancel/:slug`](#Cancel-appointment)
-    - [`/confirm/:slug`](#Master-confirm-appointment)
+    - [`/confirm/:slug`](#Worker-confirm-appointment)
   - [`/make-appointment`](#Make-appointment)
 
 - [`/profile`](#Profile)
   - [`/:username`](#Get-profile)
-  - [`/:masterID`](#Get-services)
-  - [`/find-master`](#Find-master)
-  - [`/get-schedule`](#Get-master-schedule)
+  - [`/:workerID`](#Get-services)
+  - [`/find-worker`](#Find-worker)
+  - [`/get-schedule`](#Get-worker-schedule)
   - [`/picture`](#Picture)
-  - [`/create/service`](#Create-master-service)
-  - [`/become-master`](#Become-master)
-  - `/master`
-    - [`/set-schdule`](#Set-master-schedule)
-    - [`/update`](#Update-master-profile)
+  - [`/create/service`](#Create-worker-service)
+  - [`/become-worker`](#Become-worker)
+  - `/worker`
+    - [`/set-schdule`](#Set-worker-schedule)
+    - [`/update`](#Update-worker-profile)
     - [`/update/weekend-days`](#Update-weekend-days)
 
 - [`/services`](#Services)
@@ -53,7 +53,7 @@ POST /auth/register
 {
     "email": "email",
     "username": "username",
-    "profileType": "master",
+    "profileType": "worker",
     "password": "qwerty"
 }
 ```
@@ -64,7 +64,7 @@ POST /auth/register
 | `username` | string | true | |
 | `firstName` | string | false | |
 | `lastName` | string | false | |
-| `profileType` | string | true | master \ client |
+| `profileType` | string | true | worker \ client |
 | `password` | string | true | |
 
 **Response:**
@@ -74,7 +74,7 @@ POST /auth/register
     "id": "1",
     "email": "email",
     "clientID": 1,
-    "masterID": 1,
+    "workerID": 1,
     "accessToken": "token..."
 }
 ```
@@ -84,7 +84,7 @@ POST /auth/register
 | `id` | int | |
 | `email` | string | |
 | `clientID` | int | client profile id |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `accessToken` | string | access token |
 
 **Cookies:**
@@ -123,7 +123,7 @@ POST /auth/log-in
     "id": "1",
     "email": "email",
     "clientID": 1,
-    "masterID": 1,
+    "workerID": 1,
     "accessToken": "token..."
 }
 ```
@@ -133,7 +133,7 @@ POST /auth/log-in
 | `id` | int | user id |
 | `email` | string | user email |
 | `clientID` | int | client profile id |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `accessToken` | string | access token |
 
 **Cookies:**
@@ -187,7 +187,7 @@ POST /auth/callback/google
     "id": "1",
     "email": "email",
     "clientID": 1,
-    "masterID": 1,
+    "workerID": 1,
     "accessToken": "token..."
 }
 ```
@@ -197,7 +197,7 @@ POST /auth/callback/google
 | `id` | int | |
 | `email` | string | |
 | `clientID` | int | client profile id |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `accessToken` | string | access token |
 
 **Cookies:**
@@ -224,7 +224,7 @@ User need to be authenticated
     "id": "1",
     "email": "email",
     "clientID": 1,
-    "masterID": 1,
+    "workerID": 1,
     "accessToken": "token..."
 }
 ```
@@ -234,7 +234,7 @@ User need to be authenticated
 | `id` | int | |
 | `email` | string | |
 | `clientID` | int | client profile id |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `accessToken` | string | access token |
 
 **Cookies:**
@@ -333,9 +333,9 @@ GET /profile/:username
     "firstName": "firts name",
     "lastName": "last name",
     "clientID": 1,
-    "masterID": 1,
+    "workerID": 1,
     "pictureID": null,
-    "master": {
+    "worker": {
         "shortBiography": null,
         "instagramProfile": null,
         "workingStartTime": null,
@@ -353,20 +353,20 @@ In response, we receive an array of users with the specified service in the requ
 | `firstName` | string | user first name |
 | `lastName` | string | user last name |
 | `clientID` | int | client profile id |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `pictureID` | int | user picture id |request |
-| `master` | string | master information |
-| `master.shortBiography` | string | about master |
-| `master.instagramProfile` | string | link to instagram profile if exists |
-| `master.masterStartTime` | string | master start time |
-| `master.masterEndTime` | string | master end time |
+| `worker` | string | worker information |
+| `worker.shortBiography` | string | about worker |
+| `worker.instagramProfile` | string | link to instagram profile if exists |
+| `worker.workerStartTime` | string | worker start time |
+| `worker.workerEndTime` | string | worker end time |
 
 ---
 
 ### **Get services**
 
 ```http
-GET /profile/services/:masterID
+GET /profile/services/:workerID
 ```
 
 **Response:**
@@ -379,7 +379,7 @@ GET /profile/services/:masterID
     "price": "100",
     "location": null,
     "duration": 1200000,
-    "masterID": 1,
+    "workerID": 1,
     "serviceID": 1
   },
 ]
@@ -392,15 +392,15 @@ GET /profile/services/:masterID
 | `price` | string | service price |
 | `locations` | string | service lication |
 | `duration` | int | service duration |
-| `masterID` | int | master id |
+| `workerID` | int | worker id |
 | `serviceID` | int | service id |
 
 ---
 
-### **Find master**
+### **Find worker**
 
 ```http
-GET /profile/find-master
+GET /profile/find-worker
 ```
 
 **Querys:**
@@ -421,7 +421,7 @@ GET /profile/find-master
 [
     {
         "id": 1,
-        "masterID": 1,
+        "workerID": 1,
         "username": "Alan",
         "firstName": null,
         "lastName": null,
@@ -443,7 +443,7 @@ In response, we receive an array of users with the specified service in the requ
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
 | `id` | int | |
-| `masterID` | int | master profile id |
+| `workerID` | int | worker profile id |
 | `username` | string | username |
 | `firstName` | string | user first name |
 | `lastName` | string | user last name |
@@ -458,7 +458,7 @@ In response, we receive an array of users with the specified service in the requ
 
 ---
 
-### **Get master schedule**
+### **Get worker schedule**
 
 ```http
 GET /profile/get-schedule
@@ -468,13 +468,13 @@ GET /profile/get-schedule
 
 - year
 - month
-- master_id
+- worker_id
 
 | **Query** | **Type** | **Requeired** | **Description** |
 | :--- | :--- | :--- | :--- |
 | `year` | int | true | schedule for year |
 | `month` | int | true | schedule for month |
-| `master_id` | int | true | schedule for master |
+| `worker_id` | int | true | schedule for worker |
 
 **Response:**
 
@@ -494,7 +494,7 @@ GET /profile/get-schedule
     "schedule": [
         {
             "id":  1,
-            "masterID":  1,
+            "workerID":  1,
             "workingStartTime":  null,
             "workingEndTime":  null,
             "weekendDay":  true,
@@ -504,7 +504,7 @@ GET /profile/get-schedule
         },
         {
             "id": 2,
-            "masterID": 1,
+            "workerID": 1,
             "workingStartTime": 21600000,
             "workingEndTime": 68400000,
             "weekendDay": null,
@@ -526,7 +526,7 @@ In response, we receive an array of users with the specified service in the requ
 | `workingEndTime` | int | general end working time in milliseconds |
 | `schedule` | object | schedule |
 | `schedule.id` | int | schedule id |
-| `schedule.masterID` | object | masterID |
+| `schedule.workerID` | object | workerID |
 | `schedule.workingStartTime` | string | start working time in milliseconds for date belowe |
 | `scheudle.workingEndTime` | string | end working time in milliseconds for date belowe |
 | `schedule.weekendDay` | bool | service location |
@@ -546,7 +546,7 @@ Image
 
 ---
 
-### **Create master service**
+### **Create worker service**
 
 ```http
 POST /profile/create/service
@@ -581,19 +581,19 @@ POST /profile/create/service
     "price": "100",
     "location": null,
     "duration": 1200000,
-    "masterID": 1,
+    "workerID": 1,
     "serviceID": 1
 }
 ```
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `id` | int | master service id |
+| `id` | int | worker service id |
 | `currency` | string | service currency |
 | `price` | string | service price |
 | `location` | string | service location |
 | `duration` | int | service duration |
-| `masterID` | int | master id |
+| `workerID` | int | worker id |
 | `serviceID` | int | service id |
 
 **Requirements:**
@@ -602,23 +602,23 @@ You need to be authenticated
 
 ---
 
-### **Become master**
+### **Become worker**
 
 ```http
-PATCH /profile/become-master
+PATCH /profile/become-worker
 ```
 
 **Response:**
 
 ```json
 { 
-    "masterID": 2
+    "workerID": 2
 }
 ```
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `masterID` | int | master id |
+| `workerID` | int | worker id |
 
 **Requirements:**
 
@@ -626,7 +626,7 @@ You need to be authenticated
 
 ---
 
-### **Set master schedule**
+### **Set worker schedule**
 
 ```http
 POST /profile/set-schedule
@@ -648,14 +648,14 @@ POST /profile/set-schedule
 | `workingStartTime` | string | service price |
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
-| `date` | int | master id |
+| `date` | int | worker id |
 
 **Response:**
 
 ```json
 {
     "id": 1,
-    "masterID": 1,
+    "workerID": 1,
     "workingStartTime": null,
     "workingEndTime": null,
     "weekendDay": true,
@@ -665,19 +665,19 @@ POST /profile/set-schedule
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `id` | int | master service id |
-| `masterID` | string | service currency |
+| `id` | int | worker service id |
+| `workerID` | string | service currency |
 | `workingStartTime` | string | service price |
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
-| `date` | int | master id |
+| `date` | int | worker id |
 
 ---
 
-### **Update master profile**
+### **Update worker profile**
 
 ```http
-PATCH /profile/master/update
+PATCH /profile/worker/update
 ```
 
 **Body:**
@@ -696,14 +696,14 @@ PATCH /profile/master/update
 | `workingStartTime` | string | service price |
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
-| `date` | int | master id |
+| `date` | int | worker id |
 
 **Response:**
 
 ```json
 {
     "id": 1,
-    "masterID": 1,
+    "workerID": 1,
     "workingStartTime": null,
     "workingEndTime": null,
     "weekendDay": true,
@@ -713,19 +713,19 @@ PATCH /profile/master/update
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `id` | int | master service id |
-| `masterID` | string | service currency |
+| `id` | int | worker service id |
+| `workerID` | string | service currency |
 | `workingStartTime` | string | service price |
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
-| `date` | int | master id |
+| `date` | int | worker id |
 
 ---
 
 ### **Update weekend days**
 
 ```http
-PATCH /profile/master/update/weekend-days
+PATCH /profile/worker/update/weekend-days
 ```
 
 **Body:**
@@ -774,7 +774,7 @@ GET /profile/details/:slug
 | `workingStartTime` | string | service price |
 | `workingEndTime` | string | service location |
 | `weekendDay` | int | service duration |
-| `date` | int | master id |
+| `date` | int | worker id |
 
 **Response:**
 
@@ -786,10 +786,10 @@ GET /profile/details/:slug
     "appointmentEndTime": "2022-01-28T09:37:46.678Z",
     "duration": 1200000,
     "clientConfirm": true,
-    "masterConfirm": false,
+    "workerConfirm": false,
     "clientID": 2,
-    "masterID": 1,
-    "masterServiceID": 1
+    "workerID": 1,
+    "workerServiceID": 1
 }
 ```
 
@@ -801,10 +801,10 @@ GET /profile/details/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 
 ---
 
@@ -816,10 +816,10 @@ GET /profile/details/:slug
 GET /profile/client/get-day?date=date
 ```
 
-**For master:**
+**For worker:**
 
 ```http
-GET /profile/master/get-day?date=date
+GET /profile/worker/get-day?date=date
 ```
 
 **Query:**
@@ -841,10 +841,10 @@ GET /profile/master/get-day?date=date
         "appointmentEndTime": "2022-01-28T09:46:39.915Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "masterConfirm": false,
+        "workerConfirm": false,
         "clientID": 2,
-        "masterID": 1,
-        "masterServiceID": 1
+        "workerID": 1,
+        "workerServiceID": 1
     }
 ]
 ```
@@ -857,10 +857,10 @@ GET /profile/master/get-day?date=date
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 
 ---
 
@@ -872,10 +872,10 @@ GET /profile/master/get-day?date=date
 GET /profile/client/from-now?now=date
 ```
 
-**For master:**
+**For worker:**
 
 ```http
-GET /profile/master/from-now?now=date
+GET /profile/worker/from-now?now=date
 ```
 
 **Query:**
@@ -898,10 +898,10 @@ GET /profile/master/from-now?now=date
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "masterConfirm": false,
+        "workerConfirm": false,
         "clientID": 2,
-        "masterID": 1,
-        "masterServiceID": 1
+        "workerID": 1,
+        "workerServiceID": 1
     }
 ]
 ```
@@ -914,10 +914,10 @@ GET /profile/master/from-now?now=date
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 
 ---
 
@@ -929,10 +929,10 @@ GET /profile/master/from-now?now=date
 PATCH /profile/client/cancel/:slug
 ```
 
-**For master:**
+**For worker:**
 
 ```http
-PATCH /profile/master/cancel/:slug
+PATCH /profile/worker/cancel/:slug
 ```
 
 **Query:**
@@ -955,10 +955,10 @@ PATCH /profile/master/cancel/:slug
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": false,
-        "masterConfirm": false,
+        "workerConfirm": false,
         "clientID": 2,
-        "masterID": 1,
-        "masterServiceID": 1
+        "workerID": 1,
+        "workerServiceID": 1
     }
 ]
 ```
@@ -971,17 +971,17 @@ PATCH /profile/master/cancel/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 
 ---
 
-### **Master confirm appointment**
+### **Worker confirm appointment**
 
 ```http
-PATCH /profile/master/confirm/:slug
+PATCH /profile/worker/confirm/:slug
 ```
 
 **Query:**
@@ -1004,10 +1004,10 @@ PATCH /profile/master/confirm/:slug
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": false,
-        "masterConfirm": true,
+        "workerConfirm": true,
         "clientID": 2,
-        "masterID": 1,
-        "masterServiceID": 1
+        "workerID": 1,
+        "workerServiceID": 1
     }
 ]
 ```
@@ -1020,10 +1020,10 @@ PATCH /profile/master/confirm/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 
 ---
 
@@ -1037,16 +1037,16 @@ POST /profile/make-appointment
 
 ```json
 {
-    "masterID": 1,
-    "masterServiceID": 1,
+    "workerID": 1,
+    "workerServiceID": 1,
     "appointmentStartTime": "2022-01-28T09:57:58.032Z"
 }
 ```
 
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |
 | `appointmentStartTime` | string | appointment start time |
 
 **Response:**
@@ -1061,10 +1061,10 @@ POST /profile/make-appointment
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "masterConfirm": false,
+        "workerConfirm": false,
         "clientID": 2,
-        "masterID": 1,
-        "masterServiceID": 1
+        "workerID": 1,
+        "workerServiceID": 1
     }
 ]
 ```
@@ -1077,7 +1077,7 @@ POST /profile/make-appointment
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `masterConfirm` | bool | worekr confirm |
+| `workerConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
-| `masterID` | int | master id |
-| `masterServiceID` | int | master service id |
+| `workerID` | int | worker id |
+| `workerServiceID` | int | worker service id |

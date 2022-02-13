@@ -65,7 +65,7 @@ class AppointmentController {
         }
     }
 
-    async masterGetDay(req, res, next) {
+    async workerGetDay(req, res, next) {
         try {
             const date = req.query.date
     
@@ -73,8 +73,8 @@ class AppointmentController {
                 date
             })
 
-            const dayAppointments = await AppointmentService.masterGetDay({
-                masterID: req.accessToken.masterID, 
+            const dayAppointments = await AppointmentService.workerGetDay({
+                workerID: req.accessToken.workerID, 
                 date,
             })
 
@@ -85,7 +85,7 @@ class AppointmentController {
         }
     }
 
-    async masterFromNow(req, res, next) {
+    async workerFromNow(req, res, next) {
         try {
             const now = req.query.now
 
@@ -93,8 +93,8 @@ class AppointmentController {
                 now,
             })
 
-            const foundAppointments = await AppointmentService.masterFromNow({
-                masterID: req.accessToken.masterID,
+            const foundAppointments = await AppointmentService.workerFromNow({
+                workerID: req.accessToken.workerID,
                 now,
             })
 
@@ -109,25 +109,25 @@ class AppointmentController {
         try {
             const user = await UserService.findUserByID({id: req.accessToken.id})
             const {
-                masterID,
-                masterServiceID,
+                workerID,
+                workerServiceID,
                 appointmentStartTime,
             } = req.body
             
             checkParams.all({
-                masterID,
-                masterServiceID,
+                workerID,
+                workerServiceID,
                 appointmentStartTime
             })
 
             // check if user make appointment to herself
-            if (masterID == user?.masterID) {
+            if (workerID == user?.workerID) {
                 throw AppointmentError.ForHimselfError()
             }
 
             const newAppointment = await AppointmentService.create({
-                masterID,
-                masterServiceID,
+                workerID,
+                workerServiceID,
                 clientID: user.clientID,
                 appointmentStartTime: new Date(appointmentStartTime),
             })
@@ -159,7 +159,7 @@ class AppointmentController {
         }
     }
 
-    async masterCancel(req, res, next) {
+    async workerCancel(req, res, next) {
         try {
             const slug = req.params.slug
 
@@ -167,8 +167,8 @@ class AppointmentController {
                 slug
             })
 
-            const updatedAppointment = await AppointmentService.masterCancel({
-                masterID: req.accessToken.masterID,
+            const updatedAppointment = await AppointmentService.workerCancel({
+                workerID: req.accessToken.workerID,
                 slug
             })
             
@@ -179,7 +179,7 @@ class AppointmentController {
         }
     }
 
-    async masterConfirm(req, res, next) {
+    async workerConfirm(req, res, next) {
         try {
             const slug = req.params.slug
 
@@ -187,8 +187,8 @@ class AppointmentController {
                 slug
             })
 
-            const updatedAppointment = await AppointmentService.masterConfirm({
-                masterID: req.accessToken.masterID,
+            const updatedAppointment = await AppointmentService.workerConfirm({
+                workerID: req.accessToken.workerID,
                 slug
             })
             

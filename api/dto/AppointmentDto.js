@@ -5,10 +5,10 @@ class AppointmentDto{
     appointmentEndTime
     duration
     clientConfirm
-    masterConfirm
+    workerConfirm
     clientID
-    masterID
-    masterServiceID
+    workerID
+    workerServiceID
 
     constructor({appointment}) {
         this.id = appointment.id,
@@ -17,10 +17,10 @@ class AppointmentDto{
         this.appointmentEndTime = appointment.appointmentEndTime
         this.duration = appointment.duration
         this.clientConfirm = appointment.clientConfirm
-        this.masterConfirm = appointment.masterConfirm
+        this.workerConfirm = appointment.workerConfirm
         this.clientID = appointment.clientID
-        this.masterID = appointment.masterId
-        this.masterServiceID = appointment.masterServiceID
+        this.workerID = appointment.workerId
+        this.workerServiceID = appointment.workerServiceID
     }
 }
 

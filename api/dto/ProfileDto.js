@@ -1,4 +1,4 @@
-const MasterServiceDto = require('./MasterServiceDto')
+const WorkerServiceDto = require('./WorkerServiceDto')
 
 
 class ProfileDto {
@@ -16,23 +16,23 @@ class ProfileDto {
         this.lastName = user.lastName
         this.clientID = user.clientID
         this.profileType = user.profileType
-        if (user.masterID) {
-            this.masterID = user.masterID
+        if (user.workerID) {
+            this.workerID = user.workerID
         }
         this.pictureID = user.pictureID
     }
 
-    addMasterProfile(master) {
-        this.master = {}
-        this.master.shortBiography = master.shortBiography
-        this.master.instagramProfile = master.instagramProfile
-        this.master.workingStartTime = master.workingStartTime
-        this.master.workingEndTime = master.workingEndTime
-        this.master.services = []
+    addWorkerProfile(worker) {
+        this.worker = {}
+        this.worker.shortBiography = worker.shortBiography
+        this.worker.instagramProfile = worker.instagramProfile
+        this.worker.workingStartTime = worker.workingStartTime
+        this.worker.workingEndTime = worker.workingEndTime
+        this.worker.services = []
     }
 
-    setMasterServices(masterServices) {
-        this.master.services = new MasterServiceDto(masterServices).services
+    setWorkerServices(workerServices) {
+        this.worker.services = new WorkerServiceDto(workerServices).services
     }
 }
 

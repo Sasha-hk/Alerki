@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.BOOLEAN,
                 defaultValue: true,
             },
-            masterConfirm: {
+            workerConfirm: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
             },
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            masterID: {
+            workerID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            masterServiceID: {
+            workerServiceID: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -62,17 +62,17 @@ module.exports = (sequelize, DataTypes) => {
         )
         
         AppointmentModel.belongsTo(
-            models.MasterProfileModel, 
+            models.WorkerProfileModel, 
             {
-                foreignKey: 'masterID',
+                foreignKey: 'workerID',
                 onDelete: 'CASCADE'
             }
         )
 
         AppointmentModel.belongsTo(
-            models.MasterServiceModel, 
+            models.WorkerServiceModel, 
             {
-                foreignKey: 'masterServiceID',
+                foreignKey: 'workerServiceID',
                 onDelete: 'CASCADE',
             }
         )

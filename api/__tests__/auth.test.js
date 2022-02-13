@@ -2,8 +2,8 @@ const request = require('supertest')
 const {extractCookies} = require('../utils/extractCookies')
 const app = require('../app')
 
-let master = {
-  email: 'email@gmail.com', username: 'workk', profileType: 'master', password: 'pass'
+let worker = {
+  email: 'email@gmail.com', username: 'workk', profileType: 'worker', password: 'pass'
 }
 let client = {
   email: 'em@gmail.com', username: 'client', profileType: 'client', password: 'pas'
@@ -19,17 +19,17 @@ describe('Test authenticatin', () => {
     test('with correct parameters => 200', async () => {
       const w = await request(app)
         .post('/auth/register')
-        .send(master)
+        .send(worker)
       
       expect(w.statusCode).toBe(200)
       expect(w.body).toBeTruthy()
       expect(w.body.accessToken).toBeTruthy()
 
-      master = {
-        ...master,
+      worker = {
+        ...worker,
         ...w.body
       }
-      master.refreshToken = extractCookies(w.headers).refreshToken.value
+      worker.refreshToken = extractCookies(w.headers).refreshToken.value
 
       const c = await request(app)
         .post('/auth/register')
@@ -64,10 +64,10 @@ describe('Test authenticatin', () => {
   })
 
   describe('logout', () => {
-    test('logout master => 200', async () => {
+    test('logout worker => 200', async () => {
       const r = await request(app)
         .get('/auth/log-out')
-        .set('Cookie', ['refreshToken=' + master.refreshToken])
+        .set('Cookie', ['refreshToken=' + worker.refreshToken])
       
       expect(r.statusCode).toBe(200)
     })
@@ -78,8 +78,8 @@ describe('Test authenticatin', () => {
       const r = await request(app)
         .post('/auth/log-in')
         .send({
-          email: master.email,
-          password: master.password,
+          email: worker.email,
+          password: worker.password,
         })
       
       expect(r.statusCode).toBe(200)
@@ -89,8 +89,8 @@ describe('Test authenticatin', () => {
       const r = await request(app)
         .post('/auth/log-in')
         .send({
-          username: master.username,
-          password: master.password,
+          username: worker.username,
+          password: worker.password,
         })
       
       expect(r.statusCode).toBe(200)
@@ -100,7 +100,7 @@ describe('Test authenticatin', () => {
       const r = await request(app)
         .post('/auth/log-in')
         .send({
-          ...master,
+          ...worker,
           password: 'bad password'
         })
       
@@ -112,7 +112,7 @@ describe('Test authenticatin', () => {
     test('with correct parameters => 200', async () => {
       const r = await request(app)
         .get('/auth/refresh')
-        .set('Cookie', ['refreshToken=' + master.refreshToken])
+        .set('Cookie', ['refreshToken=' + worker.refreshToken])
       
       expect(r.statusCode).toBe(200)
     })
@@ -129,12 +129,12 @@ describe('Test authenticatin', () => {
     test('with accessToken => 200', async () => {
       const w = await request(app)
         .get('/auth/user')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(w.statusCode).toBe(200)
 
-      master = {
-        ...master,
+      worker = {
+        ...worker,
         userData: w.body
       }
 
@@ -198,20 +198,20 @@ describe('Test services', () => {
   })
 })
 
-let masterService = null
-let masterSchedule = null
+let workerService = null
+let workerSchedule = null
 let weekendDay = null
-let masterScheduleDate = null
+let workerScheduleDate = null
 
 describe('Test profile', () => {
   describe('get profile', () => {
     test('with exists profile => 200', async () => {
       const r = await request(app)
-        .get('/profile/' + master.username)
+        .get('/profile/' + worker.username)
       
       expect(r.statusCode).toBe(200)
-      expect(r.body.masterID).toBeTruthy()
-      expect(r.body.master).toBeTruthy()
+      expect(r.body.workerID).toBeTruthy()
+      expect(r.body.worker).toBeTruthy()
     })
 
     test('with exists profile => 404', async () => {
@@ -222,11 +222,11 @@ describe('Test profile', () => {
     })
   })
 
-  describe('create master service', () => {
-    test('with exists service and master => 200', async () => {
+  describe('create worker service', () => {
+    test('with exists service and worker => 200', async () => {
       const r = await request(app)
         .post('/profile/create/service')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           name: 'heircut',
           currency: 'UAN',
@@ -238,10 +238,10 @@ describe('Test profile', () => {
       expect(r.statusCode).toBe(200)
     })
 
-    test('with not exists service and master => 200', async () => {
+    test('with not exists service and worker => 200', async () => {
       const r = await request(app)
         .post('/profile/create/service')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           name: 'new service name',
           currency: 'UAN',
@@ -253,7 +253,7 @@ describe('Test profile', () => {
       expect(r.statusCode).toBe(200)
     })
 
-    test('with not a master => 400', async () => {
+    test('with not a worker => 400', async () => {
       const r = await request(app)
         .post('/profile/create/service')
         .set('Cookie', ['accessToken=' + client.accessToken])
@@ -262,15 +262,15 @@ describe('Test profile', () => {
     })
   })
 
-  describe('get master services', () => {
+  describe('get worker services', () => {
     test('with exists profile => 200', async () => {
       const r = await request(app)
-        .get('/profile/services/' + master.userData.masterID)
+        .get('/profile/services/' + worker.userData.workerID)
       
       expect(r.statusCode).toBe(200)
     })
 
-    test('with not exists master id => 404', async () => {
+    test('with not exists worker id => 404', async () => {
       const r = await request(app)
         .get('/profile/services/100')
       
@@ -285,38 +285,38 @@ describe('Test profile', () => {
     })
   })
 
-  describe('find master', () => {
+  describe('find worker', () => {
     test('with correct parameters => 200', async () => {
       const r = await request(app)
-        .get('/profile/find-master')
+        .get('/profile/find-worker')
         .query({service_id: services[0].id})
       
         
       expect(r.statusCode).toBe(200)
-      masterService = r.body
+      workerService = r.body
     })
 
     test('with incorrect parameters => 400', async () => {
       const r = await request(app)
-        .get('/profile/find-master') 
+        .get('/profile/find-worker') 
         
       expect(r.statusCode).toBe(400)
     })
 
-    test('with not exists master service => 404', async () => {
+    test('with not exists worker service => 404', async () => {
       const r = await request(app)
-        .get('/profile/find-master')
+        .get('/profile/find-worker')
         .query({service_id: 10})
         
       expect(r.statusCode).toBe(404)
     })
   })
 
-  describe('update master profile', () => {
+  describe('update worker profile', () => {
     test('with correct parameters => 200', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/profile/worker/update')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           workingStartTime: 1000 * 60 * 60 * 9,
           workingEndTime: 1000 * 60 * 60 * 16,
@@ -327,8 +327,8 @@ describe('Test profile', () => {
 
     test('with weekend days => 200', async () => {
       const r = await request(app)
-        .patch('/profile/master/update/weekend-days')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/profile/worker/update/weekend-days')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           weekendDays: {
             friday: true
@@ -340,15 +340,15 @@ describe('Test profile', () => {
 
     test('without body => 400', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/profile/worker/update')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(r.statusCode).toBe(400)
     })
 
     test('without authenticated user => 401', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
+        .patch('/profile/worker/update')
         .send({
           workingStartTime: 1000 * 60 * 60 * 9,
           workingEndTime: 1000 * 60 * 60 * 16,
@@ -367,10 +367,10 @@ describe('Test profile', () => {
         scheduleDate.setDate(scheduleDate.getDate() + 2)
       }
 
-      masterScheduleDate = scheduleDate
+      workerScheduleDate = scheduleDate
       const r = await request(app)
-        .post('/profile/master/set-schedule')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .post('/profile/worker/set-schedule')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           date: scheduleDate,
           weekendDay: true
@@ -389,8 +389,8 @@ describe('Test profile', () => {
       }
 
       const r = await request(app)
-        .post('/profile/master/set-schedule')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .post('/profile/worker/set-schedule')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           workingStartTime: 6 * 60 * 60 * 1000,
           workingEndTime: 19 * 60 * 60 * 1000, 
@@ -403,16 +403,16 @@ describe('Test profile', () => {
 
     test('wiohout body date => 400', async () => {
       const r = await request(app)
-        .post('/profile/master/set-schedule')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .post('/profile/worker/set-schedule')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(r.statusCode).toBe(400)
     })
 
     test('wiohout body parameters=> 400', async () => {
       const r = await request(app)
-        .post('/profile/master/set-schedule')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .post('/profile/worker/set-schedule')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
         .send({
           date: new Date(),
         })
@@ -426,13 +426,13 @@ describe('Test profile', () => {
       const r = await request(app)
         .get('/profile/get-schedule')
         .query({
-          year: masterScheduleDate.getFullYear(),
-          month: masterScheduleDate.getMonth(),
-          master_id: masterService[0].id,
+          year: workerScheduleDate.getFullYear(),
+          month: workerScheduleDate.getMonth(),
+          worker_id: workerService[0].id,
         })
       
       expect(r.statusCode).toBe(200)
-      masterSchedule = r.body
+      workerSchedule = r.body
     }) 
 
     test('without query => 400', async () => {
@@ -442,33 +442,33 @@ describe('Test profile', () => {
       expect(r.statusCode).toBe(400)
     })
 
-    test('with not exists master id => 404', async () => {
+    test('with not exists worker id => 404', async () => {
       const r = await request(app)
         .get('/profile/get-schedule')
         .query({
           year: 2004,
           month: 4,
-          master_id: 1000,
+          worker_id: 1000,
         })
       
       expect(r.statusCode).toBe(404)
     })
 
-    test('with string master id => 400', async () => {
+    test('with string worker id => 400', async () => {
       const r = await request(app)
         .get('/profile/get-schedule')
         .query({
           year: 2004,
           month: 4,
-          master_id: 'asdfds',
+          worker_id: 'asdfds',
         })
       
       expect(r.statusCode).toBe(400)
     })
   })
 
-  describe('become master', () => {
-    test('become master => 200', async () => {
+  describe('become worker', () => {
+    test('become worker => 200', async () => {
       const r = await request(app)
         .patch('/profile/become-master')
         .set('Cookie', ['accessToken=' + client.accessToken])
@@ -476,7 +476,7 @@ describe('Test profile', () => {
       expect(r.statusCode).toBe(200)
     })
 
-    test('become master one more time => return 200', async () => {
+    test('become worker one more time => return 200', async () => {
       const r = await request(app)
         .patch('/profile/become-master')
         .set('Cookie', ['accessToken=' + client.accessToken])
@@ -510,14 +510,14 @@ describe('Test appointments', () => {
     test('with correct parameters => 200', async () => {
       let timeCandedat = new Date()
       timeCandedat.setHours(0)
-      timeCandedat.setTime(timeCandedat.getTime() + masterSchedule.workingStartTime)
+      timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
       
       let weekendDaysMaxCound = 0 
-      for (const w of Object.keys(masterSchedule.weekendDays)) {
+      for (const w of Object.keys(workerSchedule.weekendDays)) {
         if (weekendDaysMaxCound == 7) {
           throw Error('All days is weekend')
         }
-        if (masterSchedule.weekendDays[w]) {
+        if (workerSchedule.weekendDays[w]) {
           if (days.indexOf(w) == timeCandedat.getDay()) {
             timeCandedat.setDate(timeCandedat.getDate() + 2)
           }
@@ -536,8 +536,8 @@ describe('Test appointments', () => {
         .post('/appointment/make-appointment')
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
-          masterID: masterService[0].id,
-          masterServiceID: masterService[0].service.id,
+          workerID: workerService[0].id,
+          workerServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -549,15 +549,15 @@ describe('Test appointments', () => {
       let timeCandedat = new Date()
       timeCandedat.setDate(timeCandedat.getDate() + 4)
       timeCandedat.setHours(0)
-      timeCandedat.setTime(timeCandedat.getTime() + masterSchedule.workingStartTime)
+      timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
       
       let weekendDaysMaxCound = 0 
-      for (const w of Object.keys(masterSchedule.weekendDays)) {
+      for (const w of Object.keys(workerSchedule.weekendDays)) {
         if (weekendDaysMaxCound == 7) {
           throw Error('All days is weekend')
         }
-        if (masterSchedule.weekendDays[w]) {
-          if (masterSchedule.weekendDays[w] == timeCandedat.getDay()) {
+        if (workerSchedule.weekendDays[w]) {
+          if (workerSchedule.weekendDays[w] == timeCandedat.getDay()) {
             timeCandedat.setDate(timeCandedat.getDate() + 1)
           }
           weekendDaysMaxCound += 1
@@ -576,8 +576,8 @@ describe('Test appointments', () => {
         .post('/appointment/make-appointment')
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
-          masterID: masterService[0].id,
-          masterServiceID: masterService[0].service.id,
+          workerID: workerService[0].id,
+          workerServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -588,11 +588,11 @@ describe('Test appointments', () => {
       let timeCandedat = new Date()
       timeCandedat.getDate(timeCandedat.getDate() + 5)
       timeCandedat.setHours(0)
-      timeCandedat.setTime(timeCandedat.getTime() + masterSchedule.workingStartTime)
+      timeCandedat.setTime(timeCandedat.getTime() + workerSchedule.workingStartTime)
       
-      // generate appointemnt time to equeal master weekend day
-      for (const w of Object.keys(masterSchedule.weekendDays)) {
-        if (masterSchedule.weekendDays[w]) {
+      // generate appointemnt time to equeal worker weekend day
+      for (const w of Object.keys(workerSchedule.weekendDays)) {
+        if (workerSchedule.weekendDays[w]) {
           if (timeCandedat.getDay() == days.indexOf(w)) {
             break
           }
@@ -607,8 +607,8 @@ describe('Test appointments', () => {
         .post('/appointment/make-appointment')
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
-          masterID: masterService[0].id,
-          masterServiceID: masterService[0].service.id,
+          workerID: workerService[0].id,
+          workerServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -620,8 +620,8 @@ describe('Test appointments', () => {
         .post('/appointment/make-appointment')
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
-          masterID: newAppointment.masterID,
-          masterServiceID: newAppointment.masterServiceID,
+          workerID: newAppointment.workerID,
+          workerServiceID: newAppointment.workerServiceID,
           appointmentStartTime: appointmentTime,
         })
       
@@ -629,15 +629,15 @@ describe('Test appointments', () => {
     })
 
     test('with schedule busy appointment time => 400', async () => {
-      let time = new Date(masterScheduleDate)
+      let time = new Date(workerScheduleDate)
       time.setHours(12)
 
       const r = await request(app)
         .post('/appointment/make-appointment')
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({ 
-          masterID: masterService[0].id,
-          masterServiceID: masterService[0].service.id,
+          workerID: workerService[0].id,
+          workerServiceID: workerService[0].service.id,
           appointmentStartTime: time,
         })
       
@@ -692,29 +692,29 @@ describe('Test appointments', () => {
       })
     })
 
-    describe('master', () => {
+    describe('worker', () => {
       test('with correct time => 200', async () => {
         const r = await request(app)
-          .get('/appointment/master/get-day')
+          .get('/appointment/worker/get-day')
           .query({date: appointmentTime})
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(200)
       })
 
       test('with incorrect time => 400', async () => {
         const r = await request(app)
-          .get('/appointment/master/get-day')
+          .get('/appointment/worker/get-day')
           .query({date: 'asfdasfd'})
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(400)
       })
 
       test('without time => 400', async () => {
         const r = await request(app)
-          .get('/appointment/master/get-day')
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .get('/appointment/worker/get-day')
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(400)
       })
@@ -753,32 +753,32 @@ describe('Test appointments', () => {
       })
     })
 
-    describe('master', () => {
+    describe('worker', () => {
       test('with correct time => 200', async () => {
         const date = new Date()
         date.setHours(1)
 
         const r = await request(app)
-          .get('/appointment/master/from-now')
+          .get('/appointment/worker/from-now')
           .query({now: date})
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(200)
       })
 
       test('with incorrect time => 400', async () => {
         const r = await request(app)
-          .get('/appointment/master/from-now')
+          .get('/appointment/worker/from-now')
           .query({now: 'asfdasfd'})
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(400)
       })
 
       test('without time => 400', async () => {
         const r = await request(app)
-          .get('/appointment/master/from-now')
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .get('/appointment/worker/from-now')
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(400)
       })
@@ -798,7 +798,7 @@ describe('Test appointments', () => {
       test('with other user => 400', async () => {
         const r = await request(app)
           .patch('/appointment/client/cancel/' + newAppointment.slug)
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(400)
       })
@@ -820,18 +820,18 @@ describe('Test appointments', () => {
       })
     })
 
-    describe('master', () => {
+    describe('worker', () => {
       test('with exists slug => 200', async () => {
         const r = await request(app)
-          .patch('/appointment/master/cancel/' + newAppointment.slug)
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .patch('/appointment/worker/cancel/' + newAppointment.slug)
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(200)
       })
 
       test('with other user => 400', async () => {
         const r = await request(app)
-          .patch('/appointment/master/cancel/' + newAppointment.slug)
+          .patch('/appointment/worker/cancel/' + newAppointment.slug)
           .set('Cookie', ['accessToken=' + client.accessToken])
         
         expect(r.statusCode).toBe(400)
@@ -839,16 +839,16 @@ describe('Test appointments', () => {
 
       test('with not exissts slug => 404', async () => {
         const r = await request(app)
-          .patch('/appointment/master/cancel/' + 'incorrect-slug')
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .patch('/appointment/worker/cancel/' + 'incorrect-slug')
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(404)
       })
 
       test('without slug => 404', async () => {
         const r = await request(app)
-          .patch('/appointment/master/cancel/')
-          .set('Cookie', ['accessToken=' + master.accessToken])
+          .patch('/appointment/worker/cancel/')
+          .set('Cookie', ['accessToken=' + worker.accessToken])
         
         expect(r.statusCode).toBe(404)
       })
@@ -858,15 +858,15 @@ describe('Test appointments', () => {
   describe('confirm', () => {
     test('with exists slug => 200', async () => {
       const r = await request(app)
-        .patch('/appointment/master/confirm/' + newAppointment.slug)
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/appointment/worker/confirm/' + newAppointment.slug)
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(r.statusCode).toBe(200)
     })
 
-    test('with client not master => 400', async () => {
+    test('with client not worker => 400', async () => {
       const r = await request(app)
-        .patch('/appointment/master/confirm/' + newAppointment.slug)
+        .patch('/appointment/worker/confirm/' + newAppointment.slug)
         .set('Cookie', ['accessToken=' + client.accessToken])
       
       expect(r.statusCode).toBe(400)
@@ -874,16 +874,16 @@ describe('Test appointments', () => {
 
     test('with not exists slug => 404', async () => {
       const r = await request(app)
-        .patch('/appointment/master/confirm/' + 'asfad')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/appointment/worker/confirm/' + 'asfad')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(r.statusCode).toBe(404)
     })
 
     test('without slug => 404', async () => {
       const r = await request(app)
-        .patch('/appointment/master/confirm/')
-        .set('Cookie', ['accessToken=' + master.accessToken])
+        .patch('/appointment/worker/confirm/')
+        .set('Cookie', ['accessToken=' + worker.accessToken])
       
       expect(r.statusCode).toBe(404)
     })

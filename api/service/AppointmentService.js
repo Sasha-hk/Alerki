@@ -1,8 +1,8 @@
 const {AppointmentModel, Sequelize} = require('../db/models')
-const MasterServicesService = require('./MasterServicesService')
-const MasterScheduleService = require('./MasterScheduleService')
+const WorkerServicesService = require('./WorkerServicesService')
+const WorkerScheduleService = require('./WorkerScheduleService')
 const ProfileService = require('./ProfileService')
-const MasterWeekendDaysService = require('./MasterWeekendDaysService')
+const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
 const generateSlug = require('../utils/generateSlug')
 const AppointmentError = require('../exception/AppointmentError')
 const checkDate = require('../utils/validators/checkDate')
@@ -12,29 +12,29 @@ const weekDays = ['monday', 'thuesday', 'wednesday', 'thursday', 'friday', 'satu
 
 class AppointmentService { 
     async checkScheduleDays({
-        master,
-        masterID,
+        worker,
+        workerID,
         weekendDaysID,
         appointmentStartTime,
         appointmentEndTime
     }) {
-        const masterSchedule = await MasterScheduleService.findByMasterIDAndDate({
-            masterID,
+        const workerSchedule = await WorkerScheduleService.findByWorkerIDAndDate({
+            workerID,
             date: appointmentStartTime,
         })
 
-        if (masterSchedule) {
-            if (masterSchedule.workingStartTime) {
+        if (workerSchedule) {
+            if (workerSchedule.workingStartTime) {
                 this.checkWorkingTime({
                     appointmentStartTime,
                     appointmentEndTime,
-                    master: {
-                        workingStartTime: masterSchedule.workingStartTime,
-                        workingEndTime: masterSchedule.workingEndTime
+                    worker: {
+                        workingStartTime: workerSchedule.workingStartTime,
+                        workingEndTime: workerSchedule.workingEndTime
                     },
                 })
             }
-            if (masterSchedule.weekendDay) {
+            if (workerSchedule.weekendDay) {
                 throw AppointmentError.WeekendDayError()
             }
             else {
@@ -48,7 +48,7 @@ class AppointmentService {
             this.checkWorkingTime({
                 appointmentStartTime,
                 appointmentEndTime,
-                master,
+                worker,
             })
 
             await this.checkWeekendDays({
@@ -61,12 +61,12 @@ class AppointmentService {
     async checkEntryAppointments({
         startTime,
         endTime,
-        masterID,
+        workerID,
     }) {
         const byStartTime = await AppointmentModel.findAll({
             raw: true,
             where: {
-                masterID,
+                workerID,
                 appointmentStartTime: {
                     [Sequelize.Op.between]: [startTime, endTime],
                 },
@@ -76,7 +76,7 @@ class AppointmentService {
         const byEndTime = await AppointmentModel.findAll({
             raw: true,
             where: {
-                masterID,
+                workerID,
                 appointmentEndTime: {
                     [Sequelize.Op.between]: [startTime, endTime]
                 },
@@ -92,7 +92,7 @@ class AppointmentService {
         weekendDaysID,
         appointmentStartTime
     }) {
-        const weekendDays = await MasterWeekendDaysService.findByID({id: weekendDaysID})
+        const weekendDays = await WorkerWeekendDaysService.findByID({id: weekendDaysID})
         Object.keys(weekendDays).forEach(w => {
             if (weekendDays[w]) {
                 if (weekDays.indexOf(w) == appointmentStartTime.getDay()) {
@@ -105,7 +105,7 @@ class AppointmentService {
     checkWorkingTime({
         appointmentStartTime,
         appointmentEndTime,
-        master,
+        worker,
     }) {
         let fromMilliseconds = 0
         fromMilliseconds += appointmentStartTime.getHours() * 60 * 60 * 1000
@@ -120,8 +120,8 @@ class AppointmentService {
         toMilliseconds += appointmentEndTime.getMilliseconds()
 
         if (
-            master.workingStartTime > fromMilliseconds || master.workingStartTime > toMilliseconds ||
-            master.workingEndTime < fromMilliseconds || master.workingEndTime < toMilliseconds
+            worker.workingStartTime > fromMilliseconds || worker.workingStartTime > toMilliseconds ||
+            worker.workingEndTime < fromMilliseconds || worker.workingEndTime < toMilliseconds
         ) {
             throw AppointmentError.OutOfWorkingTimeError()
         }
@@ -139,41 +139,41 @@ class AppointmentService {
     }
 
     async create({
-        masterID,
-        masterServiceID,
+        workerID,
+        workerServiceID,
         clientID,
         appointmentStartTime,
     }) {
-        // get master and check if it is exists
-        const master = await ProfileService.findMasterByID({id: masterID})
+        // get worker and check if it is exists
+        const worker = await ProfileService.findWorkerByID({id: workerID})
 
-        if (!master) {
-            throw AppointmentError.MasterNotFoundError()
+        if (!worker) {
+            throw AppointmentError.WorkerNotFoundError()
         }
 
-        // get master service and check if it is exists
-        const masterService = await MasterServicesService.findByID({id: masterServiceID})
+        // get worker service and check if it is exists
+        const workerService = await WorkerServicesService.findByID({id: workerServiceID})
        
-        if (!masterService) {
+        if (!workerService) {
             throw AppointmentError.ServiceNotFoundError()
         }
 
         // generate needed data
         const slug = await generateSlug(AppointmentModel)
         const appointmentEndTime = new Date(appointmentStartTime)
-        appointmentEndTime.setTime(appointmentEndTime.getTime() + masterService.duration)
+        appointmentEndTime.setTime(appointmentEndTime.getTime() + workerService.duration)
 
         // checks
         await this.checkEntryAppointments({
             startTime: appointmentStartTime, 
             endTime: appointmentEndTime,
-            masterID,
+            workerID,
         })
 
         await this.checkScheduleDays({
-            master,
-            masterID: master.id,
-            weekendDaysID: master.weekendDaysID,
+            worker,
+            workerID: worker.id,
+            weekendDaysID: worker.weekendDaysID,
             appointmentStartTime,
             appointmentEndTime
         })
@@ -181,10 +181,10 @@ class AppointmentService {
         // create appointment
         const newAppointment = await AppointmentModel.create({
             slug,
-            masterID,
-            masterServiceID,
+            workerID,
+            workerServiceID,
             clientID,
-            duration: masterService.duration,
+            duration: workerService.duration,
             appointmentStartTime,
             appointmentEndTime,
         })
@@ -226,8 +226,8 @@ class AppointmentService {
         return dayAppointments
     }
 
-    async masterGetDay({
-        masterID,
+    async workerGetDay({
+        workerID,
         date
     }) {
         // prepare dates
@@ -247,7 +247,7 @@ class AppointmentService {
         const dayAppointments = await AppointmentModel.findAll({
             raw: true,
             where: {
-                masterID,
+                workerID,
                 appointmentStartTime: {
                     [Sequelize.Op.between]: [startDate, endDate],
                 },
@@ -260,8 +260,8 @@ class AppointmentService {
         return dayAppointments
     }
 
-    async masterFromNow({
-        masterID,
+    async workerFromNow({
+        workerID,
         now
     }) {
         // prepare dates
@@ -272,7 +272,7 @@ class AppointmentService {
         const dayAppointments = await AppointmentModel.findAll({
             raw: true,
             where: {
-                masterID,
+                workerID,
                 appointmentStartTime: {
                     [Sequelize.Op.gte]: nowDate,
                 },
@@ -336,7 +336,7 @@ class AppointmentService {
         }
     }
 
-    async masterCancel({masterID, slug}) {
+    async workerCancel({workerID, slug}) {
         const candedat = await AppointmentModel.findOne({
             raw: true,
             where: {
@@ -345,13 +345,13 @@ class AppointmentService {
         })
         
         if (candedat) {
-            if (masterID != candedat.masterID) {
+            if (workerID != candedat.workerID) {
                 throw AppointmentError.NotBelongsToUserError()
             }
 
             const updatedAppointment = await AppointmentModel.update(
                 {
-                    masterConfirm: false,
+                    workerConfirm: false,
                 },
                 {
                     returning: true,
@@ -368,7 +368,7 @@ class AppointmentService {
         }
     }
 
-    async masterConfirm({masterID, slug}) {
+    async workerConfirm({workerID, slug}) {
         const candedat = await AppointmentModel.findOne({
             raw: true,
             where: {
@@ -377,13 +377,13 @@ class AppointmentService {
         })
         
         if (candedat) {
-            if (masterID != candedat.masterID) {
+            if (workerID != candedat.workerID) {
                 throw AppointmentError.NotBelongsToUserError()
             }
 
             const updatedAppointment = await AppointmentModel.update(
                 {
-                    masterConfirm: true,
+                    workerConfirm: true,
                 },
                 {
                     returning: true,
