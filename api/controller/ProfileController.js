@@ -1,4 +1,4 @@
-const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
+const MasterWeekendDaysService = require('../service/MasterWeekendDaysService')
 const WorkerServiceService = require('../service/MasterServicesService')
 const UserPictureService = require('../service/UserPictureService')
 const MasterScheduleService = require('../service/MasterScheduleService')
@@ -127,7 +127,7 @@ class ProfileController {
         throw APIError.NotFoundError(['worker with specefied id not found'])
       }
 
-      const weekendDays = await WorkerWeekendDaysService.findByID({id: workerProfile.weekendDaysID})
+      const weekendDays = await MasterWeekendDaysService.findByID({id: workerProfile.weekendDaysID})
       const scheduleDays = await MasterScheduleService.getInRange({
         workerID: workerProfile.id,
         dateRange: [from, to],
@@ -266,7 +266,7 @@ class ProfileController {
         id: req.user.workerID
       })
 
-      const updateWeekendDays = await WorkerWeekendDaysService.update({
+      const updateWeekendDays = await MasterWeekendDaysService.update({
         id: workerProfile.weekendDaysID,
         ...weekendDays
       })

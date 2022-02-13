@@ -1,5 +1,5 @@
 const {ClientProfileModel, MasterProfileModel} = require('../db/models')
-const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+const MasterWeekendDaysService = require('./MasterWeekendDaysService')
 const UserService = require('./UserService')
 const UserPictureService = require('./UserPictureService')
 const checkTypes = require('../utils/validators/checkTypes')
@@ -37,7 +37,7 @@ class ProfileService {
     }
 
     async createWorkerProfile() {
-        const newWeekendDays = await WorkerWeekendDaysService.create()
+        const newWeekendDays = await MasterWeekendDaysService.create()
         const newWorkerProfile = await MasterProfileModel.create({
             weekendDaysID: newWeekendDays.id
         })

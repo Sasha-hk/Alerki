@@ -2,7 +2,7 @@ const {AppointmentModel, Sequelize} = require('../db/models')
 const MasterServicesService = require('./MasterServicesService')
 const MasterScheduleService = require('./MasterScheduleService')
 const ProfileService = require('./ProfileService')
-const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
+const MasterWeekendDaysService = require('./MasterWeekendDaysService')
 const generateSlug = require('../utils/generateSlug')
 const AppointmentError = require('../exception/AppointmentError')
 const checkDate = require('../utils/validators/checkDate')
@@ -92,7 +92,7 @@ class AppointmentService {
         weekendDaysID,
         appointmentStartTime
     }) {
-        const weekendDays = await WorkerWeekendDaysService.findByID({id: weekendDaysID})
+        const weekendDays = await MasterWeekendDaysService.findByID({id: weekendDaysID})
         Object.keys(weekendDays).forEach(w => {
             if (weekendDays[w]) {
                 if (weekDays.indexOf(w) == appointmentStartTime.getDay()) {

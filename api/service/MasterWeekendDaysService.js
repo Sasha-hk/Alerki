@@ -1,7 +1,7 @@
 const {MasterWeekendDaysModel} = require('../db/models')
 
 
-class WorkerWeekendDaysService {
+class MasterWeekendDaysService {
     async findByID({id}) {
         const foundDays = await MasterWeekendDaysModel.findOne({
             raw: true,
@@ -78,4 +78,4 @@ class WorkerWeekendDaysService {
 }
 
 
-module.exports = new WorkerWeekendDaysService()
+module.exports = new MasterWeekendDaysService()
