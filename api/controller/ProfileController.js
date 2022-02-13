@@ -1,5 +1,5 @@
 const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
-const WorkerServiceService = require('../service/WorkerServicesService')
+const WorkerServiceService = require('../service/MasterServicesService')
 const UserPictureService = require('../service/UserPictureService')
 const MasterScheduleService = require('../service/MasterScheduleService')
 const ProfileService = require('../service/ProfileService')

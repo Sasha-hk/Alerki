@@ -1,5 +1,5 @@
 const {AppointmentModel, Sequelize} = require('../db/models')
-const WorkerServicesService = require('./WorkerServicesService')
+const MasterServicesService = require('./MasterServicesService')
 const MasterScheduleService = require('./MasterScheduleService')
 const ProfileService = require('./ProfileService')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
@@ -152,7 +152,7 @@ class AppointmentService {
         }
 
         // get worker service and check if it is exists
-        const workerService = await WorkerServicesService.findByID({id: masterServiceID})
+        const workerService = await MasterServicesService.findByID({id: masterServiceID})
        
         if (!workerService) {
             throw AppointmentError.ServiceNotFoundError()
