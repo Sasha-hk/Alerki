@@ -1,7 +1,7 @@
 const {MasterScheduleModel, Sequelize} = require('../db/models')
 
 
-class WorkerScheduleService {
+class MasterScheduleService {
     async checkExists({
         workerID,
         date,
@@ -120,4 +120,4 @@ class WorkerScheduleService {
 }
 
 
-module.exports = new WorkerScheduleService()
+module.exports = new MasterScheduleService()

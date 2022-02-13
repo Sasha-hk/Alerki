@@ -1,6 +1,6 @@
 const {AppointmentModel, Sequelize} = require('../db/models')
 const WorkerServicesService = require('./WorkerServicesService')
-const WorkerScheduleService = require('./WorkerScheduleService')
+const MasterScheduleService = require('./MasterScheduleService')
 const ProfileService = require('./ProfileService')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
 const generateSlug = require('../utils/generateSlug')
@@ -18,7 +18,7 @@ class AppointmentService {
         appointmentStartTime,
         appointmentEndTime
     }) {
-        const workerSchedule = await WorkerScheduleService.findByWorkerIDAndDate({
+        const workerSchedule = await MasterScheduleService.findByWorkerIDAndDate({
             workerID,
             date: appointmentStartTime,
         })

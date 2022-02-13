@@ -1,7 +1,7 @@
 const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
 const WorkerServiceService = require('../service/WorkerServicesService')
 const UserPictureService = require('../service/UserPictureService')
-const WorkerScheduleService = require('../service/WorkerScheduleService')
+const MasterScheduleService = require('../service/MasterScheduleService')
 const ProfileService = require('../service/ProfileService')
 const UserService = require('../service/UserService')
 const ServiceService = require('../service/ServiceService')
@@ -128,7 +128,7 @@ class ProfileController {
       }
 
       const weekendDays = await WorkerWeekendDaysService.findByID({id: workerProfile.weekendDaysID})
-      const scheduleDays = await WorkerScheduleService.getInRange({
+      const scheduleDays = await MasterScheduleService.getInRange({
         workerID: workerProfile.id,
         dateRange: [from, to],
       })
@@ -382,7 +382,7 @@ class ProfileController {
         }
       }
 
-      const schedule = await WorkerScheduleService.updateOrCreate({
+      const schedule = await MasterScheduleService.updateOrCreate({
         workerID: req.accessToken.workerID,
         workingStartTime,
         workingEndTime,
