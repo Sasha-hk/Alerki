@@ -1,3 +1,4 @@
+import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState } from 'react'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
@@ -11,18 +12,16 @@ import useFixHydrate from '../hooks/useFixHydrate'
 
 
 const Home = () => {
-  const {theme, setTheme} = useTheme()
   const [modal, setModal] = useState(false)
-
-  const hydratedTheme = useFixHydrate(theme)
-
+  const { t, lang } = useTranslation('home')
+  
   return (
     <FluidFrame navigation={true}>
       <div className="container">
         <Button
           className="middle primary br-1"
           onClick={e => setModal(true)}
-        >show modal</Button>
+        >{t('hello')}</Button>
 
         <Modal show={modal} onClose={setModal}>
           <div>
