@@ -1,4 +1,6 @@
+import useTranslation from 'next-translate/useTranslation'
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
@@ -8,21 +10,36 @@ import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import Modal from '../components/Modal/Modal.jsx'
 import useFixHydrate from '../hooks/useFixHydrate'
+import i18nConfig from '../i18n.json'
 
 
 const Home = () => {
-  const {theme, setTheme} = useTheme()
   const [modal, setModal] = useState(false)
+  const { t, lang } = useTranslation()
+  const { locales } = i18nConfig
 
-  const hydratedTheme = useFixHydrate(theme)
-
+  
   return (
     <FluidFrame navigation={true}>
       <div className="container">
         <Button
           className="middle primary br-1"
           onClick={e => setModal(true)}
-        >show modal</Button>
+        >modal</Button>
+        <br/>
+        {
+          locales.map((lng) => {
+            if (lng === lang) return null
+            console.log(lng)
+            return (
+              <div key={lng}>
+                <Link href="/" locale={lng}>
+                  {t(`common:languages.${lng}`)}
+                </Link>
+              </div>
+            )
+          })
+        }
 
         <Modal show={modal} onClose={setModal}>
           <div>

@@ -11,7 +11,6 @@ const NavBar = () => {
 
   const user = useSelector(store => store.user).user
 
-  console.log(user)
   // navigatino views
   const navigationButtons = (
     <nav>

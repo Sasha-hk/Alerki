@@ -26,6 +26,7 @@ const Settings = () => {
     lastName: user.lastName,
     picture: user.pictureID,
   })
+  const [updatePicturePreview, setUpdatePicturePreview] = useState(null)
 
   useEffect(() => {
     if (!userData.loading) {
@@ -51,8 +52,16 @@ const Settings = () => {
     dispatch(userActions.update(formData))
   }
 
-  const truggerUploadFile = () => {
+  const handleUpdalodPictureClick = (e) => {
     document.querySelector('input[name="picture"]').click()
+  }
+
+  const makePicturePreview = (e) => {
+    const reader = new FileReader()
+    reader.onload = function(e) {
+      setUpdatePicturePreview(e.target.result)
+    }
+    reader.readAsDataURL(e.target.files[0])
   }
 
   return (
@@ -60,60 +69,74 @@ const Settings = () => {
       <SettingsWrapper>
         <span className="text-big mb-3">Profile</span>
 
-        <div>
-          <form
-            onSubmit={updateProfile}
-          >
-            <div className={cls.settings_block}>
-              <label>Picture:</label>
-              <img
+        <form
+          className={cls.form}
+          onSubmit={updateProfile}
+        >
+          <div className={cls.settings_block}>
+            <label>Picture:</label>
+            {
+              updatePicturePreview 
+                ? <img
                 className={cls.user_picture_preview}
-                src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
+                src={updatePicturePreview} 
                 alt="user picture"
-                onClick={e => truggerUploadFile()}
               />
-              <Input
-                type="file"
-                name="picture"
-                className="none"
-              />
-            </div>
-            <div className={cls.settings_block}>
-              <label>Username:</label>
+                : user.pictureID
+                  ? <img
+                    className={cls.user_picture_preview}
+                    src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
+                    alt="user picture"
+                  />
+                  : null
+            }
 
-              <Input 
-                className="middle"
-                value={updateUserData.username || ''}
-                onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
-                placeholder="username"
-              />
-            </div>
+            <Input
+              type="file"
+              name="picture"
+              className="none"
+              onChange={e => makePicturePreview(e)}
+            />
+            <Button
+              className="middle sceleton br-1 mt-4"
+              onClick={e => handleUpdalodPictureClick(e)}
+            >select photo</Button>
+          </div>
+          <div className={cls.settings_block}>
+            <label>Username:</label>
 
-            <div className={cls.settings_block}>
-              <label>First name:</label>
+            <Input 
+              className="middle"
+              value={updateUserData.username || ''}
+              onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
+              placeholder="username"
+            />
+          </div>
 
-              <Input 
-                className="middle"
-                value={updateUserData.firstName || ''}
-                onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
-                placeholder="username"
-              />
-            </div>
+          <div className={cls.settings_block}>
+            <label>First name:</label>
 
-            <div className={cls.settings_block}>
-              <label>Last name:</label>
+            <Input 
+              className="middle"
+              value={updateUserData.firstName || ''}
+              onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
+              placeholder="username"
+            />
+          </div>
 
-              <Input 
-                className="middle"
-                value={updateUserData.lastName || ''}
-                onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
-                placeholder="username"
-              />
-            </div>
+          <div className={cls.settings_block}>
+            <label>Last name:</label>
 
-            <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
-          </form>
-        </div>
+            <Input 
+              className="middle"
+              value={updateUserData.lastName || ''}
+              onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
+              placeholder="username"
+            />
+          </div>
+
+          <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
+        </form>
       </SettingsWrapper>
     </ScrollFrame>
   )
