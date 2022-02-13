@@ -110,13 +110,13 @@ class AppointmentController {
             const user = await UserService.findUserByID({id: req.accessToken.id})
             const {
                 workerID,
-                workerServiceID,
+                masterServiceID,
                 appointmentStartTime,
             } = req.body
             
             checkParams.all({
                 workerID,
-                workerServiceID,
+                masterServiceID,
                 appointmentStartTime
             })
 
@@ -127,7 +127,7 @@ class AppointmentController {
 
             const newAppointment = await AppointmentService.create({
                 workerID,
-                workerServiceID,
+                masterServiceID,
                 clientID: user.clientID,
                 appointmentStartTime: new Date(appointmentStartTime),
             })
@@ -179,7 +179,7 @@ class AppointmentController {
         }
     }
 
-    async workerConfirm(req, res, next) {
+    async masterConfirm(req, res, next) {
         try {
             const slug = req.params.slug
 
@@ -187,7 +187,7 @@ class AppointmentController {
                 slug
             })
 
-            const updatedAppointment = await AppointmentService.workerConfirm({
+            const updatedAppointment = await AppointmentService.masterConfirm({
                 workerID: req.accessToken.workerID,
                 slug
             })

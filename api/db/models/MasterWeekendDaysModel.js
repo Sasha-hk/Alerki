@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const WorkerWeekendDaysModel = sequelize.define(
-        'WorkerWeekendDaysModel',
+    const MasterWeekendDaysModel = sequelize.define(
+        'MasterWeekendDaysModel',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -41,5 +41,5 @@ module.exports = (sequelize, DataTypes) => {
         }
     )
 
-    return WorkerWeekendDaysModel
+    return MasterWeekendDaysModel
 }

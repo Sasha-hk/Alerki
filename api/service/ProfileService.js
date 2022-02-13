@@ -1,4 +1,4 @@
-const {ClientProfileModel, WorkerProfileModel} = require('../db/models')
+const {ClientProfileModel, MasterProfileModel} = require('../db/models')
 const WorkerWeekendDaysService = require('./WorkerWeekendDaysService')
 const UserService = require('./UserService')
 const UserPictureService = require('./UserPictureService')
@@ -9,7 +9,7 @@ const checkParams = require('../utils/validators/checkParams')
 class ProfileService {
     async findWorkerByID({id}) {
         checkTypes.hardNumber(Number(id), 'workerID')
-        const foundWorker = await WorkerProfileModel.findOne({
+        const foundWorker = await MasterProfileModel.findOne({
             raw: true,
             where: {
                 id,
@@ -38,7 +38,7 @@ class ProfileService {
 
     async createWorkerProfile() {
         const newWeekendDays = await WorkerWeekendDaysService.create()
-        const newWorkerProfile = await WorkerProfileModel.create({
+        const newWorkerProfile = await MasterProfileModel.create({
             weekendDaysID: newWeekendDays.id
         })
 
@@ -52,7 +52,7 @@ class ProfileService {
         shortBiography,
         instagramProfile,
     }) {
-        await WorkerProfileModel.update(
+        await MasterProfileModel.update(
             {
                 workingStartTime,
                 workingEndTime,
@@ -66,7 +66,7 @@ class ProfileService {
             }
         )
 
-        const updatedWorker = await WorkerProfileModel.findOne({
+        const updatedWorker = await MasterProfileModel.findOne({
             raw: true,
             where: {
                 id,
@@ -80,7 +80,7 @@ class ProfileService {
         const candedat = await this.findWorkerByID({id})
 
         if (candedat) {
-            const blockedMaster = await WorkerProfileModel.update(
+            const blockedMaster = await MasterProfileModel.update(
                 {
                     available: false,
                 },
@@ -100,7 +100,7 @@ class ProfileService {
         const candedat = await this.findWorkerByID({id})
 
         if (candedat) {
-            const blockedMaster = await WorkerProfileModel.update(
+            const blockedMaster = await MasterProfileModel.update(
                 {
                     available: true,
                 },

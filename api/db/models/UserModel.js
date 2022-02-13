@@ -77,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: null,
         })
 
-        UserModel.belongsTo(models.WorkerProfileModel, {
+        UserModel.belongsTo(models.MasterProfileModel, {
             foreignKey: 'workerID',
             onDelete: 'CASCADE',
             allowNull: true,

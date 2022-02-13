@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const WorkerServiceModel = sequelize.define(
-        'WorkerServiceModel',
+    const MasterServiceModel = sequelize.define(
+        'MasterServiceModel',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -34,16 +34,16 @@ module.exports = (sequelize, DataTypes) => {
         }
     )
 
-    WorkerServiceModel.associate = (models) => {
-        WorkerServiceModel.belongsTo(
-            models.WorkerProfileModel, 
+    MasterServiceModel.associate = (models) => {
+        MasterServiceModel.belongsTo(
+            models.MasterProfileModel, 
             {
                 foreignKey: 'workerID',
                 onDelete: 'CASCADE',
             }
         )
 
-        WorkerServiceModel.belongsTo(
+        MasterServiceModel.belongsTo(
             models.ServiceModel,
             {
                 foreignKey: 'serviceID',
@@ -52,5 +52,5 @@ module.exports = (sequelize, DataTypes) => {
         )
     }
 
-    return WorkerServiceModel
+    return MasterServiceModel
 }

@@ -786,10 +786,10 @@ GET /profile/details/:slug
     "appointmentEndTime": "2022-01-28T09:37:46.678Z",
     "duration": 1200000,
     "clientConfirm": true,
-    "workerConfirm": false,
+    "masterConfirm": false,
     "clientID": 2,
     "workerID": 1,
-    "workerServiceID": 1
+    "masterServiceID": 1
 }
 ```
 
@@ -801,10 +801,10 @@ GET /profile/details/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 
 ---
 
@@ -841,10 +841,10 @@ GET /profile/worker/get-day?date=date
         "appointmentEndTime": "2022-01-28T09:46:39.915Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "workerConfirm": false,
+        "masterConfirm": false,
         "clientID": 2,
         "workerID": 1,
-        "workerServiceID": 1
+        "masterServiceID": 1
     }
 ]
 ```
@@ -857,10 +857,10 @@ GET /profile/worker/get-day?date=date
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 
 ---
 
@@ -898,10 +898,10 @@ GET /profile/worker/from-now?now=date
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "workerConfirm": false,
+        "masterConfirm": false,
         "clientID": 2,
         "workerID": 1,
-        "workerServiceID": 1
+        "masterServiceID": 1
     }
 ]
 ```
@@ -914,10 +914,10 @@ GET /profile/worker/from-now?now=date
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 
 ---
 
@@ -955,10 +955,10 @@ PATCH /profile/worker/cancel/:slug
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": false,
-        "workerConfirm": false,
+        "masterConfirm": false,
         "clientID": 2,
         "workerID": 1,
-        "workerServiceID": 1
+        "masterServiceID": 1
     }
 ]
 ```
@@ -971,10 +971,10 @@ PATCH /profile/worker/cancel/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 
 ---
 
@@ -1004,10 +1004,10 @@ PATCH /profile/worker/confirm/:slug
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": false,
-        "workerConfirm": true,
+        "masterConfirm": true,
         "clientID": 2,
         "workerID": 1,
-        "workerServiceID": 1
+        "masterServiceID": 1
     }
 ]
 ```
@@ -1020,10 +1020,10 @@ PATCH /profile/worker/confirm/:slug
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 
 ---
 
@@ -1038,7 +1038,7 @@ POST /profile/make-appointment
 ```json
 {
     "workerID": 1,
-    "workerServiceID": 1,
+    "masterServiceID": 1,
     "appointmentStartTime": "2022-01-28T09:57:58.032Z"
 }
 ```
@@ -1046,7 +1046,7 @@ POST /profile/make-appointment
 | **Parameter** | **Type** | **Description** |
 | :--- | :--- | :--- |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |
 | `appointmentStartTime` | string | appointment start time |
 
 **Response:**
@@ -1061,10 +1061,10 @@ POST /profile/make-appointment
         "appointmentEndTime": "2022-01-28T09:56:49.930Z",
         "duration": 1200000,
         "clientConfirm": true,
-        "workerConfirm": false,
+        "masterConfirm": false,
         "clientID": 2,
         "workerID": 1,
-        "workerServiceID": 1
+        "masterServiceID": 1
     }
 ]
 ```
@@ -1077,7 +1077,7 @@ POST /profile/make-appointment
 | `appointmentEndTime` | string | end time |
 | `duration` | int | service duration |
 | `clientConfirm` | bool | client confirm |
-| `workerConfirm` | bool | worekr confirm |
+| `masterConfirm` | bool | worekr confirm |
 | `clientID` | int | client id |
 | `workerID` | int | worker id |
-| `workerServiceID` | int | worker service id |
+| `masterServiceID` | int | worker service id |

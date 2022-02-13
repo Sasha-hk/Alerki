@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
-    const WorkerScheduleModel = sequelize.define(
-        'WorkerScheduleModel',
+    const MasterScheduleModel = sequelize.define(
+        'MasterScheduleModel',
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -29,9 +29,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     )
 
-    WorkerScheduleModel.associate = (models) => {
-        WorkerScheduleModel.belongsTo(
-            models.WorkerProfileModel,
+    MasterScheduleModel.associate = (models) => {
+        MasterScheduleModel.belongsTo(
+            models.MasterProfileModel,
             {
                 foreignKey: 'workerID',
                 onDelete: 'CASCADE',
@@ -40,5 +40,5 @@ module.exports = (sequelize, DataTypes) => {
         )
     }
 
-    return WorkerScheduleModel
+    return MasterScheduleModel
 }

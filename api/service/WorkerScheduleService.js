@@ -1,4 +1,4 @@
-const {WorkerScheduleModel, Sequelize} = require('../db/models')
+const {MasterScheduleModel, Sequelize} = require('../db/models')
 
 
 class WorkerScheduleService {
@@ -6,7 +6,7 @@ class WorkerScheduleService {
         workerID,
         date,
     }) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
                 workerID,
@@ -24,7 +24,7 @@ class WorkerScheduleService {
         weekendDay,
         date,
     }) {
-        const newSchedule = await WorkerScheduleModel.create({
+        const newSchedule = await MasterScheduleModel.create({
             workerID,
             workingStartTime,
             workingEndTime,
@@ -36,7 +36,7 @@ class WorkerScheduleService {
     }
 
     async findByWorkerID({workerID}) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
                 workerID,
@@ -48,7 +48,7 @@ class WorkerScheduleService {
 
 
     async findByWorkerIDAndDate({workerID, date}) {
-        const foundSchedule = await WorkerScheduleModel.findOne({
+        const foundSchedule = await MasterScheduleModel.findOne({
             raw: true,
             where: {
                 workerID,
@@ -63,7 +63,7 @@ class WorkerScheduleService {
         workerID,
         dateRange,
     }) {
-        const foundSchedule = await WorkerScheduleModel.findAll({
+        const foundSchedule = await MasterScheduleModel.findAll({
             raw: true,
             where: {
                 workerID,
@@ -100,7 +100,7 @@ class WorkerScheduleService {
             return newSchedule
         }
         else {
-            const updatedSchedule = await WorkerScheduleModel.update(
+            const updatedSchedule = await MasterScheduleModel.update(
                 {
                     workingStartTime,
                     workingEndTime,

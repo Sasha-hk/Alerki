@@ -55,7 +55,7 @@ router
         '/worker/confirm/:slug',
         authMiddleware,
         isWorkerMiddleware,
-        AppointmentController.workerConfirm
+        AppointmentController.masterConfirm
     )
 
 

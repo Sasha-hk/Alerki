@@ -1,9 +1,9 @@
-const {WorkerWeekendDaysModel} = require('../db/models')
+const {MasterWeekendDaysModel} = require('../db/models')
 
 
 class WorkerWeekendDaysService {
     async findByID({id}) {
-        const foundDays = await WorkerWeekendDaysModel.findOne({
+        const foundDays = await MasterWeekendDaysModel.findOne({
             raw: true,
             where: {
                 id,
@@ -17,7 +17,7 @@ class WorkerWeekendDaysService {
     }
 
     async create() {
-        const newWeekendDays = await WorkerWeekendDaysModel.create()
+        const newWeekendDays = await MasterWeekendDaysModel.create()
 
         return newWeekendDays.dataValues
     }
@@ -48,7 +48,7 @@ class WorkerWeekendDaysService {
             return newWeekendDays
         }
         else {
-            await WorkerWeekendDaysModel.update(
+            await MasterWeekendDaysModel.update(
                 {
                     monday,
                     tuesday,
@@ -65,7 +65,7 @@ class WorkerWeekendDaysService {
                 }
             )
 
-            const updatedWeekendDays = WorkerWeekendDaysModel.findOne({
+            const updatedWeekendDays = MasterWeekendDaysModel.findOne({
                 raw: true,
                 where: {
                     id,

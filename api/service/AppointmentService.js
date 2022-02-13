@@ -140,7 +140,7 @@ class AppointmentService {
 
     async create({
         workerID,
-        workerServiceID,
+        masterServiceID,
         clientID,
         appointmentStartTime,
     }) {
@@ -152,7 +152,7 @@ class AppointmentService {
         }
 
         // get worker service and check if it is exists
-        const workerService = await WorkerServicesService.findByID({id: workerServiceID})
+        const workerService = await WorkerServicesService.findByID({id: masterServiceID})
        
         if (!workerService) {
             throw AppointmentError.ServiceNotFoundError()
@@ -182,7 +182,7 @@ class AppointmentService {
         const newAppointment = await AppointmentModel.create({
             slug,
             workerID,
-            workerServiceID,
+            masterServiceID,
             clientID,
             duration: workerService.duration,
             appointmentStartTime,
@@ -351,7 +351,7 @@ class AppointmentService {
 
             const updatedAppointment = await AppointmentModel.update(
                 {
-                    workerConfirm: false,
+                    masterConfirm: false,
                 },
                 {
                     returning: true,
@@ -368,7 +368,7 @@ class AppointmentService {
         }
     }
 
-    async workerConfirm({workerID, slug}) {
+    async masterConfirm({workerID, slug}) {
         const candedat = await AppointmentModel.findOne({
             raw: true,
             where: {
@@ -383,7 +383,7 @@ class AppointmentService {
 
             const updatedAppointment = await AppointmentModel.update(
                 {
-                    workerConfirm: true,
+                    masterConfirm: true,
                 },
                 {
                     returning: true,

@@ -537,7 +537,7 @@ describe('Test appointments', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
           workerID: workerService[0].id,
-          workerServiceID: workerService[0].service.id,
+          masterServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -577,7 +577,7 @@ describe('Test appointments', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
           workerID: workerService[0].id,
-          workerServiceID: workerService[0].service.id,
+          masterServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -608,7 +608,7 @@ describe('Test appointments', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
           workerID: workerService[0].id,
-          workerServiceID: workerService[0].service.id,
+          masterServiceID: workerService[0].service.id,
           appointmentStartTime: timeCandedat,
         })
       
@@ -621,7 +621,7 @@ describe('Test appointments', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({
           workerID: newAppointment.workerID,
-          workerServiceID: newAppointment.workerServiceID,
+          masterServiceID: newAppointment.masterServiceID,
           appointmentStartTime: appointmentTime,
         })
       
@@ -637,7 +637,7 @@ describe('Test appointments', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
         .send({ 
           workerID: workerService[0].id,
-          workerServiceID: workerService[0].service.id,
+          masterServiceID: workerService[0].service.id,
           appointmentStartTime: time,
         })
       
