@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         },
         {
-            tableName: 'WorkerServices',
+            tableName: 'MasterServices',
         }
     )
 

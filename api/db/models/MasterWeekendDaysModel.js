@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
         {
-            tableName: 'WorkerWeekendDays'
+            tableName: 'MasterWeekendDays'
         }
     )
 
