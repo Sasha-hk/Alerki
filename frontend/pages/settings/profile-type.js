@@ -14,13 +14,13 @@ const Settings = () => {
   const user = userState.user
   const [profileType, setProfileType] = useState(
     user.profileType
-      ? user.profileType == 'worker' ? true : undefined
+      ? user.profileType == 'master' ? true : undefined
       : user.profileType == 'client' ? false : undefined
   )
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (user.profileType == 'worker') {
+    if (user.profileType == 'master') {
       if (!profileType) {
         setProfileType(true)
       }
@@ -34,7 +34,7 @@ const Settings = () => {
         setProfileType(true)
         dispatch(userActions.becomeMaster())
       }
-      else if (!profileType && user.profileType == 'worker') {
+      else if (!profileType && user.profileType == 'master') {
         setProfileType(false)
         dispatch(userActions.becomeClient())
       }

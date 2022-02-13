@@ -10,7 +10,8 @@ const NavBar = () => {
   const {isAuthenticated} = useAuth()
 
   const user = useSelector(store => store.user).user
-  
+
+  console.log(user)
   // navigatino views
   const navigationButtons = (
     <nav>
@@ -65,7 +66,7 @@ const NavBar = () => {
         <span className="nav-bar-logo">Alerki</span>
 
         {
-          isAuthenticated
+          isAuthenticated()
             ? navigationButtons
             : signInButton
         }

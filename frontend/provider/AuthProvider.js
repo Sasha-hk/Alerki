@@ -5,8 +5,10 @@ import {
     useEffect,
     useState 
 } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Router, {useRouter} from 'next/router'
 import Cookies from 'js-cookie'
+import userActions from '../store/actions/userActions'
 import api from '../http'
 import parseToken from '../utils/parseToken'
 
@@ -32,6 +34,9 @@ const defaultAuthData = {
 export const AuthProvider = ({children}) => {
     const [authData, setAuthData] = useState(defaultAuthData)
     const router = useRouter()
+    const userStore = useSelector(store => store.user)
+    const user = userStore.user
+    const dispatch = useDispatch()
     
     const setData = () => {
         const token = parseToken(Cookies.get('accessToken'))
@@ -70,6 +75,7 @@ export const AuthProvider = ({children}) => {
             .then(r => { 
                 setData()
                 Router.push('/')
+                dispatch(userActions.upload())
             })
             .catch(e => {
                 return e?.response?.data
@@ -93,6 +99,7 @@ export const AuthProvider = ({children}) => {
             .then(r => {
                 setData()
                 Router.push('/')
+                dispatch(userActions.upload())
             })
             .catch(e => {
                 return e?.response?.data
@@ -106,6 +113,7 @@ export const AuthProvider = ({children}) => {
         })
             .then(r => {
                 Router.push('/')
+                dispatch(userActions.upload())
             })
             .catch(e => {
                 console.log(e)
@@ -123,6 +131,7 @@ export const AuthProvider = ({children}) => {
             .then(r => {
                 setData()
                 Router.push('/')
+                dispatch(userActions.upload())
             })
             .catch(e => {
                 console.log(e)
@@ -139,6 +148,7 @@ export const AuthProvider = ({children}) => {
                     ...authData,
                     authenticated: true,
                 })
+                dispatch(userActions.upload())
             })
             .catch(e => {
                 console.log(e)
@@ -149,10 +159,12 @@ export const AuthProvider = ({children}) => {
     // refresh or set authData from accessToken
     useEffect(async () => {
         if (Cookies.get('accessToken') === undefined && Cookies.get('authenticated')) {
-            refresh()
+            await refresh()
+            dispatch(userActions.upload())
         }
         else if (Cookies.get('authenticated') && authData.authenticated === false) {
             setData()
+            dispatch(userActions.upload())
         }
     }, [])
     
