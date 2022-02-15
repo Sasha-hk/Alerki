@@ -11,6 +11,7 @@
   --color: #000;
   --color-muted: #cacaca;
   --color-link: #1E78FF;
+  --color-error-message: #d42a2a;
 
   --corporate-color: rgb(0, 153, 255);
 
@@ -43,6 +44,7 @@
   --color: #fff;
   --color-muted: #838383;
   --color-link: #1E78FF;
+  --color-error-message: #d42a2a;
 
   --corporate-color: rgb(0, 127, 212);
 
