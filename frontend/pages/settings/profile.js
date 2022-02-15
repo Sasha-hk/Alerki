@@ -7,8 +7,8 @@ import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
 import Input from '../../components/UI/Input/Input.jsx'
 import userActions from '../../store/actions/userActions'
+import ErrorView from '../../components/UI/ErrorView/ErrorView.jsx'
 import { useAuth } from '../../provider/AuthProvider'
-import api from '../../http'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
@@ -29,7 +29,7 @@ const Settings = () => {
   const [updatePicturePreview, setUpdatePicturePreview] = useState(null)
 
   useEffect(() => {
-    if (!userData.loading) {
+    if (!userData.loading && !userData.error) {
       setUpdateUserData({
         username: user.username,
         firstName: user.firstName,
@@ -105,34 +105,46 @@ const Settings = () => {
           <div className={cls.settings_block}>
             <label>Username:</label>
 
-            <Input 
-              className="middle"
-              value={updateUserData.username || ''}
-              onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
-              placeholder="username"
-            />
+            <ErrorView
+              error={userData.errors ? 'username' in userData.errors ? userData.errors.username : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.username || ''}
+                onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
+                placeholder="username"
+              />
+            </ErrorView>
           </div>
 
           <div className={cls.settings_block}>
             <label>First name:</label>
 
-            <Input 
-              className="middle"
-              value={updateUserData.firstName || ''}
-              onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
-              placeholder="username"
-            />
+            <ErrorView
+              error={userData.errors ? 'furstName' in userData.errors ? userData.errors.firstName : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.firstName || ''}
+                onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
+                placeholder="firstName"
+              />
+            </ErrorView>
           </div>
 
           <div className={cls.settings_block}>
             <label>Last name:</label>
 
-            <Input 
-              className="middle"
-              value={updateUserData.lastName || ''}
-              onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
-              placeholder="username"
-            />
+            <ErrorView
+              error={userData.errors ? 'lastName' in userData.errors ? userData.errors.lastName : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.lastName || ''}
+                onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
+                placeholder="lastName"
+              />
+            </ErrorView>
           </div>
 
           <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
