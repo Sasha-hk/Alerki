@@ -56,6 +56,10 @@ module.exports = class AuthError extends Error {
     static BadPasswordError() {
         return new AuthError(400, 'Wrong password', {password: 'wrong password'})
     }
+
+    static PasswordNotExistsError() {
+        return new AuthError(400, 'Password not exists', {password: 'password not exists'})
+    }
     
     static BadAccessToken() {
         return new AuthError(400, 'Invalid accessToken', ['invalid accessToken'])

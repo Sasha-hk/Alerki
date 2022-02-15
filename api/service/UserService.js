@@ -163,6 +163,10 @@ class UserService {
             throw AuthError.UserWithSpecefiedDataNodeExistsError()
         }
 
+        if (!loginUser.password) {
+            throw AuthError.PasswordNotExistsError()
+        }
+
         // check password
         const passwordIsValid = await bcrypt.compare(password, loginUser.password)
         
