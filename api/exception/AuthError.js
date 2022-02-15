@@ -29,19 +29,19 @@ module.exports = class AuthError extends Error {
         )
     }
 
-    static UsernameExistsError() {
-        return new AuthError(
-            400, 
-            'User with this username already exists',
-            {username: 'user with this username already exists'}
-        )
-    }
-
     static UserWithSpecefiedDataNodeExistsError() {
         return new AuthError(
             400, 
             'User with this username already exists',
             {usernameOrEmail: 'usesr with specefied data not exists'}
+        )
+    }
+
+    static UsernameExistsError() {
+        return new AuthError(
+            400, 
+            'User with this username already exists',
+            {username: 'user with this username already exists'}
         )
     }
 
@@ -55,6 +55,10 @@ module.exports = class AuthError extends Error {
 
     static BadPasswordError() {
         return new AuthError(400, 'Wrong password', {password: 'wrong password'})
+    }
+
+    static PasswordNotExistsError() {
+        return new AuthError(400, 'Password not exists', {password: 'password not exists'})
     }
     
     static BadAccessToken() {

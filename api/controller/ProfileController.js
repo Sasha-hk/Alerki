@@ -235,6 +235,14 @@ class ProfileController {
         var updatedPicture = await UserPictureService.update({id, picture})
       }
 
+      const checkUsername = await UserService.findUserByUsername({username})
+      
+      if (checkUsername) {
+        if (checkUsername.id != id) {
+          throw ProfileError.UsernameExistsError()
+        }
+      }
+
       const updatedMaster = await UserService.updateProfile({
         id,
         username,
@@ -248,6 +256,7 @@ class ProfileController {
       res.json(userData)
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }

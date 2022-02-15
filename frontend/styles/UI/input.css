@@ -1,38 +1,61 @@
-/* general */
-input {
-    border: var(--input-border);
-    border-radius: 4px;
-    font-weight: 500;
-    outline: none;
-    background: none;
-}
-input.stratch {
-    width: 100%;
+* {
+  --input-transition: 0.2s;
 }
 
-/* text input */
+/* general */
+input {
+  transition: var(--input-transition);
+  border: var(--input-border);
+  border-radius: 4px;
+  font-weight: 500;
+  outline: none;
+  background: none;
+}
+input.stratch {
+  width: 100%;
+}
+
+/* input size */
 input.little {
-    font-size: 14px;
-    padding: 7px 8px;
+  font-size: 14px;
+  padding: 7px 8px;
 }
 input.middle {
-    font-size: 16px;
-    padding: 9px 11px;
+  font-size: 16px;
+  padding: 9px 11px;
 }
 input.big {
-    font-size: 18px;
-    padding: 13px 15px;
+  font-size: 18px;
+  padding: 13px 15px;
 }
+
+/* others */
 input::placeholder {
-    color: var(--input-placeholder-color);
+  color: var(--input-placeholder-color);
+}
+input:focus {
+  outline: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+/* colors */
+input.error {
+  color: var(--color-error-message);
+  border: 1px solid red;
+}
+input.error::placeholder {
+  color: var(--color-error-message);
+}
+input.error:focus {
+  outline: 3px solid rgba(255, 0, 0, 0.3);
 }
 
 
 /* radio button */
 input[type="radio"] {
-    margin: 0 10px 0 10px;
-    font: inherit;
-    color: currentColor;
-    width: 22px;
-    height: 22px;
+  margin: 0 10px 0 10px;
+  font: inherit;
+  color: currentColor;
+  width: 22px;
+  height: 22px;
+  outline: none;
 }

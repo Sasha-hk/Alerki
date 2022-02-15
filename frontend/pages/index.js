@@ -10,38 +10,42 @@ import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import Modal from '../components/Modal/Modal.jsx'
 import useFixHydrate from '../hooks/useFixHydrate'
-import i18nConfig from '../i18n.json'
+import i18nConfig from '../i18n.js'
 
 
 const Home = () => {
   const [modal, setModal] = useState(false)
   const { t, lang } = useTranslation()
   const { locales } = i18nConfig
-
   
   return (
     <FluidFrame navigation={true}>
       <div className="container">
-        <Button
+        {/* <Button
           className="middle primary br-1"
           onClick={e => setModal(true)}
-        >modal</Button>
-        <br/>
+        >modal</Button> */}
+
+
         {
           locales.map((lng) => {
-            if (lng === lang) return null
-            console.log(lng)
+            {/* if (lng === lang) return null */}
             return (
               <div key={lng}>
                 <Link href="/" locale={lng}>
-                  {t(`common:languages.${lng}`)}
+                  <a
+                    className={lng === lang ? "language_active" : null}
+                  >
+                    {t(`common:languages.${lng}`)}
+                  </a>
                 </Link>
               </div>
             )
           })
         }
 
-        <Modal show={modal} onClose={setModal}>
+
+        {/* <Modal show={modal} onClose={setModal}>
           <div>
             <span className="text-big">Monday 12.12.2022</span>
           </div>
@@ -49,7 +53,7 @@ const Home = () => {
             <Button className="middle muted br-1 mr-2">close</Button>
             <Button className="middle primary br-1">confirm</Button>
           </div>
-        </Modal>
+        </Modal> */}
       </div>
     </FluidFrame>
   )

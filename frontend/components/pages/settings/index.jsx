@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
+import useTranslation from 'next-translate/useTranslation'
 import ScrollFrame from '../../frames/ScrollFrame'
 import SettingsItem from '../../pages/settings/SettingsItem'
 
@@ -7,6 +8,7 @@ import cls from '../../../styles/pages/settings/base.module.css'
 
 
 const SettingsWrapper = ({children}) => {
+  const {t} = useTranslation('settings')
   const router = useRouter()
   const userProfile = useSelector(store => store.user)
   const user = userProfile.user
@@ -15,21 +17,21 @@ const SettingsWrapper = ({children}) => {
     <div className="container">
       <div className={cls.settings}>
         <div className={cls.settings_items}>
-          <span className="text-big"><b>Settings</b></span>
+          <span className="text-big"><b>{t('Settings')}</b></span>
 
           <div className="mt-3">
             <SettingsItem 
-              name="profile" 
+              name={t('navigation_profile')}
               url="profile"
               active={router.pathname == '/settings/profile'}
             />
             <SettingsItem 
-              name="profile type" 
+              name={t('navigation_profile_type')}
               url="profile-type"
               active={router.pathname == '/settings/profile-type'}
             />
             <SettingsItem 
-              name="theme" 
+              name={t('navigation_theme')}
               url="theme"
               active={router.pathname == '/settings/theme'}
             />
@@ -38,7 +40,7 @@ const SettingsWrapper = ({children}) => {
               user.profileType == 'master'
                 ? <>
                   <SettingsItem 
-                    name="master" 
+                    name={t('navigation_master')}
                     url="master"
                     active={router.pathname == '/settings/master'}
                   />

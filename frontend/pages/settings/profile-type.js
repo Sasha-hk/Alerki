@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import useTranslation from 'next-translate/useTranslation'
 import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
@@ -10,6 +11,7 @@ import profileActions from '../../store/actions/profileActions'
 
 
 const Settings = () => {
+  const {t} = useTranslation('settings')
   const userState = useSelector(store => store.user)
   const user = userState.user
   const [profileType, setProfileType] = useState(
@@ -44,15 +46,13 @@ const Settings = () => {
   return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
-        <span className="text-big">Profile type</span>
+        <span className="text-big">{t('Profile_type')}</span>
 
         <div className="mt-3">
-          <Toggle variants={['master', 'client']} state={{state: profileType, set: setProfileType}} />
+          <Toggle variants={[t('master'), t('client')]} state={{state: profileType, set: setProfileType}} />
 
           <div className="mt-3">
-            <span className="text-regular">
-              Profile type define user capabilities. The client can only make appointments. The master can create appointments, but in addition he can perform other people's appointments.
-            </span>
+            <span className="text-regular">{t('profile_type_description')}</span>
           </div>
         </div>
       </SettingsWrapper>
