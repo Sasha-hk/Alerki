@@ -34,9 +34,22 @@
 /* services */
 .services { 
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     margin-top: 48px;
 }
+.services_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 700px;
+    width: 100%;
+}
+.services_wrapper > button {
+    margin: 0 10px 10px 10px;
+}
+
 
 
 

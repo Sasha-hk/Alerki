@@ -1,9 +1,12 @@
 import cls from './toggle.module.css'
 
 
-const Toggle = ({variants, state}) => {
+const Toggle = ({variants, state, ...props}) => {
   return (
-    <div className={cls.toggle}>
+    <div 
+      {...props}
+      className={[cls.toggle, props.className].join(' ')}
+    >
       <div
         className={[cls.toggle_button, state.state ? cls.active : null].join(' ')}
         onClick={e => state.set(true)}

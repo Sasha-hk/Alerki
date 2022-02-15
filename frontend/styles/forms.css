@@ -1,4 +1,17 @@
 form label {
   color: var(--color-form-item-heading);
+  margin-bottom: 8px !important;
+}
+.settings-block {
+  width: 100%;
+}
+.settings-block:not(:last-child) {
+  margin-bottom: 12px;
+}
+.settings-block * {
+  display: block;
+}
+
+.settings-block > *:not(:last-child) {
   margin-bottom: 8px;
 }
