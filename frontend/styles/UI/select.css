@@ -1,0 +1,27 @@
+select {
+  transition: var(--input-transition);
+  border: var(--input-border);
+  border-radius: 4px;
+  font-weight: 500;
+  outline: none;
+  background: none;
+}
+select option {
+  background: transparent;
+  color: black;
+}
+
+
+/* select size */
+select.little {
+  font-size: 14px;
+  padding: 7px 8px;
+}
+select.middle {
+  font-size: 16px;
+  padding: 9px 11px;
+}
+select.big {
+  font-size: 18px;
+  padding: 13px 15px;
+}
