@@ -237,8 +237,10 @@ class ProfileController {
 
       const checkUsername = await UserService.findUserByUsername({username})
 
-      if (checkUsername) {
-        throw ProfileError.UsernameExistsError()
+      if (checkUsername.id != id) {
+        if (checkUsername) {
+          throw ProfileError.UsernameExistsError()
+        }
       }
 
       const updatedMaster = await UserService.updateProfile({
