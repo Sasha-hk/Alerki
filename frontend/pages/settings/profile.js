@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Rotuer, { useRouter } from 'next/router'
-import { io } from 'socket.io-client'
+import useTranslation from 'next-translate/useTranslation'
 import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
@@ -15,6 +15,7 @@ import cls from '../../styles/pages/settings/profile.module.css'
 const API_URL = process.env.API_URL
 
 const Settings = () => {
+  const {t} = useTranslation('settings')
   const {authData} = useAuth()
   const userData = useSelector(store => store.user) 
   const dispatch = useDispatch()
@@ -67,14 +68,14 @@ const Settings = () => {
   return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
-        <span className="text-big mb-3">Profile</span>
+        <span className="text-big mb-3">{t('Profile')}</span>
 
         <form
           className={cls.form}
           onSubmit={updateProfile}
         >
           <div className={cls.settings_block}>
-            <label>Picture:</label>
+            <label>{t('Picture')}</label>
             {
               updatePicturePreview 
                 ? <img
@@ -100,10 +101,10 @@ const Settings = () => {
             <Button
               className="middle sceleton br-1 mt-4"
               onClick={e => handleUpdalodPictureClick(e)}
-            >select photo</Button>
+            >{t('select_photo')}</Button>
           </div>
           <div className={cls.settings_block}>
-            <label>Username:</label>
+            <label>{t('Username')}</label>
 
             <ErrorView
               error={userData.errors ? 'username' in userData.errors ? userData.errors.username : null : null}
@@ -112,13 +113,13 @@ const Settings = () => {
                 className="middle"
                 value={updateUserData.username || ''}
                 onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
-                placeholder="username"
+                placeholder={t('username')}
               />
             </ErrorView>
           </div>
 
           <div className={cls.settings_block}>
-            <label>First name:</label>
+            <label>{t('First_name')}</label>
 
             <ErrorView
               error={userData.errors ? 'furstName' in userData.errors ? userData.errors.firstName : null : null}
@@ -127,13 +128,13 @@ const Settings = () => {
                 className="middle"
                 value={updateUserData.firstName || ''}
                 onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
-                placeholder="firstName"
+                placeholder={t('firstName')}
               />
             </ErrorView>
           </div>
 
           <div className={cls.settings_block}>
-            <label>Last name:</label>
+            <label>{t('Last_name')}</label>
 
             <ErrorView
               error={userData.errors ? 'lastName' in userData.errors ? userData.errors.lastName : null : null}
@@ -142,12 +143,12 @@ const Settings = () => {
                 className="middle"
                 value={updateUserData.lastName || ''}
                 onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
-                placeholder="lastName"
+                placeholder={t('lastName')}
               />
             </ErrorView>
           </div>
 
-          <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
+          <Button type="submit" className="middle primary stratch mt-3">{t('Submit')}</Button>
         </form>
       </SettingsWrapper>
     </ScrollFrame>

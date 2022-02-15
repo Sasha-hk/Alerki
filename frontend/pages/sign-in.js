@@ -4,6 +4,7 @@ import profileActions from '../store/actions/profileActions'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
 import Link from 'next/link'
+import useTranslation from 'next-translate/useTranslation'
 import Button from '../components/UI/Button/Button'
 import WithGoogle from '../components/UI/Button/WithGoogle.jsx'
 import Input from '../components/UI/Input/Input'
@@ -13,6 +14,7 @@ import cls from '../styles/pages/sign-in.module.css'
 
 
 const Continue = () => {
+  const {t} = useTranslation('sign-in')
   const {authData, login} = useAuth()
   
   const [form, setForm] = useState({
@@ -33,7 +35,7 @@ const Continue = () => {
         className={cls.form_wrapper}
       >
         <form onSubmit={signInWrapper}>
-          <span className="text-big text-center text-500 mb-4">Sign-in</span>
+          <span className="text-big text-center text-500 mb-4">{t('Sign-in')}</span>
 
           <ErrorView
             error={form.error ? 'usernameOrEmail' in form.error ? form.error.usernameOrEmail : null : null}
@@ -41,7 +43,7 @@ const Continue = () => {
           >
             <Input
               className="big stratch" 
-              placeholder="email or username" 
+              placeholder={t('email_or_username')}
               name="usernameOrEmail"
               onChange={e => setForm({...form, email: e.target.value, username: e.target.value})}
               required
@@ -54,7 +56,7 @@ const Continue = () => {
           >
             <Input 
               className="big stratch" 
-              placeholder="password" 
+              placeholder={t('password')}
               name="password"
               type="password"
               minLength="6"
@@ -67,10 +69,10 @@ const Continue = () => {
             className="big primary stratch mb-2"
             type="submit"
           >
-            sign-in
+            {t('sign-in')}
           </Button>
 
-          <span className="text-little text-muted">Don't have an account? </span>
+          <span className="text-little text-muted">{t("Don't_have_an_account?")} </span>
           <Link href="/register">
             <a className="text-little">Create a new one</a>
           </Link>
@@ -78,7 +80,7 @@ const Continue = () => {
 
         <div className={['mb-4', 'mt-4', cls.or_wrapper].join(' ')}>
           <hr className={cls.hr} />
-          <span className={cls.or_panel}>or</span>
+          <span className={cls.or_panel}>{t('common:or')}</span>
         </div>
 
         <WithGoogle /> 

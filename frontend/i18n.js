@@ -1,12 +1,11 @@
 module.exports = {
-  defaultLocale: "en",
-  locales: ["en", "ua", "ru"],
+  defaultLocale: 'en',
+  locales: ['en', 'ua', 'ru'],
   pages: {
-    "*": ["common"],
-    "/": ["home", "common"],
-    "/*": ["home"],
-    "/settings/": ['settings'],
-    "/settings/*": ['settings'],
+    '/': ['home', 'common'],
+    'rgx:^/settings/': ['settings'],
+    '/sign-in': ['sign-in', 'common'],
+    '/register': ['register', 'common'],
     'rgx:^/': ['profile'],
   },
 }

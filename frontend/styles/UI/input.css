@@ -57,4 +57,5 @@ input[type="radio"] {
   color: currentColor;
   width: 22px;
   height: 22px;
+  outline: none;
 }

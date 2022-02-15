@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
 import Link from 'next/link'
+import useTranslation from 'next-translate/useTranslation'
+import getT from 'next-translate/getT'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
 import Button from '../components/UI/Button/Button.jsx'
@@ -15,6 +17,7 @@ import cls from '../styles/pages/profile.module.css'
 const API_URL = process.env.API_URL
 
 const Profile = () => {
+  const {t} = useTranslation('profile')
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
   const dispatch = useDispatch()
@@ -57,7 +60,7 @@ const Profile = () => {
         <div className={cls.settings_button}>
           <Link href="/settings/profile">
             <a>
-              <Button className="little sceleton br-3"><span>settings</span></Button>
+              <Button className="little sceleton br-3"><span>{t('settings')}</span></Button>
             </a>
           </Link>
         </div>
@@ -75,7 +78,7 @@ const Profile = () => {
       </div>
 
       <div className={cls.services}>
-        <span className="text-big">Services</span>
+        <span className="text-big">{t('Services')}</span>
       </div>
     </>
   )

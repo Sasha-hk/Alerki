@@ -10,14 +10,13 @@ import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
 import Modal from '../components/Modal/Modal.jsx'
 import useFixHydrate from '../hooks/useFixHydrate'
-import i18nConfig from '../i18n.json'
+import i18nConfig from '../i18n.js'
 
 
 const Home = () => {
   const [modal, setModal] = useState(false)
   const { t, lang } = useTranslation()
   const { locales } = i18nConfig
-
   
   return (
     <FluidFrame navigation={true}>
