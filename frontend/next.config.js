@@ -1,4 +1,5 @@
 const nextTranslate = require("next-translate")
+const n = require('./i18n')
 
 module.exports = nextTranslate({
   // i18n: {
@@ -6,6 +7,7 @@ module.exports = nextTranslate({
   //   locales: ['en', 'ua', 'ru'],
   //   localeDetection: true,
   // },
+  n,
   env: {
     API_URL: process.env.API_URL,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
