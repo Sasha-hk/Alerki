@@ -9,9 +9,6 @@
   flex-direction: column;
   width: 100%;
 }
-.settings_view * {
-  display: inline-block;
-}
 
 
 /* XXL / Extra extra large */
