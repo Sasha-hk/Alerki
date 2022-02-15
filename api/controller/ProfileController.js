@@ -236,9 +236,9 @@ class ProfileController {
       }
 
       const checkUsername = await UserService.findUserByUsername({username})
-
-      if (checkUsername.id != id) {
-        if (checkUsername) {
+      
+      if (checkUsername) {
+        if (checkUsername.id != id) {
           throw ProfileError.UsernameExistsError()
         }
       }
