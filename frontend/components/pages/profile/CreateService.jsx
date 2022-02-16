@@ -100,21 +100,6 @@ const CreateService = () => {
             </div>
           </div>
 
-          {/* <div className="settings-block">
-            <label>Currency:</label>
-            <Select 
-              className="little"
-              name="currency"
-              value={newService.currency}
-              onChange={e => updateByName(e)}
-              required
-            >
-              <option value="UAN">UAN</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </Select>
-          </div> */}
-
           <div className="settings-block">
             <label>Duration:</label>
             
