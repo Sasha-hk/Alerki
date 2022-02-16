@@ -4,7 +4,7 @@ import Router, { useRouter } from 'next/router'
 import Link from 'next/link'
 import useTranslation from 'next-translate/useTranslation'
 import getT from 'next-translate/getT'
-import profileActions from '../../../store/actions/profileActions.js'
+import userActions from '../../../store/actions/userActions.js'
 import Button from '../../UI/Button/Button'
 import Input from '../../UI/Input/Input'
 import Select from '../../UI/Select/Select'
@@ -44,7 +44,10 @@ const CreateService = () => {
     }
     newState[e.target.name] = e.target.value
     setNewService(newState)
+  }
 
+  const creaeNewService = () => {
+    dispatch(userActions.createService(newService))
   }
 
   const createServiceWindow = (
@@ -128,6 +131,7 @@ const CreateService = () => {
         </Button>
         <Button
           className="primary middle br-1"
+          onClick={e => creaeNewService()}
         >
           create
         </Button>
