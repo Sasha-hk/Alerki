@@ -6,6 +6,7 @@ import useTranslation from 'next-translate/useTranslation'
 import getT from 'next-translate/getT'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
+import CreateService from '../components/pages/profile/CreateService.jsx'
 import Button from '../components/UI/Button/Button.jsx'
 import Input from '../components/UI/Input/Input.jsx'
 import Select from '../components/UI/Select/Select.jsx'
@@ -23,89 +24,8 @@ const Profile = () => {
   const {t} = useTranslation('profile')
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
-  const [newService, setNewService] = useState()
-  const [newServiceWindow, setNewServiceWindow] = useState(false)
   const dispatch = useDispatch()
   const router = useRouter()
-
-  const createService = () => {
-    
-  }
-  
-  const createServiceWindow = (
-    <Modal show={newServiceWindow} onClose={setNewServiceWindow}>
-      <div>
-        <span className="text-big"><b>New service</b></span>
-
-        <form className="mt-3">
-          <div className="settings-block">
-            <Input 
-              className="middle"
-              placeholder="service name"
-              required
-            />
-          </div>
-
-          <div className="settings-block">
-            <label>Price:</label>
-            <Toggle
-              variants={['fixed', 'dynamic']}
-              state={{state: newService, set: setNewService}}
-              required
-            />
-
-            <Input 
-              placeholder={newService ? 'fixed price' : 'from...'}
-              className="middle"
-              type="number" 
-              min="1"
-              max="10000"
-              step="any"
-              required
-            />
-          </div>
-
-          <div className="settings-block">
-            <label>Currency:</label>
-            <Select 
-              className="little"
-              required
-            >
-              <option value="">UAN</option>
-              <option value="">USD</option>
-              <option value="">EUR</option>
-            </Select>
-          </div>
-
-          <div className="settings-block">
-            <label>Duration:</label>
-
-            <Input 
-              placeholder="duration"
-              className="middle"
-              type="range"
-              min="1"
-              max="120"
-              step="1"
-              required
-            />
-          </div>
-        </form>
-      </div>
-      <div>
-        <Button
-          className="muted middle br-1"
-        >
-          cancel
-        </Button>
-        <Button
-          className="primary middle br-1"
-        >
-          create
-        </Button>
-      </div>
-    </Modal>
-  )
 
   // upload user info
   useEffect(() => {
@@ -117,9 +37,6 @@ const Profile = () => {
       }
     }
   }, [router.isReady, router.query.username])
-
-
-
 
   // general view for master and client
   const headerView = (
@@ -176,15 +93,7 @@ const Profile = () => {
               : <Button className="little sceleton br-3">0</Button>
           }
 
-          {createServiceWindow}
-          <Button
-            className="little sceleton br-3"
-            onClick={e => setNewServiceWindow(true)}
-          >
-            create +
-          </Button>
-
-
+          <CreateService />
         </div>
       </div>
     </>

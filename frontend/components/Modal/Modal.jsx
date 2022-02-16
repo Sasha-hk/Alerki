@@ -40,7 +40,9 @@ const Modal = ({children, show, onClose, ...props}) => {
             className={cls.modal_block}
             onClick={e => e.stopPropagation()}
           >
-            {content}
+            <div className={cls.modal_content_scroll_wrapper}>
+              {content}
+            </div>
             {buttons ? buttons : null}
           </div>
         </div>
