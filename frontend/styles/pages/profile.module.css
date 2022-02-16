@@ -50,6 +50,13 @@
     margin: 0 10px 10px 10px;
 }
 
+.currency_block {
+    display: flex;
+    column-gap: 8px;
+}
+.price_input {
+    width: 160px;
+}
 
 
 

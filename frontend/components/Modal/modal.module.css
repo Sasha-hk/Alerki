@@ -19,13 +19,16 @@
   padding: var(--frame-padding);
 }
 .modal_content {
-  position: relative;
   background: var(--modal-content-bg);
   width: var(--modal-width);
   min-height: var(--modal-height);
   padding: var(--modal-content-padding);
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 } 
+.modal_content_scroll_wrapper {
+  position: relative;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+}
 .modal_buttons {
   display: flex;
   justify-content: flex-end;
