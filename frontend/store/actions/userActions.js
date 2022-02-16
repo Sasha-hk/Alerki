@@ -44,6 +44,27 @@ const update = (updateData) => {
   }
 }
 
+// create service
+const createService = (newServiceData) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_UPLOAD))
+
+    await api({
+      method: 'post',
+      url: '/profile/create/service',
+      data: newServiceData,
+    })
+      .then(r => {
+        console.log(r)
+        dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+      })
+      .catch(e => {
+        console.log(e.response.data)
+        dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
 // become client
 const becomeClient = () => {
   return async dispatch => {
@@ -84,6 +105,7 @@ const becomeMaster = () => {
 export default {
   upload,
   update,
+  createService,
   becomeMaster,
   becomeClient,
 }
