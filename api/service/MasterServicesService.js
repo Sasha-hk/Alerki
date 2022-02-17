@@ -1,4 +1,4 @@
-const {MasterServiceModel, MasterProfileModel} = require('../db/models')
+const {MasterServiceModel, MasterProfileModel, ServiceModel} = require('../db/models')
 const {isNumber, hardNumber} = require('../utils/validators/checkTypes')
 const APIError = require('../exception/APIError')
 
@@ -53,13 +53,23 @@ class MasterServiceService {
           },
         }
       )
-
-      return await MasterServiceModel.findOne({
+ 
+      const updatedService = await MasterServiceModel.findOne({
         raw: true,
         where: {
           id
-        }
+        },
+        include: {
+          model: ServiceModel, 
+          as: 'service', 
+          attributes: ['name']
+        },
       })
+
+      updatedService.name = updatedService['service.name']
+      delete updatedService['service.name']
+
+      return updatedService
     }
 
     throw APIError.NotFoundError('service with specefied id not exists or it is not belongs to you')
@@ -114,7 +124,13 @@ class MasterServiceService {
       where: {
         masterID,
       },
+      include: {model: ServiceModel, as: 'service', attributes: ['name']}
     })
+
+    for (let i = 0; i < foundServices.length; i++) {
+      foundServices[i].name = foundServices[i]['service.name']
+      delete foundServices[i]['service.name']
+    }
 
     return foundServices
   }

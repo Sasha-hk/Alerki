@@ -53,10 +53,12 @@ class ProfileController {
       checkParams.all({
         masterID,
       })
+
       const masterServices = await MasterServiceService.findForMaster({masterID})
       if (!masterServices || masterServices.length == 0) {
         throw APIError.NotFoundError()
       }
+
       const servicesData = new MasterServiceDto(masterServices)
       
       res.json(servicesData.services ? servicesData.services : servicesData)
@@ -196,7 +198,6 @@ class ProfileController {
         instagramProfile,
       })
 
-      
       const updatedMaster = await ProfileService.updateMaster({
         id: req.user.masterID,
         workingStartTime,
@@ -223,7 +224,6 @@ class ProfileController {
         firstName,
         lastName,
       } = req.body
-
 
       checkParams.atLeastOne({
         username,
@@ -341,7 +341,9 @@ class ProfileController {
         serviceID,
       })
 
-      res.json(updatedService)
+      const serviceData = new MasterServiceDto({...updatedService, name: serviceID.name})
+
+      res.json(serviceData)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
@@ -359,7 +361,6 @@ class ProfileController {
       res.json(newMasterService)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
