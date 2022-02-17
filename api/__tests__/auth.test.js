@@ -238,12 +238,27 @@ describe('Test profile', () => {
       expect(r.statusCode).toBe(200)
     })
 
+    test('one more service => 200', async () => {
+      const r = await request(app)
+        .post('/profile/create/service')
+        .set('Cookie', ['accessToken=' + master.accessToken])
+        .send({
+          name: '1234',
+          currency: 'UAN',
+          price: 100,
+          locatoin: 'St. Sambir',
+          duration: 1000 * 60 * 20,
+        })
+
+      expect(r.statusCode).toBe(200)
+    })    
+
     test('with not exists service and master => 200', async () => {
       const r = await request(app)
         .post('/profile/create/service')
         .set('Cookie', ['accessToken=' + master.accessToken])
         .send({
-          name: 'new service name',
+          name: '1234',
           currency: 'UAN',
           price: 100,
           locatoin: 'St. Sambir',
@@ -259,6 +274,64 @@ describe('Test profile', () => {
         .set('Cookie', ['accessToken=' + client.accessToken])
 
       expect(r.statusCode).toBe(400)
+    })
+  })
+
+  describe('update master service', () => {
+    test('with exists service and master => 200', async () => {
+      const r = await request(app)
+        .patch('/profile/update/service')
+        .set('Cookie', ['accessToken=' + master.accessToken])
+        .send({
+          id: 2,
+          name: 'new name',
+          currency: 'USD',
+          price: 100,
+          locatoin: 'St. Sambir',
+          duration: 1000 * 60 * 20,
+        })
+
+      expect(r.statusCode).toBe(200)
+    })
+
+    test('with not exists service and master => 200', async () => {
+      const r = await request(app)
+        .patch('/profile/update/service')
+        .set('Cookie', ['accessToken=' + master.accessToken])
+        .send({
+          id: 10,
+          name: 'new name',
+          currency: 'USD',
+          price: 100,
+          locatoin: 'St. Sambir',
+          duration: 1000 * 60 * 20,
+        })
+
+      expect(r.statusCode).toBe(404)
+    })
+  })
+
+  describe('update master service', () => {
+    test('with exists service and master => 200', async () => {
+      const r = await request(app)
+        .delete('/profile/service')
+        .set('Cookie', ['accessToken=' + master.accessToken])
+        .send({
+          id: 2,
+        })
+
+      expect(r.statusCode).toBe(200)
+    })
+
+    test('with not exists service id => 200', async () => {
+      const r = await request(app)
+        .delete('/profile/service')
+        .set('Cookie', ['accessToken=' + master.accessToken])
+        .send({
+          id: 10,
+        })
+
+      expect(r.statusCode).toBe(404)
     })
   })
 
@@ -315,7 +388,7 @@ describe('Test profile', () => {
   describe('update master profile', () => {
     test('with correct parameters => 200', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
+        .patch('/profile/update/master')
         .set('Cookie', ['accessToken=' + master.accessToken])
         .send({
           workingStartTime: 1000 * 60 * 60 * 9,
@@ -327,7 +400,7 @@ describe('Test profile', () => {
 
     test('with weekend days => 200', async () => {
       const r = await request(app)
-        .patch('/profile/master/update/weekend-days')
+        .patch('/profile/update/master/weekend-days')
         .set('Cookie', ['accessToken=' + master.accessToken])
         .send({
           weekendDays: {
@@ -340,7 +413,7 @@ describe('Test profile', () => {
 
     test('without body => 400', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
+        .patch('/profile/update/master')
         .set('Cookie', ['accessToken=' + master.accessToken])
       
       expect(r.statusCode).toBe(400)
@@ -348,7 +421,7 @@ describe('Test profile', () => {
 
     test('without authenticated user => 401', async () => {
       const r = await request(app)
-        .patch('/profile/master/update')
+        .patch('/profile/update/master')
         .send({
           workingStartTime: 1000 * 60 * 60 * 9,
           workingEndTime: 1000 * 60 * 60 * 16,
