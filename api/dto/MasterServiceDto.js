@@ -8,6 +8,7 @@ class MasterServiceDto {
         }
         else if (typeof masterServices === 'object' && masterServices !== undefined) {
             this.id = masterServices.id
+            this.name= masterServices.name
             this.currency = masterServices.currency
             this.price = masterServices.price
             this.location = masterServices.location
@@ -20,6 +21,7 @@ class MasterServiceDto {
     parseService(service) {
         const preparedService = {
             id: service.id,
+            name: service.name,
             currency: service.currency,
             price: service.price,
             location: service.location,

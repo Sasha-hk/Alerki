@@ -33,7 +33,7 @@ router
     '/create/service',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.createMasterService
+    ProfileController.createService
   )
   .post(
     '/master/set-schedule',
@@ -49,13 +49,19 @@ router
     ProfileController.updateProfile
   )
   .patch(
-    '/master/update',
+    '/update/service',
+    authMiddleware,
+    isMasterMiddleware,
+    ProfileController.updateService
+  )
+  .patch(
+    '/update/master',
     authMiddleware,
     isMasterMiddleware,
     ProfileController.updateMaster
   )
   .patch(
-    '/master/update/weekend-days',
+    '/update/master/weekend-days',
     authMiddleware,
     isMasterMiddleware,
     ProfileController.updateMasterWeekendDays
@@ -69,6 +75,14 @@ router
     '/become-client',
     authMiddleware,
     ProfileController.becomeClient
+  )
+
+router
+  .delete(
+    '/service',
+    authMiddleware,
+    isMasterMiddleware,
+    ProfileController.deleteService
   )
 
 

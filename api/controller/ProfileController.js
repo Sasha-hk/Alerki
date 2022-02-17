@@ -53,10 +53,12 @@ class ProfileController {
       checkParams.all({
         masterID,
       })
+
       const masterServices = await MasterServiceService.findForMaster({masterID})
       if (!masterServices || masterServices.length == 0) {
         throw APIError.NotFoundError()
       }
+
       const servicesData = new MasterServiceDto(masterServices)
       
       res.json(servicesData.services ? servicesData.services : servicesData)
@@ -196,7 +198,6 @@ class ProfileController {
         instagramProfile,
       })
 
-      
       const updatedMaster = await ProfileService.updateMaster({
         id: req.user.masterID,
         workingStartTime,
@@ -223,7 +224,6 @@ class ProfileController {
         firstName,
         lastName,
       } = req.body
-
 
       checkParams.atLeastOne({
         username,
@@ -287,7 +287,7 @@ class ProfileController {
     }
   }
 
-  async createMasterService(req, res, next) {
+  async createService(req, res, next) {
     try {
       const {
         name,
@@ -301,6 +301,7 @@ class ProfileController {
       const serviceID = (await ServiceService.findOrCreateByName({name})).id
  
       const newMasterService = await MasterServiceService.create({
+        name,
         currency,
         price,
         location,
@@ -308,6 +309,54 @@ class ProfileController {
         masterID,
         serviceID,
       })
+
+      res.json(newMasterService)
+    }
+    catch (e) {
+      res.status(e.status || 500).json(e.errors) 
+    }
+  }
+
+  async updateService(req, res, next) {
+    try {
+      const {
+        id,
+        name,
+        currency,
+        price,
+        location,
+        duration,
+      } = req.body
+
+      const masterID = req.user.masterID
+
+      const serviceID = (await ServiceService.findOrCreateByName({name})).id
+      const updatedService = await MasterServiceService.update({
+        id,
+        currency,
+        price,
+        location,
+        duration,
+        masterID,
+        serviceID,
+      })
+
+      const serviceData = new MasterServiceDto({...updatedService, name: serviceID.name})
+
+      res.json(serviceData)
+    }
+    catch (e) {
+      res.status(e.status || 500).json(e.errors) 
+    }
+  }
+
+  async deleteService(req, res, next) {
+    try {
+      const {id} = req.body
+
+      const masterID = req.user.masterID
+ 
+      const newMasterService = await MasterServiceService.delete({id, masterID})
 
       res.json(newMasterService)
     }
