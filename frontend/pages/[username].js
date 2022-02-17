@@ -7,6 +7,7 @@ import getT from 'next-translate/getT'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
 import CreateService from '../components/pages/profile/CreateService.jsx'
+import UpdateService from '../components/pages/profile/UpdateService.jsx'
 import Button from '../components/UI/Button/Button.jsx'
 import Input from '../components/UI/Input/Input.jsx'
 import Select from '../components/UI/Select/Select.jsx'
@@ -22,6 +23,14 @@ const API_URL = process.env.API_URL
 
 const Profile = () => {
   const {t} = useTranslation('profile')
+  const [showModal, setShowModal] = useState(false)
+  const [updateData, setUpdateData] = useState({
+    name: "",
+    currency: "UAN",
+    price: 1,
+    location: "",
+    duration: 1,
+  })
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
   const dispatch = useDispatch()
@@ -89,8 +98,30 @@ const Profile = () => {
         >
           {
             profile.master?.services?.length != 0
-              ? <Button className="little sceleton br-3">1</Button> 
-              : <Button className="little sceleton br-3">0</Button>
+              ? <>
+                <UpdateService 
+                  serviceData={updateData} 
+                  setServiceData={setUpdateData} 
+                  showModal={showModal} 
+                  setShowModal={setShowModal}   
+                />
+
+                {
+                  profile.master?.services.map(service => {
+                    return (
+                      <Button 
+                        key={service.id}
+                        className="little sceleton br-3"
+                        onClick={e => {
+                          setUpdateData(service)
+                          setShowModal(true)
+                        }}
+                      >{service.name}</Button> 
+                    )
+                  })
+                }
+              </>
+              : null
           }
 
           <CreateService />
