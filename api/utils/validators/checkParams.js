@@ -6,11 +6,12 @@ function causeError(errors) {
 }
 
 function prepareAllErrors(parameters) {
-    let errors = []
+    let errors = {}
 
     Object.keys(parameters).forEach(p => {
         if (!parameters[p]) {
-            errors.push(`${p} is required`)
+            // errors.push(`${p} is required`)
+            errors[p] = `${p} is required`
         }
     })
 

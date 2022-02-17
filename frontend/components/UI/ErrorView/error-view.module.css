@@ -1,0 +1,5 @@
+.error_view {
+  display: inline-block;
+  color: var(--color-error-message);
+  margin-top: 4px;
+}

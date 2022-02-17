@@ -2,10 +2,16 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Router, { useRouter } from 'next/router'
 import Link from 'next/link'
+import useTranslation from 'next-translate/useTranslation'
+import getT from 'next-translate/getT'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
+import CreateService from '../components/pages/profile/CreateService.jsx'
 import Button from '../components/UI/Button/Button.jsx'
 import Input from '../components/UI/Input/Input.jsx'
+import Select from '../components/UI/Select/Select.jsx'
+import Modal from '../components/Modal/Modal.jsx'
+import Toggle from '../components/UI/Toggle/Toggle.jsx'
 import {useAuth} from '../provider/AuthProvider'
 import api from '../http'
 
@@ -15,6 +21,7 @@ import cls from '../styles/pages/profile.module.css'
 const API_URL = process.env.API_URL
 
 const Profile = () => {
+  const {t} = useTranslation('profile')
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
   const dispatch = useDispatch()
@@ -24,19 +31,16 @@ const Profile = () => {
   useEffect(() => {
     if (router.isReady) {
       if (router.query.username) {
-        console.log('upload profile data...')
-        dispatch(profileActions.upload({username: router.query.username})) 
+        if (router.query.username != profile.username) {
+          dispatch(profileActions.upload({username: router.query.username})) 
+        }
       }
     }
   }, [router.isReady, router.query.username])
 
   // general view for master and client
-  const headerView = (balance = false) => (
-    <div className={[
-      cls.header, 
-      balance ? cls.balance_header : null
-      ].join(' ')
-    }>
+  const headerView = (
+    <div className={cls.header}>
       {
         profile.pictureID
           ? <img
@@ -60,7 +64,7 @@ const Profile = () => {
         <div className={cls.settings_button}>
           <Link href="/settings/profile">
             <a>
-              <Button className="little sceleton br-3"><span>settings</span></Button>
+              <Button className="little sceleton br-3"><span>{t('settings')}</span></Button>
             </a>
           </Link>
         </div>
@@ -71,14 +75,26 @@ const Profile = () => {
   // view only for master
   const extendedView = (
     <>
-      {headerView()}
+      {headerView}
 
       <div className={cls.about}>
-        <span>{profile.worker?.shortBiography}</span>
+        <span>{profile.master?.shortBiography}</span>
       </div>
 
       <div className={cls.services}>
-        <span className="text-big">Services</span>
+        <span className="text-big">{t('Services')}</span>
+
+        <div
+          className={[cls.services_wrapper, 'mt-3'].join(' ')}
+        >
+          {
+            profile.master?.services?.length != 0
+              ? <Button className="little sceleton br-3">1</Button> 
+              : <Button className="little sceleton br-3">0</Button>
+          }
+
+          <CreateService />
+        </div>
       </div>
     </>
   )
@@ -89,9 +105,9 @@ const Profile = () => {
           {
             profileStore.loading && profileStore.initRender
               ? <b>loading</b>
-              : profile.profileType == 'worker'
+              : profile.profileType == 'master'
                 ? extendedView
-                : headerView(true)
+                : headerView
           }
         </div>
     </ScrollFrame>

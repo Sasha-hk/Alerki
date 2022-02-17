@@ -11,7 +11,6 @@ router
 router
     .get('/log-out', AuthController.logout)
     .get('/refresh', AuthController.refresh)
-    .get('/with/google', AuthController.withhGoogle) // this only for developemnt - remove it later
     .get('/callback/google', AuthController.withGoogle)
     .get(
         '/user', 

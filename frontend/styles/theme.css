@@ -1,37 +1,65 @@
 /* light */
 :root {
-    --btn-primary: #5d75ff;
-    --btn-color: #fff;
-    --btn-black-bg: #000;
-    --btn-black-color: #fff;
-    --input-border: 1px solid #292929;
-    --input-placeholder-color: #c5c5c5;
-    --bg-general: #EAF7FF;
-    --bg-block: #fff;
-    --color: #000;
-    --color-muted: #cacaca;
-    --color-link: #1E78FF;
+  --btn-primary: #5d75ff;
+  --btn-color: #fff;
+  --btn-black-bg: #000;
+  --btn-black-color: #fff;
+  --input-border: 1px solid #292929;
+  --input-placeholder-color: #c5c5c5;
+  --bg-general: #ffffff;
+  --bg-block: #f0f0f0;
+  --color: #000;
+  --color-muted: #cacaca;
+  --color-link: #1E78FF;
+  --color-error-message: #d42a2a;
 
-    --corporate-color: rgb(0, 153, 255);
+  --corporate-color: rgb(0, 153, 255);
 
-    --color-form-item-heading: #909090;
+  --color-form-item-heading: #909090;
+
+  --toggle-button-bg: #FFFFFF;
+  --toggle-bg: #F1F0F5;
+  --toggle-button-active-color: #000000;
+  --toggle-button-inactive-color: #6B6680;
+
+  --navigation-item-active-bg: rgba(0, 0, 0, 0.1);
+
+  --modal-content-bg: #FFFFFF;
+  --modal-buttons-bg: #F8F7FC;
+
+  --btn-muted-bg: #ffffff;
+  --btn-muted-color: #6B6680;
 }
 
 /* dark */
 [data-theme='dark'] {
-    --btn-primary: #3449B9;
-    --btn-color: #fff;
-    --btn-black-bg: #fff;
-    --btn-black-color: #000;
-    --input-border: 1px solid #D9D9D9;
-    --input-placeholder-color: #A6A6A6;
-    --bg-general: #16171A;
-    --bg-block: #000;
-    --color: #fff;
-    --color-muted: #838383;
-    --color-link: #1E78FF;
+  --btn-primary: #3449B9;
+  --btn-color: #fff;
+  --btn-black-bg: #fff;
+  --btn-black-color: #000;
+  --input-border: 1px solid #D9D9D9;
+  --input-placeholder-color: #A6A6A6;
+  --bg-general: #1C1C1E;
+  --bg-block: #000000;
+  --color: #fff;
+  --color-muted: #838383;
+  --color-link: #1E78FF;
+  --color-error-message: #d42a2a;
 
-    --corporate-color: rgb(0, 153, 255);
+  --corporate-color: rgb(0, 127, 212);
 
-    --color-form-item-heading: #909090;
+  --color-form-item-heading: #909090;
+
+  --toggle-button-bg: #4D4C53;
+  --toggle-bg: #313133;
+  --toggle-button-active-color: #CAC9CC;
+  --toggle-button-inactive-color: #7F7D87;
+
+  --navigation-item-active-bg: rgba(255, 255, 255, 0.1);
+
+  --modal-content-bg: #3D3C3F;
+  --modal-buttons-bg: #313133;
+
+  --btn-muted-bg: #3E3D40;
+  --btn-muted-color: #6F6D76;
 }

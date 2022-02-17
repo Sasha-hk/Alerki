@@ -1,117 +1,154 @@
 import { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Rotuer, { useRouter } from 'next/router'
-import { io } from 'socket.io-client'
+import useTranslation from 'next-translate/useTranslation'
 import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Button from '../../components/UI/Button/Button.jsx'
 import Input from '../../components/UI/Input/Input.jsx'
-import profileActions from '../../store/actions/profileActions'
+import userActions from '../../store/actions/userActions'
+import ErrorView from '../../components/UI/ErrorView/ErrorView.jsx'
 import { useAuth } from '../../provider/AuthProvider'
 import cls from '../../styles/pages/settings/profile.module.css'
 
 
-const socket = io('http://192.168.1.11:3001')
+const API_URL = process.env.API_URL
+
 const Settings = () => {
-  const {authData, refresh} = useAuth()
-  const profileData = useSelector(store => store.profile) 
+  const {t} = useTranslation('settings')
+  const {authData} = useAuth()
+  const userData = useSelector(store => store.user) 
   const dispatch = useDispatch()
-  const profile = profileData.profile
+  const user = userData.user
 
-  const [updateProfileData, setUpdateProfileData] = useState({
-    username: profile.username,
-    firstName: profile.firstName,
-    lastName: profile.lastName,
-    picture: profile.pictureID,
+  const [updateUserData, setUpdateUserData] = useState({
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    picture: user.pictureID,
   })
+  const [updatePicturePreview, setUpdatePicturePreview] = useState(null)
 
   useEffect(() => {
-    if (authData.username) {
-      dispatch(profileActions.upload({
-          username: authData.username,
-      }))
-    }
-  }, [authData])
-
-  useEffect(() => {
-    if (!profileData.loading) {
-      setUpdateProfileData({
-        username: profile.username,
-        firstName: profile.firstName,
-        lastName: profile.lastName,
-        picture: profile.pictureID,
+    if (!userData.loading && !userData.error) {
+      setUpdateUserData({
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        picture: user.pictureID,
       })
     }
-  }, [profileData])
+  }, [userData])
 
   const updateProfile = async (e) => {
     e.preventDefault()
-    
-    if (updateProfileData.picture) {
-      socket.io.emit("e", () => {
-        console.log(socket.id); // x8WIv7-mJelg7on_ALbx
-      });
-    }
-    await dispatch(profileActions.update(updateProfileData))
-    refresh()
+    const formData = new FormData()
+    const picture = e.target['0']?.files[0]
+
+    formData.append('picture', picture)
+    formData.append('username', updateUserData.username)
+    formData.append('firstName', updateUserData.firstName)
+    formData.append('lastName', updateUserData.lastName)
+
+    dispatch(userActions.update(formData))
   }
 
- return (
+  const handleUpdalodPictureClick = (e) => {
+    document.querySelector('input[name="picture"]').click()
+  }
+
+  const makePicturePreview = (e) => {
+    const reader = new FileReader()
+    reader.onload = function(e) {
+      setUpdatePicturePreview(e.target.result)
+    }
+    reader.readAsDataURL(e.target.files[0])
+  }
+
+  return (
     <ScrollFrame navigation={true}>
       <SettingsWrapper>
-        <span className="text-big mb-3">Profile</span>
-        
+        <span className="text-big mb-3">{t('Profile')}</span>
+
         <form
+          className={cls.form}
           onSubmit={updateProfile}
         >
           <div className={cls.settings_block}>
-            <label>Picture:</label>
-            <Input 
+            <label>{t('Picture')}</label>
+            {
+              updatePicturePreview 
+                ? <img
+                className={cls.user_picture_preview}
+                src={updatePicturePreview} 
+                alt="user picture"
+              />
+                : user.pictureID
+                  ? <img
+                    className={cls.user_picture_preview}
+                    src={`${API_URL}/profile/picture/${updateUserData.picture}`} 
+                    alt="user picture"
+                  />
+                  : null
+            }
+
+            <Input
               type="file"
-              className="middle"
-              onChange={e => { 
-                const file = new FileReader()
-
-                file.onload = (e) => {
-                  setUpdateProfileData({...updateProfileData, picture: e.target.result})
-                }
-
-                file.readAsDataURL(e.target.files[0])
-              }}
+              name="picture"
+              className="none"
+              onChange={e => makePicturePreview(e)}
             />
+            <Button
+              className="middle sceleton br-1 mt-4"
+              onClick={e => handleUpdalodPictureClick(e)}
+            >{t('select_photo')}</Button>
           </div>
-          
           <div className={cls.settings_block}>
-            <label>Username:</label>
-            <Input 
-              className="middle"
-              value={updateProfileData.username || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, username: e.target.value})}
-              placeholder="username"
-            />
-          </div>
+            <label>{t('Username')}</label>
 
-          <div className={cls.settings_block}>
-            <label>First name:</label>
-            <Input 
-              className="middle"
-              value={updateProfileData.firstName || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, firstName: e.target.value})}
-              placeholder="username"
-            />
+            <ErrorView
+              error={userData.errors ? 'username' in userData.errors ? userData.errors.username : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.username || ''}
+                onChange={e => setUpdateUserData({...updateUserData, username: e.target.value})}
+                placeholder={t('username')}
+              />
+            </ErrorView>
           </div>
 
           <div className={cls.settings_block}>
-            <label>Last name:</label>
-            <Input 
-              className="middle"
-              value={updateProfileData.lastName || ''}
-              onChange={e => setUpdateProfileData({...updateProfileData, lastName: e.target.value})}
-              placeholder="username"
-            />
+            <label>{t('First_name')}</label>
+
+            <ErrorView
+              error={userData.errors ? 'furstName' in userData.errors ? userData.errors.firstName : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.firstName || ''}
+                onChange={e => setUpdateUserData({...updateUserData, firstName: e.target.value})}
+                placeholder={t('firstName')}
+              />
+            </ErrorView>
           </div>
 
-          <Button type="submit" className="middle primary stratch mt-3">Submit</Button>
+          <div className={cls.settings_block}>
+            <label>{t('Last_name')}</label>
+
+            <ErrorView
+              error={userData.errors ? 'lastName' in userData.errors ? userData.errors.lastName : null : null}
+            >
+              <Input 
+                className="middle"
+                value={updateUserData.lastName || ''}
+                onChange={e => setUpdateUserData({...updateUserData, lastName: e.target.value})}
+                placeholder={t('lastName')}
+              />
+            </ErrorView>
+          </div>
+
+          <Button type="submit" className="middle primary stratch mt-3">{t('Submit')}</Button>
         </form>
       </SettingsWrapper>
     </ScrollFrame>

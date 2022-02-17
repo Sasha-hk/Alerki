@@ -1,17 +1,19 @@
-const WorkerWeekendDaysService = require('../service/WorkerWeekendDaysService')
-const WorkerServiceService = require('../service/WorkerServicesService')
+const MasterWeekendDaysService = require('../service/MasterWeekendDaysService')
+const MasterServiceService = require('../service/MasterServicesService')
 const UserPictureService = require('../service/UserPictureService')
-const WorkerScheduleService = require('../service/WorkerScheduleService')
+const MasterScheduleService = require('../service/MasterScheduleService')
 const ProfileService = require('../service/ProfileService')
 const UserService = require('../service/UserService')
 const ServiceService = require('../service/ServiceService')
 const APIError = require('../exception/APIError')
 const ProfileError = require('../exception/ProfileError')
 const checkParams = require('../utils/validators/checkParams')
-const GetWorkersDto = require('../dto/GetWorkersDto')
+const GetMastersDto = require('../dto/GetMastersDto')
 const ProfileDto = require('../dto/ProfileDto')
-const WorkerServiceDto = require('../dto/WorkerServiceDto')
-const WorkerProfileDto = require('../dto/WorkerProfileDto')
+const MasterServiceDto = require('../dto/MasterServiceDto')
+const MasterProfileDto = require('../dto/MasterProfileDto')
+const UserDto = require('../dto/UserDto')
+const FileType = require('file-type')
 
 
 class ProfileController { 
@@ -30,11 +32,11 @@ class ProfileController {
       }
       let profileData = new ProfileDto(foundUser)
       
-      if (foundUser.workerID) {
-        const workerProfile = await ProfileService.findWorkerByID({id: profileData.workerID})
-        const workerServices = await WorkerServiceService.findForWorker({workerID: workerProfile.id})
-        profileData.addWorkerProfile(workerProfile)
-        profileData.setWorkerServices(workerServices)
+      if (foundUser.masterID) {
+        const masterProfile = await ProfileService.findMasterByID({id: profileData.masterID})
+        const masterServices = await MasterServiceService.findForMaster({masterID: masterProfile.id})
+        profileData.addMasterProfile(masterProfile)
+        profileData.setMasterServices(masterServices)
       }
 
       res.json({...profileData})
@@ -44,18 +46,18 @@ class ProfileController {
     }
   }
 
-  async findServicesForWorker(req, res, next) {
+  async findServicesForMaster(req, res, next) {
     try {
-      const {workerID} = req.params
+      const {masterID} = req.params
       
       checkParams.all({
-        workerID,
+        masterID,
       })
-      const workerServices = await WorkerServiceService.findForWorker({workerID})
-      if (!workerServices || workerServices.length == 0) {
+      const masterServices = await MasterServiceService.findForMaster({masterID})
+      if (!masterServices || masterServices.length == 0) {
         throw APIError.NotFoundError()
       }
-      const servicesData = new WorkerServiceDto(workerServices)
+      const servicesData = new MasterServiceDto(masterServices)
       
       res.json(servicesData.services ? servicesData.services : servicesData)
     }
@@ -64,7 +66,7 @@ class ProfileController {
     }
   }
 
-  async findWorker(req, res, next) {
+  async findMaster(req, res, next) {
     try {
       const {service_id, limit, page} = req.query
       
@@ -72,20 +74,20 @@ class ProfileController {
         service_id,
       })
 
-      let workers = []
+      let masters = []
 
-      const workerServices = await WorkerServiceService.find({serviceID: service_id, limit, page })
-      for (const service of workerServices) {
-        const worker = await UserService.findByWorkerID({workerID: service.workerID})
-        const dto = new GetWorkersDto({worker, service})
-        workers.push({...dto})
+      const masterServices = await MasterServiceService.find({serviceID: service_id, limit, page })
+      for (const service of masterServices) {
+        const master = await UserService.findByMasterID({masterID: service.masterID})
+        const dto = new GetMastersDto({master, service})
+        masters.push({...dto})
       }
 
-      if (workers.length == 0) {
+      if (masters.length == 0) {
         throw APIError.NotFoundError()
       }
 
-      res.json(workers)
+      res.json(masters)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
@@ -97,13 +99,13 @@ class ProfileController {
       const {
         year,
         month,
-        worker_id
+        master_id
       } = req.query
 
       checkParams.all({
         year,
         month,
-        worker_id
+        master_id
       })
 
       const from = new Date()
@@ -119,22 +121,22 @@ class ProfileController {
       to.setMonth(to.getMonth() + 1)
       to.setMilliseconds(-1)
 
-      const workerProfile = await ProfileService.findWorkerByID({id: worker_id})
+      const masterProfile = await ProfileService.findMasterByID({id: master_id})
 
-      if (!workerProfile) {
-        throw APIError.NotFoundError(['worker with specefied id not found'])
+      if (!masterProfile) {
+        throw APIError.NotFoundError(['master with specefied id not found'])
       }
 
-      const weekendDays = await WorkerWeekendDaysService.findByID({id: workerProfile.weekendDaysID})
-      const scheduleDays = await WorkerScheduleService.getInRange({
-        workerID: workerProfile.id,
+      const weekendDays = await MasterWeekendDaysService.findByID({id: masterProfile.weekendDaysID})
+      const scheduleDays = await MasterScheduleService.getInRange({
+        masterID: masterProfile.id,
         dateRange: [from, to],
       })
 
       const schedule = {
         weekendDays,
-        workingStartTime: workerProfile.workingStartTime,
-        workingEndTime: workerProfile.workingEndTime,
+        workingStartTime: masterProfile.workingStartTime,
+        workingEndTime: masterProfile.workingEndTime,
         schedule: scheduleDays,
       }
 
@@ -151,14 +153,26 @@ class ProfileController {
 
       const picture = await UserPictureService.getByID({id})
 
-      res.send(picture)
+      if (!picture) {
+        throw APIError.NotFoundError()
+      }
+ 
+      const contentType = await FileType.fromBuffer(picture.picture)
+      
+      if (!contentType) {
+        throw APIError.ServerError()
+      }
+
+      res.type(contentType.mime)
+      res.send(picture.picture);
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
 
-  async updateWorker(req, res, next) {
+  async updateMaster(req, res, next) {
     try {
       const {
         username,
@@ -183,17 +197,17 @@ class ProfileController {
       })
 
       
-      const updatedWorker = await ProfileService.updateWorker({
-        id: req.user.workerID,
+      const updatedMaster = await ProfileService.updateMaster({
+        id: req.user.masterID,
         workingStartTime,
         workingEndTime,
         shortBiography,
         instagramProfile,
       })
 
-      const workerData = new WorkerProfileDto(updatedWorker)
+      const masterData = new MasterProfileDto(updatedMaster)
       
-      res.json(workerData)
+      res.json(masterData)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
@@ -202,37 +216,52 @@ class ProfileController {
 
   async updateProfile(req, res, next) {
     try {
+      const id = req.accessToken.id
+      const picture = req.files?.picture?.data
       const {
         username,
         firstName,
         lastName,
-        picture,
       } = req.body
+
 
       checkParams.atLeastOne({
         username,
         firstName,
         lastName,
-        picture,
       })
       
-      const updatedWorker = await UserService.updateProfile({
-        id: req.accessToken.id,
+      if (picture) {
+        var updatedPicture = await UserPictureService.update({id, picture})
+      }
+
+      const checkUsername = await UserService.findUserByUsername({username})
+      
+      if (checkUsername) {
+        if (checkUsername.id != id) {
+          throw ProfileError.UsernameExistsError()
+        }
+      }
+
+      const updatedMaster = await UserService.updateProfile({
+        id,
         username,
         firstName,
         lastName,
-        picture,
+        pictureID: updatedPicture?.id
       })
+
+      const userData = new UserDto(updatedMaster)
       
-      res.json(updatedWorker)
+      res.json(userData)
     }
     catch (e) {
-      console.log(e, "<<<")
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
 
-  async updateWorkerWeekendDays(req, res, next) {
+  async updateMasterWeekendDays(req, res, next) {
     try {
       const {
         weekendDays
@@ -242,12 +271,12 @@ class ProfileController {
         weekendDays
       })
 
-      const workerProfile = await ProfileService.findWorkerByID({
-        id: req.user.workerID
+      const masterProfile = await ProfileService.findMasterByID({
+        id: req.user.masterID
       })
 
-      const updateWeekendDays = await WorkerWeekendDaysService.update({
-        id: workerProfile.weekendDaysID,
+      const updateWeekendDays = await MasterWeekendDaysService.update({
+        id: masterProfile.weekendDaysID,
         ...weekendDays
       })
 
@@ -258,7 +287,7 @@ class ProfileController {
     }
   }
 
-  async createWorkerService(req, res, next) {
+  async createMasterService(req, res, next) {
     try {
       const {
         name,
@@ -268,41 +297,71 @@ class ProfileController {
         duration,
       } = req.body
 
-      const workerID = req.user.workerID
+      const masterID = req.user.masterID
       const serviceID = (await ServiceService.findOrCreateByName({name})).id
  
-      const newWorkerService = await WorkerServiceService.create({
+      const newMasterService = await MasterServiceService.create({
         currency,
         price,
         location,
         duration,
-        workerID,
+        masterID,
         serviceID,
       })
 
-      res.json(newWorkerService)
+      res.json(newMasterService)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
     }
   }
 
-  async becomeWorker(req, res, next) {
+  async becomeMaster(req, res, next) {
     try {
       const id = req.accessToken.id
- 
-      const userData = await UserService.findUserByID({id})
-      const candedat = await ProfileService.findWorkerByID({id: userData.workerID})
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findMasterByID({id: user.masterID})
       if (!candedat) {
-        const updatedToWorker = await UserService.becomeWorker({id})
-
-        res.json({workerID: updatedToWorker.workerID})
+        await UserService.becomeMaster({id})
       }
       else {
-        throw APIError.BadRequestError(['for this user worker allready exists'])
+        await ProfileService.makeAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'master'})
       }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
     }
     catch (e) {
+      res.status(e.status || 500).json(e.errors)
+    }
+  }
+
+  async becomeClient(req, res, next) {
+    try {
+      const id = req.accessToken.id 
+      const user = await UserService.findUserByID({id})
+      const candedat = await ProfileService.findClientByID({id: user.clientID})
+      if (!candedat) {
+        await UserService.becomeClient({id})
+      }
+      else {
+        if (user.masterID) {
+          await ProfileService.makeNotAvailableMaster({id: user.masterID})
+        }
+        await ProfileService.makeNotAvailableMaster({id: user.id})
+        await UserService.setProfileType({id: user.id, type: 'client'})
+      }
+
+      const updatedUser = await UserService.findUserByID({id})
+      const userData = new UserDto(updatedUser)
+
+      res.json(userData)
+    }
+    catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors)
     }
   }
@@ -332,8 +391,8 @@ class ProfileController {
         }
       }
 
-      const schedule = await WorkerScheduleService.updateOrCreate({
-        workerID: req.accessToken.workerID,
+      const schedule = await MasterScheduleService.updateOrCreate({
+        masterID: req.accessToken.masterID,
         workingStartTime,
         workingEndTime,
         weekendDay,
@@ -343,7 +402,6 @@ class ProfileController {
       res.json(schedule)
     }
     catch (e) {
-      console.log(e, '<<<<<<<<<<<<')
       res.status(e.status || 500).json(e.errors)
     }
   }

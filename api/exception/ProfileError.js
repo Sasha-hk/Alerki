@@ -1,4 +1,4 @@
-module.exports = class APIError extends Error {
+module.exports = class ProfileError extends Error {
     status
     errors
 
@@ -10,10 +10,18 @@ module.exports = class APIError extends Error {
     }
     
     static RequiredAllTimeError() {
-        return new APIError(400, 'Required start and end working time', ['required start and end working time'])
+        return new ProfileError(400, 'Required start and end working time', ['required start and end working time'])
     }
 
     static NotFoundError(errors = []) {
-        return new APIError(404, 'Not found', errors)
+        return new ProfileError(404, 'Not found', errors)
+    }
+
+    static UsernameExistsError() {
+        return new ProfileError(
+            400,
+            'User with this username already exists',
+            {username: 'user with this username already exists'}
+        )
     }
 }

@@ -37,8 +37,15 @@ nav {
 .nav-bar nav .notification {
     fill: var(--color);
 }
-.nav-bar nav .profile {
+.nav-bar nav .navigation-plug-profile-picture {
     fill: var(--color);
+    width: 33px;
+    height: 33px;
+}
+.nav-bar .navigation-profile-picture {
+    border-radius: 20px;
+    flex-shrink: 1;
+    object-fit: cover;
     width: 33px;
     height: 33px;
 }

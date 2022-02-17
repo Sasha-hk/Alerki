@@ -20,4 +20,9 @@ module.exports = class APIError extends Error {
     static IncorrectDateError() {
         return new APIError(400, 'Date is incorrect', ['incorrect date'])
     }
+
+    static ServerError() {
+        return new APIError(500, 'Server error', [])
+
+    }
 }

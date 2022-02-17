@@ -1,12 +1,13 @@
 .settings {
-
+  width: 100%;
 }
 .settings_items {
-
+  
 }
 .settings_view {
   display: flex;
   flex-direction: column;
+  width: 100%;
 }
 
 

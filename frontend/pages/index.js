@@ -1,4 +1,6 @@
-import { useEffect } from 'react'
+import useTranslation from 'next-translate/useTranslation'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
@@ -6,28 +8,55 @@ import profileActions from '../store/actions/profileActions'
 import FluidFrame from '../components/frames/FluidFrame'
 import Button from '../components/UI/Button/Button'
 import Input from '../components/UI/Input/Input'
+import Modal from '../components/Modal/Modal.jsx'
 import useFixHydrate from '../hooks/useFixHydrate'
-import { useAuth } from '../provider/AuthProvider'
+import i18nConfig from '../i18n.js'
 
 
 const Home = () => {
-    const {theme, setTheme} = useTheme()
+  const [modal, setModal] = useState(false)
+  const { t, lang } = useTranslation()
+  const { locales } = i18nConfig
+  
+  return (
+    <FluidFrame navigation={true}>
+      <div className="container">
+        {/* <Button
+          className="middle primary br-1"
+          onClick={e => setModal(true)}
+        >modal</Button> */}
 
-    const {isAuthenticated, register, authData} = useAuth()
+
+        {
+          locales.map((lng) => {
+            {/* if (lng === lang) return null */}
+            return (
+              <div key={lng}>
+                <Link href="/" locale={lng}>
+                  <a
+                    className={lng === lang ? "language_active" : null}
+                  >
+                    {t(`common:languages.${lng}`)}
+                  </a>
+                </Link>
+              </div>
+            )
+          })
+        }
 
 
-    const hydratedTheme = useFixHydrate(theme)
-
-    return (
-        <FluidFrame navigation={true}>
-            <div className="container">
-                The current theme is: {hydratedTheme} 
-                <Button onClick={() => setTheme('light')} className="little primary mr-3">Light Mode</Button>
-                <Button onClick={() => setTheme('dark')} className="little primary mb-3 mr-3">Dark Mode</Button>
-                <p>{authData.username}</p>
-            </div>
-        </FluidFrame>
-    )
+        {/* <Modal show={modal} onClose={setModal}>
+          <div>
+            <span className="text-big">Monday 12.12.2022</span>
+          </div>
+          <div>
+            <Button className="middle muted br-1 mr-2">close</Button>
+            <Button className="middle primary br-1">confirm</Button>
+          </div>
+        </Modal> */}
+      </div>
+    </FluidFrame>
+  )
 }
 
 

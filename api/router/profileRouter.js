@@ -1,22 +1,24 @@
 const Router = require('express')
 const ProfileController = require('../controller/ProfileController')
 const authMiddleware = require('../middleware/authMiddleware')
-const isWorkerMiddleware = require('../middleware/isWorkerMiddlware')
+const isMasterMiddleware = require('../middleware/isMasterMiddlware')
 const router = new Router()
 
 
 // http
 router
   .get(
-    '/find-worker',
-    ProfileController.findWorker)
+    '/find-master',
+    ProfileController.findMaster
+  )
   .get(
-    '/services/:workerID',
-    ProfileController.findServicesForWorker
+    '/services/:masterID',
+    ProfileController.findServicesForMaster
   )
   .get(
     '/get-schedule',
-    ProfileController.getSchedule)
+    ProfileController.getSchedule
+  )
   .get(
     '/picture/:id',
     ProfileController.getPicture
@@ -30,13 +32,13 @@ router
   .post(
     '/create/service',
     authMiddleware,
-    isWorkerMiddleware,
-    ProfileController.createWorkerService
+    isMasterMiddleware,
+    ProfileController.createMasterService
   )
   .post(
-    '/worker/set-schedule',
+    '/master/set-schedule',
     authMiddleware,
-    isWorkerMiddleware,
+    isMasterMiddleware,
     ProfileController.setSchedule,
   )
 
@@ -47,21 +49,26 @@ router
     ProfileController.updateProfile
   )
   .patch(
-    '/worker/update',
+    '/master/update',
     authMiddleware,
-    isWorkerMiddleware,
-    ProfileController.updateWorker
+    isMasterMiddleware,
+    ProfileController.updateMaster
   )
   .patch(
-    '/worker/update/weekend-days',
+    '/master/update/weekend-days',
     authMiddleware,
-    isWorkerMiddleware,
-    ProfileController.updateWorkerWeekendDays
+    isMasterMiddleware,
+    ProfileController.updateMasterWeekendDays
   )
   .patch(
-    '/become-worker',
+    '/become-master',
     authMiddleware,
-    ProfileController.becomeWorker
+    ProfileController.becomeMaster
+  )
+  .patch(
+    '/become-client',
+    authMiddleware,
+    ProfileController.becomeClient
   )
 
 
