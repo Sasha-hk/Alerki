@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
             models.ServiceModel,
             {
                 foreignKey: 'serviceID',
+                as: 'service',
                 onDelete: 'CASCADE',
             }
         )
