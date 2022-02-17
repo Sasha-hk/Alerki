@@ -677,7 +677,7 @@ POST /profile/set-schedule
 ### **Update master profile**
 
 ```http
-PATCH /profile/master/update
+PATCH /profile/update/master
 ```
 
 **Body:**
@@ -725,7 +725,7 @@ PATCH /profile/master/update
 ### **Update weekend days**
 
 ```http
-PATCH /profile/master/update/weekend-days
+PATCH /profile/update/master/weekend-days
 ```
 
 **Body:**

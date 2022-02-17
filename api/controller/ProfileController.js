@@ -287,7 +287,7 @@ class ProfileController {
     }
   }
 
-  async createMasterService(req, res, next) {
+  async createService(req, res, next) {
     try {
       const {
         name,
@@ -301,6 +301,7 @@ class ProfileController {
       const serviceID = (await ServiceService.findOrCreateByName({name})).id
  
       const newMasterService = await MasterServiceService.create({
+        name,
         currency,
         price,
         location,
@@ -312,6 +313,53 @@ class ProfileController {
       res.json(newMasterService)
     }
     catch (e) {
+      res.status(e.status || 500).json(e.errors) 
+    }
+  }
+
+  async updateService(req, res, next) {
+    try {
+      const {
+        id,
+        name,
+        currency,
+        price,
+        location,
+        duration,
+      } = req.body
+
+      const masterID = req.user.masterID
+
+      const serviceID = (await ServiceService.findOrCreateByName({name})).id
+      const updatedService = await MasterServiceService.update({
+        id,
+        currency,
+        price,
+        location,
+        duration,
+        masterID,
+        serviceID,
+      })
+
+      res.json(updatedService)
+    }
+    catch (e) {
+      res.status(e.status || 500).json(e.errors) 
+    }
+  }
+
+  async deleteService(req, res, next) {
+    try {
+      const {id} = req.body
+
+      const masterID = req.user.masterID
+ 
+      const newMasterService = await MasterServiceService.delete({id, masterID})
+
+      res.json(newMasterService)
+    }
+    catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
