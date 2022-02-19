@@ -80,7 +80,7 @@ const profileReducer = (state = defaultProfileState, action) => {
       }
 
     // create service
-    case types.USER_CREATE_SERVICE:
+    case types.PROFILE_CREATE_SERVICE:
       return {
         ...state,
         loading: true,
@@ -88,17 +88,17 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: null,
       }
 
-    case types.USER_CREATE_SERVICE_SUCCESS:
+    case types.PROFILE_CREATE_SERVICE_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
+        profile: {
+          ...state.profile,
           master: {
-            ...state.user.master,
-            services: {
-              ...state.user.master.services,
-              ...action.payload,
-            }
+            ...state.profile.master,
+            services: [
+              ...state.profile.master.services,
+              action.payload,
+            ]
           }
         },
         loading: false,
@@ -106,7 +106,7 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: null,
       }
 
-    case types.USER_CREATE_SERVICE_ERROR:
+    case types.PROFILE_CREATE_SERVICE_ERROR:
       return {
         ...state,
         loading: false,
@@ -115,7 +115,7 @@ const profileReducer = (state = defaultProfileState, action) => {
       }
 
     // delete service
-    case types.USER_DELETE_SERVICE:
+    case types.PROFILE_DELETE_SERVICE:
       return {
         ...state,
         loading: true,
@@ -123,7 +123,7 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: null,
       }
 
-    case types.USER_DELETE_SERVICE_SUCCESS:
+    case types.PROFILE_DELETE_SERVICE_SUCCESS:
       return {
         ...state,
         user: {
@@ -135,7 +135,7 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: null,
       }
 
-    case types.USER_DELETE_SERVICE_ERROR:
+    case types.PROFILE_DELETE_SERVICE_ERROR:
       return {
         ...state,
         loading: false,
@@ -143,6 +143,41 @@ const profileReducer = (state = defaultProfileState, action) => {
         errors: action.payload,
       }
 
+    // update service
+    case types.PROFILE_UPDATE_SERVICE:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.PROFILE_UPDATE_SERVICE_SUCCESS:
+      return {
+        ...state,
+        profile: {
+          ...state.profile,
+          master: {
+            ...state.profile.master,
+            services: [
+              ...state.profile.master.services,
+            ].map(e => {
+              return action.payload == e.id ? action.payload : e
+            })
+          }
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.PROFILE_UPDATE_SERVICE_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
     
     default:
       return state

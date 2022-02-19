@@ -26,7 +26,7 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
     dispatch(profileActions.upload({username: user.username}))
   }
   
-  const creaeserviceData = () => {
+  const createServiceData = () => {
     dispatch(userActions.updateService(serviceData))
     updateProfile()
     setShowModal(false)
@@ -49,15 +49,9 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
       >
         delete
       </Button>
-      {/* <Button
-        className="muted middle br-1"
-        onClick={e => setShowModal(false)}
-      >
-        cancel
-      </Button> */}
       <Button
         className="primary middle br-1"
-        onClick={e => creaeserviceData()}
+        onClick={e => createServiceData()}
       >
         update
       </Button>

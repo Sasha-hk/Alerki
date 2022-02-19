@@ -13,18 +13,6 @@ import Toggle from '../../UI/Toggle/Toggle'
 import cls from '../../../styles/pages/profile.module.css'
 
 
-        // <Button
-        //   className="muted middle br-1"
-        // >
-        //   cancel
-        // </Button>
-        // <Button
-        //   className="primary middle br-1"
-        //   onClick={e => creaeserviceData()}
-        // >
-        //   create
-        // </Button>
-
 const ManageServiceWIndow = ({
   children, 
   serviceData,
