@@ -32,5 +32,10 @@ form > div > *:not(:last-child) {
 /* label */
 label {
   color: var(--color-form-item-heading);
-  margin-bottom: 8px !important;
+  margin-bottom: 8px;
+}
+
+/* spaces */
+.space-above {
+  margin-top: 16px;
 }

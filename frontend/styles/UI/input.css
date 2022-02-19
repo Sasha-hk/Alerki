@@ -1,5 +1,6 @@
 * {
   --input-transition: 0.2s;
+  --checkbox-size: 17px;
 }
 
 /* general */
@@ -33,9 +34,13 @@ input.big {
 input::placeholder {
   color: var(--input-placeholder-color);
 }
-input[type="text"]:focus,
+input:focus,
 input[type="password"]:focus {
   outline: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+input[type="checkbox"] {
+  outline: none;
 }
 
 /* colors */
@@ -59,4 +64,15 @@ input[type="radio"] {
   width: 22px;
   height: 22px;
   outline: none;
+}
+
+/* checkbox */
+input[type="checkbox"] {
+  margin: 0 10px 0 10px;
+  width: var(--checkbox-size);
+  height: var(--checkbox-size);
+}
+label.checkbox {
+  display: flex;
+  align-items: center;
 }
