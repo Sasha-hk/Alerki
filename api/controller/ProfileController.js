@@ -105,23 +105,8 @@ class ProfileController {
       } = req.query
 
       checkParams.all({
-        year,
-        month,
         master_id
       })
-
-      const from = new Date()
-      from.setFullYear(year)
-      from.setMonth(month)
-      from.setDate(1)
-      from.setHours(0)
-      from.setMinutes(0)
-      from.setSeconds(0)
-      from.setMilliseconds(0)
-
-      const to = new Date(from)
-      to.setMonth(to.getMonth() + 1)
-      to.setMilliseconds(-1)
 
       const masterProfile = await ProfileService.findMasterByID({id: master_id})
 
@@ -129,17 +114,20 @@ class ProfileController {
         throw APIError.NotFoundError(['master with specefied id not found'])
       }
 
-      const weekendDays = await MasterWeekendDaysService.findByID({id: masterProfile.weekendDaysID})
-      const scheduleDays = await MasterScheduleService.getInRange({
-        masterID: masterProfile.id,
-        dateRange: [from, to],
-      })
+      const weekendDays = await ProfileService.getWeekendDays({masterID: masterProfile.id})
 
       const schedule = {
         weekendDays,
         workingStartTime: masterProfile.workingStartTime,
         workingEndTime: masterProfile.workingEndTime,
-        schedule: scheduleDays,
+      }
+
+      if (year && month) {
+        schedule.schedule = await ProfileService.getScheduleForMoth({
+          year,
+          month,
+          masterID: masterProfile.id,
+        })
       }
 
       res.json(schedule)
@@ -345,7 +333,7 @@ class ProfileController {
       await new Promise((res, rej) => setTimeout(res(), 10000))
 
       const serviceData = new MasterServiceDto({...updatedService})
-      console.log(serviceData)
+      
       res.json(serviceData)
     }
     catch (e) {
