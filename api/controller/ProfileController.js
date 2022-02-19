@@ -169,7 +169,6 @@ class ProfileController {
       res.send(picture.picture);
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -256,7 +255,6 @@ class ProfileController {
       res.json(userData)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -344,8 +342,7 @@ class ProfileController {
         serviceID,
       })
 
-      const serviceData = new MasterServiceDto({...updatedService, name: serviceID.name})
-
+      const serviceData = new MasterServiceDto({...updatedService})
       res.json(serviceData)
     }
     catch (e) {
@@ -413,7 +410,6 @@ class ProfileController {
       res.json(userData)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors)
     }
   }
