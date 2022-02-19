@@ -29,7 +29,6 @@ const ManageServiceWIndow = () => {
     location: "",
     duration: 1,
   })
-  const [priceType, setPriceType] = useState()
   const [showModal, setShowModal] = useState(false)
 
   if (serviceData.duration >= 60) {
@@ -42,17 +41,13 @@ const ManageServiceWIndow = () => {
     var durationView = serviceData.duration % 60 + 'm.'
   }
   
-  const updateByName = (e) => {
-    const newState = {
-      ...serviceData,
-    }
-    newState[e.target.name] = e.target.value
-    setServiceData(newState)
+  const updateProfile = () => {
+    dispatch(profileActions.upload({username: user.username}))
   }
 
   const creaeserviceData = async () => {
-    dispatch(await userActions.createService(serviceData))
-    dispatch(await profileActions.upload(user.username))
+    dispatch(userActions.createService(serviceData))
+    dispatch(profileActions.upload({username: user.username}))
     setShowModal(false)
   }
 
@@ -71,7 +66,10 @@ const ManageServiceWIndow = () => {
         </Button>
         <Button
           className="primary middle br-1"
-          onClick={e => creaeserviceData()}
+          onClick={e => {
+            creaeserviceData()
+            updateProfile()
+          }}
         >
           create
         </Button> 

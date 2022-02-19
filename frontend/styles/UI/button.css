@@ -53,6 +53,11 @@ button.br-3 {
 button.primary {
     background: var(--btn-primary);
 }
+button.danger {
+    background: none;
+    border: var(--btn-danger-border);
+    color: var(--btn-danger-color);
+}
 button.black {
     background: var(--btn-black-bg);
     color: var(--btn-black-color);

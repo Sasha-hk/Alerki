@@ -133,6 +133,35 @@ const userReducer = (state = defaultUserState, action) => {
         errors: action.payload,
       }
 
+        // become master
+    case types.USER_DELETE_SERVICE:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_DELETE_SERVICE_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_DELETE_SERVICE_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+
     default:
       return state
   }

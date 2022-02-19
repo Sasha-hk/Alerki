@@ -21,11 +21,14 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
   const userStore = useSelector(store => store.user)
   const profile = useSelector(store => store.profile)
   const user = userStore.user
+
+  const updateProfile = () => {
+    dispatch(profileActions.upload({username: user.username}))
+  }
   
-  const creaeserviceData = async () => {
-    dispatch(await userActions.updateService(serviceData))
-    console.log(user.username)
-    dispatch(await profileActions.upload(user.username))
+  const creaeserviceData = () => {
+    dispatch(userActions.updateService(serviceData))
+    updateProfile()
     setShowModal(false)
   }
 
@@ -37,15 +40,26 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
       setShowModal={setShowModal}
     >
       <Button
+        className="danger middle br-1"
+        onClick={e => {
+          dispatch(userActions.deleteService({id: serviceData.id}))
+          updateProfile()
+          setShowModal(false)
+        }}
+      >
+        delete
+      </Button>
+      {/* <Button
         className="muted middle br-1"
+        onClick={e => setShowModal(false)}
       >
         cancel
-      </Button>
+      </Button> */}
       <Button
         className="primary middle br-1"
         onClick={e => creaeserviceData()}
       >
-        create
+        update
       </Button>
     </InputServcieWindow>
   )

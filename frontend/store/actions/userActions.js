@@ -78,10 +78,33 @@ const updateService = (updateData) => {
       .then(r => {
         console.log(r)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+        
       })
       .catch(e => {
         console.log(e.response.data)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
+// delete service
+const deleteService = ({id}) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_DELETE_SERVICE))
+
+    await api({
+      method: 'delete',
+      url: '/profile/service',
+      data: {id},
+    })
+      .then(async (r) => {
+        console.log(r)
+        await dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_SUCCESS, r.data))
+        upload()
+      })
+      .catch(e => {
+        console.log(e.response.data)
+        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -128,6 +151,7 @@ export default {
   update,
   createService,
   updateService,
+  deleteService,
   becomeMaster,
   becomeClient,
 }

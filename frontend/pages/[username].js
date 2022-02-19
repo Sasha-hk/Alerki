@@ -99,17 +99,16 @@ const Profile = () => {
           {
             profile.master?.services?.length != 0
               ? <>
-                <UpdateService 
-                  serviceData={updateData} 
-                  setServiceData={setUpdateData} 
-                  showModal={showModal} 
-                  setShowModal={setShowModal}   
+                <UpdateService
+                  serviceData={updateData}
+                  setServiceData={setUpdateData}
+                  showModal={showModal}
+                  setShowModal={setShowModal}
                 />
-
                 {
                   profile.master?.services.map(service => {
                     return (
-                      <Button 
+                      <Button
                         key={service.id}
                         className="little sceleton br-3"
                         onClick={e => {
