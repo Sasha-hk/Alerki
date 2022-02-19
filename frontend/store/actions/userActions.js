@@ -47,7 +47,7 @@ const update = (updateData) => {
 // create service
 const createService = (newServiceData) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_UPLOAD))
+    dispatch(makeAction(types.USER_CREATE_SERVICE))
 
     await api({
       method: 'post',
@@ -55,12 +55,11 @@ const createService = (newServiceData) => {
       data: newServiceData,
     })
       .then(r => {
-        console.log(r)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+        console.log(e?.response?.data)
+        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -99,8 +98,7 @@ const deleteService = ({id}) => {
     })
       .then(async (r) => {
         console.log(r)
-        await dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_SUCCESS, r.data))
-        upload()
+        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
         console.log(e.response.data)
