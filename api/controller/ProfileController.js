@@ -310,7 +310,10 @@ class ProfileController {
         serviceID,
       })
 
-      res.json(newMasterService)
+      res.json({
+        name,
+        ...newMasterService,
+      })
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
