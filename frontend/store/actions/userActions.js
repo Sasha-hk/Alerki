@@ -74,6 +74,7 @@ const updateService = (updateData) => {
       data: updateData,
     })
       .then(r => {
+        console.log(r.data)
         dispatch(makeActionWithPayload(profileTypes.PROFILE_UPDATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
@@ -93,7 +94,7 @@ const deleteService = ({id}) => {
       data: {id},
     })
       .then(async (r) => {
-        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_SUCCESS, id))
       })
       .catch(e => {
         dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_ERROR, e?.response?.data))
