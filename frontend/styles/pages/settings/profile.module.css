@@ -1,15 +1,6 @@
 .form {
-  display: inline-block;
   max-width: 300px;
 }
-.settings_block {
-  display: flex;
-  flex-direction: column;
-}
-.settings_block:not(:last-child) {
-  margin-bottom: 12px;
-}
-
 .user_picture_preview {
   border-radius: 500px;
   width: 200px;
@@ -18,17 +9,9 @@
   object-fit: cover;
 }
 
-/* @media screen and (min-width: 0) and (max-width: 480px) {
-  .user_picture_preview {
-    width: 100%;
-  }
-} */
 
 @media only screen and (min-width: 0px) and (max-width: 480px) {
   .form {
     max-width: none;
-  }
-  .settings_block {
-    width: 100%;
   }
 }

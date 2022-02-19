@@ -14,8 +14,18 @@ const Settings = () => {
         <span className="text-big">{t('Master_settigns')}</span>
 
         <div className="mt-3">
-          In process...
+
         </div>
+
+        <form>
+          <div>
+            1
+          </div>
+
+          <div>
+            2
+          </div>
+        </form>
       </SettingsWrapper>
     </ScrollFrame>
   )

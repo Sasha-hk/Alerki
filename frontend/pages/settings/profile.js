@@ -74,7 +74,8 @@ const Settings = () => {
           className={cls.form}
           onSubmit={updateProfile}
         >
-          <div className={cls.settings_block}>
+          {/* <div className={cls.settings_block}> */}
+          <div>
             <label>{t('Picture')}</label>
             {
               updatePicturePreview 
@@ -99,11 +100,11 @@ const Settings = () => {
               onChange={e => makePicturePreview(e)}
             />
             <Button
-              className="middle sceleton br-1 mt-4"
+              className="middle sceleton stratch br-1 mt-4"
               onClick={e => handleUpdalodPictureClick(e)}
             >{t('select_photo')}</Button>
           </div>
-          <div className={cls.settings_block}>
+          <div>
             <label>{t('Username')}</label>
 
             <ErrorView
@@ -118,7 +119,7 @@ const Settings = () => {
             </ErrorView>
           </div>
 
-          <div className={cls.settings_block}>
+          <div>
             <label>{t('First_name')}</label>
 
             <ErrorView
@@ -133,7 +134,7 @@ const Settings = () => {
             </ErrorView>
           </div>
 
-          <div className={cls.settings_block}>
+          <div>
             <label>{t('Last_name')}</label>
 
             <ErrorView

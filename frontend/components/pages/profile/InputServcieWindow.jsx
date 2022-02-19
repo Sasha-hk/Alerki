@@ -50,11 +50,11 @@ const ManageServiceWIndow = ({
 
   return (
     <Modal show={showModal} onClose={setShowModal}>
-      <div>
+    <div>
         <span className="text-big"><b>New service</b></span>
 
         <form className="mt-3">
-          <div className="settings-block">
+          <div>
             <Input 
               className="middle"
               placeholder="service name"
@@ -65,7 +65,7 @@ const ManageServiceWIndow = ({
             />
           </div>
 
-          <div className="settings-block">
+          <div>
             <label>Price:</label>
             <Toggle
               variants={['fixed', 'dynamic']}
@@ -101,12 +101,12 @@ const ManageServiceWIndow = ({
             </div>
           </div>
 
-          <div className="settings-block">
+          <div>
             <label>Duration:</label>
             
             <b>{durationView}</b>
 
-            <Input 
+            <Input
               placeholder="duration"
               className="middle"
               type="range"

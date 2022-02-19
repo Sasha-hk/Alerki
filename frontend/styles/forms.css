@@ -1,4 +1,7 @@
 /* form */
+form {
+  width: 100%;
+}
 form > div {
   width: 100%;
 }
