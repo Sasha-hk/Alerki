@@ -62,6 +62,7 @@ const ManageServiceWIndow = () => {
       >
         <Button
           className="muted middle br-1"
+          onClick={e => setShowModal(false)}
         >
           cancel
         </Button>

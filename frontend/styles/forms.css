@@ -1,17 +1,41 @@
-label {
-  color: var(--color-form-item-heading);
-  margin-bottom: 8px !important;
-}
-.settings-block {
+/* form */
+form {
   width: 100%;
 }
-.settings-block:not(:last-child) {
-  margin-bottom: 12px;
+form > div {
+  width: 100%;
 }
-.settings-block * {
+form > div:not(:last-child) {
+  margin-bottom: 16px;
+}
+form > div > * {
   display: block;
 }
-
-.settings-block > *:not(:last-child) {
+form > div > *:not(:last-child) {
   margin-bottom: 8px;
+}
+
+/* for other html structures */
+.separates-block {
+  width: 100%;
+}
+.separates-block:not(:last-child) {
+  margin-bottom: 16px;
+}
+.separates-block * {
+  display: block;
+}
+.separates-block > *:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+/* label */
+label {
+  color: var(--color-form-item-heading);
+  margin-bottom: 8px;
+}
+
+/* spaces */
+.space-above {
+  margin-top: 16px;
 }
