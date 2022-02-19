@@ -128,7 +128,15 @@ const profileReducer = (state = defaultProfileState, action) => {
         ...state,
         user: {
           ...state.user,
-          ...action.payload,
+          master: {
+            ...state.profile.master,
+            services: [
+              ...state.profile.master.services,
+            ].filter(e => {
+              console.log(e, action.payload, e.id != action.payload)
+              return e.id != action.payload
+            })
+          }
         },
         loading: false,
         error: false,
@@ -153,7 +161,7 @@ const profileReducer = (state = defaultProfileState, action) => {
       }
 
     case types.PROFILE_UPDATE_SERVICE_SUCCESS:
-      return {
+      const n = {
         ...state,
         profile: {
           ...state.profile,
@@ -162,7 +170,7 @@ const profileReducer = (state = defaultProfileState, action) => {
             services: [
               ...state.profile.master.services,
             ].map(e => {
-              return action.payload == e.id ? action.payload : e
+              return action.payload.id == e.id ? action.payload : e
             })
           }
         },
@@ -170,6 +178,8 @@ const profileReducer = (state = defaultProfileState, action) => {
         error: false,
         errors: null,
       }
+
+      return n
 
     case types.PROFILE_UPDATE_SERVICE_ERROR:
       return {

@@ -28,7 +28,7 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
   
   const createServiceData = () => {
     dispatch(userActions.updateService(serviceData))
-    updateProfile()
+    // updateProfile()
     setShowModal(false)
   }
 
@@ -43,7 +43,6 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
         className="danger middle br-1"
         onClick={e => {
           dispatch(userActions.deleteService({id: serviceData.id}))
-          updateProfile()
           setShowModal(false)
         }}
       >

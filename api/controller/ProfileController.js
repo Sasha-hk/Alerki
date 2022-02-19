@@ -342,7 +342,10 @@ class ProfileController {
         serviceID,
       })
 
+      await new Promise((res, rej) => setTimeout(res(), 10000))
+
       const serviceData = new MasterServiceDto({...updatedService})
+      console.log(serviceData)
       res.json(serviceData)
     }
     catch (e) {
@@ -356,9 +359,9 @@ class ProfileController {
 
       const masterID = req.user.masterID
  
-      const newMasterService = await MasterServiceService.delete({id, masterID})
+      await MasterServiceService.delete({id, masterID})
 
-      res.json(newMasterService)
+      res.json()
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
