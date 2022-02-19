@@ -1,10 +1,10 @@
 import * as types from '../types/userTypes'
+import * as profileTypes from '../types/profileTypes'
 import api from '../../http'
 import {
   makeAction,
   makeActionWithPayload,
 } from '../../utils/createAction.js'
-import Cookies from 'js-cookie'
 
 
 // upload
@@ -47,7 +47,7 @@ const update = (updateData) => {
 // create service
 const createService = (newServiceData) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_CREATE_SERVICE))
+    dispatch(makeAction(profileTypes.PROFILE_CREATE_SERVICE))
 
     await api({
       method: 'post',
@@ -55,19 +55,18 @@ const createService = (newServiceData) => {
       data: newServiceData,
     })
       .then(r => {
-        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_CREATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e?.response?.data)
-        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_ERROR, e?.response?.data))
-      }) 
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_CREATE_SERVICE_ERROR, e?.response?.data))
+      })
   }
 }
 
 // update service
 const updateService = (updateData) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_UPLOAD))
+    dispatch(makeAction(profileTypes.PROFILE_UPDATE_SERVICE))
 
     await api({
       method: 'patch',
@@ -75,13 +74,10 @@ const updateService = (updateData) => {
       data: updateData,
     })
       .then(r => {
-        console.log(r)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
-        
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_UPDATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_UPDATE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -89,7 +85,7 @@ const updateService = (updateData) => {
 // delete service
 const deleteService = ({id}) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_DELETE_SERVICE))
+    dispatch(makeAction(profileTypes.PROFILE_DELETE_SERVICE))
 
     await api({
       method: 'delete',
@@ -97,12 +93,10 @@ const deleteService = ({id}) => {
       data: {id},
     })
       .then(async (r) => {
-        console.log(r)
-        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
-        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_ERROR, e?.response?.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }

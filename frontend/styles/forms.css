@@ -1,4 +1,4 @@
-form label {
+label {
   color: var(--color-form-item-heading);
   margin-bottom: 8px !important;
 }

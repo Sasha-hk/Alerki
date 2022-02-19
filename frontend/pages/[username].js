@@ -8,6 +8,7 @@ import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
 import CreateService from '../components/pages/profile/CreateService.jsx'
 import UpdateService from '../components/pages/profile/UpdateService.jsx'
+import ServiceView from '../components/pages/profile/ServiceView.jsx'
 import Button from '../components/UI/Button/Button.jsx'
 import Input from '../components/UI/Input/Input.jsx'
 import Select from '../components/UI/Select/Select.jsx'
@@ -33,6 +34,8 @@ const Profile = () => {
   })
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
+  const userStore = useSelector(store => store.user)
+  const user = userStore.user
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -97,14 +100,22 @@ const Profile = () => {
           className={[cls.services_wrapper, 'mt-3'].join(' ')}
         >
           {
-            profile.master?.services?.length != 0
+              profile.master?.services?.length != 0
               ? <>
-                <UpdateService
-                  serviceData={updateData}
-                  setServiceData={setUpdateData}
-                  showModal={showModal}
-                  setShowModal={setShowModal}
-                />
+                {
+                  profile.id == user.id
+                    ? <UpdateService
+                      serviceData={updateData}
+                      setServiceData={setUpdateData}
+                      showModal={showModal}
+                      setShowModal={setShowModal}
+                    />
+                    : <ServiceView
+                      serviceData={updateData}
+                      showModal={showModal}
+                      setShowModal={setShowModal}
+                    />
+                }
                 {
                   profile.master?.services.map(service => {
                     return (
@@ -122,8 +133,11 @@ const Profile = () => {
               </>
               : null
           }
-
-          <CreateService />
+          {
+            profile.id && user.id && profile.id == user.id
+              ? <CreateService />
+              : null
+          }
         </div>
       </div>
     </>
