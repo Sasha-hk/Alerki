@@ -47,7 +47,7 @@ const update = (updateData) => {
 // create service
 const createService = (newServiceData) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_UPLOAD))
+    dispatch(makeAction(types.USER_CREATE_SERVICE))
 
     await api({
       method: 'post',
@@ -55,12 +55,11 @@ const createService = (newServiceData) => {
       data: newServiceData,
     })
       .then(r => {
-        console.log(r)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+        console.log(e?.response?.data)
+        dispatch(makeActionWithPayload(types.USER_CREATE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -78,10 +77,32 @@ const updateService = (updateData) => {
       .then(r => {
         console.log(r)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+        
       })
       .catch(e => {
         console.log(e.response.data)
         dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
+// delete service
+const deleteService = ({id}) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_DELETE_SERVICE))
+
+    await api({
+      method: 'delete',
+      url: '/profile/service',
+      data: {id},
+    })
+      .then(async (r) => {
+        console.log(r)
+        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_SUCCESS, r.data))
+      })
+      .catch(e => {
+        console.log(e.response.data)
+        dispatch(makeActionWithPayload(types.USER_DELETE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -128,6 +149,7 @@ export default {
   update,
   createService,
   updateService,
+  deleteService,
   becomeMaster,
   becomeClient,
 }

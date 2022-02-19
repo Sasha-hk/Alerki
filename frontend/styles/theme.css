@@ -29,6 +29,8 @@
 
   --btn-muted-bg: #ffffff;
   --btn-muted-color: #6B6680;
+  --btn-danger: #bb1010;
+  --btn-danger-color: #aa0c0c;
 }
 
 /* dark */
@@ -62,4 +64,6 @@
 
   --btn-muted-bg: #3E3D40;
   --btn-muted-color: #6F6D76;
+  --btn-danger-border: 1px solid #a71212;
+  --btn-danger-color: #da4747;
 }

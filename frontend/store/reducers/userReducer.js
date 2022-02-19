@@ -132,7 +132,7 @@ const userReducer = (state = defaultUserState, action) => {
         error: true,
         errors: action.payload,
       }
-
+    
     default:
       return state
   }
