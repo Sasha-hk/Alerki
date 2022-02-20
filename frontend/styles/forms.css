@@ -1,6 +1,7 @@
 /* form */
 form {
   width: 100%;
+  max-width: 300px;
 }
 form > div {
   width: 100%;
@@ -38,4 +39,10 @@ label {
 /* spaces */
 .space-above {
   margin-top: 16px;
+}
+
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+  form {
+    max-width: none;
+  }
 }
