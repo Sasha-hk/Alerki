@@ -139,33 +139,22 @@ const becomeMaster = () => {
 }
 
 // update master
-const updateMaster = ({
-  workingStartTime,
-  workingEndTime,
-  shortBiography,
-  instagramProfile,
-}) => {
+const updateMaster = (updateData) => {
   return async dispatch => {
     dispatch(makeAction(types.USER_UPDATE_MASTER))
-
-    if (workingStartTime && workingEndTime && shortBiography && instagramProfile) {
-      await api({
-        method: 'patch',
-        url: '/profile/update/master',
-        body: {
-          workingStartTime,
-          workingEndTime,
-          shortBiography,
-          instagramProfile,
-        },
+    
+    await api({
+      method: 'patch',
+      url: '/profile/update/master',
+      data: updateData,
+    })
+      .then(r => {
+        console.log(r.data)
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_SUCCESS, r.data))
       })
-        .then(r => {
-          dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_SUCCESS, r.data))
-        })
-        .catch(e => {
-          dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_ERROR, e?.response?.data))
-        })
-    }
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_ERROR, e?.response?.data))
+      })
   }
 }
 
@@ -173,7 +162,6 @@ const updateMaster = ({
 // update master weekend days
 const updateMasterWeekendDays = (weekendDays) => {
   return async dispatch => {
-    console.log(weekendDays)
     dispatch(makeAction(types.USER_UPDATE_WEEKEND_DAYS))
 
     await api({

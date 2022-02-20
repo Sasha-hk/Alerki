@@ -133,7 +133,7 @@ const userReducer = (state = defaultUserState, action) => {
         errors: action.payload,
       }
 
-    // become master
+    // update master
     case types.USER_UPDATE_MASTER:
       return {
         ...state,
@@ -142,7 +142,7 @@ const userReducer = (state = defaultUserState, action) => {
         errors: null,
       }
 
-    case types.USER_UPDATE_SUCCESS:
+    case types.USER_UPDATE_MASTER_SUCCESS:
       return {
         ...state,
         user: {
@@ -157,7 +157,7 @@ const userReducer = (state = defaultUserState, action) => {
         errors: null,
       }
 
-    case types.USER_UPDATE_ERROR:
+    case types.USER_UPDATE_MASTER_ERROR:
       return {
         ...state,
         loading: false,

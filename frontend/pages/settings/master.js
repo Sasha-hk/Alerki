@@ -35,15 +35,33 @@ const Settings = () => {
     instagramProfile: null,
     weekendDays: {},
   })
+  const convertTimeToMilliseconds = (time) => {
+    const parsed = time.split(':')
+    return parsed[0] * 60 * 60 * 1000 + parsed[1] * 60 * 1000
+  }
+
+  const convertMillisecondsToTime = (milliseconds) => {
+    const hours = String(Math.floor(milliseconds / 60 / 60 / 1000))
+    const seconds = String(milliseconds % 60 / 1000)
+    
+    return `${hours.length == 1 ? '0' + hours : hours}:${seconds.length == 1 ? '0' + seconds : seconds}` 
+  }
 
   useEffect(() => {
-    setUpdateMasterData({
-      workingStartTime: user?.master?.workingStartTime,
-      workingEndTime: user?.master?.workingEndTime,
-      shortBiography: user?.master?.shortBiography,
-      instagramProfile: user?.master?.instagramProfile,
-      weekendDays: user?.master?.weekendDays,
-    })
+    if (user.master) {
+      console.log(user.master)
+      setUpdateMasterData({
+        workingStartTime: user?.master?.workingStartTime
+          ? convertMillisecondsToTime(user?.master?.workingStartTime)
+          : null,
+        workingEndTime: user?.master?.workingEndTime
+          ? convertMillisecondsToTime(user?.master?.workingEndTime)
+          : null,
+        shortBiography: user?.master?.shortBiography,
+        instagramProfile: user?.master?.instagramProfile,
+        weekendDays: user?.master?.weekendDays,
+      })
+    }
   }, [user])
 
   const onUpdateWeekendDays = (e) => {
@@ -58,14 +76,28 @@ const Settings = () => {
     setUpdateMasterData(updatedDays)
   }
 
+  
+
   const handleSubmit = (e) => {
     e.preventDefault()
+    
     if (updateMasterData.weekendDays) {
       dispatch(userActions.updateMasterWeekendDays(updateMasterData.weekendDays))
     }
-
-    if (updateMasterData.workingStartTime && updateMasterData.workingEndTime && updateMasterData.shortBiography && updateMasterData.instagramProfile) {
-      dispatch(userActions.updateMaster(updateMasterData))
+    if (updateMasterData.workingStartTime || 
+        updateMasterData.workingEndTime || 
+        updateMasterData.shortBiography || 
+        updateMasterData.instagramProfile
+      ) {
+      dispatch(userActions.updateMaster({
+        ...updateMasterData,
+        workingStartTime: updateMasterData.workingStartTime
+          ? convertTimeToMilliseconds(updateMasterData.workingStartTime)
+          : null,
+        workingEndTime: updateMasterData.workingEndTime 
+          ? convertTimeToMilliseconds(updateMasterData.workingEndTime)
+          : null,
+      }))
     }
   }
 
@@ -85,7 +117,7 @@ const Settings = () => {
             <Input
               className="middle"
               placeholder="form"
-              // value="9:0:0.0"
+              value={updateMasterData.workingStartTime || ""}
               onChange={e => setUpdateMasterData({
                 ...updateMasterData,
                 workingStartTime: e.target.value,
@@ -97,10 +129,10 @@ const Settings = () => {
             <Input
               className="middle"
               placeholder="to"
-              // value={updateMasterData.workingEndTime}
+              value={updateMasterData.workingEndTime || ""}
               onChange={e => setUpdateMasterData({
                 ...updateMasterData,
-                workingEntTime: e.target.value,
+                workingEndTime: e.target.value,
               })}
               type="time"
             />
@@ -114,10 +146,10 @@ const Settings = () => {
                 weekDays.map(e => {
                   return (
                     <label key={e}>
-                      <Input 
+                      <Input
                         type="checkbox"
                         name={e}
-                        checked={updateMasterData?.weekendDays?.[e] || null}
+                        checked={updateMasterData?.weekendDays?.[e] || false}
                         onChange={e => onUpdateWeekendDays(e)}
                       />
                       {e}
