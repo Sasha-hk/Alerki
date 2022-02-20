@@ -190,6 +190,7 @@ class ProfileController {
       res.json(masterData)
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
