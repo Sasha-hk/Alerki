@@ -8,7 +8,7 @@ const defaultUserState = {
     email: null,
     firstName: null,
     lastName: null,
-    profileType: null, 
+    profileType: null,
   },
   loading: false,
   error: false,
@@ -126,6 +126,70 @@ const userReducer = (state = defaultUserState, action) => {
       }
 
     case types.USER_BECOME_MASTER_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+
+    // update master
+    case types.USER_UPDATE_MASTER:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_UPDATE_MASTER_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          master: {
+            ...state.user.master,
+            ...action.payload,
+          }
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_UPDATE_MASTER_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+
+    // become master
+    case types.USER_UPDATE_WEEKEND_DAYS:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_UPDATE_WEEKEND_DAYS_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          master: {
+            ...state.user.master,
+            weekendDays: action.payload,
+          }
+        },
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.USER_UPDATE_WEEKEND_DAYS_ERROR:
       return {
         ...state,
         loading: false,

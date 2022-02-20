@@ -164,10 +164,6 @@ class ProfileController {
   async updateMaster(req, res, next) {
     try {
       const {
-        username,
-        firstName,
-        lastName,
-        picture,
         workingStartTime,
         workingEndTime,
         shortBiography,
@@ -175,10 +171,6 @@ class ProfileController {
       } = req.body
       
       checkParams.atLeastOne({
-        username,
-        firstName,
-        lastName,
-        picture,
         workingStartTime,
         workingEndTime,
         shortBiography,
@@ -198,6 +190,7 @@ class ProfileController {
       res.json(masterData)
     }
     catch (e) {
+      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }

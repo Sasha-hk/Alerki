@@ -1,4 +1,6 @@
 const UserService = require('../service/UserService')
+const ProfilieService = require('../service/ProfileService')
+const MasterWeekendDaysService = require('../service/MasterWeekendDaysService')
 const getDeviceName = require('../utils/deviceName')
 const GoogleOAuth = require('../oauth/GoogleOAuth')
 const checkParams = require('../utils/validators/checkParams')
@@ -163,7 +165,16 @@ class AuthController {
       const user = await UserService.findUserByID({
         id: req.accessToken.id,
       })
+      
       const userData = new UserDto(user)
+
+      if (req.accessToken.masterID) {
+        const masterProfile = await ProfilieService.findMasterByID({id: req.accessToken.masterID})
+        userData.appendMaster(masterProfile)
+        const weekendDays = await MasterWeekendDaysService.findByID({id: masterProfile.weekendDaysID})
+        userData.appendWeekendDays(weekendDays)
+      }
+      
 
       res.json(userData)
     }

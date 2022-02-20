@@ -53,6 +53,9 @@ class ProfileService {
     shortBiography,
     instagramProfile,
   }) {
+    checkTypes.hardNumber(Number(workingStartTime), 'workingStartTime')
+    checkTypes.hardNumber(Number(workingEndTime), 'workingEndTime')
+    
     await MasterProfileModel.update(
       {
         workingStartTime,

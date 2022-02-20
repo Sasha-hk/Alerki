@@ -138,6 +138,46 @@ const becomeMaster = () => {
   }
 }
 
+// update master
+const updateMaster = (updateData) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_UPDATE_MASTER))
+    
+    await api({
+      method: 'patch',
+      url: '/profile/update/master',
+      data: updateData,
+    })
+      .then(r => {
+        console.log(r.data)
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_ERROR, e?.response?.data))
+      })
+  }
+}
+
+
+// update master weekend days
+const updateMasterWeekendDays = (weekendDays) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_UPDATE_WEEKEND_DAYS))
+
+    await api({
+      method: 'patch',
+      url: '/profile/update/master/weekend-days',
+      data: {weekendDays},
+    })
+      .then(r => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_WEEKEND_DAYS_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_WEEKEND_DAYS_ERROR, e?.response?.data))
+      })
+  }
+}
+
 
 export default {
   upload,
@@ -145,6 +185,8 @@ export default {
   createService,
   updateService,
   deleteService,
+  updateMaster,
+  updateMasterWeekendDays,
   becomeMaster,
   becomeClient,
 }
