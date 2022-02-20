@@ -31,6 +31,9 @@
   --btn-muted-color: #6B6680;
   --btn-danger: #bb1010;
   --btn-danger-color: #aa0c0c;
+
+  --textarea-border: 1px solid #000;
+  --textarea-placeholder-color: #000;
 }
 
 /* dark */
@@ -66,4 +69,7 @@
   --btn-muted-color: #6F6D76;
   --btn-danger-border: 1px solid #a71212;
   --btn-danger-color: #da4747;
+
+  --textarea-border: 1px solid #fff;
+  --textarea-placeholder-color: #fff;
 }
