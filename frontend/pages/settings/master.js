@@ -49,7 +49,6 @@ const Settings = () => {
 
   useEffect(() => {
     if (user.master) {
-      console.log(user.master)
       setUpdateMasterData({
         workingStartTime: user?.master?.workingStartTime
           ? convertMillisecondsToTime(user?.master?.workingStartTime)
@@ -75,8 +74,6 @@ const Settings = () => {
     updatedDays['weekendDays'][e.target.name] = e.target.checked
     setUpdateMasterData(updatedDays)
   }
-
-  
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -110,6 +107,19 @@ const Settings = () => {
           className="space-above"
           onSubmit={e => handleSubmit(e)}
         >
+          <div>
+            <label>About: </label>
+
+            <textarea 
+              cols="30" 
+              rows="10"
+              value={updateMasterData.shortBiography}
+              onChange={e => setUpdateMasterData({...updateMasterData, shortBiography: e.target.value})}
+              placeholder="About you..."
+            >
+
+            </textarea>
+          </div>
           <div>
             <label>Work time:</label>
 

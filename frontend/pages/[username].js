@@ -89,8 +89,8 @@ const Profile = () => {
     <>
       {headerView}
 
-      <div className={cls.about}>
-        <span>{profile.master?.shortBiography}</span>
+      <div className={[cls.about, 'mt-4'].join(' ')}>
+        <span className="text-muted">{profile.master?.shortBiography}</span>
       </div>
 
       <div className={cls.services}>
