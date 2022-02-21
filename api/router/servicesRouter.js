@@ -4,16 +4,20 @@ const router = new Router()
 
 
 router
-    .get(
-        '/find',
-        ServiceController.findByName
-    )
+  .get(
+    '/',
+    ServiceController.services
+  )
+  .get(
+    '/find',
+    ServiceController.findByName
+  )
 
 router
-    .post(
-        '/create',
-        ServiceController.create
-    )
+  .post(
+    '/create',
+    ServiceController.create
+  )
 
 
 module.exports = router
