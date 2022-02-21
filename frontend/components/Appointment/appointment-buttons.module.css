@@ -1,0 +1,89 @@
+.buttons_wrapper {
+  display: flex;
+  column-gap: 5px;
+  overflow: hidden;
+}
+
+.service_button,
+.master_button {
+  cursor: pointer;
+  background: var(--bg-block);
+  width: 100%;
+}
+
+.service_button {
+  border-radius: 14px;
+  border-radius: var(--buttons-border) 0 0 var(--buttons-border);
+}
+
+.master_button {
+  border-radius: 0 var(--buttons-border) var(--buttons-border) 0;
+}
+
+.button_inscription {
+  user-select: none;
+}
+
+
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+  .buttons_wrapper {
+    --buttons-border: 14px;
+  }
+  .service_button,
+  .master_button {
+    padding: 20px;
+    height: 150px;
+  }
+  .button_inscription {
+    font-size: 30px;
+  }
+}
+
+/* XL / Extra large */
+@media only screen and (max-width: 1400px) {
+  .buttons_wrapper {
+    --buttons-border: 14px;
+  }
+  .service_button,
+  .master_button {
+    padding: 20px;
+    height: 150px;
+  }
+  .button_inscription {
+    font-size: 35px;
+  }
+}
+
+/* LG / Large */
+@media only screen and (max-width: 1200px) {
+
+}
+
+/* MD / Medium */
+@media only screen and (max-width: 992px) {
+
+}
+
+/* SM / little */
+@media only screen and (max-width: 768px) {
+  .button_inscription {
+    font-size: 30px;
+  }
+}
+
+/* XS / Extra little */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+  .buttons_wrapper {
+    --buttons-border: 7px;
+  }
+  .service_button,
+  .master_button {
+    padding: 10px 12px;
+    height: 100px;
+  }
+  .button_inscription {
+    font-size: 24px;
+  }
+}
