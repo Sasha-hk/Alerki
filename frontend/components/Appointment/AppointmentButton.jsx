@@ -1,16 +1,38 @@
 import { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
+import appointmentActins from '../../store/actions/appointmentActions.js'
+import ServiceItem from './ServiceItem'
+import api from '../../http'
 import cls from './appointment-buttons.module.css'
 
 
 const AppointmentButton = () => {
+  const dispatch = useDispatch()
+  const appointmentStore = useSelector(store => store.appointment)
+  const appointments = appointmentStore.appointments
+
   const [selectService, setSelectService] = useState()
   const [serviceWindow, setServiceWindow] = useState(false)
   const [selectMaster, setSelectMaster] = useState()
   const [masterWindow, setMasterWindow] = useState(false)
+
+  const [services, setServices] = useState()
+
+  useEffect(() => {
+    api({
+      url: '/services/',
+      params: {
+        limit: 30,
+        page: 0,
+      }
+    })
+      .then(r => {
+        setServices(r.data)
+      })
+  }, [])
 
   return (
     <div className={cls.buttons_wrapper}>
@@ -20,11 +42,21 @@ const AppointmentButton = () => {
         onClose={setServiceWindow}
       >
         <div>
-          <span>Service</span>
+          <span className="text-big">Service</span>
 
-          <form className="space-above">
-            some inputs...
-          </form>
+          <ul className={[cls.services_wrapper, 'mt-3', 'pb-2'].join(' ')}>
+            {
+              services
+                ? services.map(e => {
+                  return (
+                    <ServiceItem key={e.id}>
+                      {e.name}
+                    </ServiceItem>
+                  )
+                })
+                : null
+            }
+          </ul>
         </div>
 
         <div>
