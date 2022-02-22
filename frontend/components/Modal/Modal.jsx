@@ -5,7 +5,7 @@ import cls from './modal.module.css'
 const Modal = ({children, show, onClose, padding = true, ...props}) => {
   // add classes to content div and buttons div
   if (Array.isArray(children)) {
-    if (padding) {
+    if (padding && children[0]) {
       var content = cloneElement(children[0], {
         className: [children[0].props.className, cls.modal_content].join(' ')
       })
@@ -14,9 +14,12 @@ const Modal = ({children, show, onClose, padding = true, ...props}) => {
       content = children[0]
     }
 
-    var buttons = cloneElement(children[1], {
-      className: [children[1].props.className, cls.modal_buttons].join(' ')
-    })
+    if (children[1]) {
+      var buttons = cloneElement(children[1], {
+        className: [children[1].props.className, cls.modal_buttons].join(' ')
+      })
+    }
+
   }
   else if (padding) {
     var content = cloneElement(children, {

@@ -1,6 +1,5 @@
 /* custom structure */
 .modal_heading {
-  /* position: absolute; */
   background: var(--modal-content-bg);
   position: sticky;
   top: 0;
