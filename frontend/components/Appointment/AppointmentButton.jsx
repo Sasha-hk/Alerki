@@ -40,16 +40,19 @@ const AppointmentButton = () => {
       <Modal 
         show={serviceWindow}
         onClose={setServiceWindow}
+        padding={false}
       >
         <div>
-          <span className="text-big">Service</span>
+          <div className="heading">
+            <span className="text-big heading">Service</span>
+          </div>
 
           <ul className={[cls.services_wrapper, 'mt-3', 'pb-2'].join(' ')}>
             {
               services
                 ? services.map(e => {
                   return (
-                    <ServiceItem key={e.id}>
+                    <ServiceItem key={e.id} className="paddings">
                       {e.name}
                     </ServiceItem>
                   )

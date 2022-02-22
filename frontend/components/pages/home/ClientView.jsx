@@ -8,9 +8,7 @@ const ClientView = () => {
       <div>
         Future appointment views
       </div>
-
       
-
       <AppointmentButton />
     </HomeWrapper>
   )
