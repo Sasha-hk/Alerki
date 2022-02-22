@@ -12,10 +12,9 @@ import cls from '../../styles/pages/home/base.module.css'
 
 const useFiltredServices = (services, sort) => {
   const filtred = useMemo(() => {
-    return services.filter(service => {
-      console.log(service)
-      return service.name.toLowerCase().includes(sort.toLowerCase())
-    })
+    if (services) {
+      return services.filter(service => service.name.toLowerCase().includes(sort.toLowerCase()))
+    }
   }, [services, sort])
 
   return filtred
@@ -33,7 +32,7 @@ const AppointmentButton = () => {
   
   const [services, setServices] = useState()
 
-  const [servicesFilter, setServicesFilter] = useState(null)
+  const [servicesFilter, setServicesFilter] = useState('')
   const filtredServices = useFiltredServices(services, servicesFilter)
 
   useEffect(() => {
