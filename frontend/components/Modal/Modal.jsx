@@ -3,7 +3,6 @@ import cls from './modal.module.css'
 
 
 const Modal = ({children, show, onClose, padding = true, ...props}) => {
-  console.log(children)
   // add classes to content div and buttons div
   if (Array.isArray(children)) {
     if (padding && children[0]) {
