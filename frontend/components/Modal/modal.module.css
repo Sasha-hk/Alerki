@@ -46,18 +46,6 @@
   width: var(--modal-width);
 }
 
-/* custom structure */
-.modal_content_scroll_wrapper .heading {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: var(--modal-buttons-padding);
-  background: red;
-}
-.modal_content_scroll_wrapper .paddings {
-  padding: var(--modal-side-padding);
-}
-
 /* active */
 .active{
   display: none;
@@ -73,7 +61,7 @@
     --modal-width: 400px;
     --modal-height: 400px;
     --modal-content-padding: 32px 24px;
-    --modal-side-padding: 0 24px;
+    --modal-side-padding: 24px;
     --modal-buttons-padding: 16px 24px;
   }
 }
@@ -84,7 +72,7 @@
     --modal-width: 400px;
     --modal-height: 400px;
     --modal-content-padding: 32px 24px;
-    --modal-side-padding: 0 24px;
+    --modal-side-padding: 24px;
     --modal-buttons-padding: 16px 24px;
   }
 }
@@ -111,7 +99,7 @@
   .modal_window {
     --modal-width: 100%;
     --modal-content-padding: 20px 16px;
-    --modal-side-padding: 0 16px;
+    --modal-side-padding: 16px;
     --modal-buttons-padding: 16px 16px;
   }
 }
@@ -121,7 +109,7 @@
   .modal_window {
     --modal-height: 50vh;
     --modal-content-padding: 20px 16px;
-    --modal-side-padding: 0 16px;
+    --modal-side-padding: 16px;
     --modal-buttons-padding: 16px 16px;
   }
 }
@@ -129,7 +117,7 @@
   .modal_window {
     --modal-height: 500px;
     --modal-content-padding: 20px 16px;
-    --modal-side-padding: 0 16px;
+    --modal-side-padding: 16px;
     --modal-buttons-padding: 16px 16px;
   }
 }
