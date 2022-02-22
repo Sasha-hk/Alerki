@@ -1,4 +1,4 @@
-const {ServiceModel} = require('../db/models')
+const {Sequelize, ServiceModel} = require('../db/models')
 
 
 class ServiceService {
@@ -10,10 +10,12 @@ class ServiceService {
         'name',
       ],
       where: {
-        name,
+        name: {
+          [Sequelize.Op.like]: name,
+        },
       },
       offset: page ? page * limit : 0,
-      limit: limit || 24,
+      limit: limit || 50,
     })
 
     return results

@@ -4,3 +4,13 @@
   justify-content: space-between;
   height: 100%;
 }
+
+.service_search_input {
+  border: none;
+  outline: none !important;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.service_search_input::placeholder {
+  font-size: 20px;
+}

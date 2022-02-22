@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
@@ -6,8 +6,19 @@ import Input from '../UI/Input/Input'
 import appointmentActins from '../../store/actions/appointmentActions.js'
 import ServiceItem from './ServiceItem'
 import api from '../../http'
-import cls from './appointment-buttons.module.css'
+import clsButton from './appointment-buttons.module.css'
+import cls from '../../styles/pages/home/base.module.css'
 
+
+const useFiltredServices = (services, sort) => {
+  const filtred = useMemo(() => {
+    if (services) {
+      return services.filter(service => service.name.toLowerCase().includes(sort.toLowerCase()))
+    }
+  }, [services, sort])
+
+  return filtred
+}
 
 const AppointmentButton = () => {
   const dispatch = useDispatch()
@@ -18,8 +29,11 @@ const AppointmentButton = () => {
   const [serviceWindow, setServiceWindow] = useState(false)
   const [selectMaster, setSelectMaster] = useState()
   const [masterWindow, setMasterWindow] = useState(false)
-
+  
   const [services, setServices] = useState()
+
+  const [servicesFilter, setServicesFilter] = useState('')
+  const filtredServices = useFiltredServices(services, servicesFilter)
 
   useEffect(() => {
     api({
@@ -35,28 +49,37 @@ const AppointmentButton = () => {
   }, [])
 
   return (
-    <div className={cls.buttons_wrapper}>
+    <div className={clsButton.buttons_wrapper}>
       {/* service modal */}
       <Modal 
         show={serviceWindow}
         onClose={setServiceWindow}
+        padding={false}
       >
         <div>
-          <span className="text-big">Service</span>
+          <Input 
+            className={['modal_heading', cls.service_search_input].join(' ')}
+            placeholder="service name"
+            onChange={e => {
+              setServicesFilter(e.target.value)
+            }}
+          />
 
-          <ul className={[cls.services_wrapper, 'mt-3', 'pb-2'].join(' ')}>
-            {
-              services
-                ? services.map(e => {
-                  return (
-                    <ServiceItem key={e.id}>
-                      {e.name}
-                    </ServiceItem>
-                  )
-                })
-                : null
-            }
-          </ul>
+          <div className={[clsButton.services_wrapper, 'pb-2'].join(' ')}>
+            <div>
+              {
+                services
+                  ? filtredServices.map(e => {
+                    return (
+                      <ServiceItem key={e.id} className="modal_paddings">
+                        {e.name}
+                      </ServiceItem>
+                    )
+                  })
+                  : null
+              }
+            </div>
+          </div>
         </div>
 
         <div>
@@ -78,17 +101,17 @@ const AppointmentButton = () => {
 
       {/* master modal in future */}
       <div 
-        className={cls.service_button}
+        className={clsButton.service_button}
         onClick={e => setServiceWindow(true)}
       >
-        <span className={cls.button_inscription}>Service</span>
+        <span className={clsButton.button_inscription}>Service</span>
       </div>
 
       <div 
-        className={cls.master_button}
+        className={clsButton.master_button}
         onClick={e => console.log('Master')}
       >
-        <span className={cls.button_inscription}>Master</span>
+        <span className={clsButton.button_inscription}>Master</span>
       </div>
     </div>
   )

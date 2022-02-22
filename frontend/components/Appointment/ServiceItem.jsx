@@ -3,12 +3,12 @@ import cls from './service-item.module.css'
 
 const ServiceItem = ({children, ...props}) => {
   return (
-    <li
+    <option
       {...props}
       className={[cls.service_item, props.className].join(' ')}
     >
       {children}
-    </li>
+    </option>
   )
 }
 

@@ -1,7 +1,8 @@
 .service_item {
   list-style: none;
-  padding: 10px 0;
+  padding-top: 17px;
+  padding-bottom: 17px;
 }
-.service_item:not(:last-child) {
-  border-bottom: 0.5px solid rgb(90, 90, 90);
+.service_item {
+  border-top: 0.2px solid rgb(90, 90, 90);
 }
