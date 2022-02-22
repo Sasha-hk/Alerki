@@ -26,14 +26,14 @@ const upload = () => {
 }
 
 // find services
-const find = (querys) => {
+const find = (querys = {name: null, limit: 25, page: 0}) => {
   return async dispatch => {
     dispatch(makeAction(types.SERVICE_FIND))
-    
+    console.log(querys) 
     await api({
       method: 'get',
       url: '/services/find',
-      props: querys,
+      params: querys,
     })
       .then(r => {
         dispatch(makeActionWithPayload(types.SERVICE_FIND_SUCCESS, r.data))
