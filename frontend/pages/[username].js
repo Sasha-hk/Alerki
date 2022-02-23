@@ -10,6 +10,7 @@ import CreateService from '../components/pages/profile/CreateService.jsx'
 import UpdateService from '../components/pages/profile/UpdateService.jsx'
 import ServiceView from '../components/pages/profile/ServiceView.jsx'
 import Button from '../components/UI/Button/Button.jsx'
+import UserPicture from '../components/UserPicture/UserPicture.jsx'
 import Input from '../components/UI/Input/Input.jsx'
 import Select from '../components/UI/Select/Select.jsx'
 import Modal from '../components/Modal/Modal.jsx'
@@ -53,22 +54,7 @@ const Profile = () => {
   // general view for master and client
   const headerView = (
     <div className={cls.header}>
-      {
-        profile.pictureID
-          ? <img
-            className={cls.user_picture}
-            src={`${API_URL}/profile/picture/${profile.pictureID}`}
-            alt=""
-          />
-        : <svg 
-          className={cls.plug_user_picture}
-          viewBox="0 0 29 29"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="14.5" cy="14.5" r="14.5" />
-        </svg>
-      }
+      <UserPicture pictureID={profile.pictureID} size="big" />
 
       <div className={cls.header_info}>
         <span className="text-big">{profile.firstName} {profile.lastName}</span>
@@ -116,6 +102,7 @@ const Profile = () => {
                       setShowModal={setShowModal}
                     />
                 }
+
                 {
                   profile.master?.services.map(service => {
                     return (

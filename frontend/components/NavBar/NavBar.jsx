@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
 import Button from '../UI/Button/Button'
+import UserPicture from '../UserPicture/UserPicture'
 import { useAuth } from '../../provider/AuthProvider.js'
 
 
@@ -32,18 +33,8 @@ const NavBar = () => {
       </Link>
 
       <Link href={`/${user.username}/`}>
-        <a>   
-          {
-            user.pictureID
-              ? <img
-                className="navigation-profile-picture"
-                src={`${API_URL}/profile/picture/${user.pictureID}`}
-                alt="user picture"
-              />
-              : <svg className="navigation-plug-profile-picture" width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <circle cx="14.5" cy="14.5" r="14.5" />
-              </svg>
-          }
+        <a>
+          <UserPicture pictureID={user.pictureID} size="little" />
         </a>
       </Link>
     </nav>

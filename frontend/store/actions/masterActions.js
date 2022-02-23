@@ -17,7 +17,7 @@ const upload = ({
 
     await api({
       method: 'get',
-      url: '/profile/master/from-now',
+      url: '/profile/find-master',
       params: {
         service_id: serviceID,
         limit,
@@ -29,7 +29,7 @@ const upload = ({
       })
       .catch(e => {
         dispatch(makeActionWithPayload(types.MASTER_UPLOAD_ERROR, e?.response?.data))
-      }) 
+      })
   }
 }
 

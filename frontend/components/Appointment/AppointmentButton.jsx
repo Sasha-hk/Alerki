@@ -5,6 +5,7 @@ import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
 import appointmentActins from '../../store/actions/appointmentActions.js'
 import serviceActions from '../../store/actions/serviceActions.js'
+import masterActions from '../../store/actions/masterActions.js'
 import ServiceItem from './ServiceItem'
 import api from '../../http'
 import clsButton from './appointment-buttons.module.css'
@@ -50,6 +51,8 @@ const AppointmentButton = () => {
   const appointments = appointmentStore.appointments
   const serviceStore = useSelector(store => store.service)
   const services = serviceStore.services
+  const masterStore = useSelector(store => store.master)
+  const masters = masterStore.masters
 
   const [showButtons, setShowButtons] = useState(defaultShowButtonsState)
   const [showModal, setShowModal] = useState(defaultShowModalsState)
@@ -113,7 +116,11 @@ const AppointmentButton = () => {
               setAppointment({
                 ...appointment,
                 serviceID: e.target.dataset.id,
-              }) 
+              })
+
+              dispatch(masterActions.upload({
+                serviceID: e.target.dataset.id,
+              }))
 
               setShowModal({...showModal, service: false, master: true})
             }
@@ -187,11 +194,11 @@ const AppointmentButton = () => {
         >
           <div>
             {
-              services
+              masters
                 ? filtredServices.map(e => {
                   return (
                     <ServiceItem 
-                      key={e.id} 
+                      key={e.id}
                       data-id={e.id}
                       className="modal_paddings"
                     >
@@ -224,9 +231,9 @@ const AppointmentButton = () => {
             </div>
           : null
       }
-
     </Modal>    
   )
+
   return (
     <div className={clsButton.buttons_wrapper}>
       {selectServiceWindow}
