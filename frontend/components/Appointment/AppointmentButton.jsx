@@ -49,6 +49,7 @@ const AppointmentButton = () => {
 
   return (
     <div className={clsButton.buttons_wrapper}>
+      {/* modal windows */}
       <SelectServiceWindow 
           appointment={appointment}
           setAppointment={setAppointment}
@@ -58,14 +59,14 @@ const AppointmentButton = () => {
           setShowButtons={setShowButtons}
       />
 
-      {/* <SelectMasterWindow
+      <SelectMasterWindow
           appointment={appointment}
           setAppointment={setAppointment}
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}
           setShowButtons={setShowButtons}
-      /> */}
+      />
 
       {/* buttons */}
       <div 
