@@ -1,6 +1,8 @@
-const MasterView = ({master}) => {
+const MasterView = ({master, ...props}) => {
   return (
-    <div>
+    <div
+      {...props}
+    >
       masterView
     </div>
   )

@@ -1,4 +1,5 @@
 import * as types from '../types/masterTypes'
+import shiftObjects from '../../utils/shiftObjects'
 
 
 const defaultMasterState = {
@@ -7,7 +8,6 @@ const defaultMasterState = {
   error: false,
   errors: null,
 }
-
 
 const masterReducer = (state = defaultMasterState, action) => {
   switch (action.type) {
@@ -23,13 +23,13 @@ const masterReducer = (state = defaultMasterState, action) => {
     case types.MASTER_UPLOAD_SUCCESS:
       return {
         ...state,
-        masters: [
+        masters: shiftObjects([
           ...state.masters,
           ...action.payload,
-        ],
+        ], 'id'),
         loading: false,
         error: false,
-        errorMessage: null,
+        errors: null,
       }
 
     case types.MASTER_UPLOAD_ERROR:

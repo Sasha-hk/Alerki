@@ -5,6 +5,7 @@ import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
 import masterActions from '../../store/actions/masterActions.js'
 import ServiceItem from './ServiceItem'
+import MasterView from './MasterView'
 import cls from '../../styles/pages/home/base.module.css'
 
 
@@ -55,16 +56,17 @@ const SelectMasterWindow = ({
             {
               masters
                 ? masters.map(e => {
-                  return (
-                    <ServiceItem 
-                      key={e.id}
-                      data-id={e.id}
-                      className="modal_paddings"
-                    >
-                      {e.username}
-                    </ServiceItem>
-                  )
-                })
+                  console.log(e)
+                    return (
+                      <MasterView
+                        key={e.id}
+                        data-id={e.id}
+                        className="modal_paddings"
+                      >
+                        {e.username}
+                      </MasterView>
+                    )
+                  })
                 : null
             }
           </div>
