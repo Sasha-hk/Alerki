@@ -23,10 +23,10 @@ const masterReducer = (state = defaultMasterState, action) => {
     case types.MASTER_UPLOAD_SUCCESS:
       return {
         ...state,
-        masters: {
+        masters: [
           ...state.masters,
           ...action.payload,
-        },
+        ],
         loading: false,
         error: false,
         errorMessage: null,
