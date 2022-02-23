@@ -83,6 +83,7 @@ const AppointmentButton = () => {
   // close windows
   const closeSelectServiceWindow = () => {
     setShowModal({...showModal, service: false})
+    setShowButtons({...showButtons, service: true})
   }
 
   const closeSelectMasterWindow = () => {
@@ -90,7 +91,7 @@ const AppointmentButton = () => {
   }
 
   const selectServiceWindow = (
-    <Modal 
+    <Modal
       show={showModal.service}
       onClose={closeSelectServiceWindow}
       padding={false}
@@ -114,8 +115,7 @@ const AppointmentButton = () => {
                 serviceID: e.target.dataset.id,
               }) 
 
-              setShowModal({...showModal, service: false})
-              setShowModal({...showModal, master: true})
+              setShowModal({...showModal, service: false, master: true})
             }
           }}
         >
@@ -205,21 +205,26 @@ const AppointmentButton = () => {
         </div>
       </div>
 
-      <div>
-        <Button 
-          className="middle muted"
-          onClick={e => setShowModal({...showModal, master: false})}
-        >
-          close
-        </Button>
+      {
+        showButtons.master
+          ? <div>
+              <Button 
+                className="middle muted"
+                onClick={e => setShowModal({...showModal, master: false})}
+              >
+                close
+              </Button>
 
-        <Button 
-          className="middle primary"
-          onClick={e => setShowModal({...showModal, master: false})}
-        >
-          confirm
-        </Button>
-      </div>
+              <Button 
+                className="middle primary"
+                onClick={e => setShowModal({...showModal, master: false})}
+              >
+                confirm
+              </Button>
+            </div>
+          : null
+      }
+
     </Modal>    
   )
   return (
