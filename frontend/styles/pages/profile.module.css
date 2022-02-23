@@ -74,6 +74,9 @@
     .header_info {
         text-align: center;
     }
+    .picture_space {
+        margin-bottom: 16px;
+    }
 }
 
 /* SM / little */
