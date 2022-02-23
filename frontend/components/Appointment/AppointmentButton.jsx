@@ -43,9 +43,9 @@ const AppointmentButton = () => {
   const appointmentStore = useSelector(store => store.appointment)
   const appointments = appointmentStore.appointments
 
+  const [appointment, setAppointment] = useState(defaultAppointmentState)
   const [showButtons, setShowButtons] = useState(defaultShowButtonsState)
   const [showModal, setShowModal] = useState(defaultShowModalsState)
-  const [appointment, setAppointment] = useState(defaultAppointmentState)
 
   return (
     <div className={clsButton.buttons_wrapper}>
@@ -58,16 +58,16 @@ const AppointmentButton = () => {
           setShowButtons={setShowButtons}
       />
 
-      <SelectMasterWindow
+      {/* <SelectMasterWindow
           appointment={appointment}
           setAppointment={setAppointment}
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}
           setShowButtons={setShowButtons}
-      />
+      /> */}
 
-      {/* master modal in future */}
+      {/* buttons */}
       <div 
         className={clsButton.service_button}
         onClick={e => setShowModal({...showModal, service: true})}
