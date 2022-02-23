@@ -1,4 +1,5 @@
 import * as types from '../types/serviceTypes'
+import shiftObjects from '../../utils/shiftObjects'
 
 
 const defaultServiceState = {
@@ -22,10 +23,10 @@ const serviceReducer = (state = defaultServiceState, action) => {
     case types.SERVICE_UPLOAD_SUCCESS:
       return {
         ...state,
-        services: [
+        services: shiftObjects([
           ...state.services,
           ...action.payload,
-        ],
+        ], 'id'),
         loading: false,
         error: false,
         errors: null,
@@ -51,10 +52,10 @@ const serviceReducer = (state = defaultServiceState, action) => {
     case types.SERVICE_FIND_SUCCESS:
       return {
         ...state,
-        services: [
+        services: shiftObjects([
           ...state.services,
           ...action.payload,
-        ].filter(unique),
+        ], 'id'),
         loading: false,
         error: false,
         errors: null,

@@ -17,6 +17,7 @@ import '../styles/UI/select.css'
 import '../styles/forms.css'
 import '../styles/UI/textarea.css'
 import '../styles/UI/modal.css'
+import '../styles/user-picture.css'
 
 
 function App({ Component, pageProps }) {
