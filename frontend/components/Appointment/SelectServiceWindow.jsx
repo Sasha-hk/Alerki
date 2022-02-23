@@ -1,17 +1,67 @@
+import { useEffect, useState, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
+import serviceActions from '../../store/actions/serviceActions.js'
+import masterActions from '../../store/actions/masterActions.js'
 import ServiceItem from './ServiceItem'
+import cls from '../../styles/pages/home/base.module.css'
 
+
+const useFiltredServices = (services, sort) => {
+  const filtred = useMemo(() => {
+    if (services) {
+      return services.filter(service => service.name.toLowerCase().includes(sort.toLowerCase()))
+    }
+  }, [services, sort])
+
+  return filtred
+}
 
 const SelectServiceWindow = ({
-  services,
+  appointment,
+  setAppointment,
   showModal, 
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
-    return (
+  const dispatch = useDispatch()
+  const serviceStore = useSelector(store => store.service)
+  const services = serviceStore.services
+ 
+  const [servicesFilter, setServicesFilter] = useState('')
+  const filtredServices = useFiltredServices(services, servicesFilter)
+
+  // upload services
+  useEffect(() => {
+    dispatch(serviceActions.upload())
+  }, [])
+
+  const closeSelectServiceWindow = () => {
+    setShowModal({...showModal, service: false})
+    setShowButtons({...showButtons, service: true})
+  }
+
+  // find services if it's need
+  const findIfRequire = (e) => {
+    let ifUpload = true
+    for (let i of services) {
+      if (i.name.includes(e.target.value)) {
+        ifUpload = false
+        break
+      }
+    }
+
+    if (ifUpload) {
+      dispatch(serviceActions.find({
+        name: e.target.value
+      }))
+    }
+  }
+
+  return (
     <Modal
       show={showModal.service}
       onClose={closeSelectServiceWindow}
