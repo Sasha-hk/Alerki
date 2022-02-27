@@ -133,7 +133,6 @@ const profileReducer = (state = defaultProfileState, action) => {
             services: [
               ...state.profile.master.services,
             ].filter(e => {
-              console.log(e, action.payload, e.id != action.payload)
               return e.id != action.payload
             })
           }

@@ -24,11 +24,6 @@ const SelectMasterWindow = ({
   const masterStore = useSelector(store => store.master)
   const masters = masterStore.masters
 
-  // upload services
-  useEffect(() => {
-    dispatch(masterActions.upload({serviceID: appointment.serviceID}))
-  }, [])
-
   const closeSelectMasterWindow = () => {
     setShowModal({...showModal, master: false})
   }
@@ -69,8 +64,8 @@ const SelectMasterWindow = ({
                 if (e.target.dataset['masterId']) {
                   setAppointment({
                     ...appointment,
-                    masterID: e.target.dataset['masterId'],
-                    masterServiceID: e.target.dataset['masterServiceId'],
+                    masterID: e.target.dataset.masterId,
+                    masterServiceID: e.target.dataset.masterServiceId,
                   })
 
                   // dispatch(masterActions.upload({
@@ -90,7 +85,7 @@ const SelectMasterWindow = ({
                           data-master-id={e.masterID}
                           data-master-service-id={e.service.serviceID}
                           master={e}
-                          active={appointment.masterID == e.id ? true : false}
+                          active={appointment.masterID == e.masterID ? true : false}
                         >
                           {e.username}
                         </SelectMaster>
