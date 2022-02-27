@@ -84,6 +84,7 @@ const SelectServiceWindow = ({
         <div
           className='pb-2'
           onClick={e => {
+            console.log(e)
             if (e.target.dataset.id) {
               setAppointment({
                 ...appointment,
@@ -98,24 +99,22 @@ const SelectServiceWindow = ({
             }
           }}
         >
-          <div>
-            {
-              services
-                ? filtredServices.map(e => {
-                  return (
-                    <SelectService
-                      key={e.id} 
-                      data-id={e.id}
-                      className="modal_paddings"
-                      active={appointment.serviceID == e.id ? true : false}
-                    >
-                      {e.name}
-                    </SelectService>
-                  )
-                })
-                : null
-            }
-          </div>
+          {
+            services
+              ? filtredServices.map(e => {
+                return (
+                  <SelectService
+                    key={e.id} 
+                    data-id={e.id}
+                    className="modal_paddings"
+                    active={appointment.serviceID == e.id ? true : false}
+                  >
+                    {e.name}
+                  </SelectService>
+                )
+              })
+              : null
+          }
         </div>
       </div>
 

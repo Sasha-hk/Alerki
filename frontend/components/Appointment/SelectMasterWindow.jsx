@@ -32,7 +32,6 @@ const SelectMasterWindow = ({
   const closeSelectMasterWindow = () => {
     setShowModal({...showModal, master: false})
   }
-  console.log(masters)
 
   return (
     <Modal 
@@ -64,22 +63,42 @@ const SelectMasterWindow = ({
 
               />
             </ModalHeading>
-            {
-              masters
-                ? masters.map(e => {
-                    return (
-                      <SelectMaster
-                        key={e.id}
-                        data-id={e.id}
-                        master={e}
-                        active={appointment.masterID == e.id ? true : false}
-                      >
-                        {e.username}
-                      </SelectMaster>
-                    )
+            <div
+              className='pb-2'
+              onClick={e => {
+                if (e.target.dataset['masterId']) {
+                  setAppointment({
+                    ...appointment,
+                    masterID: e.target.dataset['masterId'],
+                    masterServiceID: e.target.dataset['masterServiceId'],
                   })
-                : null
-            }
+
+                  // dispatch(masterActions.upload({
+                  //   serviceID: e.target.dataset.id,
+                  // }))
+
+                  setShowModal({...showModal, master: false})
+                }
+              }}
+            >
+              {
+                masters
+                  ? masters.map(e => {
+                      return (
+                        <SelectMaster
+                          key={e.id}
+                          data-master-id={e.masterID}
+                          data-master-service-id={e.service.serviceID}
+                          master={e}
+                          active={appointment.masterID == e.id ? true : false}
+                        >
+                          {e.username}
+                        </SelectMaster>
+                      )
+                    })
+                  : null
+              }
+            </div>
           </div>
         </div>
       </div>

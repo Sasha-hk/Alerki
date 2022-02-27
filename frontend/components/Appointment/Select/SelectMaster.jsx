@@ -4,9 +4,11 @@ import cls from './select-master.module.css'
 
 
 const SelectMaster = ({master, ...props}) => {
-  console.log(master)
   return (
-    <Option>
+    <Option
+      {...props}
+      className={[props.className].join(' ')}
+    >
       <div className={cls.master_info}>
         <UserPicture pictureID={master?.pictureID} size="little" />
 
