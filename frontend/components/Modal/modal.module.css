@@ -9,7 +9,6 @@
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(21px);
 }
-
 .modal_wrapper {
   display: flex;
   justify-content: center;
@@ -52,6 +51,20 @@
 }
 .modal_window.active {
   display: block;
+}
+
+/* custom structure */
+.modal_heading {
+  background: var(--modal-content-bg);
+  position: sticky;
+  top: 0;
+  left: 0;
+  padding: var(--modal-buttons-padding);
+  width: 100%;
+}
+.modal_paddings {
+  padding-left: var(--modal-side-padding);
+  padding-right: var(--modal-side-padding);
 }
 
 

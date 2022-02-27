@@ -11,7 +11,6 @@ const UserPicture = ({pictureID, size = "little", ...props}) => {
     )
   }
   else {
-    console.log(12)
     return (
       <svg 
         className={['plug_user_picture', 'user-picture-size', size, props.className].join(' ')}

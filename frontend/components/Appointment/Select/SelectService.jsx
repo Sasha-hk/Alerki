@@ -1,16 +1,17 @@
+import ModalContent from '../../Modal/ModalContent'
 import cls from './service-item.module.css'
 
 
-const ServiceItem = ({children, ...props}) => {
+const SelectService = ({children, ...props}) => {
   return (
-    <option
+    <ModalContent
       {...props}
       className={[cls.service_item, props.className].join(' ')}
     >
       {children}
-    </option>
+    </ModalContent>
   )
 }
 
 
-export default ServiceItem
+export default SelectService

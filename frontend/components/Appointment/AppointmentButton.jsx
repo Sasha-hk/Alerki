@@ -6,7 +6,6 @@ import Input from '../UI/Input/Input'
 import appointmentActins from '../../store/actions/appointmentActions.js'
 import serviceActions from '../../store/actions/serviceActions.js'
 import masterActions from '../../store/actions/masterActions.js'
-import ServiceItem from './ServiceItem'
 import clsButton from './appointment-buttons.module.css'
 import cls from '../../styles/pages/home/base.module.css'
 

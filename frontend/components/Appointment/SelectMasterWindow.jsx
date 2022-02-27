@@ -4,8 +4,10 @@ import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
 import masterActions from '../../store/actions/masterActions.js'
-import ServiceItem from './ServiceItem'
-import MasterView from './MasterView'
+import SelectService from './Select/SelectService'
+import SelectMaster from './Select/SelectMaster'
+import ModalHeading from '../Modal/ModalHeading'
+import ModalContent from '../Modal/ModalContent'
 import cls from '../../styles/pages/home/base.module.css'
 
 
@@ -53,18 +55,23 @@ const SelectMasterWindow = ({
           }}
         >
           <div>
+            <div
+              className="modal_heading"
+            >
+              hello
+            </div>
             {
               masters
                 ? masters.map(e => {
-                  console.log(e)
+                  {/* console.log(e) */}
                     return (
-                      <MasterView
+                      <SelectMaster
                         key={e.id}
                         data-id={e.id}
-                        className="modal_paddings"
+                        master={e}
                       >
                         {e.username}
-                      </MasterView>
+                      </SelectMaster>
                     )
                   })
                 : null
