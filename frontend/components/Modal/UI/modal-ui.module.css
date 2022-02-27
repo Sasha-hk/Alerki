@@ -1,0 +1,28 @@
+/* search heading */
+.search_heading_input {
+  border: none;
+  font-size: 20px;
+  outline: none !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.search_heading_input::placeholder {
+  font-size: 20px;
+}
+
+/* option */
+.modal_option {
+  transition: 0.5s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 17px;
+  padding-bottom: 17px;
+  border-top: 0.2px solid rgb(90, 90, 90);
+}
+.modal_option:last-child {
+  border-bottom: 0.2px solid rgb(90, 90, 90);
+}
+.modal_option:hover {
+  background: var(--modal-bg-option-hover);
+}

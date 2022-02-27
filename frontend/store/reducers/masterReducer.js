@@ -23,10 +23,7 @@ const masterReducer = (state = defaultMasterState, action) => {
     case types.MASTER_UPLOAD_SUCCESS:
       return {
         ...state,
-        masters: shiftObjects([
-          ...state.masters,
-          ...action.payload,
-        ], 'id'),
+        masters: action.payload,
         loading: false,
         error: false,
         errors: null,
@@ -39,6 +36,36 @@ const masterReducer = (state = defaultMasterState, action) => {
         error: true,
         errors: action.payload,
       }
+
+    // supplement
+    case types.MASTER_SUPPLEMENT:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errors: null,
+      }
+    
+    case types.MASTER_SUPPLEMENT_SUCCESS:
+      return {
+        ...state,
+        masters: shiftObjects([
+          ...store.masters,
+          ...action.payload,
+        ], 'id'),
+        loading: false,
+        error: false,
+        errors: null,
+      }
+
+    case types.MASTER_SUPPLEMENT_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errors: action.payload,
+      }
+    
 
     default:
       return state

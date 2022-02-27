@@ -8,6 +8,7 @@ import SelectService from './Select/SelectService'
 import SelectMaster from './Select/SelectMaster'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
+import SearchInput from '../Modal/UI/SearchInput'
 import cls from '../../styles/pages/home/base.module.css'
 
 
@@ -22,6 +23,8 @@ const SelectMasterWindow = ({
   const dispatch = useDispatch()
   const masterStore = useSelector(store => store.master)
   const masters = masterStore.masters
+
+  const s = 1
 
   // upload services
   useEffect(() => {
@@ -55,15 +58,17 @@ const SelectMasterWindow = ({
           }}
         >
           <div>
-            <div
+            <ModalHeading
               className="modal_heading"
             >
-              hello
-            </div>
+              <SearchInput 
+                placeholder="master"
+
+              />
+            </ModalHeading>
             {
               masters
                 ? masters.map(e => {
-                  {/* console.log(e) */}
                     return (
                       <SelectMaster
                         key={e.id}

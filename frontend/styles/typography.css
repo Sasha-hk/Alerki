@@ -24,6 +24,9 @@
     font-size: var(--text-big) !important;
 }
 
+small {
+    font-size: 12px;
+}
 
 /* colors */
 .text-muted {
