@@ -1,0 +1,9 @@
+.select_master {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.master_info {
+  display: flex;
+  align-items: center;
+}

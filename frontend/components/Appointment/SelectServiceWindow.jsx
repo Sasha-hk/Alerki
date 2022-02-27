@@ -2,12 +2,12 @@ import { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
-import Input from '../UI/Input/Input'
 import serviceActions from '../../store/actions/serviceActions.js'
 import masterActions from '../../store/actions/masterActions.js'
 import SelectService from './Select/SelectService'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
+import SearchInput from '../Modal/UI/SearchInput'
 import cls from '../../styles/pages/home/base.module.css'
 
 
@@ -71,7 +71,7 @@ const SelectServiceWindow = ({
     >
       <div>
         <ModalHeading>
-          <Input
+          <SearchInput
             className={[cls.service_search_input].join(' ')}
             placeholder="service name"
             onChange={e => {
@@ -81,7 +81,7 @@ const SelectServiceWindow = ({
           />
         </ModalHeading>
 
-        <div 
+        <div
           className='pb-2'
           onClick={e => {
             if (e.target.dataset.id) {
@@ -130,7 +130,7 @@ const SelectServiceWindow = ({
 
               <Button 
                 className="middle primary"
-                onClick={e => setShowModal({...showModal, service: false})}
+                onClick={e => setShowModal({...showModal, service: false, master: true})}
               >
                 confirm
               </Button>
