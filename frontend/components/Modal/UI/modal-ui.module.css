@@ -26,3 +26,9 @@
 .modal_option:hover {
   background: var(--modal-bg-option-hover);
 }
+.option_active {
+  background: var(--modal-bg-option-active)
+}
+.option_active.modal_option:hover {
+  background: var(--modal-bg-option-active);
+}
