@@ -126,8 +126,8 @@ const profileReducer = (state = defaultProfileState, action) => {
     case types.PROFILE_DELETE_SERVICE_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
+        profile: {
+          ...state.profile,
           master: {
             ...state.profile.master,
             services: [
