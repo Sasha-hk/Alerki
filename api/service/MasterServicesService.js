@@ -22,6 +22,8 @@ class MasterServiceService {
       serviceID,
     })
 
+    this.indicateService({masterService: newMasterService})
+
     return newMasterService.dataValues
   }
 
@@ -77,16 +79,19 @@ class MasterServiceService {
   }
 
   async indicateService({masterService}) {
-    const candedat = MasterServiceModel.findAll({
+    const services = await MasterServiceModel.findAll({
       raw: true,
       where: {
         serviceID: masterService.serviceID,
       },
     })
 
-    const length = candedat.length
+    const length = services.length
 
-    if (length == 0) {
+    if (length > 1) {
+      return
+    }
+    else if (length == 0) {
       ServiceService.makeNotAvailable({
         id: masterService.serviceID,
       })
@@ -95,9 +100,6 @@ class MasterServiceService {
       ServiceService.makeAvailable({
         id: masterService.serviceID,
       })
-    }
-    else if (length > 1) {
-      return
     }
   }
 
@@ -109,15 +111,18 @@ class MasterServiceService {
     const candedat = await this.findByID({id})
 
     if (candedat && candedat.masterID == masterID) {
-      return await MasterServiceModel.destroy({
+      await MasterServiceModel.destroy({
         where: {
           id,
           masterID,
         }
       })
+
+      this.indicateService({masterService: candedat})
+
+      return
     }
 
-    this.indicateService({masterService: candedat})
 
     throw APIError.NotFoundError('service with specefied id not exists')
   }
@@ -172,10 +177,6 @@ class MasterServiceService {
     })
 
     return masterService
-  }
-
-  async processingGeneralService({id}) {
-    // const candedats = ServiceService.
   }
 }
 

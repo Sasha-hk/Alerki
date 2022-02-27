@@ -71,12 +71,11 @@ class ServiceService {
     const services = await ServiceModel.findAll({
       raw: true,
       where: {
-        // available: true,
+        available: true,
       },
       offset: page ? page * limit : 0,
       limit: limit || 24,
     })
-    console.log(services)
 
     return services
   }

@@ -190,7 +190,6 @@ class ProfileController {
       res.json(masterData)
     }
     catch (e) {
-      console.log(e)
       res.status(e.status || 500).json(e.errors) 
     }
   }
@@ -340,8 +339,7 @@ class ProfileController {
 
       const masterID = req.user.masterID
  
-      const des = await MasterServiceService.delete({id, masterID})
-      console.log(des)
+      await MasterServiceService.delete({id, masterID})
 
       res.json()
     }

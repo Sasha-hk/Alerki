@@ -16,7 +16,6 @@ class ServiceController {
       res.json(foundServices)
     }
     catch(e) {
-      console.log(e)
       res.status(e.status || 500).json(e)    
     }
   }
