@@ -1,0 +1,11 @@
+/* search heading */
+.search_heading_input {
+  border: none;
+  font-size: 20px;
+  outline: none !important;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.search_heading_input::placeholder {
+  font-size: 20px;
+}

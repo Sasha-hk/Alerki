@@ -1,7 +1,12 @@
 import cls from './modal.module.css'
 
 
-const ModalHeading = ({children, ...props}) => {
+const ModalHeading = ({
+  children, 
+  value,
+  setValue,
+  ...props
+}) => {
   return (
     <div
       {...props}
