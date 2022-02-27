@@ -1,15 +1,12 @@
-import ModalContent from '../../Modal/ModalContent'
 import UserPicture from '../../UserPicture/UserPicture'
+import Option from '../../Modal/UI/Option'
 import cls from './select-master.module.css'
 
 
 const SelectMaster = ({master, ...props}) => {
   console.log(master)
   return (
-    <ModalContent
-      {...props}
-      className={[cls.select_master, 'modal_paddings', props.className].join(' ')}
-    >
+    <Option>
       <div className={cls.master_info}>
         <UserPicture pictureID={master?.pictureID} size="little" />
 
@@ -19,7 +16,7 @@ const SelectMaster = ({master, ...props}) => {
       </div>
 
       <span>{master.service?.price} {master.service?.currency}</span>
-    </ModalContent>
+    </Option>
   )
 }
 

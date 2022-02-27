@@ -77,7 +77,14 @@ const AppointmentButton = () => {
 
       <div 
         className={clsButton.master_button}
-        onClick={e => setShowModal({...showModal, master: true})}
+        onClick={e => {
+          if (appointment.serviceID) {
+            setShowModal({...showModal, master: true})
+          } 
+          else {
+            setShowModal({...showModal, service: true})
+          }
+        }}
       >
         <span className={clsButton.button_inscription}>Master</span>
       </div>
