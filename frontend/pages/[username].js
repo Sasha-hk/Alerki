@@ -54,7 +54,11 @@ const Profile = () => {
   // general view for master and client
   const headerView = (
     <div className={cls.header}>
-      <UserPicture pictureID={profile.pictureID} size="big" />
+      <UserPicture 
+        className={cls.picture_space}
+        pictureID={profile.pictureID} 
+        size="big" 
+      />
 
       <div className={cls.header_info}>
         <span className="text-big">{profile.firstName} {profile.lastName}</span>

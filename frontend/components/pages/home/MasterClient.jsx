@@ -1,6 +1,6 @@
 
 
-const MasterView = () => {
+const SelectMaster = () => {
   return (
     <div>
       master view
@@ -9,4 +9,4 @@ const MasterView = () => {
 }
 
 
-export default MasterView
+export default SelectMaster

@@ -1,11 +1,11 @@
 const API_URL = process.env.API_URL
 
-const UserPicture = ({pictureID, size = "little"}) => {
+const UserPicture = ({pictureID, size = "little", ...props}) => {
   if (pictureID) {
     return (
       <img
-        className={['user_picture', 'user-picture-size', size].join(' ')}
         src={`${API_URL}/profile/picture/${pictureID}`}
+        className={['user_picture', 'user-picture-size', size, props.className].join(' ')}
         alt=""
       />
     )
@@ -13,7 +13,7 @@ const UserPicture = ({pictureID, size = "little"}) => {
   else {
     return (
       <svg 
-        className={['user_picture', 'user-picture-size', size].join(' ')}
+        className={['plug_user_picture', 'user-picture-size', size, props.className].join(' ')}
         viewBox="0 0 29 29"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

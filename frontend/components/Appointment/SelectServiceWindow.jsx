@@ -5,7 +5,9 @@ import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
 import serviceActions from '../../store/actions/serviceActions.js'
 import masterActions from '../../store/actions/masterActions.js'
-import ServiceItem from './ServiceItem'
+import SelectService from './Select/SelectService'
+import ModalHeading from '../Modal/ModalHeading'
+import ModalContent from '../Modal/ModalContent'
 import cls from '../../styles/pages/home/base.module.css'
 
 
@@ -68,14 +70,16 @@ const SelectServiceWindow = ({
       padding={false}
     >
       <div>
-        <Input 
-          className={['modal_heading', cls.service_search_input].join(' ')}
-          placeholder="service name"
-          onChange={e => {
-            findIfRequire(e)
-            setServicesFilter(e.target.value)
-          }}
-        />
+        <ModalHeading>
+          <Input
+            className={[cls.service_search_input].join(' ')}
+            placeholder="service name"
+            onChange={e => {
+              findIfRequire(e)
+              setServicesFilter(e.target.value)
+            }}
+          />
+        </ModalHeading>
 
         <div 
           className='pb-2'
@@ -99,13 +103,13 @@ const SelectServiceWindow = ({
               services
                 ? filtredServices.map(e => {
                   return (
-                    <ServiceItem 
+                    <SelectService
                       key={e.id} 
                       data-id={e.id}
                       className="modal_paddings"
                     >
                       {e.name}
-                    </ServiceItem>
+                    </SelectService>
                   )
                 })
                 : null

@@ -11,7 +11,7 @@ import Input from '../components/UI/Input/Input'
 import Modal from '../components/Modal/Modal.jsx'
 import useFixHydrate from '../hooks/useFixHydrate'
 import ClientView from '../components/pages/home/ClientView.jsx'
-import MasterView from '../components/pages/home/MasterClient.jsx'
+import SelectMaster from '../components/pages/home/MasterClient.jsx'
 import i18nConfig from '../i18n.js'
 
 
@@ -28,7 +28,7 @@ const Home = () => {
         {
           user.profileType == 'client'
             ? <ClientView></ClientView>
-            : <MasterView></MasterView>
+            : <SelectMaster></SelectMaster>
         }
 
 
