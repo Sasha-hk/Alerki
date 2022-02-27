@@ -24,8 +24,6 @@ const SelectMasterWindow = ({
   const masterStore = useSelector(store => store.master)
   const masters = masterStore.masters
 
-  const s = 1
-
   // upload services
   useEffect(() => {
     dispatch(masterActions.upload({serviceID: appointment.serviceID}))
@@ -74,6 +72,7 @@ const SelectMasterWindow = ({
                         key={e.id}
                         data-id={e.id}
                         master={e}
+                        active={appointment.masterID == e.id ? true : false}
                       >
                         {e.username}
                       </SelectMaster>

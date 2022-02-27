@@ -107,6 +107,7 @@ const SelectServiceWindow = ({
                       key={e.id} 
                       data-id={e.id}
                       className="modal_paddings"
+                      active={appointment.serviceID == e.id ? true : false}
                     >
                       {e.name}
                     </SelectService>

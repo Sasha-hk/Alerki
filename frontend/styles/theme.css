@@ -27,6 +27,7 @@
   --modal-content-bg: #FFFFFF;
   --modal-buttons-bg: #F8F7FC;
   --modal-bg-option-hover: #e0e0e0;
+  --modal-bg-option-active: #1E78FF;
 
   --btn-muted-bg: #ffffff;
   --btn-muted-color: #6B6680;
@@ -68,6 +69,7 @@
   --modal-content-bg: #3D3C3F;
   --modal-buttons-bg: #313133;
   --modal-bg-option-hover: #4a494d;
+  --modal-bg-option-active: #1E78FF;
 
   --btn-muted-bg: #3E3D40;
   --btn-muted-color: #6F6D76;
