@@ -340,7 +340,8 @@ class ProfileController {
 
       const masterID = req.user.masterID
  
-      await MasterServiceService.delete({id, masterID})
+      const des = await MasterServiceService.delete({id, masterID})
+      console.log(des)
 
       res.json()
     }

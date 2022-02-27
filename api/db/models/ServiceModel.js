@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
             name: {
                 type: DataTypes.STRING(64),
             },
+            available: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: true,
+            },
         },
         {
             tableName: 'Services',

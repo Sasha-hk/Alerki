@@ -1,4 +1,5 @@
 const {MasterServiceModel, MasterProfileModel, ServiceModel} = require('../db/models')
+const ServiceService = require('./ServiceService')
 const {isNumber, hardNumber} = require('../utils/validators/checkTypes')
 const APIError = require('../exception/APIError')
 
@@ -75,6 +76,31 @@ class MasterServiceService {
     throw APIError.NotFoundError('service with specefied id not exists or it is not belongs to you')
   }
 
+  async indicateService({masterService}) {
+    const candedat = MasterServiceModel.findAll({
+      raw: true,
+      where: {
+        serviceID: masterService.serviceID,
+      },
+    })
+
+    const length = candedat.length
+
+    if (length == 0) {
+      ServiceService.makeNotAvailable({
+        id: masterService.serviceID,
+      })
+    }
+    else if (length == 1) {
+      ServiceService.makeAvailable({
+        id: masterService.serviceID,
+      })
+    }
+    else if (length > 1) {
+      return
+    }
+  }
+
   async delete({
     id,
     masterID,
@@ -90,6 +116,8 @@ class MasterServiceService {
         }
       })
     }
+
+    this.indicateService({masterService: candedat})
 
     throw APIError.NotFoundError('service with specefied id not exists')
   }
@@ -144,6 +172,10 @@ class MasterServiceService {
     })
 
     return masterService
+  }
+
+  async processingGeneralService({id}) {
+    // const candedats = ServiceService.
   }
 }
 

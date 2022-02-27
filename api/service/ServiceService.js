@@ -2,6 +2,16 @@ const {Sequelize, ServiceModel} = require('../db/models')
 
 
 class ServiceService {
+  async findByID({id}) {
+    const result = await ServiceModel.findAll({
+      raw: true,
+      where: {
+        id,
+      },
+    })
+
+    return result
+  }
   async findByName({name, limit, page}) {
     const results = await ServiceModel.findAll({
       raw: true,
@@ -10,6 +20,7 @@ class ServiceService {
         'name',
       ],
       where: {
+        available: true,
         name: {
           [Sequelize.Op.like]: name,
         },
@@ -59,11 +70,41 @@ class ServiceService {
   async services({limit, page}) {
     const services = await ServiceModel.findAll({
       raw: true,
+      where: {
+        // available: true,
+      },
       offset: page ? page * limit : 0,
       limit: limit || 24,
     })
+    console.log(services)
 
     return services
+  }
+
+  async makeNotAvailable({id}) {
+    ServiceModel.update(
+      {
+        available: false,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    )
+  }
+
+  async makeAvailable({id}) {
+    ServiceModel.update(
+      {
+        available: true,
+      },
+      {
+        where: {
+          id,
+        },
+      }
+    )
   }
 }
 
