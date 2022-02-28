@@ -1,7 +1,7 @@
 /* form */
 form {
   width: 100%;
-  max-width: 300px;
+  /* max-width: 300px; */
 }
 form > div {
   width: 100%;

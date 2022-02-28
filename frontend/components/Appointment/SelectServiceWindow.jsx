@@ -6,7 +6,6 @@ import serviceActions from '../../store/actions/serviceActions.js'
 import masterActions from '../../store/actions/masterActions.js'
 import SelectService from './Select/SelectService'
 import ModalHeading from '../Modal/ModalHeading'
-import ModalContent from '../Modal/ModalContent'
 import SearchInput from '../Modal/UI/SearchInput'
 import cls from '../../styles/pages/home/base.module.css'
 
@@ -84,7 +83,6 @@ const SelectServiceWindow = ({
         <div
           className='pb-2'
           onClick={e => {
-            console.log(e)
             if (e.target.dataset.id) {
               setAppointment({
                 ...appointment,

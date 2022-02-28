@@ -29,7 +29,6 @@ const upload = () => {
 const find = (querys = {name: null, limit: 25, page: 0}) => {
   return async dispatch => {
     dispatch(makeAction(types.SERVICE_FIND))
-    console.log(querys) 
     await api({
       method: 'get',
       url: '/services/find',
