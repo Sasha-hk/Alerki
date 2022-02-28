@@ -1,0 +1,18 @@
+.day {
+  display:block; 
+  height: max-content;
+  width:100%; 
+  padding: 5%;
+}
+
+.available {
+  color: var(--calendar-day-available-color);
+  background: var(--calendar-day-available-bg);
+}
+.not_available {
+  color: var(--calendar-day-not-available-color);
+  background: var(--calendar-day-not-available-bg);
+}
+.another_month {
+  background: var(--calendar-day-another-month-bg);
+}
