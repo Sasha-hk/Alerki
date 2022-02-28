@@ -38,8 +38,8 @@
   --textarea-placeholder-color: #000;
 
   /* calendar */
-  --calendar-day-border: 1px solid #CFCFD0;
-  --calendar-day-available-bg: #FFFFFF;
+  --calendar-day-border-color: #CFCFD0;
+  --calendar-day-border: 1px solid var(--calendar-day-border-color);
   --calendar-day-not-available-bg: #F8F9FD;
   --calendar-day-another-month-bg: #FFFFFF;
   --calendar-day-available-color: var(--color);
@@ -86,10 +86,11 @@
   --textarea-placeholder-color: #fff;
 
   /* calendar */
-  --calendar-day-border: 1px solid #CFCFD0;
+  --calendar-day-border-color: #CFCFD0;
+  --calendar-day-border: 1px solid var(--calendar-day-border-color);
   --calendar-day-available-bg: #535353;
   --calendar-day-not-available-bg: #333333;
-  --calendar-day-another-month-bg: var(--calendar-day-available-bgA);
+  --calendar-day-another-month-bg: var(--calendar-day-available-bg);
   --calendar-day-available-color: var(--color);
   --calendar-day-not-available-color: var(--color);
 }
