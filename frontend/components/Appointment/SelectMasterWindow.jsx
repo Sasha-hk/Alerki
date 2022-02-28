@@ -12,6 +12,20 @@ import SearchInput from '../Modal/UI/SearchInput'
 import cls from '../../styles/pages/home/base.module.css'
 
 
+
+const useFiltredMasters = (masters, filter) => {
+  const filtred = useMemo(() => {
+    if (masters) {
+      return masters.filter(master => {
+        const FullName = `${master.username} ${master.firstName} ${master.lastName}`
+        return FullName.toLowerCase().includes(filter.toLowerCase())
+      })
+    }
+  }, [masters, filter])
+
+  return filtred
+}
+
 const SelectMasterWindow = ({
   appointment,
   setAppointment,
@@ -24,12 +38,15 @@ const SelectMasterWindow = ({
   const masterStore = useSelector(store => store.master)
   const masters = masterStore.masters
 
+  const [mastersFilter, setMasterFilter] = useState('')
+  const filtredMasters = useFiltredMasters(masters, mastersFilter)
+
   const closeSelectMasterWindow = () => {
     setShowModal({...showModal, master: false})
   }
 
   return (
-    <Modal 
+    <Modal
       show={showModal.master}
       onClose={closeSelectMasterWindow}
       padding={false}
@@ -55,7 +72,14 @@ const SelectMasterWindow = ({
             >
               <SearchInput 
                 placeholder="master"
-
+                value={mastersFilter} 
+                onChange={e => {
+                  setMasterFilter(e.target.value)
+                  dispatch(masterActions.upload({
+                    serviceID: appointment.serviceID,
+                    limit: 1000,
+                  }))
+                }}
               />
             </ModalHeading>
             <div
@@ -67,18 +91,14 @@ const SelectMasterWindow = ({
                     masterID: e.target.dataset.masterId,
                     masterServiceID: e.target.dataset.masterServiceId,
                   })
-
-                  // dispatch(masterActions.upload({
-                  //   serviceID: e.target.dataset.id,
-                  // }))
-
+                  
                   setShowModal({...showModal, master: false})
                 }
               }}
             >
               {
-                masters
-                  ? masters.map(e => {
+                filtredMasters
+                  ? filtredMasters.map(e => {
                       return (
                         <SelectMaster
                           key={e.id}
