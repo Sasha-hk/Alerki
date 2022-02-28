@@ -5,56 +5,16 @@ import AnotherMonth from './DayView/AnotherMonth'
 import cls from './calendar.module.css'
 
 
-const Calendar = () => {
+const Calendar = ({children, ...props}) => {
   const calendarElement = useRef() 
 
   return (
     <div
+      {...props}
       ref={calendarElement}
-      className={cls.calendar}
+      className={[cls.calendar, props.className].join(' ')}
     >
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-
-
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-      <Available></Available>
-
-
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-      <AnotherMonth></AnotherMonth>
-
-
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
-      <NotAvailable></NotAvailable>
+      {children}  
     </div>
   )
 }
