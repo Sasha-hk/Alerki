@@ -9,8 +9,6 @@ import SelectMaster from './Select/SelectMaster'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
 import SearchInput from '../Modal/UI/SearchInput'
-import cls from '../../styles/pages/home/base.module.css'
-
 
 
 const useFiltredMasters = (masters, filter) => {
@@ -61,8 +59,7 @@ const SelectMasterWindow = ({
                 serviceID: e.target.dataset.id,
               })
 
-              setShowModal({...showModal, master: false})
-              setShowModal({...showModal, date: true})
+              setShowModal({...showModal, master: false, date: true})
             }
           }}
         >
@@ -92,7 +89,7 @@ const SelectMasterWindow = ({
                     masterServiceID: e.target.dataset.masterServiceId,
                   })
                   
-                  setShowModal({...showModal, master: false})
+                  setShowModal({...showModal, master: false, date: true})
                 }
               }}
             >

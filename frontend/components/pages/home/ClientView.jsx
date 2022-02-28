@@ -2,12 +2,11 @@ import AppointmentButton from '../../../components/Appointment/AppointmentButton
 import HomeWrapper from './HomeWrapper'
 import cls from '../../../styles/pages/home/base.module.css'
 
+
 const ClientView = () => {
   return (
     <HomeWrapper>
-      <div>
-        Future appointment views
-      </div>
+      <span className="text-big">Planned:</span>
       
       <AppointmentButton />
     </HomeWrapper>

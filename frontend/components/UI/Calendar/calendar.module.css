@@ -1,0 +1,24 @@
+.calendar {
+  background: var(--calendar-day-border-color);
+  border: var(--calendar-day-border);
+  border-radius: 7px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  grid-column-gap: 1px;
+  grid-row-gap: 1px;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+}
+.calendar::before {
+  content: "";
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+  width: 0;
+  padding-bottom: 100%;
+}
+.calendar > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
