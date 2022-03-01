@@ -2,8 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
-import serviceActions from '../../store/actions/serviceActions.js'
-import masterActions from '../../store/actions/masterActions.js'
+import CAPActions from '../../store/actions/CAPActions.js'
 import SelectService from './Select/SelectService'
 import ModalHeading from '../Modal/ModalHeading'
 import SearchInput from '../Modal/UI/SearchInput'
@@ -29,15 +28,15 @@ const SelectServiceWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const serviceStore = useSelector(store => store.service)
-  const services = serviceStore.services
+  const servicesStore = useSelector(store => store.cap.services)
+  const services = servicesStore.services
  
   const [servicesFilter, setServicesFilter] = useState('')
   const filtredServices = useFiltredServices(services, servicesFilter)
 
   // upload services
   useEffect(() => {
-    dispatch(serviceActions.upload())
+    dispatch(CAPActions.uploadServices())
   }, [])
 
   const closeSelectServiceWindow = () => {
@@ -56,7 +55,7 @@ const SelectServiceWindow = ({
     }
 
     if (ifUpload) {
-      dispatch(serviceActions.find({
+      dispatch(CAPActions.findServices({
         name: e.target.value
       }))
     }
@@ -89,7 +88,7 @@ const SelectServiceWindow = ({
                 serviceID: e.target.dataset.id,
               })
 
-              dispatch(masterActions.upload({
+              dispatch(CAPActions.uploadMasters({
                 serviceID: e.target.dataset.id,
               }))
 

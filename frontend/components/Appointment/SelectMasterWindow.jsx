@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import Input from '../UI/Input/Input'
-import masterActions from '../../store/actions/masterActions.js'
+import CAPActions from '../../store/actions/CAPActions.js'
 import SelectService from './Select/SelectService'
 import SelectMaster from './Select/SelectMaster'
 import ModalHeading from '../Modal/ModalHeading'
@@ -33,8 +33,8 @@ const SelectMasterWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const masterStore = useSelector(store => store.master)
-  const masters = masterStore.masters
+  const mastersStore = useSelector(store => store.cap.masters)
+  const masters = mastersStore.masters
 
   const [mastersFilter, setMasterFilter] = useState('')
   const filtredMasters = useFiltredMasters(masters, mastersFilter)
@@ -72,7 +72,7 @@ const SelectMasterWindow = ({
                 value={mastersFilter} 
                 onChange={e => {
                   setMasterFilter(e.target.value)
-                  dispatch(masterActions.upload({
+                  dispatch(CAPActions.uploadMasters({
                     serviceID: appointment.serviceID,
                     limit: 1000,
                   }))

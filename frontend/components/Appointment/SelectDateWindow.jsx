@@ -12,13 +12,13 @@ import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
 const SelectDataWindow = ({
   appointment,
   setAppointment,
-  showModal, 
+  showModal,
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const masterStore = useSelector(store => store.master)
+  const masterStore = useSelector(store => store.cap.masters)
   const masters = masterStore.masters
 
   const closeSelectDateWindow = () => {
