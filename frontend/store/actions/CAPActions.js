@@ -98,10 +98,38 @@ const supplementMasters = ({
   }
 }
 
+// upload schdule
+const uploadSchedule = ({
+  year,
+  month,
+  masterID,
+}) => {
+  return async dispatch => {
+    dispatch(makeAction(types.CAP_SCHEDULE_UPLOAD))
+
+    await api({
+      method: 'get',
+      url: '/profile/get-schedule',
+      params: {
+        year,
+        month,
+        master_id: masterID,
+      }
+    })
+      .then(r => { 
+        dispatch(makeActionWithPayload(types.CAP_SCHEDULE_UPLOAD_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.CAP_SCHEDULE_UPLOAD_ERROR, e?.response?.data))
+      })
+  }
+}
+
 
 export default {
   uploadServices,
   findServices,
   uploadMasters,
   supplementMasters,
+  uploadSchedule,
 }
