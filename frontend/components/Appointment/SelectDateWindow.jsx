@@ -1,4 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux' 
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
@@ -18,8 +19,14 @@ const SelectDataWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const masterStore = useSelector(store => store.cap.masters)
-  const masters = masterStore.masters
+  const masterSchedule = useSelector(store => store.cap.schedule)
+  const masters = masterSchedule.schedule
+
+  const [calendarDate, setCalendarData] = useState({
+    date: new Date(),
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  })
 
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
@@ -31,8 +38,7 @@ const SelectDataWindow = ({
       onClose={closeSelectDateWindow}
       padding={false}
     >
-      <div 
-        style={{height: '100%'}}
+      <div
         onClick={e => {
           // if (e.target.dataset.id) {
           //   setAppointment({
