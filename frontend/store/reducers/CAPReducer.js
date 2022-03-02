@@ -168,7 +168,6 @@ const CAPReducer = (state = defaultCAPState, action) => {
       })
     
     case types.CAP_SCHEDULE_UPLOAD_SUCCESS:
-      console.log(12)
       return updateSchedule(state, {
         schedule: action.payload,
         ...successState,

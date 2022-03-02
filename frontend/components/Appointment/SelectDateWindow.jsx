@@ -4,7 +4,7 @@ import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
-import Calendar from '../UI/Calendar/Calendar'
+import Calendar, {generateDays} from '../UI/Calendar/Calendar'
 import AvailableDay from '../UI/Calendar/DayView/Available'
 import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
@@ -19,18 +19,24 @@ const SelectDataWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const masterSchedule = useSelector(store => store.cap.schedule)
-  const masters = masterSchedule.schedule
+  const scheduleStore = useSelector(store => store.cap.schedule)
+  const schedule = scheduleStore.schedule
 
-  const [calendarDate, setCalendarData] = useState({
+  const [calendar, setCalendar] = useState(null)
+  const [calendarMonth, setCalendarMonth] = useState({
     date: new Date(),
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
   })
 
+  if (!calendar) {
+    generateDays(calendarMonth.date, setCalendar)
+  }
+
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
   }
+  console.log(calendar)
   
   return (
     <Modal
@@ -70,7 +76,22 @@ const SelectDataWindow = ({
             }
           }}
         >
-          <Calendar />
+          <Calendar>
+            {
+              schedule && calendar
+                ? 
+                  calendar.map(day => {
+                    console.log(day.type)
+                    if (day.type == 'available') {
+                      return <AvailableDay key={day.date} date={day.date.getDate()} />
+                    }
+                    else if (day.type == 'another month') {
+                      return <AnotherMonth key={day.date}/>
+                    }
+                  })
+                : 0
+            }
+          </Calendar>
           {/* {
             filtredMasters
               ? filtredMasters.map(e => {
@@ -92,7 +113,7 @@ const SelectDataWindow = ({
       </div>
 
       {
-        showButtons.master
+        showButtons.master 
           ? <div>
               <Button 
                 className="middle muted"

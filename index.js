@@ -1,6 +1,3 @@
-import cls from './calendar.module.css'
-
-
 const getDaysCount = (year, month) => {
   return 32 - new Date(year, month, 32).getDate()
 }
@@ -34,35 +31,19 @@ const generateRightOffset = (date) => {
   return rightOffset
 }
 
-const Calendar = ({children, ...props}) => {
-  return (
-    <div
-      {...props}
-      className={[cls.calendar, props.className].join(' ')}
-    >
-      {children}  
-    </div>
-  )
+const date = new Date()
+const calendarDays = []
+const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
+
+calendarDays.push(...generateLeftOffset(date))
+let dateNode = date
+
+for (let i = 1; i < daysCount + 1; i++) {
+  dateNode.setDate(i)
+  calendarDays.push({
+    date: new Date(dateNode),
+    type: 'available'
+  })
 }
 
-export const generateDays = (date, setDays) => {
-  const calendarDays = []
-  const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
-
-  calendarDays.push(...generateLeftOffset(date))
-  let dateNode = date
-
-  for (let i = 1; i < daysCount + 1; i++) {
-    dateNode.setDate(i)
-    calendarDays.push({
-      date: new Date(dateNode),
-      type: 'available'
-    })
-  }
-
-  calendarDays.push(...generateRightOffset(date))
-
-  setDays(calendarDays)
-}
-
-export default Calendar
+calendarDays.push(...generateRightOffset(date))
