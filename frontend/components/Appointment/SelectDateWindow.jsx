@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
-import Calendar, {generateDays} from '../UI/Calendar/Calendar'
+import Calendar, {generateDays, setWeekendDays} from '../UI/Calendar/Calendar'
 import AvailableDay from '../UI/Calendar/DayView/Available'
 import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
+import DaysInscription from '../UI/Calendar/DaysInscription'
 
 
 const SelectDataWindow = ({
@@ -29,14 +30,19 @@ const SelectDataWindow = ({
     month: new Date().getMonth(),
   })
 
-  if (!calendar) {
-    generateDays(calendarMonth.date, setCalendar)
-  }
+  useEffect(() => {
+    setCalendar(generateDays(calendarMonth.date, setCalendar))
+  }, [])
+
+  useEffect(() => {
+    if (schedule?.weekendDays) {
+      setCalendar(setWeekendDays(calendar, schedule?.weekendDays))
+    }
+  }, [schedule])
 
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
   }
-  console.log(calendar)
   
   return (
     <Modal
@@ -44,23 +50,11 @@ const SelectDataWindow = ({
       onClose={closeSelectDateWindow}
       padding={false}
     >
-      <div
-        onClick={e => {
-          // if (e.target.dataset.id) {
-          //   setAppointment({
-          //     ...appointment,
-          //     serviceID: e.target.dataset.id,
-          //   })
-
-          //   setShowModal({...showModal, master: false})
-          //   setShowModal({...showModal, date: true})
-          // }
-        }}
-      >
+      <div>
         <ModalHeading
           className="modal_heading"
         >
-          <span className="text-big">2022 Fabruary</span>
+          <span className="text-big">MARCH 2022</span>
         </ModalHeading>
         <ModalContent
           className='pb-2'
@@ -76,39 +70,25 @@ const SelectDataWindow = ({
             }
           }}
         >
+          <DaysInscription />
           <Calendar>
             {
               schedule && calendar
                 ? 
                   calendar.map(day => {
-                    console.log(day.type)
                     if (day.type == 'available') {
                       return <AvailableDay key={day.date} date={day.date.getDate()} />
                     }
                     else if (day.type == 'another month') {
                       return <AnotherMonth key={day.date}/>
                     }
+                    else if (day.type == 'not available') {
+                      return <NotAvailableDay key={day.date} date={day.date.getDate()} />
+                    }
                   })
                 : 0
             }
           </Calendar>
-          {/* {
-            filtredMasters
-              ? filtredMasters.map(e => {
-                  return (
-                    <SelectMaster
-                      key={e.id}
-                      data-master-id={e.masterID}
-                      data-master-service-id={e.service.serviceID}
-                      master={e}
-                      active={appointment.masterID == e.masterID ? true : false}
-                    >
-                      {e.username}
-                    </SelectMaster>
-                  )
-                })
-              : null
-          } */}
         </ModalContent>
       </div>
 
