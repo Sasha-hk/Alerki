@@ -24,7 +24,6 @@ export const generateRightOffset = (date) => {
   const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
   const offset = 7 - new Date(date.getFullYear(), date.getMonth(), daysCount).getDay()
   const rightOffset = []
-  console.log(offset)
 
   if (offset == 7) {
     return []
