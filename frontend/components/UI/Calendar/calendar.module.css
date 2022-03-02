@@ -37,3 +37,20 @@
   font-size: 0.95em !important;
   font-weight: 300;
 }
+
+/* month switch */
+.month_switch {
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+}
+.month_switch div {
+  display: flex;
+  padding: 4px;
+}
+.month_switch_available {
+  stroke: var(--calendar-month-switch-available);
+}
+.month_switch_not_available {
+  stroke: var(--calendar-month-switch-not-available);
+}

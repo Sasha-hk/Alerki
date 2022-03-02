@@ -9,6 +9,7 @@ import AvailableDay from '../UI/Calendar/DayView/Available'
 import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
 import DaysInscription from '../UI/Calendar/DaysInscription'
+import MonthSwitch from '../UI/Calendar/MonthSwitch'
 
 
 const SelectDataWindow = ({
@@ -24,14 +25,14 @@ const SelectDataWindow = ({
   const schedule = scheduleStore.schedule
 
   const [calendar, setCalendar] = useState(null)
-  const [calendarMonth, setCalendarMonth] = useState({
+  const [calendarDate, setCalendarDate] = useState({
     date: new Date(),
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
   })
 
   useEffect(() => {
-    setCalendar(generateDays(calendarMonth.date, setCalendar))
+    setCalendar(generateDays(calendarDate.date, setCalendar))
   }, [])
 
   useEffect(() => {
@@ -54,19 +55,16 @@ const SelectDataWindow = ({
         <ModalHeading
           className="modal_heading"
         >
-          <span className="text-big">MARCH 2022</span>
+          <div style={{display: 'flex', justifyContent: 'space-between', slignItems: 'center'}}>
+            <span className="text-big">{calendarDate.date.toLocaleDateString('EN', {month: 'long'}).toUpperCase()} {calendarDate.year}</span>
+
+            <MonthSwitch></MonthSwitch>
+          </div>
         </ModalHeading>
         <ModalContent
           className='pb-2'
           onClick={e => {
             if (e.target.dataset['masterId']) {
-              // setAppointment({
-              //   ...appointment,
-              //   masterID: e.target.dataset.masterId,
-              //   masterServiceID: e.target.dataset.masterServiceId,
-              // })
-              
-              // setShowModal({...showModal, master: false})
             }
           }}
         >
