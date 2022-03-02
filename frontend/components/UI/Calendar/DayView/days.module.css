@@ -8,13 +8,19 @@
 }
 
 .available {
-  color: var(--calendar-day-available-color);
   background: var(--calendar-day-available-bg);
 }
+.available span {
+  color: var(--calendar-day-available-color);
+}
+
 .not_available {
-  color: var(--calendar-day-not-available-color);
   background: var(--calendar-day-not-available-bg);
 }
+.not_available span {
+  color: var(--calendar-day-not-available-color);
+}
+
 .another_month {
   background: var(--calendar-day-another-month-bg);
 }

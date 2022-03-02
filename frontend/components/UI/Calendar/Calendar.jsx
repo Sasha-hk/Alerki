@@ -40,25 +40,21 @@ export const generateDays = (date) => {
 
 export const setWeekendDays = (calendar, weekendDays) => {
   const out = []
-  console.log(calendar) 
+
   for (let i in calendar) {
-    console.log(calendar[i].date.getDay())
     if (calendar[i].type == 'available') {
       if (weekendDays[days[calendar[i].date.getDay()]]) {
-        if (weekendDays[days[calendar[i].date.getDay()]]) {
-          console.log(weekendDays[days[calendar[i].date.getDay()]])
-          out.push({
-            ...calendar[i],
-            type: 'not available',
-          })
-        }
-        else {
-          out.push(calendar[i])
-        }
+        out.push({
+          ...calendar[i],
+          type: 'not available',
+        })
       }
       else {
         out.push(calendar[i])
       }
+    }
+    else {
+      out.push(calendar[i])
     }
   }
 

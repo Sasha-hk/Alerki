@@ -36,7 +36,7 @@ const SelectDataWindow = ({
 
   useEffect(() => {
     if (schedule?.weekendDays) {
-      // setCalendar(setWeekendDays(calendar, schedule?.weekendDays))
+      setCalendar(setWeekendDays(calendar, schedule?.weekendDays))
     }
   }, [schedule])
 
