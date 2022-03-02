@@ -48,6 +48,13 @@
   display: flex;
   padding: 4px;
 }
+
+.month_switch svg {
+  stroke-width: 3px;
+  stroke-miterlimit: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .month_switch_available {
   stroke: var(--calendar-month-switch-available);
 }

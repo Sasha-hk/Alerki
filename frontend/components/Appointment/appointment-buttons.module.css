@@ -24,6 +24,11 @@
   user-select: none;
 }
 
+/* date */
+.calendar_paddings {
+  padding-bottom: 24px;
+}
+
 
 /* XXL / Extra extra large */
 @media only screen and (min-width: 1401px) {

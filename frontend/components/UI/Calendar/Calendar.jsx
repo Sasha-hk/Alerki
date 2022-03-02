@@ -23,7 +23,7 @@ export const generateDays = (date) => {
   const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
 
   calendarDays.push(...generateLeftOffset(date))
-  let dateNode = date
+  let dateNode = new Date(date)
 
   for (let i = 1; i < daysCount + 1; i++) {
     dateNode.setDate(i)
