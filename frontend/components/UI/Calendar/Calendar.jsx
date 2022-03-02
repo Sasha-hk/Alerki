@@ -1,38 +1,11 @@
+import {
+  generateLeftOffset,
+  generateRightOffset,
+  getDaysCount
+} from './utils/date'
+import { days } from './data'
 import cls from './calendar.module.css'
 
-
-const getDaysCount = (year, month) => {
-  return 32 - new Date(year, month, 32).getDate()
-}
-
-const generateLeftOffset = (date) => {
-  const offset = new Date(date.getFullYear(), date.getMonth(), 0).getDay()
-  const leftOffset = []
-  
-  for (let i = 0; i < offset; i++) {
-    leftOffset.push({
-      date: new Date(date.getFullYear(), date.getMonth(), offset - i),
-      type: 'another month',
-    })
-  }
-
-  return leftOffset
-}
-
-const generateRightOffset = (date) => {
-  const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
-  const offset = new Date(date.getFullYear(), date.getMonth(), daysCount).getDay()
-  const rightOffset = []
-
-  for (let i = 1; i < offset; i++) {
-    rightOffset.push({
-      date: new Date(date.getFullYear(), date.getMonth(), daysCount + i + 1),
-      type: 'another month',
-    })
-  }
-
-  return rightOffset
-}
 
 const Calendar = ({children, ...props}) => {
   return (
@@ -45,7 +18,7 @@ const Calendar = ({children, ...props}) => {
   )
 }
 
-export const generateDays = (date, setDays) => {
+export const generateDays = (date) => {
   const calendarDays = []
   const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
 
@@ -62,7 +35,34 @@ export const generateDays = (date, setDays) => {
 
   calendarDays.push(...generateRightOffset(date))
 
-  setDays(calendarDays)
+  return calendarDays
+}
+
+export const setWeekendDays = (calendar, weekendDays) => {
+  const out = []
+  console.log(calendar) 
+  for (let i in calendar) {
+    console.log(calendar[i].date.getDay())
+    if (calendar[i].type == 'available') {
+      if (weekendDays[days[calendar[i].date.getDay()]]) {
+        if (weekendDays[days[calendar[i].date.getDay()]]) {
+          console.log(weekendDays[days[calendar[i].date.getDay()]])
+          out.push({
+            ...calendar[i],
+            type: 'not available',
+          })
+        }
+        else {
+          out.push(calendar[i])
+        }
+      }
+      else {
+        out.push(calendar[i])
+      }
+    }
+  }
+
+  return out
 }
 
 export default Calendar

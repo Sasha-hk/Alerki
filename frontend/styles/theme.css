@@ -86,7 +86,7 @@
   --textarea-placeholder-color: #fff;
 
   /* calendar */
-  --calendar-day-border-color: #CFCFD0;
+  --calendar-day-border-color: #4d4a4a;
   --calendar-day-border: 1px solid var(--calendar-day-border-color);
   --calendar-day-available-bg:  #333333;
   --calendar-day-not-available-bg:#535353;

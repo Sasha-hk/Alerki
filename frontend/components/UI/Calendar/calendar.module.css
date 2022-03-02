@@ -22,3 +22,18 @@
   grid-row: 1 / 1;
   grid-column: 1 / 1;
 }
+
+/* inscription */
+.days_inscription {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-column-gap: 1px;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  width: 100%;
+  user-select: none;
+}
+.days_inscription span {
+  font-size: 0.95em !important;
+  font-weight: 300;
+}
