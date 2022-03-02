@@ -9,6 +9,8 @@ import AvailableDay from '../UI/Calendar/DayView/Available'
 import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
 import DaysInscription from '../UI/Calendar/DaysInscription'
+import MonthSwitch from '../UI/Calendar/MonthSwitch'
+import cls from './appointment-buttons.module.css'
 
 
 const SelectDataWindow = ({
@@ -24,21 +26,18 @@ const SelectDataWindow = ({
   const schedule = scheduleStore.schedule
 
   const [calendar, setCalendar] = useState(null)
-  const [calendarMonth, setCalendarMonth] = useState({
+  const [calendarDate, setCalendarDate] = useState({
     date: new Date(),
     year: new Date().getFullYear(),
     month: new Date().getMonth(),
   })
 
   useEffect(() => {
-    setCalendar(generateDays(calendarMonth.date, setCalendar))
-  }, [])
-
-  useEffect(() => {
     if (schedule?.weekendDays) {
-      setCalendar(setWeekendDays(calendar, schedule?.weekendDays))
+      const generatedDays = generateDays(calendarDate.date)
+      setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
     }
-  }, [schedule])
+  }, [calendarDate, schedule])
 
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
@@ -54,19 +53,38 @@ const SelectDataWindow = ({
         <ModalHeading
           className="modal_heading"
         >
-          <span className="text-big">MARCH 2022</span>
+          <div style={{display: 'flex', justifyContent: 'space-between', slignItems: 'center'}}>
+            <span className="text-big">{calendarDate.date.toLocaleDateString('EN', {month: 'long'}).toUpperCase()} {calendarDate.year}</span>
+
+            <MonthSwitch
+              date={calendarDate.date}   
+              previous={() => {
+                const previousDate = new Date(calendarDate.date)
+                previousDate.setMonth(previousDate.getMonth() - 1)
+
+                setCalendarDate({
+                  date: previousDate,
+                  year: previousDate.getFullYear(),
+                  month: previousDate.getMonth(),
+                })
+              }}
+              next={() => {
+                const nextDate = new Date(calendarDate.date)
+                nextDate.setMonth(nextDate.getMonth() + 1)
+
+                setCalendarDate({
+                  date: nextDate,
+                  year: nextDate.getFullYear(),
+                  month: nextDate.getMonth(),
+                })
+              }}
+            />
+          </div>
         </ModalHeading>
         <ModalContent
-          className='pb-2'
+          className={cls.calendar_paddings}
           onClick={e => {
             if (e.target.dataset['masterId']) {
-              // setAppointment({
-              //   ...appointment,
-              //   masterID: e.target.dataset.masterId,
-              //   masterServiceID: e.target.dataset.masterServiceId,
-              // })
-              
-              // setShowModal({...showModal, master: false})
             }
           }}
         >

@@ -94,4 +94,7 @@
   --calendar-day-another-month-bg: var(--calendar-day-available-bg);
   --calendar-day-available-color: var(--color);
   --calendar-day-not-available-color: #585858;
+  
+  --calendar-month-switch-not-available: var(--color-muted);
+  --calendar-month-switch-available: var(--color);
 }
