@@ -13,7 +13,7 @@ const Calendar = ({children, ...props}) => {
       {...props}
       className={[cls.calendar, props.className].join(' ')}
     >
-      {children}  
+      {children}
     </div>
   )
 }

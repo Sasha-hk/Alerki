@@ -43,7 +43,7 @@ const SelectDataWindow = ({
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
   }
-  console.log(calendar)
+  
   return (
     <Modal
       show={showModal.date}
