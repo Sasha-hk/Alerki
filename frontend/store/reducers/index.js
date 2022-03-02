@@ -6,10 +6,10 @@ import CAPReducer from './CAPReducer'
 
 
 const rootReducer = combineReducers({
-    profile: profileReducer,
-    user: userReducer,
     appointment: appointmentReducer,
     cap: CAPReducer,
+    profile: profileReducer,
+    user: userReducer,
 })
 
 

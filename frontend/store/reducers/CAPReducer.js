@@ -60,28 +60,29 @@ const updateSchedule = (state, data) => {
 
 // generics
 const genServicesError = (state, error) => {
-  return Object.assign(state, {
+  return {...Object.assign(state, {
     services: {
       ...errorState(error)
     }
-  })
+  })}
 }
 
 const genMastersError = (state, error) => {
-  return Object.assign(state, {
+  return {...Object.assign(state, {
     masters: {
       ...errorState(error)
     },
-  })
+  })}
 }
 
 const genScheduleError = (state, error) => {
-  return Object.assign(state.schedule, {
+  return {...Object.assign(state, {
     schedule: {
       ...errorState(error)
     }
-  })
+  })}
 }
+
 
 const CAPReducer = (state = defaultCAPState, action) => {
   switch (action.type) {

@@ -7,7 +7,6 @@ const NotAvailable = ({number, fontSize = 'middle', ...props}) => {
       {...props}
       className={[cls.not_available, cls.day].join(' ')}
     >
-      <span className={'text-' + fontSize}>1</span>
     </div>
   )
 }

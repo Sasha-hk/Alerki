@@ -1,9 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux' 
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
-import Calendar from '../UI/Calendar/Calendar'
+import Calendar, {generateDays} from '../UI/Calendar/Calendar'
 import AvailableDay from '../UI/Calendar/DayView/Available'
 import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
@@ -18,12 +19,24 @@ const SelectDataWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const masterStore = useSelector(store => store.cap.masters)
-  const masters = masterStore.masters
+  const scheduleStore = useSelector(store => store.cap.schedule)
+  const schedule = scheduleStore.schedule
+
+  const [calendar, setCalendar] = useState(null)
+  const [calendarMonth, setCalendarMonth] = useState({
+    date: new Date(),
+    year: new Date().getFullYear(),
+    month: new Date().getMonth(),
+  })
+
+  if (!calendar) {
+    generateDays(calendarMonth.date, setCalendar)
+  }
 
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
   }
+  console.log(calendar)
   
   return (
     <Modal
@@ -31,8 +44,7 @@ const SelectDataWindow = ({
       onClose={closeSelectDateWindow}
       padding={false}
     >
-      <div 
-        style={{height: '100%'}}
+      <div
         onClick={e => {
           // if (e.target.dataset.id) {
           //   setAppointment({
@@ -64,7 +76,22 @@ const SelectDataWindow = ({
             }
           }}
         >
-          <Calendar />
+          <Calendar>
+            {
+              schedule && calendar
+                ? 
+                  calendar.map(day => {
+                    console.log(day.type)
+                    if (day.type == 'available') {
+                      return <AvailableDay key={day.date} date={day.date.getDate()} />
+                    }
+                    else if (day.type == 'another month') {
+                      return <AnotherMonth key={day.date}/>
+                    }
+                  })
+                : 0
+            }
+          </Calendar>
           {/* {
             filtredMasters
               ? filtredMasters.map(e => {
@@ -86,7 +113,7 @@ const SelectDataWindow = ({
       </div>
 
       {
-        showButtons.master
+        showButtons.master 
           ? <div>
               <Button 
                 className="middle muted"

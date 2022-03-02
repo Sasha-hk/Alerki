@@ -27,7 +27,7 @@ const useFiltredMasters = (masters, filter) => {
 const SelectMasterWindow = ({
   appointment,
   setAppointment,
-  showModal, 
+  showModal,
   setShowModal,
   showButtons,
   setShowButtons,
@@ -88,6 +88,12 @@ const SelectMasterWindow = ({
                     masterID: e.target.dataset.masterId,
                     masterServiceID: e.target.dataset.masterServiceId,
                   })
+
+                  dispatch(CAPActions.uploadSchedule({
+                    year: new Date().getFullYear(),
+                    month: new Date().getMonth(),
+                    masterID: e.target.dataset.masterId,
+                  }))
                   
                   setShowModal({...showModal, master: false, date: true})
                 }
