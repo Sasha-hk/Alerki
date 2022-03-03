@@ -1,12 +1,10 @@
-import cls from './select-master.module.css'
+import cls from './select-time.module.css'
 
 
 const SelectTime = ({from, to}) => {
   return (
     <div className={cls.select_time}>
-      <span>{from}</span>
-      -
-      <span>{to}</span>
+      <span className="text-middle">{from}</span> - <span className="text-middle">{to}</span>
     </div>
   )
 }

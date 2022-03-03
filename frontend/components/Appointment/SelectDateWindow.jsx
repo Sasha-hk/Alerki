@@ -82,30 +82,26 @@ const SelectDataWindow = ({
             />
           </div>
         </ModalHeading>
-        <ModalContent
-          className={cls.calendar_paddings}
-          onClick={e => {
-            if (e.target.dataset['masterId']) {
-            }
-          }}
-        >
+        <ModalContent className={cls.calendar_paddings}>
           <DaysInscription />
           <Calendar
             onClick={e => {
-              // set date for new appointment
-              if (e.target.dataset.date) {
+              // set date and switch windows
+              const handle = (date) => {
                 setAppointment({
                   ...appointment,
-                  date: e.target.dataset.date,
+                  date,
                 })
+
+                setShowModal({...showModal, date: false, time: true})
+              }
+              
+              // set date for new appointment
+              if (e.target.dataset.date) {
+                handle(e.target.dataset.date)
               }
               else {
-                if (e.target.offsetParent.dataset?.date) {
-                  setAppointment({
-                    ...appointment,
-                    date: e.target.offsetParent.dataset.date,
-                  })
-                }
+                handle(e.target.offsetParent.dataset.date)
               }
             }}
           >
@@ -137,7 +133,7 @@ const SelectDataWindow = ({
                       />
                     }
                   })
-                : 0
+                : null
             }
           </Calendar>
         </ModalContent>

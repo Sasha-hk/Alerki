@@ -10,6 +10,7 @@ import cls from '../../styles/pages/home/base.module.css'
 import SelectServiceWindow from './SelectServiceWindow'
 import SelectMasterWindow from './SelectMasterWindow'
 import SelectDateWindow from './SelectDateWindow'
+import SelectTimeWindow from './SelectTimeWindow'
 
 
 
@@ -67,6 +68,15 @@ const AppointmentButton = () => {
       />
 
       <SelectDateWindow
+          appointment={appointment}
+          setAppointment={setAppointment}
+          showModal={showModal}
+          setShowModal={setShowModal}
+          showButtons={showButtons}
+          setShowButtons={setShowButtons}
+      />
+
+      <SelectTimeWindow
           appointment={appointment}
           setAppointment={setAppointment}
           showModal={showModal}

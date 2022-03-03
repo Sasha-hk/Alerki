@@ -1,3 +1,14 @@
 .select_time {
+  background: var(--bg-block);
+  border-radius: 30px;;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
   display: flex;
+  padding: 8px 16px;
+  /* width: min-content; */
+}
+.select_time:hover {
+  background: var(--ui-hover-color);
+}
+.active {
+  background: var(--ui-active-bg);
 }
