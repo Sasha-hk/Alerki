@@ -13,6 +13,9 @@
   --color-link: #1E78FF;
   --color-error-message: #d42a2a;
 
+  --ui-active-bg: #1E78FF;
+  --ui-hover-color: rgb(88, 88, 88);
+
   --corporate-color: rgb(0, 153, 255);
 
   --color-form-item-heading: #909090;

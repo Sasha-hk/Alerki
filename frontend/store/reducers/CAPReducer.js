@@ -37,6 +37,12 @@ const defaultCAPState = {
     schedule: {},
     ...successState,
   },
+  appointment: {
+    serviceID: null,
+    masterServiceID: null,
+    masterID: null,
+    appointmentStartTime: null,
+  }
 }
 
 // update state
@@ -86,6 +92,13 @@ const genScheduleError = (state, error) => {
 
 const CAPReducer = (state = defaultCAPState, action) => {
   switch (action.type) {
+    // appointment
+    case types.CAP_UPDATE_APPOINTMENT:
+      return {
+        ...state.newAppointment,
+        ...action.payload,
+      }
+
     // services
     // upload
     case types.CAP_SERVICE_UPLOAD:

@@ -9,5 +9,9 @@ const SelectTime = ({from, to}) => {
   )
 }
 
+export const generateTime = (schedule, appointmentDate, service) => {
+
+}
+
 
 export default SelectTime

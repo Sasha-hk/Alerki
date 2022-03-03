@@ -22,17 +22,14 @@ const SelectTimeWindow = ({
   const schedule = scheduleStore.schedule
 
   const [time, setTime] = useState(null)
-  const [selectTime, setSelectTime] = useState({
-    date: new Date(),
-    year: new Date().getFullYear(),
-    month: new Date().getMonth(),
-  })
+  const [selectTime, setSelectTime] = useState(null)
 
-  // generate calendar days
+  // generate time
   // useEffect(() => {
+  //   console.log(schedule)
   //   if (schedule?.weekendDays) {
-  //     const generatedDays = generateDays(calendarDate.date)
-  //     setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
+  //     // const generatedDays = generateDays(calendarDate.date)
+  //     // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
   //   }
   // }, [calendarDate, schedule, appointment.date])
 
