@@ -45,6 +45,12 @@
   --calendar-day-another-month-bg: #FFFFFF;
   --calendar-day-available-color: var(--color);
   --calendar-day-not-available-color: #DBDDEF;
+
+  --calendar-month-switch-not-available: var(--color-muted);
+  --calendar-month-switch-available: var(--color);
+
+  --calendar-day-hover-bg: rgba(0, 0, 0, 0.1);
+  --calendar-day-active: #1E78FF;
 }
 
 /* dark */
@@ -97,4 +103,7 @@
   
   --calendar-month-switch-not-available: var(--color-muted);
   --calendar-month-switch-available: var(--color);
+
+  --calendar-day-hover-bg: rgb(32, 32, 32);
+  --calendar-day-active: #1E78FF;
 }

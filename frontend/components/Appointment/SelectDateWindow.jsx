@@ -32,12 +32,13 @@ const SelectDataWindow = ({
     month: new Date().getMonth(),
   })
 
+  // generate calendar days
   useEffect(() => {
     if (schedule?.weekendDays) {
       const generatedDays = generateDays(calendarDate.date)
       setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
     }
-  }, [calendarDate, schedule])
+  }, [calendarDate, schedule, appointment.date])
 
   const closeSelectDateWindow = () => {
     setShowModal({...showModal, date: false})
@@ -89,19 +90,51 @@ const SelectDataWindow = ({
           }}
         >
           <DaysInscription />
-          <Calendar>
+          <Calendar
+            onClick={e => {
+              // set date for new appointment
+              if (e.target.dataset.date) {
+                setAppointment({
+                  ...appointment,
+                  date: e.target.dataset.date,
+                })
+              }
+              else {
+                if (e.target.offsetParent.dataset?.date) {
+                  setAppointment({
+                    ...appointment,
+                    date: e.target.offsetParent.dataset.date,
+                  })
+                }
+              }
+            }}
+          >
             {
               schedule && calendar
                 ? 
                   calendar.map(day => {
                     if (day.type == 'available') {
-                      return <AvailableDay key={day.date} date={day.date.getDate()} />
+                      return <AvailableDay 
+                        key={day.date} 
+                        data-date={`${day.date.getFullYear()} ${day.date.getMonth()} ${day.date.getDate()}`}
+                        date={day.date.getDate()}
+                        active={
+                          appointment.date == `${day.date.getFullYear()} ${day.date.getMonth()} ${day.date.getDate()}`
+                            ? true
+                            : false
+                        }
+                      />
                     }
                     else if (day.type == 'another month') {
-                      return <AnotherMonth key={day.date}/>
+                      return <AnotherMonth 
+                        key={day.date}
+                      />
                     }
                     else if (day.type == 'not available') {
-                      return <NotAvailableDay key={day.date} date={day.date.getDate()} />
+                      return <NotAvailableDay 
+                        key={day.date} 
+                        date={day.date.getDate()} 
+                      />
                     }
                   })
                 : 0
