@@ -1,5 +1,5 @@
 import Option from '../../Modal/UI/Option'
-import cls from './service-item.module.css'
+import cls from './select-service.module.css'
 
 
 const SelectService = ({children, ...props}) => {
