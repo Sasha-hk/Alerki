@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux' 
+import CAPActinons from '../../store/actions/CAPActions.js'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import CAPActions from '../../store/actions/CAPActions.js'

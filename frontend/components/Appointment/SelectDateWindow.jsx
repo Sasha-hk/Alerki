@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import CAPActions from '../../store/actions/CAPActions.js'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
@@ -14,14 +15,13 @@ import cls from './appointment-buttons.module.css'
 
 
 const SelectDataWindow = ({
-  appointment,
-  setAppointment,
   showModal,
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
+  const appointment = useSelector(store => store.cap.appointment)
   const scheduleStore = useSelector(store => store.cap.schedule)
   const schedule = scheduleStore.schedule
 
@@ -88,10 +88,7 @@ const SelectDataWindow = ({
             onClick={e => {
               // set date and switch windows
               const handle = (date) => {
-                setAppointment({
-                  ...appointment,
-                  date,
-                })
+                dispatch(CAPActions.updateAppointment(date))
 
                 setShowModal({...showModal, date: false, time: true})
               }

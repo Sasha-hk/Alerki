@@ -38,6 +38,7 @@ const defaultCAPState = {
     ...successState,
   },
   appointment: {
+    date: null,
     serviceID: null,
     masterServiceID: null,
     masterID: null,
@@ -46,6 +47,12 @@ const defaultCAPState = {
 }
 
 // update state
+const updateAppointment = (state, data) => {
+  return {...Object.assign(state, {
+    appointment: data,
+  })}
+}
+
 const updateServices = (state, data) => {
   return {...Object.assign(state, {
     services: data,
@@ -94,10 +101,9 @@ const CAPReducer = (state = defaultCAPState, action) => {
   switch (action.type) {
     // appointment
     case types.CAP_UPDATE_APPOINTMENT:
-      return {
-        ...state.newAppointment,
-        ...action.payload,
-      }
+      return updateAppointment(state, {
+        date: action.payload
+      })
 
     // services
     // upload
