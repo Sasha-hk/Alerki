@@ -4,8 +4,8 @@ import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
-import SelectTime from './Select/SelectTime'
-import cls from './appointment-buttons.module.css'
+import SelectTime, {generateTime} from './Select/SelectTime'
+import cls from './styles/appointment-buttons.module.css'
 import pageCls from './styles/select-time.module.css'
 
 
@@ -16,21 +16,29 @@ const SelectTimeWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const appointment = useSelector(store => store.cap.appointment)
+  const CAPSrote = useSelector(store => store.cap)
+  const appointment = CAPSrote.appointment
   const scheduleStore = useSelector(store => store.cap.schedule)
   const schedule = scheduleStore.schedule
 
   const [time, setTime] = useState(null)
-  const [selectTime, setSelectTime] = useState(null)
 
   // generate time
-  // useEffect(() => {
-  //   console.log(schedule)
-  //   if (schedule?.weekendDays) {
-  //     // const generatedDays = generateDays(calendarDate.date)
-  //     // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
-  //   }
-  // }, [calendarDate, schedule, appointment.date])
+  useEffect(() => {
+    console.log(schedule)
+    if (schedule?.weekendDays) {
+      // const service = 
+      console.log(appointment)
+
+      // setTime(generateTime(
+      //   schedule,
+      //   schedule.workingStartTime,
+      //   schedule.workingEndTime,
+      // ))
+      // const generatedDays = generateDays(calendarDate.date)
+      // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
+    }
+  }, [schedule])
 
   const closeSelectTimeWindow = () => {
     setShowModal({...showModal, time: false})

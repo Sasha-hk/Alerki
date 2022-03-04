@@ -11,7 +11,7 @@ import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
 import DaysInscription from '../UI/Calendar/DaysInscription'
 import MonthSwitch from '../UI/Calendar/MonthSwitch'
-import cls from './appointment-buttons.module.css'
+import cls from './styles/appointment-buttons.module.css'
 
 
 const SelectDataWindow = ({
