@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import CAPActions from '../../store/actions/CAPActions.js'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
@@ -14,14 +15,13 @@ import cls from './appointment-buttons.module.css'
 
 
 const SelectDataWindow = ({
-  appointment,
-  setAppointment,
   showModal,
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
+  const appointment = useSelector(store => store.cap.appointment)
   const scheduleStore = useSelector(store => store.cap.schedule)
   const schedule = scheduleStore.schedule
 
@@ -82,30 +82,23 @@ const SelectDataWindow = ({
             />
           </div>
         </ModalHeading>
-        <ModalContent
-          className={cls.calendar_paddings}
-          onClick={e => {
-            if (e.target.dataset['masterId']) {
-            }
-          }}
-        >
+        <ModalContent className={cls.calendar_paddings}>
           <DaysInscription />
           <Calendar
             onClick={e => {
+              // set date and switch windows
+              const handle = (date) => {
+                dispatch(CAPActions.updateAppointment({date}))
+
+                setShowModal({...showModal, date: false, time: true})
+              }
+              
               // set date for new appointment
               if (e.target.dataset.date) {
-                setAppointment({
-                  ...appointment,
-                  date: e.target.dataset.date,
-                })
+                handle(e.target.dataset.date)
               }
               else {
-                if (e.target.offsetParent.dataset?.date) {
-                  setAppointment({
-                    ...appointment,
-                    date: e.target.offsetParent.dataset.date,
-                  })
-                }
+                handle(e.target.offsetParent.dataset.date)
               }
             }}
           >
@@ -137,7 +130,7 @@ const SelectDataWindow = ({
                       />
                     }
                   })
-                : 0
+                : null
             }
           </Calendar>
         </ModalContent>

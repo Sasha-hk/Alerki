@@ -1,13 +1,10 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux' 
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
-import Input from '../UI/Input/Input'
 import CAPActions from '../../store/actions/CAPActions.js'
-import SelectService from './Select/SelectService'
 import SelectMaster from './Select/SelectMaster'
 import ModalHeading from '../Modal/ModalHeading'
-import ModalContent from '../Modal/ModalContent'
 import SearchInput from '../Modal/UI/SearchInput'
 
 
@@ -25,14 +22,13 @@ const useFiltredMasters = (masters, filter) => {
 }
 
 const SelectMasterWindow = ({
-  appointment,
-  setAppointment,
   showModal,
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
+  const appointment = useSelector(store => store.cap.appointment)
   const mastersStore = useSelector(store => store.cap.masters)
   const masters = mastersStore.masters
 
@@ -52,16 +48,6 @@ const SelectMasterWindow = ({
       <div>
         <div 
           className={'pb-2'}
-          onClick={e => {
-            if (e.target.dataset.id) {
-              setAppointment({
-                ...appointment,
-                serviceID: e.target.dataset.id,
-              })
-
-              setShowModal({...showModal, master: false, date: true})
-            }
-          }}
         >
           <div>
             <ModalHeading
@@ -83,11 +69,10 @@ const SelectMasterWindow = ({
               className='pb-2'
               onClick={e => {
                 if (e.target.dataset['masterId']) {
-                  setAppointment({
-                    ...appointment,
+                  dispatch(CAPActions.updateAppointment({
                     masterID: e.target.dataset.masterId,
-                    masterServiceID: e.target.dataset.masterServiceId,
-                  })
+                    masterServiceID: e.target.dataset.masterServiceId,                    
+                  }))
 
                   dispatch(CAPActions.uploadSchedule({
                     year: new Date().getFullYear(),

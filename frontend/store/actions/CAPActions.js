@@ -6,6 +6,11 @@ import {
 } from '../../utils/createAction.js'
 
 
+// update appointment
+const updateAppointment = (payload = {}) => {
+  return makeActionWithPayload(types.CAP_UPDATE_APPOINTMENT, payload)
+}
+
 // upload services
 const uploadServices = () => {
   return async dispatch => {
@@ -127,6 +132,7 @@ const uploadSchedule = ({
 
 
 export default {
+  updateAppointment,
   uploadServices,
   findServices,
   uploadMasters,
