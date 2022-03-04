@@ -16,29 +16,29 @@ const SelectTimeWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const CAPSrote = useSelector(store => store.cap)
-  const appointment = CAPSrote.appointment
-  const scheduleStore = useSelector(store => store.cap.schedule)
+  const CAPStore = useSelector(store => store.cap)
+  const appointment = CAPStore.appointment
+  const scheduleStore = CAPStore.schedule
   const schedule = scheduleStore.schedule
 
   const [time, setTime] = useState(null)
 
   // generate time
   useEffect(() => {
-    console.log(schedule)
     if (schedule?.weekendDays) {
-      // const service = 
-      console.log(appointment)
+      const t = generateTime(
+        schedule,
+        schedule.workingStartTime,
+        schedule.workingEndTime,
+        appointment.masterService.service.duration,
+      )
 
-      // setTime(generateTime(
-      //   schedule,
-      //   schedule.workingStartTime,
-      //   schedule.workingEndTime,
-      // ))
+      console.log(t, ' <<< time')
+      setTime(t)
       // const generatedDays = generateDays(calendarDate.date)
       // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
     }
-  }, [schedule])
+  }, [appointment])
 
   const closeSelectTimeWindow = () => {
     setShowModal({...showModal, time: false})
@@ -63,10 +63,14 @@ const SelectTimeWindow = ({
             // }
           }}
         >
-          <SelectTime 
-            from="10:30"
-            to="12:00"
-          />
+          {
+            time
+              ? time.map(i => {
+                return (
+                  
+                )
+              })
+          }
         </ModalContent>
       </div>
 

@@ -29,45 +29,65 @@ const checkIntersectionsTime = ({
  * It return `true` if time belongs to master working time
  * @return {bool} - belongs to master working time
  */
-const checkBelongsTime = ({
+const checkBelongsTime = (
   workingStartTime,
   workingEndTime,
   start,
   end,
-}) => {
-
+) => {
+  return (workingStartTime <= start && workingStartTime <= end) && (workingEndTime >= start && workingEndTime >= end)
 }
 
-export const generateTime = ({
+export const generateTime = (
   schedule,
   workingStartTime,
   workingEndTime,
   serviceDuration
-}) => {
+) => {
   const time = []
   const startLimitTime = new Date(schedule.workingStartTime || workingStartTime).getTime()
-  const endLimitTime = new Date(schedule.workingEndTime || workingEndTime).getTime
+  const endLimitTime = new Date(schedule.workingEndTime || workingEndTime).getTime()
   let startPoint = new Date(startLimitTime).getTime()
   let start
   let end
 
+  let i = 0
+
   while (true) {
+    i += 1
     start = startPoint
     end = start + serviceDuration
+    startPoint = end
 
-    if (checkIntersectionsTime) {
-      continue
-    }
+    // if (checkIntersectionsTime(start, end, )) {
+    //   continue
+    // }
 
-    if (!checkBelongsTime) {
+    if (!checkBelongsTime(startLimitTime, endLimitTime, start, end)) {
+      console.log(checkBelongsTime(0, 10, start, end))
+      console.log({
+        startLimitTime,
+        endLimitTime,
+        start,
+        end,
+        startPoint
+      })
+      console.warn('time not belongs to working time ', i)
       break
     }
 
-    time.apend()
+    time.push({
+      start,
+      end
+    })
 
-
+    if (i < 1000) {
+      console.log('Too many iterations')
+      break
+    }
   }
-}
 
+  return time
+}
 
 export default SelectTime
