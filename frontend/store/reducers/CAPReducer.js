@@ -39,6 +39,7 @@ const defaultCAPState = {
   },
   appointment: {
     date: null,
+    time: null,
     serviceID: null,
     masterServiceID: null,
     masterID: null,
@@ -48,52 +49,56 @@ const defaultCAPState = {
 
 // update state
 const updateAppointment = (state, data) => {
-  return {...Object.assign(state, {
-    appointment: data,
-  })}
+  return {
+    ...state,
+    appointment: {
+      ...state.appointment,
+      ...data,
+    }
+  }
 }
 
 const updateServices = (state, data) => {
-  return {...Object.assign(state, {
-    services: data,
-  })}
+  return {
+    ...state,
+    services: {
+      ...state.services,
+      ...data,
+    }
+  }
 }
 
 const updateMasters = (state, data) => {
-  return {...Object.assign(state, {
-    masters: data
-  })}
+  return {
+    ...state,
+    masters: {
+      ...state.masters,
+      ...data,
+    }
+  }
 }
 
 const updateSchedule = (state, data) => {
-  return {...Object.assign(state, {
-    schedule: data
-  })}
+  return {
+    ...state,
+    schedule: {
+      ...state.chedule,
+      ...data,
+    }
+  }
 }
 
 // generics
 const genServicesError = (state, error) => {
-  return {...Object.assign(state, {
-    services: {
-      ...errorState(error)
-    }
-  })}
+  return updateServices(state, {...errorState(error)})
 }
 
 const genMastersError = (state, error) => {
-  return {...Object.assign(state, {
-    masters: {
-      ...errorState(error)
-    },
-  })}
+  return updateMasters(state, {...errorState(error)})
 }
 
 const genScheduleError = (state, error) => {
-  return {...Object.assign(state, {
-    schedule: {
-      ...errorState(error)
-    }
-  })}
+  return updateSchedule(state, {...errorState(error)})
 }
 
 
@@ -101,9 +106,7 @@ const CAPReducer = (state = defaultCAPState, action) => {
   switch (action.type) {
     // appointment
     case types.CAP_UPDATE_APPOINTMENT:
-      return updateAppointment(state, {
-        date: action.payload
-      })
+      return updateAppointment(state, action.payload)
 
     // services
     // upload

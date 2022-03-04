@@ -7,7 +7,7 @@ import {
 
 
 // update appointment
-const updateAppointment = (payload) => {
+const updateAppointment = (payload = {}) => {
   return makeActionWithPayload(types.CAP_UPDATE_APPOINTMENT, payload)
 }
 
