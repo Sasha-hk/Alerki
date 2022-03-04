@@ -88,7 +88,7 @@ const SelectDataWindow = ({
             onClick={e => {
               // set date and switch windows
               const handle = (date) => {
-                dispatch(CAPActions.updateAppointment(date))
+                dispatch(CAPActions.updateAppointment({date}))
 
                 setShowModal({...showModal, date: false, time: true})
               }

@@ -10,14 +10,13 @@ import pageCls from './styles/select-time.module.css'
 
 
 const SelectTimeWindow = ({
-  appointment,
-  setAppointment,
   showModal,
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
+  const appointment = useSelector(store => store.cap.appointment)
   const scheduleStore = useSelector(store => store.cap.schedule)
   const schedule = scheduleStore.schedule
 

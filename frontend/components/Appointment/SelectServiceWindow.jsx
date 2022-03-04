@@ -21,14 +21,13 @@ const useFiltredServices = (services, sort) => {
 }
 
 const SelectServiceWindow = ({
-  appointment,
-  setAppointment,
   showModal, 
   setShowModal,
   showButtons,
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
+  const appointment = useSelector(store => store.cap.appointment)
   const servicesStore = useSelector(store => store.cap.services)
   const services = servicesStore.services
  
@@ -84,10 +83,10 @@ const SelectServiceWindow = ({
           className='pb-2'
           onClick={e => {
             if (e.target.dataset.id) {
-              setAppointment({
+              dispatch(CAPActions.updateAppointment({
                 ...appointment,
                 serviceID: e.target.dataset.id,
-              })
+              }))
 
               dispatch(CAPActions.uploadMasters({
                 serviceID: e.target.dataset.id,
