@@ -11,7 +11,7 @@ import NotAvailableDay from '../UI/Calendar/DayView/NotAvailable'
 import AnotherMonth from '../UI/Calendar/DayView/AnotherMonth'
 import DaysInscription from '../UI/Calendar/DaysInscription'
 import MonthSwitch from '../UI/Calendar/MonthSwitch'
-import cls from './appointment-buttons.module.css'
+import cls from './styles/appointment-buttons.module.css'
 
 
 const SelectDataWindow = ({
@@ -97,7 +97,7 @@ const SelectDataWindow = ({
               if (e.target.dataset.date) {
                 handle(e.target.dataset.date)
               }
-              else {
+              else if (e.target.offsetParent?.dataset?.date) {
                 handle(e.target.offsetParent.dataset.date)
               }
             }}

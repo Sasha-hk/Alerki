@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {millisecondsToTime} from '../../utils/timeConvert.js'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
 import ModalContent from '../Modal/ModalContent'
-import SelectTime from './Select/SelectTime'
-import cls from './appointment-buttons.module.css'
+import SelectTime, {generateTime} from './Select/SelectTime'
+import cls from './styles/appointment-buttons.module.css'
 import pageCls from './styles/select-time.module.css'
 
 
@@ -16,21 +17,29 @@ const SelectTimeWindow = ({
   setShowButtons,
 }) => {
   const dispatch = useDispatch()
-  const appointment = useSelector(store => store.cap.appointment)
-  const scheduleStore = useSelector(store => store.cap.schedule)
+  const CAPStore = useSelector(store => store.cap)
+  const appointment = CAPStore.appointment
+  const scheduleStore = CAPStore.schedule
   const schedule = scheduleStore.schedule
 
   const [time, setTime] = useState(null)
-  const [selectTime, setSelectTime] = useState(null)
 
   // generate time
-  // useEffect(() => {
-  //   console.log(schedule)
-  //   if (schedule?.weekendDays) {
-  //     // const generatedDays = generateDays(calendarDate.date)
-  //     // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
-  //   }
-  // }, [calendarDate, schedule, appointment.date])
+  useEffect(() => {
+    if (schedule?.weekendDays) {
+      const t = generateTime(
+        schedule,
+        schedule.workingStartTime,
+        schedule.workingEndTime,
+        appointment.masterService.service.duration,
+      )
+
+      console.log(t, ' <<< time')
+      setTime(t)
+      // const generatedDays = generateDays(calendarDate.date)
+      // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
+    }
+  }, [appointment])
 
   const closeSelectTimeWindow = () => {
     setShowModal({...showModal, time: false})
@@ -55,10 +64,20 @@ const SelectTimeWindow = ({
             // }
           }}
         >
-          <SelectTime 
-            from="10:30"
-            to="12:00"
-          />
+          {
+            time
+              ? time.map(i => {
+                console.log(i)
+                return (
+                  <SelectTime 
+                    key={i.start}
+                   from={millisecondsToTime(i.start)}
+                    to={millisecondsToTime(i.end)}
+                  />
+                )
+              })
+              : null
+          }
         </ModalContent>
       </div>
 

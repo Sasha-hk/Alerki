@@ -1,17 +1,26 @@
 import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Router, { useRouter } from 'next/router'
-import Link from 'next/link'
 import useTranslation from 'next-translate/useTranslation'
-import getT from 'next-translate/getT'
 import userActions from '../../../store/actions/userActions.js'
-import Button from '../../UI/Button/Button'
 import Input from '../../UI/Input/Input'
 import Select from '../../UI/Select/Select'
 import Modal from '../../Modal/Modal'
 import Toggle from '../../UI/Toggle/Toggle'
 import cls from '../../../styles/pages/profile.module.css'
 
+
+const getDurationView = (duration) => {
+  let hours = Math.floor(duration / 60 / 60 / 1000) % 24
+  let minutes = Math.floor(duration / 60 / 1000) % 60
+
+  if (minutes == 0) {
+    return `${hours}h.`
+  }
+  else if (hours == 0) {
+    return `${minutes}m.`
+  }
+  return `${hours}h. ${minutes}m.`
+}
 
 const ManageServiceWIndow = ({
   children, 
@@ -25,16 +34,6 @@ const ManageServiceWIndow = ({
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
   const [priceType, setPriceType] = useState()
-
-  if (serviceData.duration >= 60) {
-    var durationView = Math.trunc(serviceData.duration / 60) + 'h. '
-    if (serviceData.duration % 60 != 0) {
-      durationView += serviceData.duration % 60 + 'm.'
-    }
-  }
-  else {
-    var durationView = serviceData.duration % 60 + 'm.'
-  }
   
   const updateByName = (e) => {
     const newState = {
@@ -104,7 +103,7 @@ const ManageServiceWIndow = ({
           <div>
             <label>Duration:</label>
             
-            <b>{durationView}</b>
+            <b>{getDurationView(serviceData.duration)}</b>
 
             <Input
               placeholder="duration"
@@ -114,8 +113,13 @@ const ManageServiceWIndow = ({
               max="120"
               step="1"
               name="duration"
-              value={serviceData.duration}
-              onChange={e => updateByName(e)}
+              value={serviceData.duration / 60 / 1000}
+              onChange={e => {
+                setServiceData({
+                  ...serviceData,
+                  duration: e.target.value * 60 * 1000
+                })
+              }}
               required
             />
           </div>
