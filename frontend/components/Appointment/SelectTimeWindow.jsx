@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {millisecondsToTime} from '../../utils/timeConvert.js'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
@@ -66,10 +67,16 @@ const SelectTimeWindow = ({
           {
             time
               ? time.map(i => {
+                console.log(i)
                 return (
-                  
+                  <SelectTime 
+                    key={i.start}
+                   from={millisecondsToTime(i.start)}
+                    to={millisecondsToTime(i.end)}
+                  />
                 )
               })
+              : null
           }
         </ModalContent>
       </div>

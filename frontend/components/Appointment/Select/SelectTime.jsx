@@ -1,9 +1,9 @@
 import cls from './select-time.module.css'
 
 
-const SelectTime = ({from, to}) => {
+const SelectTime = ({from, to, key}) => {
   return (
-    <div className={cls.select_time}>
+    <div className={cls.select_time} key={key}>
       <span className="text-middle">{from}</span> - <span className="text-middle">{to}</span>
     </div>
   )
@@ -86,6 +86,7 @@ export const generateTime = (
       break
     }
   }
+  console.log(time)
 
   return time
 }

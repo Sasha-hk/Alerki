@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useTranslation from 'next-translate/useTranslation'
 
+import {millisecondsToTime, timeToMilliseconds} from '../../utils/timeConvert'
 import ScrollFrame from '../../components/frames/ScrollFrame.jsx'
 import SettingsWrapper from '../../components/pages/settings'
 import Input from '../../components/UI/Input/Input.jsx'
@@ -35,26 +36,16 @@ const Settings = () => {
     instagramProfile: null,
     weekendDays: {},
   })
-  const convertTimeToMilliseconds = (time) => {
-    const parsed = time.split(':')
-    return parsed[0] * 60 * 60 * 1000 + parsed[1] * 60 * 1000
-  }
-
-  const convertMillisecondsToTime = (milliseconds) => {
-    const hours = String(Math.floor(milliseconds / 60 / 60 / 1000))
-    const seconds = String(milliseconds % 60 / 1000)
-    
-    return `${hours.length == 1 ? '0' + hours : hours}:${seconds.length == 1 ? '0' + seconds : seconds}` 
-  }
 
   useEffect(() => {
     if (user.master) {
+      console.log('>> ', millisecondsToTime(user?.master?.workingStartTime))
       setUpdateMasterData({
         workingStartTime: user?.master?.workingStartTime
-          ? convertMillisecondsToTime(user?.master?.workingStartTime)
+          ? millisecondsToTime(user?.master?.workingStartTime)
           : null,
         workingEndTime: user?.master?.workingEndTime
-          ? convertMillisecondsToTime(user?.master?.workingEndTime)
+          ? millisecondsToTime(user?.master?.workingEndTime)
           : null,
         shortBiography: user?.master?.shortBiography,
         instagramProfile: user?.master?.instagramProfile,
@@ -81,22 +72,25 @@ const Settings = () => {
     if (updateMasterData.weekendDays) {
       dispatch(userActions.updateMasterWeekendDays(updateMasterData.weekendDays))
     }
+    
     if (updateMasterData.workingStartTime || 
-        updateMasterData.workingEndTime || 
+        updateMasterData.workingEndTime ||
         updateMasterData.shortBiography || 
         updateMasterData.instagramProfile
       ) {
       dispatch(userActions.updateMaster({
         ...updateMasterData,
         workingStartTime: updateMasterData.workingStartTime
-          ? convertTimeToMilliseconds(updateMasterData.workingStartTime)
+          ? timeToMilliseconds(updateMasterData.workingStartTime)
           : null,
         workingEndTime: updateMasterData.workingEndTime 
-          ? convertTimeToMilliseconds(updateMasterData.workingEndTime)
+          ? timeToMilliseconds(updateMasterData.workingEndTime)
           : null,
       }))
     }
   }
+
+  console.log(updateMasterData)
 
   return (
     <ScrollFrame navigation={true}>
@@ -113,7 +107,7 @@ const Settings = () => {
             <textarea 
               cols="30" 
               rows="10"
-              value={updateMasterData.shortBiography}
+              value={updateMasterData.shortBiography || ''}
               onChange={e => setUpdateMasterData({...updateMasterData, shortBiography: e.target.value})}
               placeholder="About you..."
             >
@@ -127,7 +121,7 @@ const Settings = () => {
             <Input
               className="middle"
               placeholder="form"
-              value={updateMasterData.workingStartTime || ""}
+              value={updateMasterData.workingStartTime || "12:01"}
               onChange={e => setUpdateMasterData({
                 ...updateMasterData,
                 workingStartTime: e.target.value,
@@ -139,7 +133,7 @@ const Settings = () => {
             <Input
               className="middle"
               placeholder="to"
-              value={updateMasterData.workingEndTime || ""}
+              value={updateMasterData.workingEndTime || "12:12"}
               onChange={e => setUpdateMasterData({
                 ...updateMasterData,
                 workingEndTime: e.target.value,

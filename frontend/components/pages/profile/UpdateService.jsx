@@ -26,9 +26,10 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
     dispatch(profileActions.upload({username: user.username}))
   }
   
-  const createServiceData = () => {
+  const updateServiceData = () => {
+    console.log(serviceData)
     dispatch(userActions.updateService(serviceData))
-    // updateProfile()
+
     setShowModal(false)
   }
 
@@ -50,7 +51,7 @@ const ManageServiceWIndow = ({showModal, setShowModal, serviceData, setServiceDa
       </Button>
       <Button
         className="primary middle br-1"
-        onClick={e => createServiceData()}
+        onClick={e => updateServiceData()}
       >
         update
       </Button>
