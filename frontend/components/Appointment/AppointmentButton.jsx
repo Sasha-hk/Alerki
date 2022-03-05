@@ -11,6 +11,7 @@ import SelectServiceWindow from './SelectServiceWindow'
 import SelectMasterWindow from './SelectMasterWindow'
 import SelectDateWindow from './SelectDateWindow'
 import SelectTimeWindow from './SelectTimeWindow'
+import ConfirmWindow from './ConfirmWindow'
 
 
 
@@ -50,8 +51,6 @@ const AppointmentButton = () => {
     <div className={clsButton.buttons_wrapper}>
       {/* modal windows */}
       <SelectServiceWindow 
-          appointment={appointment}
-          setAppointment={setAppointment}
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}
@@ -59,8 +58,6 @@ const AppointmentButton = () => {
       />
 
       <SelectMasterWindow
-          appointment={appointment}
-          setAppointment={setAppointment}
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}
@@ -68,8 +65,6 @@ const AppointmentButton = () => {
       />
 
       <SelectDateWindow
-          appointment={appointment}
-          setAppointment={setAppointment}
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}
@@ -77,8 +72,13 @@ const AppointmentButton = () => {
       />
 
       <SelectTimeWindow
-          appointment={appointment}
-          setAppointment={setAppointment}
+          showModal={showModal}
+          setShowModal={setShowModal}
+          showButtons={showButtons}
+          setShowButtons={setShowButtons}
+      />
+
+      <ConfirmWindow
           showModal={showModal}
           setShowModal={setShowModal}
           showButtons={showButtons}

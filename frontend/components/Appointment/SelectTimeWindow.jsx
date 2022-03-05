@@ -63,6 +63,7 @@ const SelectTimeWindow = ({
               dispatch(CAPActions.updateAppointment({
                 time: e.target.dataset.time,
               }))
+              setShowModal({...showModal, time: false, confirm: true})
             }
           }}
         >
