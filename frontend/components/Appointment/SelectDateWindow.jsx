@@ -97,7 +97,7 @@ const SelectDataWindow = ({
               if (e.target.dataset.date) {
                 handle(e.target.dataset.date)
               }
-              else {
+              else if (e.target.offsetParent?.dataset?.date) {
                 handle(e.target.offsetParent.dataset.date)
               }
             }}
