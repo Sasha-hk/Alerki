@@ -1,0 +1,63 @@
+.calendar {
+  background: var(--calendar-day-border-color);
+  border: var(--calendar-day-border);
+  border-radius: 7px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  grid-column-gap: 1px;
+  grid-row-gap: 1px;
+  height: auto;
+  width: 100%;
+  overflow: hidden;
+}
+.calendar::before {
+  content: "";
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+  width: 0;
+  padding-bottom: 100%;
+}
+.calendar > *:first-child {
+  grid-row: 1 / 1;
+  grid-column: 1 / 1;
+}
+
+/* inscription */
+.days_inscription {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-column-gap: 1px;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  width: 100%;
+  user-select: none;
+}
+.days_inscription span {
+  font-size: 0.95em !important;
+  font-weight: 300;
+}
+
+/* month switch */
+.month_switch {
+  display: flex;
+  align-items: center;
+  column-gap: 15px;
+}
+.month_switch div {
+  display: flex;
+  padding: 4px;
+}
+
+.month_switch svg {
+  stroke-width: 3px;
+  stroke-miterlimit: 10;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.month_switch_available {
+  stroke: var(--calendar-month-switch-available);
+}
+.month_switch_not_available {
+  stroke: var(--calendar-month-switch-not-available);
+}

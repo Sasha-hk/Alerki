@@ -1,26 +1,75 @@
-const { UserModel } = require('../db/models')
-const AuthError = require('../exception/AuthError')
-const UserDto = require('../dto/UserDto')
+const {UserModel, Sequelize} = require('../db/models')
 const AuthService = require('./AuthService')
 const UserPictureService = require('./UserPictureService')
+const ProfileService = require('./ProfileService')
+const AuthError = require('../exception/AuthError')
+const UserDto = require('../dto/UserDto')
+const checkType = require('../utils/validators/checkTypes')
 const bcrypt = require('bcrypt')
 const request = require('request')
 
 
 class UserService {
-	async getUserByEmail(email) {
-		const checkUserExists = await UserModel.findOne({
-			raw: true,
-			where: {
-				email
-			}
-		})
+    async setProfileType({id, type}) {
+        await UserModel.update(
+            {
+                profileType: type,
+            },
+            {
+                where: {
+                    id,
+                },
+            },
+        )
+    }
 
-		return checkUserExists
-	}
+    async findUserByEmail(email) {
+        const checkUserExists = await UserModel.findOne({
+            raw: true,
+            where: {
+                email
+            }
+        })
+
+        return checkUserExists
+    }
+
+    async findUserByUsername({username}) {
+        const foundUser = await UserModel.findOne({
+            raw: true,
+            where: {
+                username,
+            }
+        })
+
+        return foundUser
+    }
+
+    async findUserByID({id}) {
+        checkType.hardNumber(Number(id), 'in findUserByID')
+        const user = await UserModel.findOne({
+            raw: true,
+            where: {
+                id,
+            },
+        })
+
+        return user
+    }
+
+    async findByMasterID({masterID}) {
+        const foundUser = await UserModel.findOne({
+            raw: true,
+            where: {
+                masterID,
+            },
+        })
+
+        return foundUser
+    }
 
     async checkEmailExists(email) {
-        const checkUserExists = await this.getUserByEmail(email)
+        const checkUserExists = await this.findUserByEmail(email)
 
         if (checkUserExists) {
             throw AuthError.EmailExistsError()
@@ -29,78 +78,106 @@ class UserService {
         return checkUserExists
     }
 
-    checkProfileType(profileType) {
-        if (profileType != 'client' && profileType != 'worker') {
-            throw AuthError.BadRequestError()
+    async checkUsernameExists(username) {
+        const checkUserExists = await this.findUserByUsername({username})
+
+        if (checkUserExists) {
+            throw AuthError.UsernameExistsError()
         }
+
+        return checkUserExists
     }
 
-	async generateAndSaveTokens(user, deviceName) {
-		const userData = new UserDto(user)
+    async generateAndSaveTokens(user, deviceName) {
+        const userData = {
+            id: user.id,
+            email: user.email,
+            masterID: user.masterID,
+            clientID: user.clientID,
+        }
         const tokens = await AuthService.generateTokens({...userData})
         await AuthService.saveAuthData(userData.id, deviceName, tokens)
-		
+        
         return {userData, ...tokens}	
-	}
+    }
 
-    async register(
+    async register({
         email, 
-        firstName, 
-        lastName, 
+        username,
+        firstName,
+        lastName,
         password, 
         profileType, 
         deviceName
-	) {
-        // check if all data specefied
-        if (!email || !firstName || !lastName || !password || !profileType) {
-            throw AuthError.BadRequestError(['required data not specefied'])
+    }) {    
+        // check profile type
+        if (profileType != 'client' && profileType != 'master') {
+            throw AuthError.BadRequestError()
         }
-        
-        // check if selected profile type
-        this.checkProfileType(profileType)
 
         // check if user with specefied email exists
         await this.checkEmailExists(email)
+        await this.checkUsernameExists(username)
 
-        // if password exists hash it else save null
         const hashedPassword = bcrypt.hashSync(password, 1)
-       
+
+        // create profile
+        let clientProfile = null
+        let masterProfile = null
+        if (profileType == 'client') {
+            clientProfile = await ProfileService.createClientProfile()
+        }
+        else {
+            clientProfile = await ProfileService.createClientProfile()
+            masterProfile = await ProfileService.createMasterProfile()
+        }
+        
         // crete new user
         const newUser = await UserModel.create({
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
+            email,
+            username,
+            firstName,
+            lastName,
             password: hashedPassword,
-            profileType: profileType,
+            profileType,
+            clientID: clientProfile?.id || null,
+            masterID: masterProfile?.id || null,
         })
-		
+ 
         return await this.generateAndSaveTokens(newUser, deviceName)
     }
 
-    async login(email, password, deviceName) {
+    async login({email, username, password, deviceName}) {
         // check if user exists
         const loginUser = await UserModel.findOne({
             raw: true,
             where: {
-                email,
+                [Sequelize.Op.or]: {
+                    email: email || null,
+                    username: username || null,
+                }
             },
         })
 
         if (!loginUser) {
-            throw AuthError.EmailNotExistsError()
+            throw AuthError.UserWithSpecefiedDataNodeExistsError()
+        }
+
+        if (!loginUser.password) {
+            throw AuthError.PasswordNotExistsError()
         }
 
         // check password
-        const passwordIsValid = bcrypt.compare(password, loginUser.password)
-
+        const passwordIsValid = await bcrypt.compare(password, loginUser.password)
+        
         if (!passwordIsValid) {
             throw AuthError.BadPasswordError()
         }
 
-		return await this.generateAndSaveTokens(loginUser, deviceName)
+        return await this.generateAndSaveTokens(loginUser, deviceName)
     }
 
-    async logout(accessToken, refreshToken, deviceName) {
+    async logout({accessToken, refreshToken, deviceName}) {
         // get user id from accessToken or refreshToken
         const decodedToken = accessToken 
             ? await AuthService.verifyAccessToken(accessToken)
@@ -115,17 +192,17 @@ class UserService {
             : null 
     }
 
-    async refresh(refreshToken, deviceName) {
+    async refresh({refreshToken, deviceName}) {
         // decode refreshToken
         const decodedToken = await AuthService.verifyRefreshToken(refreshToken)
-
+        
         if (decodedToken) {
             // check if use with id from refreshToken exists
-            const checkUser = await this.getUserByEmail(decodedToken.email)
+            const checkUser = await this.findUserByEmail(decodedToken.email)
 
             // if user exists generate new tokens
             if (checkUser) {
-				return await this.generateAndSaveTokens(checkUser, deviceName)
+                return await this.generateAndSaveTokens(checkUser, deviceName)
             }
             else {
                 throw AuthError.BadRequestError(['User not exists'])
@@ -137,53 +214,131 @@ class UserService {
         }
     }
 
-	async savePhotoId(id, photoID) {
-		const withPhoto = await UserModel.update({
-				photoID,
-			},
-			{
-				where: {
-					id
-				}
-			}
-		)
+    async savePhotoId(id, photoID) {
+        const withPhoto = await UserModel.update({
+                photoID,
+            },
+            {
+                where: {
+                    id
+                }
+            }
+        )
 
-		return withPhoto
-	}
+        return withPhoto
+    }
 
-	async withGoogle(profileData, deviceName, googleToken) {
-		if (!profileData.email) {
-			throw AuthError.BadRequestError(['code was invalid'])
-		}
-		const candedat = await this.getUserByEmail(profileData.email)
+    async withGoogle({profileData, deviceName, googleToken}) {
+        if (!profileData.email) {
+            throw AuthError.BadRequestError(['code was invalid'])
+        }
+        const candedat = await this.findUserByEmail(profileData.email)
 
-		if (candedat) {
-			return await this.generateAndSaveTokens(candedat, deviceName)
-		}
-		else {
-			const uploadAndSavePicture = async (pictureUrl) => {
-				const picture = request(pictureUrl)
-				const savedPicture = await UserPictureService.savePicture(picture, pictureUrl)
-				return savedPicture.dataValues.id
-			}
+        if (candedat) {
+            return await this.generateAndSaveTokens(candedat, deviceName)
+        }
+        else {
+            const uploadAndSavePicture = async (pictureUrl) => {
+                const picture = request(pictureUrl)
+                const savedPicture = await UserPictureService.savePicture(picture, pictureUrl)
+                return savedPicture.dataValues.id
+            }
 
-			const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
+            const savedPicture = profileData.picture ? await uploadAndSavePicture(profileData.picture) : null
 
-			const newUser = await UserModel.create({
-				email: profileData.email,
-				firstName: profileData.given_name,
-				lastName: profileData.family_name,
-				profileType: 'client',
-				deviceName,
-				pictureID: savedPicture,
-				googleAccessToken: googleToken.access_token,
-				googleRefreshToken: googleToken.refresh_token,
-				googleIdToken: googleToken.id_token,
-			})
+            // generate unique username from email
+            let candedatUsername = profileData.email.split('@')[0]
 
-			return await this.generateAndSaveTokens(newUser, deviceName)
-		}
-	}
+            while (true) {
+                const checkUsername = await this.findUserByUsername({username: candedatUsername})
+
+                if (!checkUsername) {
+                    break
+                }
+
+                candedatUsername += '_'
+            }
+
+            const newUser = await UserModel.create({
+                email: profileData.email,
+                username: candedatUsername,
+                firstName: profileData.given_name,
+                lastName: profileData.family_name,
+                profileType: 'client',
+                deviceName,
+                pictureID: savedPicture?.id,
+                googleAccessToken: googleToken.access_token,
+                googleRefreshToken: googleToken.refresh_token,
+                googleIdToken: googleToken.id_token,
+            })
+
+            return await this.generateAndSaveTokens(newUser, deviceName)
+        }
+    }
+
+    async becomeMaster({id}) {
+        const masterProfile = await ProfileService.createMasterProfile()
+
+        const update = await UserModel.update(
+            {
+                profileType: 'master',
+                masterID: masterProfile.id,
+            },
+            {
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return update[1][0]
+    }
+
+    async becomeClient({id}) {
+        const clientProfile = await ProfileService.createClientProfile()
+        const update = await UserModel.update(
+            {
+                profileType: 'client',
+                clientID: clientProfile.id,
+            },
+            {
+                raw: true,
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return update[1][0]
+    }
+
+    async updateProfile({
+        id,
+        username,
+        firstName,
+        lastName,
+        pictureID,
+    }) {
+        const updatedUser = await UserModel.update(
+            {
+                username,
+                firstName,
+                lastName,
+                pictureID,
+            }, 
+            {
+                raw: true,
+                returning: true,
+                where: {
+                    id,
+                },
+            }
+        )
+
+        return updatedUser[1][0]
+    }
 }
 
 

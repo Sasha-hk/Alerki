@@ -1,5 +1,7 @@
 const { AuthUserModel, UserModel } = require('../db/models')
+const AuthError = require('../exception/AuthError')
 const jwt = require('jsonwebtoken')
+
 
 class AuthService {
     async generateTokens(payload) {
@@ -57,15 +59,25 @@ class AuthService {
     }
 
     async verifyAccessToken(accessToken) {
-        const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET)
-
-        return decoded
+        try {
+            const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET)
+    
+            return decoded
+        }
+        catch(e) {
+            throw AuthError.BadAccessToken()
+        }
     }
 
-    async verifyRefreshToken(accessRefresh) {
-        const decoded = jwt.verify(accessRefresh, process.env.JWT_REFRESH_SECRET)
+    async verifyRefreshToken(refreshToken) {
+        try {
+            const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
 
-        return decoded
+            return decoded
+        }
+        catch(e) {
+            throw AuthError.BadRefreshToken()
+        }
     }
 }
 

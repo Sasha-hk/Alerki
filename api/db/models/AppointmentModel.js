@@ -1,3 +1,6 @@
+const slugLength = require('../../config/models').appointemnt.slug.length;
+
+
 module.exports = (sequelize, DataTypes) => {
     const AppointmentModel = sequelize.define(
         'AppointmentModel',
@@ -7,12 +10,41 @@ module.exports = (sequelize, DataTypes) => {
                 autoIncrement: true,
                 primaryKey: true,
             },
-            appointmentTime: {
-                type: DataTypes.DATE,
+            slug: {
+                type: DataTypes.STRING(11),
+                allowNull: false,
             },
-            confirmed: {
+            appointmentStartTime: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            appointmentEndTime: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            duration: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            clientConfirm: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: true,
+            },
+            masterConfirm: {
                 type: DataTypes.BOOLEAN,
                 defaultValue: false,
+            },
+            clientID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            masterID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            masterServiceID: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
             },
         },
         {
@@ -21,26 +53,27 @@ module.exports = (sequelize, DataTypes) => {
     )
 
     AppointmentModel.associate = (models) => {
-        AppointmentModel.belongsTo(models.ServiceModel, {
-            foreignKey: 'serviceID',
-            onDelete: 'CASCADE',
-            allowNull:true,
-            defaultValue:null,
-        })
-
-        AppointmentModel.belongsToMany(
+        AppointmentModel.belongsTo(
             models.ClientProfileModel, 
             {
-                foreignKey: 'appointmentID',
-                through: 'Appointment_Client',
+                foreignKey: 'clientID',
+                onDelete: 'CASCADE',
+            }
+        )
+        
+        AppointmentModel.belongsTo(
+            models.MasterProfileModel, 
+            {
+                foreignKey: 'masterID',
+                onDelete: 'CASCADE'
             }
         )
 
-        AppointmentModel.belongsToMany(
-            models.WorkerProfileModel, 
+        AppointmentModel.belongsTo(
+            models.MasterServiceModel, 
             {
-                foreignKey: 'appointmentID',
-                through: 'Appointment_Worker',
+                foreignKey: 'masterServiceID',
+                onDelete: 'CASCADE',
             }
         )
     }

@@ -18,12 +18,25 @@ services:
             context: ../api/
             dockerfile: Dockerfile
         container_name: api
-        command: bash -c "npm run migrate && npm run start:production"
+        command: bash -c "npm run migrate && npm run start"
         depends_on:
             - db
         env_file: .env.production
         ports:
+            - "3001:3001"
+        working_dir: /app/api
+
+
+    frontnend:
+        build:
+            context: ../frontend/
+            dockerfile: Dockerfile
+        container_name: frontend
+        command: bash -c "npm run build && npm run start"
+        depends_on:
+            - backend
+        ports:
             - "3000:3000"
         volumes:
             - ../:/app
-        working_dir: /app/api
+        working_dir: /app/frontend

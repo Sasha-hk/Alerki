@@ -4,8 +4,8 @@ WORKDIR /app/api
 
 COPY package*.json ./
 
-RUN npm install 
+RUN npm update && npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3001

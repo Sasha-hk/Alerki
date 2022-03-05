@@ -1,0 +1,38 @@
+name: Test API
+
+on:   
+  push:
+    branches:
+      - main
+
+    paths-ignore:
+      - 'frontend/**'
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
+
+  pull_request:
+    branches:
+      - main
+      - dev
+
+    paths-ignore:
+      - 'frontend/**'
+      - 'documentation/**'
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE'
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Test API
+        run: |
+          . ./docker/build-test.sh
+          docker-compose -f ./docker/docker-compose.test.yml up --exit-code-from backend

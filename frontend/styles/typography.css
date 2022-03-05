@@ -1,0 +1,90 @@
+/* general */
+* {
+    font-weight: 500;
+    --text-little: 16px;
+    --text-normal: 18px;
+    --text-middle: 20px;
+    --text-big: 26px;
+}
+
+/* text size */
+.text-little {
+    font-size: var(--text-little) !important;
+}
+
+.text-normal {
+    font-size: var(--text-normal) !important;
+}
+
+.text-middle {
+    font-size: var(--text-middle) !important;
+}
+
+.text-big {
+    font-size: var(--text-big) !important;
+}
+
+small {
+    font-size: 12px;
+}
+
+/* colors */
+.text-muted {
+    color: var(--color-muted);
+}
+.text-form-item {
+    color: var(--color-form-item-heading);
+}
+
+/* weight */
+b {
+    font-weight: 600;
+}
+
+/* links */
+a {
+    text-decoration: none;
+    color: var(--color-link);
+}
+
+/* position */
+.text-center {
+    display: block;
+    text-align: center;
+}
+
+/* font weight */
+.text-500 {
+    font-weight: 500;
+}
+
+
+/* XS / Extra little */
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+
+}
+
+/* SM / little */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+    
+}
+
+/* MD / Medium */
+@media only screen and (min-width: 769px) and (max-width: 992px) {
+
+}
+
+/* LG / Large */
+@media only screen and (min-width: 993px) and (max-width: 1200px) {
+
+}
+
+/* XL / Extra large */
+@media only screen and (min-width: 1201px) and (max-width: 1400px) {
+    
+}
+
+/* XXL / Extra extra large */
+@media only screen and (min-width: 1401px) {
+
+}

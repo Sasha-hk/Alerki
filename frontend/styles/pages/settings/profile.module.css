@@ -1,0 +1,17 @@
+.form {
+  max-width: 300px;
+}
+.user_picture_preview {
+  border-radius: 500px;
+  width: 200px;
+  height: 200px;
+  flex-shrink: 1;
+  object-fit: cover;
+}
+
+
+@media only screen and (min-width: 0px) and (max-width: 480px) {
+  .form {
+    max-width: none;
+  }
+}

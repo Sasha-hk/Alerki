@@ -1,0 +1,81 @@
+/* general */
+button {
+    border: none;
+    border-radius: 4px;
+    color: var(--btn-color);
+    font-weight: 500;
+    outline: none;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* sizes */
+button.little {
+    font-size: 14px;
+    padding: 7px 24px;
+}
+button.middle {
+    font-size: 16px;
+    padding: 9px 30px;
+}
+button.big {
+    font-size: 18px;
+    padding: 13px 40px;
+}
+
+button.compact.little {
+    padding: 7px 24px;
+}
+button.compact.middle {
+    padding: 9px 24px;
+}
+button.compact.big {
+    padding: 13px 24px;
+}
+
+button.stratch {
+    width: 100%;
+}
+
+/* border */
+button.br-1 {
+    border-radius: 4px;
+}
+button.br-2 {
+    border-radius: 7px;
+}
+button.br-3 {
+    border-radius: 100px;
+}
+
+/* colors */
+button.primary {
+    background: var(--btn-primary);
+}
+button.danger {
+    background: none;
+    border: var(--btn-danger-border);
+    color: var(--btn-danger-color);
+}
+button.black {
+    background: var(--btn-black-bg);
+    color: var(--btn-black-color);
+}
+button.google {
+    background: #D7503F;
+    color: #fff;
+    display: flex;
+    border: none;
+    align-items: center;
+    justify-content: center;
+}
+button.sceleton {
+    color: var(--color);
+    background: none;
+    border: 1.5px solid var(--color);
+}
+button.muted {
+    background: var(--btn-muted-bg);
+    color: var(--btn-muted-color);
+}

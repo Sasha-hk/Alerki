@@ -1,0 +1,40 @@
+.day {
+  display:block;
+  height: max-content;
+  width:100%;
+  height: 100%;
+  padding: 10% 15%;
+  position: relative;
+  transition: 0.8s;
+  user-select: none;
+}
+
+.available.day:hover {
+  transition: 0.2s;
+  background: var(--calendar-day-hover-bg);
+}
+.available.active.day:hover {
+  background: var(--calendar-day-active);
+}
+
+.available {
+  background: var(--calendar-day-available-bg);
+}
+.available span {
+  color: var(--calendar-day-available-color);
+}
+
+.not_available {
+  background: var(--calendar-day-not-available-bg);
+}
+.not_available span {
+  color: var(--calendar-day-not-available-color);
+}
+
+.another_month {
+  background: var(--calendar-day-another-month-bg);
+}
+
+.active {
+  background: var(--calendar-day-active);
+}

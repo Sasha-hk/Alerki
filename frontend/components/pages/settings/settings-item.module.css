@@ -1,0 +1,31 @@
+/* settings item */
+.settings_item {
+  display: flex;
+  cursor: pointer;
+}
+.settings_block {
+  border-radius: 8px;
+  padding: 10px 12px;
+  width: 100%;
+}
+.settings_block span {
+  user-select: none;
+}
+.settings_item:not(:last-child) {
+  margin-bottom: 4px;
+}
+.active_indicator {
+  display: block;
+  width: 6px;
+  height: auto;
+  margin: 5px 5px 5px 0;
+  border-radius: 10px;
+}
+
+/* setting item active */
+.settings_item.active .active_indicator {
+  background: var(--corporate-color);
+}
+.settings_item.active .settings_block {
+  background: var(--navigation-item-active-bg);
+}
