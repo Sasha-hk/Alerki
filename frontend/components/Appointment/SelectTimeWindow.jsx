@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {millisecondsToTime} from '../../utils/timeConvert.js'
+import CAPActions from '../../store/actions/CAPActions'
 import Modal from '../Modal/Modal'
 import Button from '../UI/Button/Button'
 import ModalHeading from '../Modal/ModalHeading'
@@ -33,11 +34,8 @@ const SelectTimeWindow = ({
         schedule.workingEndTime,
         appointment.masterService.service.duration,
       )
-
-      console.log(t, ' <<< time')
+      
       setTime(t)
-      // const generatedDays = generateDays(calendarDate.date)
-      // setCalendar(setWeekendDays(generatedDays, schedule?.weekendDays))
     }
   }, [appointment])
 
@@ -60,18 +58,23 @@ const SelectTimeWindow = ({
         <ModalContent
           className={[cls.calendar_paddings, pageCls.select_time_wrapper].join(' ')}
           onClick={e => {
-            // if (e.target.dataset['masterId']) {
-            // }
+
+            if (e.target.dataset.time) {
+              dispatch(CAPActions.updateAppointment({
+                time: e.target.dataset.time,
+              }))
+            }
           }}
         >
           {
             time
               ? time.map(i => {
-                console.log(i)
                 return (
-                  <SelectTime 
+                  <SelectTime
                     key={i.start}
-                   from={millisecondsToTime(i.start)}
+                    data-time={i.start}
+                    active={i.start == appointment.time ? true : false}
+                    from={millisecondsToTime(i.start)}
                     to={millisecondsToTime(i.end)}
                   />
                 )
