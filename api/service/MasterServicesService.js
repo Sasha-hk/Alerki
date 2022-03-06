@@ -1,4 +1,5 @@
 const {MasterServiceModel, MasterProfileModel, ServiceModel} = require('../db/models')
+const ServiceService = require('./ServiceService')
 const {isNumber, hardNumber} = require('../utils/validators/checkTypes')
 const APIError = require('../exception/APIError')
 
@@ -20,6 +21,8 @@ class MasterServiceService {
       masterID,
       serviceID,
     })
+
+    this.indicateService({masterService: newMasterService})
 
     return newMasterService.dataValues
   }
@@ -75,6 +78,31 @@ class MasterServiceService {
     throw APIError.NotFoundError('service with specefied id not exists or it is not belongs to you')
   }
 
+  async indicateService({masterService}) {
+    const services = await MasterServiceModel.findAll({
+      raw: true,
+      where: {
+        serviceID: masterService.serviceID,
+      },
+    })
+
+    const length = services.length
+
+    if (length > 1) {
+      return
+    }
+    else if (length == 0) {
+      ServiceService.makeNotAvailable({
+        id: masterService.serviceID,
+      })
+    }
+    else if (length == 1) {
+      ServiceService.makeAvailable({
+        id: masterService.serviceID,
+      })
+    }
+  }
+
   async delete({
     id,
     masterID,
@@ -83,13 +111,18 @@ class MasterServiceService {
     const candedat = await this.findByID({id})
 
     if (candedat && candedat.masterID == masterID) {
-      return await MasterServiceModel.destroy({
+      await MasterServiceModel.destroy({
         where: {
           id,
           masterID,
         }
       })
+
+      this.indicateService({masterService: candedat})
+
+      return
     }
+
 
     throw APIError.NotFoundError('service with specefied id not exists')
   }

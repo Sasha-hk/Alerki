@@ -4,7 +4,6 @@ const AuthError = require('../exception/AuthError')
 
 module.exports = async (req, res, next) => {
     try {
-
         const userData = await UserService.findUserByID({id: req.accessToken.id})
 
         if (userData.profileType != 'master') {

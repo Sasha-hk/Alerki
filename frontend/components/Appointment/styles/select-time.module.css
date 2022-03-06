@@ -1,0 +1,7 @@
+.select_time_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  column-gap: 5px;
+  row-gap: 10px;
+}

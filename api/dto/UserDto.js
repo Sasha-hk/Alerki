@@ -26,6 +26,21 @@ class UserDto {
             this.pictureID = user.pictureID
         }
     }
+
+    appendMaster(master) {
+        this.master = {}
+        this.master.shortBiography = master.shortBiography
+        this.master.instagramProfile = master.instagramProfile
+        this.master.available = master.available
+        this.master.workingStartTime = master.workingStartTime
+        this.master.workingEndTime = master.workingEndTime
+        this.master.weekendDaysID = master.weekendDaysID
+    }
+
+    appendWeekendDays(weekendDays) {
+        this.master.weekendDays = weekendDays
+    }
+
 }
 
 

@@ -7,7 +7,10 @@ import getT from 'next-translate/getT'
 import ScrollFrame from '../components/frames/ScrollFrame.jsx'
 import profileActions from '../store/actions/profileActions'
 import CreateService from '../components/pages/profile/CreateService.jsx'
+import UpdateService from '../components/pages/profile/UpdateService.jsx'
+import ServiceView from '../components/pages/profile/ServiceView.jsx'
 import Button from '../components/UI/Button/Button.jsx'
+import UserPicture from '../components/UserPicture/UserPicture.jsx'
 import Input from '../components/UI/Input/Input.jsx'
 import Select from '../components/UI/Select/Select.jsx'
 import Modal from '../components/Modal/Modal.jsx'
@@ -22,8 +25,18 @@ const API_URL = process.env.API_URL
 
 const Profile = () => {
   const {t} = useTranslation('profile')
+  const [showModal, setShowModal] = useState(false)
+  const [updateData, setUpdateData] = useState({
+    name: "",
+    currency: "UAN",
+    price: 1,
+    location: "",
+    duration: 1,
+  })
   const profileStore = useSelector(store => store.profile)
   const profile = profileStore.profile
+  const userStore = useSelector(store => store.user)
+  const user = userStore.user
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -41,22 +54,11 @@ const Profile = () => {
   // general view for master and client
   const headerView = (
     <div className={cls.header}>
-      {
-        profile.pictureID
-          ? <img
-            className={cls.user_picture}
-            src={`${API_URL}/profile/picture/${profile.pictureID}`}
-            alt=""
-          />
-        : <svg 
-          className={cls.plug_user_picture}
-          viewBox="0 0 29 29"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="14.5" cy="14.5" r="14.5" />
-        </svg>
-      }
+      <UserPicture 
+        className={cls.picture_space}
+        pictureID={profile.pictureID} 
+        size="big" 
+      />
 
       <div className={cls.header_info}>
         <span className="text-big">{profile.firstName} {profile.lastName}</span>
@@ -77,8 +79,8 @@ const Profile = () => {
     <>
       {headerView}
 
-      <div className={cls.about}>
-        <span>{profile.master?.shortBiography}</span>
+      <div className={[cls.about, 'mt-4'].join(' ')}>
+        <span className="text-muted">{profile.master?.shortBiography}</span>
       </div>
 
       <div className={cls.services}>
@@ -88,12 +90,45 @@ const Profile = () => {
           className={[cls.services_wrapper, 'mt-3'].join(' ')}
         >
           {
-            profile.master?.services?.length != 0
-              ? <Button className="little sceleton br-3">1</Button> 
-              : <Button className="little sceleton br-3">0</Button>
-          }
+              profile.master?.services?.length != 0
+              ? <>
+                {
+                  profile.id == user.id
+                    ? <UpdateService
+                      serviceData={updateData}
+                      setServiceData={setUpdateData}
+                      showModal={showModal}
+                      setShowModal={setShowModal}
+                    />
+                    : <ServiceView
+                      serviceData={updateData}
+                      showModal={showModal}
+                      setShowModal={setShowModal}
+                    />
+                }
 
-          <CreateService />
+                {
+                  profile.master?.services.map(service => {
+                    return (
+                      <Button
+                        key={service.id}
+                        className="little sceleton br-3"
+                        onClick={e => {
+                          setUpdateData(service)
+                          setShowModal(true)
+                        }}
+                      >{service.name}</Button> 
+                    )
+                  })
+                }
+              </>
+              : null
+          }
+          {
+            profile.id && user.id && profile.id == user.id
+              ? <CreateService />
+              : null
+          }
         </div>
       </div>
     </>

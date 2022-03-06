@@ -13,6 +13,9 @@
   --color-link: #1E78FF;
   --color-error-message: #d42a2a;
 
+  --ui-active-bg: #1E78FF;
+  --ui-hover-color: rgb(88, 88, 88);
+
   --corporate-color: rgb(0, 153, 255);
 
   --color-form-item-heading: #909090;
@@ -26,9 +29,31 @@
 
   --modal-content-bg: #FFFFFF;
   --modal-buttons-bg: #F8F7FC;
+  --modal-bg-option-hover: #e0e0e0;
+  --modal-bg-option-active: #1E78FF;
 
   --btn-muted-bg: #ffffff;
   --btn-muted-color: #6B6680;
+  --btn-danger: #bb1010;
+  --btn-danger-color: #aa0c0c;
+
+  --textarea-border: 1px solid #000;
+  --textarea-placeholder-color: #000;
+
+  /* calendar */
+  --calendar-day-border-color: #CFCFD0;
+  --calendar-day-border: 1px solid var(--calendar-day-border-color);
+  --calendar-day-available-bg: #fff;
+  --calendar-day-not-available-bg: #F8F9FD;
+  --calendar-day-another-month-bg: #FFFFFF;
+  --calendar-day-available-color: var(--color);
+  --calendar-day-not-available-color: #DBDDEF;
+
+  --calendar-month-switch-not-available: var(--color-muted);
+  --calendar-month-switch-available: var(--color);
+
+  --calendar-day-hover-bg: rgba(0, 0, 0, 0.1);
+  --calendar-day-active: #1E78FF;
 }
 
 /* dark */
@@ -46,6 +71,9 @@
   --color-link: #1E78FF;
   --color-error-message: #d42a2a;
 
+  --ui-active-bg: #1E78FF;
+  --ui-hover-color: rgb(88, 88, 88);
+
   --corporate-color: rgb(0, 127, 212);
 
   --color-form-item-heading: #909090;
@@ -59,7 +87,29 @@
 
   --modal-content-bg: #3D3C3F;
   --modal-buttons-bg: #313133;
+  --modal-bg-option-hover: #4a494d;
+  --modal-bg-option-active: var(--ui-active-bg);
 
   --btn-muted-bg: #3E3D40;
   --btn-muted-color: #6F6D76;
+  --btn-danger-border: 1px solid #a71212;
+  --btn-danger-color: #da4747;
+
+  --textarea-border: 1px solid #fff;
+  --textarea-placeholder-color: #fff;
+
+  /* calendar */
+  --calendar-day-border-color: #000000;
+  --calendar-day-border: 1px solid var(--calendar-day-border-color);
+  --calendar-day-available-bg:  #333333;
+  --calendar-day-not-available-bg:#424242;
+  --calendar-day-another-month-bg: var(--calendar-day-available-bg);
+  --calendar-day-available-color: var(--color);
+  --calendar-day-not-available-color: #585858;
+  
+  --calendar-month-switch-not-available: var(--color-muted);
+  --calendar-month-switch-available: var(--color);
+
+  --calendar-day-hover-bg: rgb(32, 32, 32);
+  --calendar-day-active: var(--ui-active-bg);
 }

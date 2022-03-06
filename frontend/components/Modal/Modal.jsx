@@ -2,21 +2,32 @@ import { cloneElement } from 'react'
 import cls from './modal.module.css'
 
 
-const Modal = ({children, show, onClose, ...props}) => {
+const Modal = ({children, show, onClose, padding = true, ...props}) => {
   // add classes to content div and buttons div
   if (Array.isArray(children)) {
-    var content = cloneElement(children[0], {
-      className: [children[0].props.className, cls.modal_content].join(' ')
-    })
+    if (padding && children[0]) {
+      var content = cloneElement(children[0], {
+        className: [children[0].props.className, cls.modal_content].join(' ')
+      })
+    }
+    else {
+      content = children[0]
+    }
 
-    var buttons = cloneElement(children[1], {
-      className: [children[1].props.className, cls.modal_buttons].join(' ')
-    })
+    if (children[1]) {
+      var buttons = cloneElement(children[1], {
+        className: [children[1].props.className, cls.modal_buttons].join(' ')
+      })
+    }
+
   }
-  else {
+  else if (padding) {
     var content = cloneElement(children, {
       className: [children.props.className, cls.modal_content].join(' ')
     })
+  }
+  else {
+    content = children[0]
   }
 
   // check if onClose is function
@@ -40,7 +51,7 @@ const Modal = ({children, show, onClose, ...props}) => {
             className={cls.modal_block}
             onClick={e => e.stopPropagation()}
           >
-            <div className={cls.modal_content_scroll_wrapper}>
+            <div className={[cls.modal_content_scroll_wrapper, 'main'].join(' ')}>
               {content}
             </div>
             {buttons ? buttons : null}

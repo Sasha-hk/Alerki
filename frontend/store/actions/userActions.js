@@ -1,10 +1,10 @@
 import * as types from '../types/userTypes'
+import * as profileTypes from '../types/profileTypes'
 import api from '../../http'
 import {
   makeAction,
   makeActionWithPayload,
 } from '../../utils/createAction.js'
-import Cookies from 'js-cookie'
 
 
 // upload
@@ -47,7 +47,7 @@ const update = (updateData) => {
 // create service
 const createService = (newServiceData) => {
   return async dispatch => {
-    dispatch(makeAction(types.USER_UPLOAD))
+    dispatch(makeAction(profileTypes.PROFILE_CREATE_SERVICE))
 
     await api({
       method: 'post',
@@ -55,12 +55,49 @@ const createService = (newServiceData) => {
       data: newServiceData,
     })
       .then(r => {
-        console.log(r)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_SUCCESS, r.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_CREATE_SERVICE_SUCCESS, r.data))
       })
       .catch(e => {
-        console.log(e.response.data)
-        dispatch(makeActionWithPayload(types.USER_UPLOAD_ERROR, e?.response?.data))
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_CREATE_SERVICE_ERROR, e?.response?.data))
+      })
+  }
+}
+
+// update service
+const updateService = (updateData) => {
+  return async dispatch => {
+    dispatch(makeAction(profileTypes.PROFILE_UPDATE_SERVICE))
+
+    await api({
+      method: 'patch',
+      url: '/profile/update/service',
+      data: updateData,
+    })
+      .then(r => {
+        console.log(r.data)
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_UPDATE_SERVICE_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_UPDATE_SERVICE_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
+// delete service
+const deleteService = ({id}) => {
+  return async dispatch => {
+    dispatch(makeAction(profileTypes.PROFILE_DELETE_SERVICE))
+
+    await api({
+      method: 'delete',
+      url: '/profile/service',
+      data: {id},
+    })
+      .then(async (r) => {
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_SUCCESS, id))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(profileTypes.PROFILE_DELETE_SERVICE_ERROR, e?.response?.data))
       }) 
   }
 }
@@ -101,11 +138,55 @@ const becomeMaster = () => {
   }
 }
 
+// update master
+const updateMaster = (updateData) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_UPDATE_MASTER))
+    
+    await api({
+      method: 'patch',
+      url: '/profile/update/master',
+      data: updateData,
+    })
+      .then(r => {
+        console.log(r.data)
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_MASTER_ERROR, e?.response?.data))
+      })
+  }
+}
+
+
+// update master weekend days
+const updateMasterWeekendDays = (weekendDays) => {
+  return async dispatch => {
+    dispatch(makeAction(types.USER_UPDATE_WEEKEND_DAYS))
+
+    await api({
+      method: 'patch',
+      url: '/profile/update/master/weekend-days',
+      data: {weekendDays},
+    })
+      .then(r => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_WEEKEND_DAYS_SUCCESS, r.data))
+      })
+      .catch(e => {
+        dispatch(makeActionWithPayload(types.USER_UPDATE_WEEKEND_DAYS_ERROR, e?.response?.data))
+      })
+  }
+}
+
 
 export default {
   upload,
   update,
   createService,
+  updateService,
+  deleteService,
+  updateMaster,
+  updateMasterWeekendDays,
   becomeMaster,
   becomeClient,
 }
