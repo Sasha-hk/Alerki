@@ -20,7 +20,7 @@ const defaultShowButtonsState = {
   master: false,
   date: false,
   time: false,
-  confirm: false,
+  confirm: true,
 }
 
 const defaultShowModalsState = {
