@@ -139,11 +139,11 @@ const makeAppointment = (data = {
 }) => {
   return async dispatch => {
     dispatch(makeAction(appointmentTypes.APPOINTMENT_MAKE))
-
+    console.log(data)
     await api({
       method: 'post',
-      url: '/profile/make-appointment',
-      query: data
+      url: '/appointment/make-appointment',
+      data,
     })
       .then(r => {
         dispatch(makeActionWithPayload(appointmentTypes.APPOINTMENT_MAKE_SUCCESS, r.data))

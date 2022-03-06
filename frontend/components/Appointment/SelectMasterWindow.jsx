@@ -69,6 +69,7 @@ const SelectMasterWindow = ({
               className='pb-2'
               onClick={e => {
                 if (e.target.dataset['masterId']) {
+                  console.log(masters)
                   const masterService = masters.find(i => i.masterID == e.target.dataset.masterId)
 
                   dispatch(CAPActions.updateAppointment({
@@ -94,7 +95,7 @@ const SelectMasterWindow = ({
                         <SelectMaster
                           key={e.id}
                           data-master-id={e.masterID}
-                          data-master-service-id={e.service.serviceID}
+                          data-master-service-id={e.service.id}
                           master={e}
                           active={appointment.masterID == e.masterID ? true : false}
                         >

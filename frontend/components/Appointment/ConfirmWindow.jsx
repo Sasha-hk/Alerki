@@ -63,14 +63,14 @@ const ConfirmWindow = ({
                 onClick={e => {
                   const time = new Date(appointment.date)
                   time.setTime(time.getTime() + Number(appointment.time))
-
+                  
                   dispatch(CAPActions.makeAppointment({
                     masterServiceID: appointment.masterServiceID,
                     masterID: appointment.masterID,
                     appointmentStartTime: time,
                   }))
 
-                  setShowModal({...showModal, confirm: false})
+                  // setShowModal({...showModal, confirm: false})
                 }}
               >
                 confirm
