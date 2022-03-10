@@ -2,7 +2,7 @@ FROM node
 
 WORKDIR /app/
 
-COPY yarn.lock ./
+COPY package*.json *yarn.lock ./
 
 RUN yarn install
 
