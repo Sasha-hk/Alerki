@@ -3,10 +3,10 @@ const {extractCookies} = require('../utils/extractCookies')
 const app = require('../app')
 
 let master = {
-  email: 'email@gmail.com', username: 'workk', profileType: 'master', password: 'pass'
+  email: 'email@gmail.com', username: 'workk', profileType: 'master', password: 'pass',
 }
 let client = {
-  email: 'em@gmail.com', username: 'client', profileType: 'client', password: 'pas'
+  email: 'em@gmail.com', username: 'client', profileType: 'client', password: 'pas',
 }
 
 let services = null
@@ -27,7 +27,7 @@ describe('Test authenticatin', () => {
 
       master = {
         ...master,
-        ...w.body
+        ...w.body,
       }
       master.refreshToken = extractCookies(w.headers).refreshToken.value
 
@@ -41,7 +41,7 @@ describe('Test authenticatin', () => {
 
       client = {
         ...client,
-        ...c.body
+        ...c.body,
       }
       client.refreshToken = extractCookies(c.headers).refreshToken.value
     })
@@ -101,7 +101,7 @@ describe('Test authenticatin', () => {
         .post('/auth/log-in')
         .send({
           ...master,
-          password: 'bad password'
+          password: 'bad password',
         })
       
       expect(r.statusCode).toBe(400)
@@ -135,7 +135,7 @@ describe('Test authenticatin', () => {
 
       master = {
         ...master,
-        userData: w.body
+        userData: w.body,
       }
 
       const c = await request(app)
@@ -146,7 +146,7 @@ describe('Test authenticatin', () => {
 
       client = {
         ...client,
-        userData: c.body
+        userData: c.body,
       }
     })
 
@@ -404,8 +404,8 @@ describe('Test profile', () => {
         .set('Cookie', ['accessToken=' + master.accessToken])
         .send({
           weekendDays: {
-            friday: true
-          }
+            friday: true,
+          },
         })
       
       expect(r.statusCode).toBe(200)
@@ -446,7 +446,7 @@ describe('Test profile', () => {
         .set('Cookie', ['accessToken=' + master.accessToken])
         .send({
           date: scheduleDate,
-          weekendDay: true
+          weekendDay: true,
         })
       
       expect(r.statusCode).toBe(200)

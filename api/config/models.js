@@ -1,7 +1,7 @@
 module.exports = {
-    appointemnt: {
-        slug: {
-            length: 11,
-        },
+  appointemnt: {
+    slug: {
+      length: 11,
     },
+  },
 }
