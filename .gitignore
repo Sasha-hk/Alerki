@@ -41,6 +41,7 @@ build/Release
 node_modules/
 jspm_packages/
 package-lock.json
+yarn.lock
 
 # TypeScript v1 declaration files
 typings/
@@ -107,3 +108,4 @@ dist
 
 pgdata/
 migrations/
+.husky/_
