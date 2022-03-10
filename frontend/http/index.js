@@ -6,7 +6,7 @@ const API_URL = process.env.API_URL
 
 const api = axios.create({
     withCredentials: true,
-    baseURL: API_URL
+    baseURL: API_URL,
 })
 
 api.interceptors.response.use(
@@ -22,7 +22,7 @@ api.interceptors.response.use(
             return api.request(originalRequest);
         }
         return Promise.reject(error)
-    }
+    },
 )
 
 

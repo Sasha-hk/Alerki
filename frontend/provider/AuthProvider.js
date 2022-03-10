@@ -3,7 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useState 
+  useState, 
 } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Router, {useRouter} from 'next/router'
@@ -70,7 +70,7 @@ export const AuthProvider = ({children}) => {
         username,
         password,
         profileType,
-      }
+      },
     })
       .then(r => { 
         setData()
@@ -86,7 +86,7 @@ export const AuthProvider = ({children}) => {
   const login = async ({
     email,
     username,
-    password
+    password,
   }) => {
     return await api({
       method: 'post',
@@ -95,7 +95,7 @@ export const AuthProvider = ({children}) => {
         email,
         username,
         password,
-      }
+      },
     })
       .then(r => {
         setData()
@@ -128,7 +128,7 @@ export const AuthProvider = ({children}) => {
       url: '/auth/callback/google',
       params: {
         code,
-      }
+      },
     })
       .then(r => {
         setData()
@@ -143,7 +143,7 @@ export const AuthProvider = ({children}) => {
   const refresh = async () => {
     await api({
       method: 'get',
-      url: '/auth/refresh'
+      url: '/auth/refresh',
     })
       .then(r => {
         setData({

@@ -54,7 +54,7 @@ const findServices = (querys = {name: null, limit: 25, page: 0}) => {
 const uploadMasters = ({
   serviceID = 1,
   limit = 25,
-  page = 0
+  page = 0,
 }) => {
   return async dispatch => {
     dispatch(makeAction(types.CAP_MASTER_UPLOAD))
@@ -66,7 +66,7 @@ const uploadMasters = ({
         service_id: serviceID,
         limit,
         page,
-      }
+      },
     })
       .then(r => { 
         dispatch(makeActionWithPayload(types.CAP_MASTER_UPLOAD_SUCCESS, r.data))
@@ -81,7 +81,7 @@ const uploadMasters = ({
 const supplementMasters = ({
   serviceID = 1,
   limit = 25,
-  page = 0
+  page = 0,
 }) => {
   return async dispatch => {
     dispatch(makeAction(types.CAP_MASTER_SUPPLEMENT))
@@ -93,7 +93,7 @@ const supplementMasters = ({
         service_id: serviceID,
         limit,
         page,
-      }
+      },
     })
       .then(r => { 
         dispatch(makeActionWithPayload(types.CAP_MASTER_SUPPLEMENT_SUCCESS, r.data))
@@ -120,7 +120,7 @@ const uploadSchedule = ({
         year,
         month,
         master_id: masterID,
-      }
+      },
     })
       .then(r => { 
         dispatch(makeActionWithPayload(types.CAP_SCHEDULE_UPLOAD_SUCCESS, r.data))
@@ -143,7 +143,7 @@ const makeAppointment = (data = {
     await api({
       method: 'post',
       url: '/profile/make-appointment',
-      query: data
+      query: data,
     })
       .then(r => {
         dispatch(makeActionWithPayload(appointmentTypes.APPOINTMENT_MAKE_SUCCESS, r.data))
