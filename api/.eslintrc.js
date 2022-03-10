@@ -1,14 +1,12 @@
 module.exports = {
-  env: {
-    // browser: true,
-    commonjs: true,
-    es2021: true,
-    jest: true,
+  'env': {
+    'commonjs': true,
+    'es2021': true,
+    'jest': true,
   },
-  extends: [],
-  parserOptions: {
-    ecmaVersion: 'latest',
+  'extends': [],
+  'parserOptions': {
+    'ecmaVersion': 'latest',
   },
-  rules: {
-  },
+  'rules': {},
 }

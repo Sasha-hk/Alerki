@@ -1,24 +1,24 @@
 module.exports = {
-  root: true,
-  env: {
-    browser: true,
-    es2021: true,
+  'root': true,
+  'env': {
+    'browser': true,
+    'es2021': true,
   },
-  extends: [],
-  plugins: [
+  'extends': [],
+  'plugins': [
     'react',
     'jest',
   ],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
+  'parserOptions': {
+    'ecmaFeatures': {
+      'jsx': true,
     },
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    'ecmaVersion': 'latest',
+    'sourceType': 'module',
   },
-  rules: {
+  'rules': {
     'comma-dangle': ['error', 'always-multiline'],
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-  }
+  },
 }
