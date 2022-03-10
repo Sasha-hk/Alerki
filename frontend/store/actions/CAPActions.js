@@ -1,4 +1,5 @@
 import * as types from '../types/CAPTypes'
+import * as appointmentTypes from '../types/appointmentTypes'
 import api from '../../http'
 import {
   makeAction,
@@ -130,6 +131,30 @@ const uploadSchedule = ({
   }
 }
 
+// make appointment
+const makeAppointment = (data = {
+  masterServiceID: null,
+  masterID: null,
+  appointmentStartTime: null,
+}) => {
+  return async dispatch => {
+    dispatch(makeAction(appointmentTypes.APPOINTMENT_MAKE))
+
+    await api({
+      method: 'post',
+      url: '/profile/make-appointment',
+      query: data
+    })
+      .then(r => {
+        dispatch(makeActionWithPayload(appointmentTypes.APPOINTMENT_MAKE_SUCCESS, r.data))
+      })
+      .catch(e => {
+        console.log(e.response)
+        dispatch(makeActionWithPayload(appointmentTypes.APPOINTMENT_MAKE_ERROR, e?.response?.data))
+      }) 
+  }
+}
+
 
 export default {
   updateAppointment,
@@ -138,4 +163,5 @@ export default {
   uploadMasters,
   supplementMasters,
   uploadSchedule,
+  makeAppointment,
 }

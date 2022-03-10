@@ -60,7 +60,7 @@ const SelectServiceWindow = ({
       }))
     }
   }
-
+  
   return (
     <Modal
       show={showModal.service}
@@ -86,8 +86,9 @@ const SelectServiceWindow = ({
               dispatch(CAPActions.updateAppointment({
                 ...appointment,
                 serviceID: e.target.dataset.id,
+                service: services.find(i => e.target.dataset.id == i.id)
               }))
-
+              
               dispatch(CAPActions.uploadMasters({
                 serviceID: e.target.dataset.id,
               }))

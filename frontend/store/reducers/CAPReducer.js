@@ -40,6 +40,7 @@ const defaultCAPState = {
   appointment: {
     date: null,
     time: null,
+    service: null,
     masterService: null,
     serviceID: null,
     masterServiceID: null,
