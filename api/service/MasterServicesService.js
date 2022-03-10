@@ -11,7 +11,7 @@ class MasterServiceService {
     location,
     duration,
     masterID,
-    serviceID
+    serviceID,
   }) {
     const newMasterService = await MasterServiceModel.create({
       currency,
@@ -54,18 +54,18 @@ class MasterServiceService {
             id,
             masterID,
           },
-        }
+        },
       )
  
       const updatedService = await MasterServiceModel.findOne({
         raw: true,
         where: {
-          id
+          id,
         },
         include: {
           model: ServiceModel, 
           as: 'service', 
-          attributes: ['name']
+          attributes: ['name'],
         },
       })
 
@@ -115,7 +115,7 @@ class MasterServiceService {
         where: {
           id,
           masterID,
-        }
+        },
       })
 
       this.indicateService({masterService: candedat})
@@ -130,7 +130,7 @@ class MasterServiceService {
   async find({
     serviceID, 
     limit, 
-    page
+    page,
   }) {
     // check if serviceID is number
     hardNumber(Number(serviceID), 'serviceID')
@@ -148,7 +148,7 @@ class MasterServiceService {
   }
 
   async findForMaster({
-    masterID
+    masterID,
   }) {
     hardNumber(Number(masterID), 'masterID')
 
@@ -157,7 +157,7 @@ class MasterServiceService {
       where: {
         masterID,
       },
-      include: {model: ServiceModel, as: 'service', attributes: ['name']}
+      include: {model: ServiceModel, as: 'service', attributes: ['name']},
     })
 
     for (let i = 0; i < foundServices.length; i++) {

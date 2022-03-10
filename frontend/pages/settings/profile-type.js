@@ -17,7 +17,7 @@ const Settings = () => {
   const [profileType, setProfileType] = useState(
     user.profileType
       ? user.profileType == 'master' ? true : undefined
-      : user.profileType == 'client' ? false : undefined
+      : user.profileType == 'client' ? false : undefined,
   )
   const dispatch = useDispatch()
 

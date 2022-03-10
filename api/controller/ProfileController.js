@@ -101,11 +101,11 @@ class ProfileController {
       const {
         year,
         month,
-        master_id
+        master_id,
       } = req.query
 
       checkParams.all({
-        master_id
+        master_id,
       })
 
       const masterProfile = await ProfileService.findMasterByID({id: master_id})
@@ -154,7 +154,7 @@ class ProfileController {
       }
 
       res.type(contentType.mime)
-      res.send(picture.picture);
+      res.send(picture.picture)
     }
     catch (e) {
       res.status(e.status || 500).json(e.errors) 
@@ -227,7 +227,7 @@ class ProfileController {
         username,
         firstName,
         lastName,
-        pictureID: updatedPicture?.id
+        pictureID: updatedPicture?.id,
       })
 
       const userData = new UserDto(updatedMaster)
@@ -242,20 +242,20 @@ class ProfileController {
   async updateMasterWeekendDays(req, res, next) {
     try {
       const {
-        weekendDays
+        weekendDays,
       } = req.body
       
       checkParams.all({
-        weekendDays
+        weekendDays,
       })
 
       const masterProfile = await ProfileService.findMasterByID({
-        id: req.user.masterID
+        id: req.user.masterID,
       })
 
       const updateWeekendDays = await MasterWeekendDaysService.update({
         id: masterProfile.weekendDaysID,
-        ...weekendDays
+        ...weekendDays,
       })
 
       res.json(updateWeekendDays)
@@ -403,7 +403,7 @@ class ProfileController {
         workingStartTime,
         workingEndTime,
         weekendDay,
-        date
+        date,
       } = req.body
 
       checkParams.all({
