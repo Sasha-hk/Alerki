@@ -20,7 +20,7 @@ module.exports = {
   'ignorePatterns': [
     'node_modules',
     'docker',
-    'documentation',
+    'docs',
     'pgdata',
   ],
 }

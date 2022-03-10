@@ -178,7 +178,7 @@ POST /auth/callback/google
 
 | **Query** | **Type** | **Requeired** | **Details** |
 | :--- | :--- | :--- | :--- |
-| `code` | string | true | Google OAuth2.0 code / read about this [`here`](https://developers.google.com/identity/protocols/oauth2/web-server#redirecting "Google OAuth2.0 documentation") |
+| `code` | string | true | Google OAuth2.0 code / read about this [`here`](https://developers.google.com/identity/protocols/oauth2/web-server#redirecting "Google OAuth2.0 docs") |
 
 **Response:**
 
@@ -265,10 +265,10 @@ GET /services/find
 **Response:**
 
 ```json
-[ 
-    { 
-        "id": 1, 
-        "name": "heircut" 
+[
+    {
+        "id": 1,
+        "name": "heircut"
     }
 ]
 ```
@@ -611,7 +611,7 @@ PATCH /profile/become-master
 **Response:**
 
 ```json
-{ 
+{
     "masterID": 2
 }
 ```

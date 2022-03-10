@@ -7,7 +7,7 @@ on:
 
     paths-ignore:
       - 'frontend/**'
-      - 'documentation/**'
+      - 'docs/**'
       - .husky/**
       - '.github/**'
       - 'README.md'
@@ -20,7 +20,7 @@ on:
 
     paths-ignore:
       - 'frontend/**'
-      - 'documentation/**'
+      - 'docs/**'
       - .husky/**
       - '.github/**'
       - 'README.md'
