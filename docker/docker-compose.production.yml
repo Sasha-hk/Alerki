@@ -14,7 +14,7 @@ services:
             - ../pgdata/production:/var/lib/postgresql/data
 
     backend:
-        build: 
+        build:
             context: ../api/
             dockerfile: Dockerfile
         container_name: api
