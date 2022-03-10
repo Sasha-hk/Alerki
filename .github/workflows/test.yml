@@ -1,36 +1,50 @@
-name: Test API
+name: CI
 
-on:   
+on:
   push:
     branches:
       - main
-
-    paths-ignore:
-      - 'frontend/**'
-      - 'documentation/**'
-      - '.github/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
 
   pull_request:
     branches:
       - main
-      - dev
-
-    paths-ignore:
-      - 'frontend/**'
-      - 'documentation/**'
-      - '.github/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
 
 jobs:
-  push:
+  build-image:
+    name: Build image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          . ./docker/build-test.sh
+
+  lint-code:
+    name: Lint code
+    runs-on: ubuntu-latest
+    needs: build-image
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install packages
+        run: |
+          yarn install
+
+      - name: Lint code
+        run: |
+          yarn lint
+
+  integration-testing:
+    name: Integration testing
+    runs-on: ubuntu-latest
+    needs: lint-code
+    steps:
+      - uses: actions/checkout@v2
+
+      # - name: Build
+      #   run: |
+      #     . ./docker/build-test.sh
 
       - name: Test API
         run: |

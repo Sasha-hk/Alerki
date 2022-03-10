@@ -1,32 +1,17 @@
 name: Build
 
-on:   
+on:
   push:
     branches:
       - main
-
-    paths-ignore:
-      - 'frontend/**'
-      - 'documentation/**'
-      - '.github/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
 
   pull_request:
     branches:
       - main
 
-    paths-ignore:
-      - 'frontend/**'
-      - 'documentation/**'
-      - '.github/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE'
 
 jobs:
-  push:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
