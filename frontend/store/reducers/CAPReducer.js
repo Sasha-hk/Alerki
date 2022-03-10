@@ -46,7 +46,7 @@ const defaultCAPState = {
     masterServiceID: null,
     masterID: null,
     appointmentStartTime: null,
-  }
+  },
 }
 
 // update state
@@ -56,7 +56,7 @@ const updateAppointment = (state, data) => {
     appointment: {
       ...state.appointment,
       ...data,
-    }
+    },
   }
 }
 
@@ -66,7 +66,7 @@ const updateServices = (state, data) => {
     services: {
       ...state.services,
       ...data,
-    }
+    },
   }
 }
 
@@ -76,7 +76,7 @@ const updateMasters = (state, data) => {
     masters: {
       ...state.masters,
       ...data,
-    }
+    },
   }
 }
 
@@ -86,7 +86,7 @@ const updateSchedule = (state, data) => {
     schedule: {
       ...state.chedule,
       ...data,
-    }
+    },
   }
 }
 
@@ -133,7 +133,7 @@ const CAPReducer = (state = defaultCAPState, action) => {
     // find
     case types.CAP_SERVICE_FIND:
       return updateServices(state, {
-        ...loadingState
+        ...loadingState,
       })
 
     case types.CAP_SERVICE_FIND_SUCCESS:
@@ -142,7 +142,7 @@ const CAPReducer = (state = defaultCAPState, action) => {
           ...state.services.services,
           ...action.payload,
         ], 'id'),
-        ...loadingState
+        ...loadingState,
       })
     
     case types.CAP_SERVICE_FIND_ERROR:

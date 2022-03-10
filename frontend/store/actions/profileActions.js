@@ -13,7 +13,7 @@ const upload = ({username}) => {
 
     await api({
       method: 'get',
-      url: '/profile/' + username
+      url: '/profile/' + username,
     })
       .then(r => { 
         dispatch(makeActionWithPayload(types.PROFILE_UPLOAD_SUCCESS, r.data))
@@ -72,5 +72,5 @@ const update = ({
 
 export default {
   upload,
-  update
+  update,
 }

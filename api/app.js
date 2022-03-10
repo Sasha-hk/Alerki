@@ -3,8 +3,8 @@ const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const express = require('express')
 const app = express()
-const http = require('http');
-const server = http.createServer(app);
+const http = require('http')
+const server = http.createServer(app)
 // const socketIO = require('socket.io')
 // const io = socketIO(server, {
 //   transports:['polling'],
@@ -19,9 +19,9 @@ const server = http.createServer(app);
 const router = require('./router')
 
 const corsOptions ={
-    origin: process.env.CLIENT_HOST,
-    credentials: true,
-    optionSuccessStatus: 200
+  origin: process.env.CLIENT_HOST,
+  credentials: true,
+  optionSuccessStatus: 200,
 }
 
 // middlewares

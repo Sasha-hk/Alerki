@@ -40,7 +40,7 @@ class ProfileService {
   async createMasterProfile() {
     const newWeekendDays = await MasterWeekendDaysService.create()
     const newMasterProfile = await MasterProfileModel.create({
-      weekendDaysID: newWeekendDays.id
+      weekendDaysID: newWeekendDays.id,
     })
 
     return newMasterProfile.dataValues
@@ -67,7 +67,7 @@ class ProfileService {
         where: {
           id,
         },
-      }
+      },
     )
 
     const updatedMaster = await MasterProfileModel.findOne({
@@ -94,7 +94,7 @@ class ProfileService {
           where: {
             id,
           },
-        }
+        },
       )
       return blockedMaster[1][0]
     }
@@ -114,7 +114,7 @@ class ProfileService {
           where: {
             id,
           },
-        }
+        },
       )
       return blockedMaster[1][0]
     }

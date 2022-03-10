@@ -6,17 +6,17 @@ const router = new Router()
 router
   .get(
     '/',
-    ServiceController.services
+    ServiceController.services,
   )
   .get(
     '/find',
-    ServiceController.findByName
+    ServiceController.findByName,
   )
 
 router
   .post(
     '/create',
-    ServiceController.create
+    ServiceController.create,
   )
 
 

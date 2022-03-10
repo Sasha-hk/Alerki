@@ -89,7 +89,7 @@ class ServiceService {
         where: {
           id,
         },
-      }
+      },
     )
   }
 
@@ -102,7 +102,7 @@ class ServiceService {
         where: {
           id,
         },
-      }
+      },
     )
   }
 }

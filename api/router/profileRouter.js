@@ -9,23 +9,23 @@ const router = new Router()
 router
   .get(
     '/find-master',
-    ProfileController.findMaster
+    ProfileController.findMaster,
   )
   .get(
     '/services/:masterID',
-    ProfileController.findServicesForMaster
+    ProfileController.findServicesForMaster,
   )
   .get(
     '/get-schedule',
-    ProfileController.getSchedule
+    ProfileController.getSchedule,
   )
   .get(
     '/picture/:id',
-    ProfileController.getPicture
+    ProfileController.getPicture,
   )
   .get(
     '/:username',
-    ProfileController.getProfile
+    ProfileController.getProfile,
   )
 
 router
@@ -33,7 +33,7 @@ router
     '/create/service',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.createService
+    ProfileController.createService,
   )
   .post(
     '/master/set-schedule',
@@ -46,35 +46,35 @@ router
   .patch(
     '/update',
     authMiddleware,
-    ProfileController.updateProfile
+    ProfileController.updateProfile,
   )
   .patch(
     '/update/service',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.updateService
+    ProfileController.updateService,
   )
   .patch(
     '/update/master',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.updateMaster
+    ProfileController.updateMaster,
   )
   .patch(
     '/update/master/weekend-days',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.updateMasterWeekendDays
+    ProfileController.updateMasterWeekendDays,
   )
   .patch(
     '/become-master',
     authMiddleware,
-    ProfileController.becomeMaster
+    ProfileController.becomeMaster,
   )
   .patch(
     '/become-client',
     authMiddleware,
-    ProfileController.becomeClient
+    ProfileController.becomeClient,
   )
 
 router
@@ -82,7 +82,7 @@ router
     '/service',
     authMiddleware,
     isMasterMiddleware,
-    ProfileController.deleteService
+    ProfileController.deleteService,
   )
 
 

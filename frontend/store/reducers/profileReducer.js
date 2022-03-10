@@ -64,7 +64,7 @@ const profileReducer = (state = defaultProfileState, action) => {
           master: {
             ...state.master,
             services: action.payload,
-          }
+          },
         },
         loading: false,
         error: false,
@@ -98,8 +98,8 @@ const profileReducer = (state = defaultProfileState, action) => {
             services: [
               ...state.profile.master.services,
               action.payload,
-            ]
-          }
+            ],
+          },
         },
         loading: false,
         error: false,
@@ -134,8 +134,8 @@ const profileReducer = (state = defaultProfileState, action) => {
               ...state.profile.master.services,
             ].filter(e => {
               return e.id != action.payload
-            })
-          }
+            }),
+          },
         },
         loading: false,
         error: false,
@@ -170,8 +170,8 @@ const profileReducer = (state = defaultProfileState, action) => {
               ...state.profile.master.services,
             ].map(e => {
               return action.payload.id == e.id ? action.payload : e
-            })
-          }
+            }),
+          },
         },
         loading: false,
         error: false,

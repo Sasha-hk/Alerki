@@ -5,8 +5,8 @@ const serviceRouter = require('./servicesRouter')
 
 
 module.exports = (app) => {
-    app.use('/auth', authRouter)
-    app.use('/appointment/', appointmentRouter)
-    app.use('/profile', profileRouter)
-    app.use('/services', serviceRouter)
+  app.use('/auth', authRouter)
+  app.use('/appointment/', appointmentRouter)
+  app.use('/profile', profileRouter)
+  app.use('/services', serviceRouter)
 }

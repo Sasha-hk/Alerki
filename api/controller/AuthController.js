@@ -24,7 +24,7 @@ class AuthController {
         email,
         username,
         password,
-        profileType
+        profileType,
       })
       
       const userData = await UserService.register({
@@ -60,7 +60,7 @@ class AuthController {
       } = req.body
 
       checkParams.all({
-        password
+        password,
       })
 
       checkParams.atLeastOne({
@@ -88,12 +88,12 @@ class AuthController {
       const deviceName = getDeviceName(req)
       const {
         accessToken,
-        refreshToken
+        refreshToken,
       } = req.cookies
 
       checkParams.atLeastOne({
         accessToken,
-        refreshToken
+        refreshToken,
       })
 
       UserService.logout({accessToken, refreshToken, deviceName})
@@ -144,7 +144,7 @@ class AuthController {
       const userData = await UserService.withGoogle({
         profileData,
         deviceName,
-        googleToken
+        googleToken,
       })
       
       res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
