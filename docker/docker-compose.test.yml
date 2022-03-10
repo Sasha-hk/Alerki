@@ -14,11 +14,11 @@ services:
             - ../pgdata/test:/var/lib/postgresql/data
 
     backend:
-        build: 
+        build:
             context: ../api/
             dockerfile: Dockerfile
         container_name: api
-        command: bash -c "npm install && npm run test"
+        command: bash -c "yarn install && yarn run test"
         depends_on:
             - db
         env_file: .env.test
@@ -34,7 +34,7 @@ services:
     #         context: ../frontend/
     #         dockerfile: Dockerfile
     #     container_name: frontend
-    #     command: bash -c "npm run test"
+    #     command: bash -c "yarn run test"
     #     depends_on:
     #         - backend
     #     ports:
