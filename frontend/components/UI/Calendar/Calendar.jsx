@@ -21,16 +21,25 @@ const Calendar = ({children, ...props}) => {
 export const generateDays = (date) => {
   const calendarDays = []
   const daysCount = getDaysCount(date.getFullYear(), date.getMonth())
+  const now = new Date()
 
   calendarDays.push(...generateLeftOffset(date))
   let dateNode = new Date(date)
 
   for (let i = 1; i < daysCount + 1; i++) {
     dateNode.setDate(i)
-    calendarDays.push({
-      date: new Date(dateNode),
-      type: 'available'
-    })
+    if (dateNode.getTime() > now.getTime()) {
+      calendarDays.push({
+        date: new Date(dateNode),
+        type: 'available'
+      })
+    }
+    else {
+      calendarDays.push({
+        date: new Date(dateNode),
+        type: 'not available'
+      }) 
+    }
   }
 
   calendarDays.push(...generateRightOffset(date))

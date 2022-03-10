@@ -1,10 +1,17 @@
+import {millisecondsToTime} from '../../../utils/timeConvert.js'
 import cls from './select-time.module.css'
 
 
-const SelectTime = ({from, to, key}) => {
+const SelectTime = ({from, to, active = false, ...props}) => {
   return (
-    <div className={cls.select_time} key={key}>
-      <span className="text-middle">{from}</span> - <span className="text-middle">{to}</span>
+    <div {...props} className={[
+      cls.select_time, 
+      'text-middle',
+      active
+        ? cls.active
+        : null,
+    ].join(' ')}>
+      {from} - {to}
     </div>
   )
 }
@@ -64,15 +71,6 @@ export const generateTime = (
     // }
 
     if (!checkBelongsTime(startLimitTime, endLimitTime, start, end)) {
-      console.log(checkBelongsTime(0, 10, start, end))
-      console.log({
-        startLimitTime,
-        endLimitTime,
-        start,
-        end,
-        startPoint
-      })
-      console.warn('time not belongs to working time ', i)
       break
     }
 
@@ -81,12 +79,10 @@ export const generateTime = (
       end
     })
 
-    if (i < 1000) {
-      console.log('Too many iterations')
+    if (i == 100) {
       break
     }
   }
-  console.log(time)
 
   return time
 }
