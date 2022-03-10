@@ -1,6 +1,6 @@
 name: Build
 
-on:   
+on:
   push:
     branches:
       - main
@@ -8,6 +8,7 @@ on:
     paths-ignore:
       - 'frontend/**'
       - 'documentation/**'
+      - .husky/**
       - '.github/**'
       - 'README.md'
       - '.gitignore'
@@ -20,6 +21,7 @@ on:
     paths-ignore:
       - 'frontend/**'
       - 'documentation/**'
+      - .husky/**
       - '.github/**'
       - 'README.md'
       - '.gitignore'
