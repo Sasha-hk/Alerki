@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
       },
       workingStartTime: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ZONED,
       },
       workingEndTime: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ZONED,
       },
       weekendDaysID: {
         type: DataTypes.INTEGER,
