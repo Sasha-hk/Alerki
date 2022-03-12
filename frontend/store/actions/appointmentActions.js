@@ -36,7 +36,7 @@ const make = (data) => {
     await api({
       method: 'post',
       url: '/profile/make-appointment',
-      query: data
+      query: data,
     })
       .then(r => {
         dispatch(makeActionWithPayload(types.APPOINTMENT_MAKE_SUCCESS, r.data))

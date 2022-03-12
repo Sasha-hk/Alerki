@@ -59,7 +59,7 @@ const Settings = () => {
       ...updateMasterData,
       weekendDays: {
         ...updateMasterData.weekendDays,
-      }
+      },
     }
     
     updatedDays['weekendDays'][e.target.name] = e.target.checked

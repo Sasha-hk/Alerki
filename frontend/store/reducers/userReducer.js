@@ -150,7 +150,7 @@ const userReducer = (state = defaultUserState, action) => {
           master: {
             ...state.user.master,
             ...action.payload,
-          }
+          },
         },
         loading: false,
         error: false,
@@ -182,7 +182,7 @@ const userReducer = (state = defaultUserState, action) => {
           master: {
             ...state.user.master,
             weekendDays: action.payload,
-          }
+          },
         },
         loading: false,
         error: false,

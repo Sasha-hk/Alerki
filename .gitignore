@@ -108,4 +108,3 @@ dist
 
 pgdata/
 migrations/
-.husky/_
