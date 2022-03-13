@@ -6,20 +6,21 @@ Content:
 
 - [Requirements](#requirements)
   - [1. System description](#1-system-description)
-  - [2. Registration](#2-registration)
-  - [3. User types](#3-user-types)
+  - [2. Target audience](#2-target-audience)
+  - [3. Registration](#3-registration)
+  - [4. User types](#4-user-types)
     - [Client](#client)
     - [Master](#master)
-  - [4. Entities](#4-entities)
+  - [5. Entity](#5-entity)
     - [Master service](#master-service)
     - [Appointment](#appointment)
-  - [5. Tech stack](#5-tech-stack)
+  - [6. Tech stack](#6-tech-stack)
     - [API](#api)
     - [Frontend](#frontend)
 
 ## 1. System description
 
-The system give ability for clients to make easy an appointments. Masters can easy manage and plan their work.
+The system give ability for clients to find master and make an appointments. Masters can easy manage and plan their work.
 
 Navigation has the following pages:
 
@@ -54,7 +55,11 @@ The website should be multilingual, support languages:
 
 Tech stack see [below](#4-tech-stack)
 
-## 2. Registration
+## 2. Target audience
+
+The system will be useful for people who are often make an appointment, and master who work a lot. So the website need nice design.
+
+## 3. Registration
 
 We need to support registration / authentication with popular authentication providers, such as:
 
@@ -79,7 +84,7 @@ Whe user sign-in with Google for example, we take such data:
 - picture - if exists
 - phone number - if exists
 
-## 3. User types
+## 4. User types
 
 The system has such user types:
 
@@ -120,7 +125,7 @@ Profile information:
 - master services
 - biography
 
-## 4. Entities
+## 5. Entity
 
 Description of:
 
@@ -148,7 +153,7 @@ Appointment consists of:
 - start date
 - end date
 
-## 5. Tech stack
+## 6. Tech stack
 
 Production environment: [Docker](https://www.docker.com/ "Docker official website")
 
