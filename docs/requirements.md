@@ -21,14 +21,32 @@ Content:
 
 The system give ability for clients to make easy an appointments. Masters can easy manage and plan their work.
 
-The systemd consists of such blocks:
+Navigation has the following pages:
+
+- home
+- notification
+- profile
+
+If user is client, on home page his can make an appointment and see planned appointments. If user is master, on home page his can see schedule and master appointments.
+
+On notification page client and master can see their notification, for example for master: you received request to make an appointment.
+
+On profile page user can see his profile, also he can go to settings page where can edit profile information.
+
+If use is not authenticated, we show for the user home page where he can make an appointment, he goes through the steps to make an appointment, but where he tap on confirm button he need authorize, we modal window where he can make it. After authentication he can complete appointment.
+
+To make an appointment user need to select: service, master, date, and time, after that all he can confirm appointment.
+
+Read more about client and master functionality [below](#3-user-types)
+
+The system consists of such blocks:
 
 - Registration, authentication, and authorization
 - Functionality for master
 - Functionality for client
 - Notifications
 
-Ths website should be multilingual, support languages:
+The website should be multilingual, support languages:
 
 - English
 - Ukrainian
@@ -73,6 +91,7 @@ The system has such user types:
 Client functionality:
 
 - make an appointment
+- cancel appointment
 - edit his profile
 
 Profile information:
@@ -87,6 +106,9 @@ Profile information:
 Master functionality:
 
 - make an appointment to other masters
+- confirm incoming appointment
+- cancel incoming appointment
+- cancel confirmed appointment
 - edit his profile
 
 Profile information:
