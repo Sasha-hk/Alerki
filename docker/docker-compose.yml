@@ -1,0 +1,43 @@
+version: "3.9"
+
+services:
+  db:
+    container_name: database
+    environment:
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_DATABASE
+    image: postgres
+    env_file:
+      - .env.prod
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../pgdata/production:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ../api/
+      dockerfile: Dockerfile
+    container_name: api
+    command: bash -c "yarn run migrate && yarn run start"
+    depends_on:
+      - db
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.prod
+    working_dir: /app/
+
+  frontend:
+    build:
+      context: ../frontend/
+      dockerfile: Dockerfile
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.prod
+    working_dir: /app/
