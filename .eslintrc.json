@@ -17,10 +17,4 @@
     "no-cond-assign": ["error", "always"],
     "for-direction": "off"
   }
-  // "ignorePatterns": [
-  //   "node_modules",
-  //   "docker",
-  //   "docs",
-  //   "pgdata"
-  // ]
 }
