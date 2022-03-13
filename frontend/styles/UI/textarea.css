@@ -1,9 +1,0 @@
-textarea {
-  border: var(--textarea-border);
-  background: none;
-  padding: 10px;
-  border-radius: 4px;
-}
-textarea::placeholder {
-  color: var(--textarea-placeholder-color);
-}
