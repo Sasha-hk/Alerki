@@ -2,7 +2,7 @@
 
 Vision of the project concept.
 
-Content:
+Table of contents:
 
 - [Requirements](#requirements)
   - [1. System description](#1-system-description)
