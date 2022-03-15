@@ -17,7 +17,9 @@ Table of contents:
 
 **Database structure:**
 
-![database models](images/database-structure.svg)
+<p align="center">
+  <img src="./images/database-structure.svg">
+</p>
 
 ## User
 

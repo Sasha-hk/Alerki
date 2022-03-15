@@ -1,6 +1,8 @@
 # Web services structure
 
-![web services structure](images/services-structure.svg)
+<p align="center">
+  <img src="./images/services-structure.svg">
+</p>
 
 Table of contents:
 
