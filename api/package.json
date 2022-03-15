@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=dev && nodemon index.js",
-    "start": "NODE_ENV=prod && node index.js",
+    "start": "NODE_ENV=prod && node ./build/index.js",
     "makemigrations": "npx sequelize-mig migration:make -n",
     "migrate": "npx sequelize-cli db:migrate"
   },
@@ -18,7 +18,8 @@
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.2.2",
     "pg": "^8.7.3",
-    "sequelize": "^6.17.0"
+    "sequelize": "^6.17.0",
+    "typescript": "^4.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.15",
