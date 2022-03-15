@@ -1,0 +1,29 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "Alerki API",
+  "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
+  "license": "MIT",
+  "scripts": {
+    "dev": "NODE_ENV=dev && nodemon index.js",
+    "start": "NODE_ENV=prod && node index.js",
+    "makemigrations": "npx sequelize-mig migration:make -n",
+    "migrate": "npx sequelize-cli db:migrate"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "chai": "^4.3.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "mocha": "^9.2.2",
+    "pg": "^8.7.3",
+    "sequelize": "^6.17.0",
+    "sequelize-cli": "^6.4.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "sequelize-mig": "^3.1.3",
+    "supertest": "^6.2.2"
+  }
+}
