@@ -5,7 +5,7 @@
   "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
   "license": "MIT",
   "scripts": {
-    "dev": "NODE_ENV=dev && nodemon index.js",
+    "dev": "NODE_ENV=dev && nodemon index.ts",
     "start": "NODE_ENV=prod && node ./build/index.js",
     "makemigrations": "npx sequelize-mig migration:make -n",
     "migrate": "npx sequelize-cli db:migrate"
