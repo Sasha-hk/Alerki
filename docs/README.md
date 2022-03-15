@@ -2,5 +2,6 @@
 
 Table of contents:
 
-- [Requirements](./requirements.md)
 - [Database structure](./database.md)
+- [Requirements](./requirements.md)
+- [Web services structure](./services-structure.md)
