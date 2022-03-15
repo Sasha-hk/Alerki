@@ -10,7 +10,7 @@ Table of contents:
   - [Database](#database)
   - [API](#api)
   - [Frontend](#frontend)
-  - [NGINX](#nginx)
+  - [Nginx](#nginx)
   - [Client](#client)
 
 ## Server
@@ -33,6 +33,10 @@ He is responsible for all business logic, for example create an appointment, reg
 
 Frontend is a use interface. We use [React.js](https://reactjs.org/ "React.js official website") framework to create user interfaces, and [Next.js](https://nextjs.org/ "Next.js official website") for SSR and SSG.
 
-## NGINX
+## Nginx
+
+[Nginx](https://docs.nginx.com/ "Nginx official website") we use as web server, to route all the requests from client to out services.
 
 ## Client
+
+Client is a user who use out website.
