@@ -5,7 +5,7 @@
   "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
   "license": "MIT",
   "lint-staged": {
-    "*.{js,jsx}": "eslint ."
+    "*.{js, jsx, ts, tsx}": "eslint ."
   },
   "commitlint": {
     "extends": [
