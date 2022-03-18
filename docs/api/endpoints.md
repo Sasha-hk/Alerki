@@ -1,4 +1,4 @@
-# API endpoints
+# Endpoints
 
 Endpoints list:
 
@@ -9,24 +9,33 @@ Endpoints list:
   - GET /oauth/google
 
 - GET /user
+  - /master
+    - POST /service
+    - DELETE /service
+    - PAtCH /service
+  - PATCH /profile
+  - /become
+    - PATCH /master
+    - PATCH /client
 
 - /profile
   - GET /[username]
-  - /set
-    - POST /profile
+  - GET /services/[master_id]
+  - GET /picture/[id]
+  - /client
+    - GET /appointments?for=[date]
   - /master
-    - POST /create-service
-    - DELETE /service
-    - PAtCH /service
+    - GET /appointment?for=[date]
 
 - /services
   - GET /fine?name=[name]
 
 - /appointment
   - GET /details/[slug]
-  - GET /masters?service_id=[id]
-  - GET /schedule?master_id=[id]
-  - POST /make
+  - /steps
+    - GET /masters?service_id=[id]
+    - GET /schedule?master_id=[id]&for=[date]
+    - POST /make
   - /client
     - POST /cancel/[slug]
   - /master
