@@ -9,7 +9,10 @@ Endpoints list:
   - GET /oauth/google
 
 - GET /user
+  - /client
+    - GET /appointments?for=[date]
   - /master
+    - GET /appointments?for=[date]
     - POST /service
     - DELETE /service
     - PAtCH /service
@@ -22,12 +25,16 @@ Endpoints list:
   - GET /[username]
   - GET /services/[master_id]
   - GET /picture/[id]
-  - /client
-    - GET /appointments?for=[date]
+  - PATCH /profile
   - /master
-    - GET /appointment?for=[date]
+    - POST /service
+    - DELETE /service
+    - PAtCH /service
+  - /become
+    - PATCH /master
+    - PATCH /client
 
-- /services
+- GET /services
   - GET /fine?name=[name]
 
 - /appointment
