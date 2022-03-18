@@ -9,24 +9,29 @@ Endpoints list:
   - GET /oauth/google
 
 - GET /user
+  - /master
+    - POST /service
+    - DELETE /service
+    - PAtCH /service
+  - PATCH /profile
+  - /become
+    - PATCH /master
+    - PATCH /client
 
 - /profile
   - GET /[username]
-  - /set
-    - POST /profile
-  - /master
-    - POST /create-service
-    - DELETE /service
-    - PAtCH /service
+  - GET /services/[master_id]
+  - GET /picture/[id]
 
 - /services
   - GET /fine?name=[name]
 
 - /appointment
   - GET /details/[slug]
-  - GET /masters?service_id=[id]
-  - GET /schedule?master_id=[id]
-  - POST /make
+  - /steps
+    - GET /masters?service_id=[id]
+    - GET /schedule?master_id=[id]
+    - POST /make
   - /client
     - POST /cancel/[slug]
   - /master
