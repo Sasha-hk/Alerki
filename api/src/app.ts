@@ -29,7 +29,7 @@ class App {
 
   /**
    * Set controllers
-   * @param {Controller[]} controllers
+   * @param {Controller[]} controllers array of controllers
    */
   public setControllers(controllers: Controller[]): void {
     controllers.forEach(controller => {
