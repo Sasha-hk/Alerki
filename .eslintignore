@@ -5,3 +5,4 @@ docs
 docker
 node_modules
 pgdata
+dist
