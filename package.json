@@ -33,7 +33,11 @@
   },
   "devDependencies": {
     "@commitlint/config-angular": "^16.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
     "commitlint": "^16.2.1",
+    "eslint": "^8.11.0",
+    "eslint-config-xo": "^0.40.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.5"
   },
