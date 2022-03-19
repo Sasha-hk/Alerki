@@ -5,7 +5,7 @@
   "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
   "license": "MIT",
   "lint-staged": {
-    "*.{js, jsx, ts, tsx}": "eslint ."
+    "*.{js,jsx,ts,tsx}": "eslint . --ext .ts,.tsx,.js,.jsx"
   },
   "commitlint": {
     "extends": [
@@ -42,7 +42,7 @@
     "lint-staged": "^12.3.5"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "prepare": "husky install"
   }
 }
