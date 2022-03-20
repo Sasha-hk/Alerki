@@ -1,6 +1,6 @@
 import App from './app';
 import AuthController from './controllers/auth.controller';
-import connect from './db/connect';
+import Database from './db/connect';
 
 const app = new App();
 
@@ -8,6 +8,6 @@ app.setControllers([
   new AuthController(),
 ]);
 
-connect();
+console.log(Database);
 
 app.listen();
