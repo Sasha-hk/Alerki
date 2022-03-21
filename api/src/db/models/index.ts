@@ -1,5 +1,8 @@
 import { Options, Sequelize } from 'sequelize';
 import config from '../../config/database';
+import UserModel from './user.model';
+import WeekendDaysModel from './weekend-days.model';
+import AuthModel from './auth.model';
 
 const env: string = process.env.NODE_ENV || 'dev';
 
@@ -10,18 +13,23 @@ export const sequelize: Sequelize = new Sequelize(
   <Options> (config as any)[env],
 );
 
-// Const a = {
-//   sequelize,
-//   Sequelize,
-//   Comment: CommentFactory(sequelize, Sequelize),
-//   Post: PostFactory(sequelize, Sequelize),
-//   User: UserFactory(sequelize, Sequelize),
-// };
+const models = [
+  UserModel,
+  WeekendDaysModel,
+  AuthModel,
+];
 
-// Object.keys(db).forEach(modelName => {
-//   if (db[modelName].associate) {
-//     db[modelName].associate(db);
-//   }
-// });
+models.forEach(model => model.initialize(sequelize));
 
-export default {};
+// Associations
+AuthModel.belongsTo(UserModel, {
+  foreignKey: 'userID',
+  onDelete: 'CASCADE',
+});
+
+export default {
+  sequelize,
+  UserModel,
+  WeekendDaysModel,
+  AuthModel,
+};
