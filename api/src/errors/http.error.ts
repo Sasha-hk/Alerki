@@ -1,15 +1,17 @@
+import IError from '../interfaces/error.interface';
+
 class HttpError extends Error {
   public status: number;
   public message: string;
-  public error?: object;
+  public error?: IError;
 
   /**
    * Error constructor
    * @param {number} status Error status
    * @param {string} message Console message
-   * @param {object} error Response error description
+   * @param {IError} error Response error description
    */
-  constructor(status: number, message: string, error?: object) {
+  constructor(status: number, message: string, error?: IError) {
     super(message);
 
     this.status = status;
@@ -23,10 +25,9 @@ class HttpError extends Error {
   /**
    * Bad request error
    * @param {error} error error description
-   * @returns {HttpError} Error
    */
-  static BarRequest(error?: object): HttpError {
-    return new HttpError(400, 'bad request', error ? error : undefined);
+  static BarRequest(error?: IError) {
+    return new HttpError(400, 'bad request', error);
   }
 }
 

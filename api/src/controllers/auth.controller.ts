@@ -1,5 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
+import Validator from '../utils/validator';
+import IError from '../interfaces/error.interface';
 // I import { UerMode, AuthModel } from '../db/models';
 
 /**
@@ -19,11 +21,31 @@ class AuthController implements Controller {
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
   }
 
-  private register(req: Request) {
+  private register(req: Request, res: Response) {
     try {
-      console.log(req);
-    } catch (e) {
-      console.log(e);
+      const {
+        username,
+        email,
+      } = req.body;
+
+      Validator({
+        atLeastOne: [
+          {
+            value: username,
+            name: 'username',
+            type: 'string',
+          },
+          {
+            value: email,
+            name: 'email',
+          },
+        ],
+      });
+
+      res.send('OK');
+    } catch (e: IError | any) {
+      console.log(e.error);
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 

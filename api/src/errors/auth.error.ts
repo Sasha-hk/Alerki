@@ -44,7 +44,7 @@ class AuthError extends HttpError {
     return new HttpError(
       400,
       'Username not exists',
-      { error: { username: 'username not exists' } },
+      { error: 'username not exists' },
     );
   }
 
@@ -56,7 +56,7 @@ class AuthError extends HttpError {
     return new HttpError(
       400,
       'Username already exists',
-      { error: { username: 'username already exists' } },
+      { error: 'username already exists' },
     );
   }
 
@@ -65,7 +65,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static EmailExists(): HttpError {
-    return new HttpError(400, 'Email already exists', { error: { email: 'email already exists' } });
+    return new HttpError(400, 'Email already exists', { error: 'email already exists' });
   }
 
   /**
@@ -73,7 +73,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static EmailNotExists(): HttpError {
-    return new HttpError(400, 'Email not exists', { error: { email: 'email not exists' } });
+    return new HttpError(400, 'Email not exists', { error: 'email not exists' });
   }
 
   /**
