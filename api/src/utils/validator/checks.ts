@@ -11,6 +11,7 @@ import { setErrorDetails } from './helpers';
 export function checkExists(
   toCheck: IValidateItem,
   errorDetails: IErrorItem[],
+  option: 'all' | 'atLeastOne' = 'all',
 ): boolean {
   if (!toCheck?.value) {
     if (toCheck?.required) {
@@ -22,10 +23,17 @@ export function checkExists(
       return true;
     }
 
-    setErrorDetails(errorDetails, {
-      field: toCheck.name,
-      details: `${toCheck.name} is required or another one`,
-    });
+    if (option === 'all') {
+      setErrorDetails(errorDetails, {
+        field: toCheck.name,
+        details: `${toCheck.name} is required`,
+      });
+    } else if (option === 'atLeastOne') {
+      setErrorDetails(errorDetails, {
+        field: toCheck.name,
+        details: `${toCheck.name} is required or another one`,
+      });
+    }
 
     return true;
   }
@@ -58,16 +66,39 @@ export function checkType(
 }
 
 /**
+ * Check for pattern matching
+ * @param {IValidateItem} toCheck Check item
+ * @param {IErrorItem[]} errorDetails Error details
+ * @returns {boolean} It `true` it's validation error
+ */
+export function checkPattern(
+  toCheck: IValidateItem,
+  errorDetails: IErrorItem[],
+): boolean {
+  if (toCheck?.pattern) {
+    if (!RegExp(toCheck.pattern).test(toCheck.value)) {
+      checkMinLength(toCheck, (error: IErrorItem) => {
+        setErrorDetails(errorDetails, error);
+      });
+
+      return false;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Check for max length
  * @param {IValidateItem} toCheck Check item
  * @param {(error: IErrorItem) => void} callback Callback function
  */
 export function checkMaxLength(toCheck: IValidateItem, callback: (error: IErrorItem) => void) {
   if (toCheck?.maxLength) {
-    if (toCheck.value > toCheck.maxLength) {
+    if (toCheck.value.length > toCheck.maxLength) {
       callback({
         field: toCheck.name,
-        details: `${toCheck.name} expected to be shorter than ${toCheck.maxLength}`,
+        details: `expected to be shorter than ${toCheck.maxLength}`,
       });
     }
   }
@@ -80,10 +111,10 @@ export function checkMaxLength(toCheck: IValidateItem, callback: (error: IErrorI
  */
 export function checkMinLength(toCheck: IValidateItem, callback: (error: IErrorItem) => void) {
   if (toCheck?.minLength) {
-    if (toCheck.value < toCheck.minLength) {
+    if (toCheck.value.length < toCheck.minLength) {
       callback({
         field: toCheck.name,
-        details: `${toCheck.name} expected to be longer than ${toCheck.minLength}`,
+        details: `expected to be longer than ${toCheck.minLength}`,
       });
     }
   }
@@ -99,7 +130,7 @@ export function checkMaxValue(toCheck: IValidateItem, callback: (error: IErrorIt
     if (toCheck.value > toCheck.maxValue) {
       callback({
         field: toCheck.name,
-        details: `${toCheck.name} expected to be less than ${toCheck.maxValue}`,
+        details: `expected to be less than ${toCheck.maxValue}`,
       });
     }
   }
@@ -115,7 +146,7 @@ export function checkMinValue(toCheck: IValidateItem, callback: (error: IErrorIt
     if (toCheck.value < toCheck.minValue) {
       callback({
         field: toCheck.name,
-        details: `${toCheck.name} expected to be more than ${toCheck.minValue}`,
+        details: `expected to be more than ${toCheck.minValue}`,
       });
     }
   }

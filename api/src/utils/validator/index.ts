@@ -21,7 +21,8 @@ function validateAll(all: Array<IValidateItem>) {
     }
 
     if (checkLengthAndValue(i, errorDetails)) {
-      lengthAndValueError = false;
+      console.log(1);
+      lengthAndValueError = true;
       break;
     }
   }
@@ -43,7 +44,7 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   const errorDetails: IErrorItem[] = [];
 
   for (const i of atLeastOne) {
-    if (checkExists(i, errorDetails)) {
+    if (checkExists(i, errorDetails, 'atLeastOne')) {
       existsError = false;
       break;
     }
@@ -59,7 +60,7 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
     }
   }
 
-  if (existsError || typeError || lengthAndValueError) {
+  if (!existsError || typeError || lengthAndValueError) {
     throw ValidationError.AllRequired('Validation error', {
       error: {
         message: 'validation error',
