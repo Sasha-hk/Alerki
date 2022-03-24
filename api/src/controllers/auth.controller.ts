@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
+// I import { UerMode, AuthModel } from '../db/models';
 
 /**
  * Implements authentication logic
@@ -18,9 +19,9 @@ class AuthController implements Controller {
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
   }
 
-  private register(req: Request, res: Response) {
+  private register(req: Request) {
     try {
-      console.log(req, res);
+      console.log(req);
     } catch (e) {
       console.log(e);
     }
