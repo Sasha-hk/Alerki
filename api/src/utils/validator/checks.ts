@@ -1,5 +1,5 @@
-import IError, { IErrorItem } from '../../interfaces/error.interface';
-import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
+import { IErrorItem } from '../../interfaces/error.interface';
+import { IValidateItem } from '../../interfaces/validator.interface';
 import { setErrorDetails } from './helpers';
 
 /**

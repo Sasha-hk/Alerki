@@ -1,29 +1,35 @@
 import ValidationError from '../../errors/validation.error';
-import IError, { IErrorItem } from '../../interfaces/error.interface';
+import { IErrorItem } from '../../interfaces/error.interface';
 import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
-import { setErrorDetails } from './helpers';
 import { checkLengthAndValue, checkExists, checkType } from './checks';
 
 function validateAll(all: Array<IValidateItem>) {
-  let throwError: boolean = false;
+  let existsError: boolean = false;
+  let typeError: boolean = false;
+  let lengthAndValueError: boolean = false;
   const errorDetails: IErrorItem[] = [];
 
   for (const i of all) {
-    // Check for exists
-    if (!i.value) {
-      throwError = true;
+    if (checkExists(i, errorDetails)) {
+      existsError = true;
+      break;
+    }
 
-      errorDetails.push({
-        field: i.name,
-        details: `${i.name} is required`,
-      });
+    if (checkType(i, errorDetails)) {
+      typeError = true;
+      break;
+    }
+
+    if (checkLengthAndValue(i, errorDetails)) {
+      lengthAndValueError = false;
+      break;
     }
   }
 
-  if (throwError) {
-    throw ValidationError.AllRequired('All parameters required', {
+  if (existsError || typeError || lengthAndValueError) {
+    throw ValidationError.AllRequired('Validation error', {
       error: {
-        message: 'all parameters required',
+        message: 'validation error',
         details: errorDetails,
       },
     });
@@ -47,7 +53,6 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
       break;
     }
 
-    // Check length and value
     if (checkLengthAndValue(i, errorDetails)) {
       lengthAndValueError = false;
       break;
