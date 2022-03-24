@@ -2,7 +2,7 @@ import ValidationError from '../../errors/validation.error';
 import IError, { IErrorItem } from '../../interfaces/error.interface';
 import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
 import { setErrorDetails } from './helpers';
-import { checkLengthAndValue } from './checks';
+import { checkLengthAndValue, checkExists, checkType } from './checks';
 
 function validateAll(all: Array<IValidateItem>) {
   let throwError: boolean = false;
@@ -37,43 +37,19 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   const errorDetails: IErrorItem[] = [];
 
   for (const i of atLeastOne) {
-    // Check for exists and required
-    if (i.value) {
+    if (checkExists(i, errorDetails)) {
       existsError = false;
-    } else {
-      if (i.required) {
-        setErrorDetails(errorDetails, {
-          field: i.name,
-          details: `${i.name} is required`,
-        });
-
-        break;
-      }
-
-      setErrorDetails(errorDetails, {
-        field: i.name,
-        details: `${i.name} is required or another one`,
-      });
-
       break;
     }
 
-    // Check for type
-    if (i?.type) {
-      if (typeof i.value !== i.type) {
-        typeError = true;
-
-        setErrorDetails(errorDetails, {
-          field: i.name,
-          details: `${i.name} expected to be a ${i.type}`,
-        });
-      }
+    if (checkType(i, errorDetails)) {
+      typeError = true;
+      break;
     }
 
     // Check length and value
-    lengthAndValueError = checkLengthAndValue(i, errorDetails);
-
-    if (lengthAndValueError) {
+    if (checkLengthAndValue(i, errorDetails)) {
+      lengthAndValueError = false;
       break;
     }
   }
