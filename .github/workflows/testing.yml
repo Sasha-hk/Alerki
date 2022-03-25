@@ -50,7 +50,8 @@ jobs:
           POSTGRES_PASSWORD: 1234
           POSTGRES_DB: appointment_test
         ports:
-          - 5432/tcp
+          - 5432:5432
+
     strategy:
       matrix:
         node-version: [14.x, 16.x]
