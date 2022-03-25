@@ -1,13 +1,13 @@
 import App from './app';
 import AuthController from './controllers/auth.controller';
-import connect from './db/connect';
+import Database from './db/connect';
 
+const db = new Database();
 const app = new App();
 
 app.setControllers([
   new AuthController(),
 ]);
 
-connect();
-
+db.connect();
 app.listen();

@@ -3,13 +3,19 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
 
+interface IApp {
+  readonly app: express.Application;
+  readonly env: string;
+  readonly port: string | number;
+}
+
 /**
  * Server object
  */
-class App {
-  private app: express.Application = express();
-  private env: string = process.env.NODE_ENV || 'dev';
-  private port: string | number = process.env.API_PORT || 3000;
+class App implements IApp {
+  readonly app = express();
+  readonly env = process.env.NODE_ENV || 'dev';
+  readonly port = process.env.API_PORT || 3000;
 
   /**
    * App constructor
@@ -21,7 +27,7 @@ class App {
   /**
    * Set middlewares
    */
-  private setMiddlewares() {
+  private setMiddlewares(): void {
     this.app.use(express.json());
     this.app.use(cookieParser());
     this.app.use(cors());
