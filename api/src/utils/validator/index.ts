@@ -9,6 +9,10 @@ import {
   checkLengthAndValue,
 } from './checks';
 
+/**
+ * Validate and check if all exists
+ * @param {Array<IValidateItem>} all Parameters to validate
+ */
 function validateAll(all: Array<IValidateItem>) {
   let existsError: boolean = false;
   let requiredError: boolean = false;
@@ -54,6 +58,10 @@ function validateAll(all: Array<IValidateItem>) {
   }
 }
 
+/**
+ * Validate and check if at least one exists
+ * @param {Array<IValidateItem>} atLeastOne Parameters to validate
+ */
 function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   let beforeExists: boolean = false;
   let existsError: boolean = false;
