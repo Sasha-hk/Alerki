@@ -1,7 +1,8 @@
 {
   "root": true,
   "env": {
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
   "extends": [
     "xo"
@@ -17,6 +18,7 @@
     "object-curly-spacing": ["error", "always"],
     "max-len": ["error", { "code": 100 }],
     "indent": ["error", 2],
-    "new-cap": 0
+    "new-cap": 0,
+    "no-unused-vars": 0
   }
 }
