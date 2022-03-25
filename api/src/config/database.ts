@@ -1,5 +1,5 @@
 interface IConfigMode {
-  username: string | undefined,
+  user: string | undefined,
   password: string | undefined,
   database: string | undefined,
   host: string | undefined,
@@ -14,21 +14,21 @@ interface IDBConfig {
 
 const DBConfig: IDBConfig = {
   dev: {
-    username: process.env.DB_DEV_USER,
+    user: process.env.DB_DEV_USER,
     password: process.env.DB_DEV_PASSWORD,
     database: process.env.DB_DEV_DATABASE,
     host: process.env.DB_DEV_HOST,
     dialect: process.env.DB_DEV_DIALECT,
   },
   test: {
-    username: process.env.DB_TEST_USER,
+    user: process.env.DB_TEST_USER,
     password: process.env.DB_TEST_PASSWORD,
     database: process.env.DB_TEST_DATABASE,
     host: process.env.DB_TEST_HOST,
     dialect: process.env.DB_TEST_DIALECT,
   },
   prod: {
-    username: process.env.DB_PROD_USER,
+    user: process.env.DB_PROD_USER,
     password: process.env.DB_PROD_PASSWORD,
     database: process.env.DB_PROD_DATABASE,
     host: process.env.DB_PROD_HOST,
