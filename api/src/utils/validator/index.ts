@@ -69,13 +69,13 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
     if (checkRequired(i, requiredErrorDetails)) {
       requiredError = true;
       continue;
-    } else {
-      beforeExists = true;
     }
 
     if (checkExists(i, existsErrorDetails, 'atLeastOne')) {
       existsError = true;
       continue;
+    } else {
+      beforeExists = true;
     }
 
     if (checkType(i, errorDetails)) {
@@ -94,7 +94,13 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
     }
   }
 
-  if (!existsError || typeError || lengthAndValueError || patternError || requiredError) {
+  if (
+    (existsError === true && beforeExists !== true)
+    || typeError
+    || lengthAndValueError
+    || patternError
+    || requiredError
+  ) {
     if (requiredError) {
       errorDetails = [
         ...errorDetails,
@@ -121,8 +127,9 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
 /**
  * Validate parameters
  * @throws {IError}
+ * @return {boolean} If `true` all ok
  */
-export default (toValidate: IValidationTypes) => {
+export default (toValidate: IValidationTypes): boolean => {
   if (toValidate?.all) {
     validateAll(toValidate.all);
   }
@@ -130,4 +137,6 @@ export default (toValidate: IValidationTypes) => {
   if (toValidate?.atLeastOne) {
     validateAtLeastOne(toValidate.atLeastOne);
   }
+
+  return true;
 };
