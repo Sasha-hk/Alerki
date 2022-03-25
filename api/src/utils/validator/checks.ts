@@ -3,7 +3,7 @@ import { IValidateItem } from '../../interfaces/validator.interface';
 import { setErrorDetails } from './helpers';
 
 /**
- * Check if value exists and required
+ * Check if value exists
  * @param {IValidateItem} toCheck Check item
  * @param {IErrorItem[]} errorDetails Error details
  * @returns {boolean} It `true` it's validation error
@@ -11,10 +11,39 @@ import { setErrorDetails } from './helpers';
 export function checkExists(
   toCheck: IValidateItem,
   errorDetails: IErrorItem[],
-  option: 'all' | 'atLeastOne' = 'all',
+  checkTypes: 'all' | 'atLeastOne' = 'all',
 ): boolean {
   if (!toCheck?.value) {
-    if (toCheck?.required) {
+    if (checkTypes === 'all') {
+      setErrorDetails(errorDetails, {
+        field: toCheck.name,
+        details: `${toCheck.name} is required`,
+      });
+    } else if (checkTypes === 'atLeastOne') {
+      setErrorDetails(errorDetails, {
+        field: toCheck.name,
+        details: `${toCheck.name} is required or another one`,
+      });
+    }
+
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Check if value required
+ * @param {IValidateItem} toCheck Check item
+ * @param {IErrorItem[]} errorDetails Error details
+ * @returns {boolean} It `true` it's validation error
+ */
+export function checkRequired(
+  toCheck: IValidateItem,
+  errorDetails: IErrorItem[],
+): boolean {
+  if (toCheck?.required) {
+    if (!toCheck?.value) {
       setErrorDetails(errorDetails, {
         field: toCheck.name,
         details: `${toCheck.name} is required`,
@@ -23,19 +52,7 @@ export function checkExists(
       return true;
     }
 
-    if (option === 'all') {
-      setErrorDetails(errorDetails, {
-        field: toCheck.name,
-        details: `${toCheck.name} is required`,
-      });
-    } else if (option === 'atLeastOne') {
-      setErrorDetails(errorDetails, {
-        field: toCheck.name,
-        details: `${toCheck.name} is required or another one`,
-      });
-    }
-
-    return true;
+    return false;
   }
 
   return false;
