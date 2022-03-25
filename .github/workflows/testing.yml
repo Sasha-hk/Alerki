@@ -28,8 +28,6 @@ jobs:
           cd ..
           yarn lint
 
-
-
   unit-testing:
     name: Unit testing
     needs: lint-code
