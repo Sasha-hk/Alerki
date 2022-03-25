@@ -77,11 +77,12 @@ export function checkPattern(
 ): boolean {
   if (toCheck?.pattern) {
     if (!RegExp(toCheck.pattern).test(toCheck.value)) {
-      checkMinLength(toCheck, (error: IErrorItem) => {
-        setErrorDetails(errorDetails, error);
+      setErrorDetails(errorDetails, {
+        field: toCheck.name,
+        details: 'does not match pattern',
       });
 
-      return false;
+      return true;
     }
   }
 

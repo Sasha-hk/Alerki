@@ -1,12 +1,13 @@
 import ValidationError from '../../errors/validation.error';
 import { IErrorItem } from '../../interfaces/error.interface';
 import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
-import { checkLengthAndValue, checkExists, checkType } from './checks';
+import { checkLengthAndValue, checkExists, checkType, checkPattern } from './checks';
 
 function validateAll(all: Array<IValidateItem>) {
   let existsError: boolean = false;
   let typeError: boolean = false;
   let lengthAndValueError: boolean = false;
+  let patternError:boolean = false;
   const errorDetails: IErrorItem[] = [];
 
   for (const i of all) {
@@ -20,6 +21,11 @@ function validateAll(all: Array<IValidateItem>) {
       break;
     }
 
+    if (checkPattern(i, errorDetails)) {
+      patternError = true;
+      break;
+    }
+
     if (checkLengthAndValue(i, errorDetails)) {
       console.log(1);
       lengthAndValueError = true;
@@ -27,7 +33,7 @@ function validateAll(all: Array<IValidateItem>) {
     }
   }
 
-  if (existsError || typeError || lengthAndValueError) {
+  if (existsError || typeError || lengthAndValueError || patternError) {
     throw ValidationError.AllRequired('Validation error', {
       error: {
         message: 'validation error',
@@ -41,6 +47,7 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   let existsError: boolean = true;
   let typeError: boolean = false;
   let lengthAndValueError: boolean = false;
+  let patternError: boolean = false;
   const errorDetails: IErrorItem[] = [];
 
   for (const i of atLeastOne) {
@@ -54,13 +61,18 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
       break;
     }
 
+    if (checkPattern(i, errorDetails)) {
+      patternError = true;
+      break;
+    }
+
     if (checkLengthAndValue(i, errorDetails)) {
       lengthAndValueError = false;
       break;
     }
   }
 
-  if (!existsError || typeError || lengthAndValueError) {
+  if (!existsError || typeError || lengthAndValueError || patternError) {
     throw ValidationError.AllRequired('Validation error', {
       error: {
         message: 'validation error',
