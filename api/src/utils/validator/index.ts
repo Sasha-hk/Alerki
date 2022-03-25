@@ -13,23 +13,22 @@ function validateAll(all: Array<IValidateItem>) {
   for (const i of all) {
     if (checkExists(i, errorDetails)) {
       existsError = true;
-      break;
+      continue;
     }
 
     if (checkType(i, errorDetails)) {
       typeError = true;
-      break;
+      continue;
     }
 
     if (checkPattern(i, errorDetails)) {
       patternError = true;
-      break;
+      continue;
     }
 
     if (checkLengthAndValue(i, errorDetails)) {
-      console.log(1);
       lengthAndValueError = true;
-      break;
+      continue;
     }
   }
 
@@ -53,22 +52,22 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   for (const i of atLeastOne) {
     if (checkExists(i, errorDetails, 'atLeastOne')) {
       existsError = false;
-      break;
+      continue;
     }
 
     if (checkType(i, errorDetails)) {
       typeError = true;
-      break;
+      continue;
     }
 
     if (checkPattern(i, errorDetails)) {
       patternError = true;
-      break;
+      continue;
     }
 
     if (checkLengthAndValue(i, errorDetails)) {
       lengthAndValueError = false;
-      break;
+      continue;
     }
   }
 
@@ -82,6 +81,10 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
   }
 }
 
+/**
+ * Validate parameters
+ * @throws {IError}
+ */
 export default (toValidate: IValidationTypes) => {
   if (toValidate?.all) {
     validateAll(toValidate.all);
