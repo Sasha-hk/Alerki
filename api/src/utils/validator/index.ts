@@ -1,10 +1,17 @@
 import ValidationError from '../../errors/validation.error';
 import { IErrorItem } from '../../interfaces/error.interface';
 import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
-import { checkLengthAndValue, checkExists, checkType, checkPattern } from './checks';
+import {
+  checkExists,
+  checkRequired,
+  checkType,
+  checkPattern,
+  checkLengthAndValue,
+} from './checks';
 
 function validateAll(all: Array<IValidateItem>) {
   let existsError: boolean = false;
+  let requiredError: boolean = false;
   let typeError: boolean = false;
   let lengthAndValueError: boolean = false;
   let patternError:boolean = false;
@@ -13,6 +20,11 @@ function validateAll(all: Array<IValidateItem>) {
   for (const i of all) {
     if (checkExists(i, errorDetails)) {
       existsError = true;
+      continue;
+    }
+
+    if (checkRequired(i, errorDetails)) {
+      requiredError = true;
       continue;
     }
 
@@ -32,7 +44,7 @@ function validateAll(all: Array<IValidateItem>) {
     }
   }
 
-  if (existsError || typeError || lengthAndValueError || patternError) {
+  if (existsError || typeError || lengthAndValueError || patternError || requiredError) {
     throw ValidationError.AllRequired('Validation error', {
       error: {
         message: 'validation error',
@@ -43,15 +55,26 @@ function validateAll(all: Array<IValidateItem>) {
 }
 
 function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
-  let existsError: boolean = true;
+  let beforeExists: boolean = false;
+  let existsError: boolean = false;
+  let requiredError: boolean = false;
   let typeError: boolean = false;
   let lengthAndValueError: boolean = false;
   let patternError: boolean = false;
-  const errorDetails: IErrorItem[] = [];
+  let errorDetails: IErrorItem[] = [];
+  const existsErrorDetails: IErrorItem[] = [];
+  const requiredErrorDetails: IErrorItem[] = [];
 
   for (const i of atLeastOne) {
-    if (checkExists(i, errorDetails, 'atLeastOne')) {
-      existsError = false;
+    if (checkRequired(i, requiredErrorDetails)) {
+      requiredError = true;
+      continue;
+    } else {
+      beforeExists = true;
+    }
+
+    if (checkExists(i, existsErrorDetails, 'atLeastOne')) {
+      existsError = true;
       continue;
     }
 
@@ -71,7 +94,21 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
     }
   }
 
-  if (!existsError || typeError || lengthAndValueError || patternError) {
+  if (!existsError || typeError || lengthAndValueError || patternError || requiredError) {
+    if (requiredError) {
+      errorDetails = [
+        ...errorDetails,
+        ...requiredErrorDetails,
+      ];
+    }
+
+    if (existsError === true && beforeExists !== true) {
+      errorDetails = [
+        ...errorDetails,
+        ...existsErrorDetails,
+      ];
+    }
+
     throw ValidationError.AllRequired('Validation error', {
       error: {
         message: 'validation error',
