@@ -16,6 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
+          cache: yarn
 
       - name: Install packages
         run: |
@@ -26,7 +27,6 @@ jobs:
       - name: Lint code
         run: |
           yarn lint
-          cache: yarn
 
   unit-testing:
     name: Unit testing
