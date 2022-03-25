@@ -180,25 +180,27 @@ export function checkLengthAndValue(
   toCheck: IValidateItem,
   errorDetails: IErrorItem[],
 ): boolean {
+  let localError: boolean = false;
+
   checkMaxLength(toCheck, (error: IErrorItem) => {
     setErrorDetails(errorDetails, error);
-    return true;
+    localError = true;
   });
 
   checkMinLength(toCheck, (error: IErrorItem) => {
     setErrorDetails(errorDetails, error);
-    return true;
+    localError = true;
   });
 
   checkMaxValue(toCheck, (error: IErrorItem) => {
     setErrorDetails(errorDetails, error);
-    return true;
+    localError = true;
   });
 
   checkMinValue(toCheck, (error: IErrorItem) => {
     setErrorDetails(errorDetails, error);
-    return true;
+    localError = true;
   });
 
-  return false;
+  return localError;
 }

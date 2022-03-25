@@ -97,7 +97,7 @@ function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
     }
 
     if (checkLengthAndValue(i, errorDetails)) {
-      lengthAndValueError = false;
+      lengthAndValueError = true;
       continue;
     }
   }
