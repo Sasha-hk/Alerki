@@ -11,16 +11,6 @@ jobs:
   lint-code:
     name: Lint code
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:10.10
-        env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: appointment_test
-        ports:
-          - 5432/tcp
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
