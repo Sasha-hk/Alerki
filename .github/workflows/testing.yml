@@ -43,5 +43,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: yarn
 
-    - run: yarn install
-    - run: cd api && yarn test:unit
+    - run: |
+        cd api
+        yarn install
+        yarn test:unit
