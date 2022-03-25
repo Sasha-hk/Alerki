@@ -1,15 +1,26 @@
 import HttpError from './http.error';
+import IError from '../interfaces/error.interface';
 
 /**
  * Authentication / Authorization error
  */
 class AuthError extends HttpError {
   /**
+   * Auth error constructor
+   * @param {number=} status Error code
+   * @param {string=} message Console message
+   * @param {IError=} error Response error description
+   */
+  constructor(status: number = 400, message: string = 'Validation error', error?: IError) {
+    super(status, message, error);
+  }
+
+  /**
    * Invalid access token error
    * @returns {HttpError} Error
    */
   static BadAccessToken(): HttpError {
-    return new HttpError(400, 'Invalid access token', { error: 'invalid access token' });
+    throw new HttpError(400, 'Invalid access token', { error: 'invalid access token' });
   }
 
   /**
@@ -17,7 +28,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static BadRefreshToken(): HttpError {
-    return new HttpError(400, 'Invalid refresh token', { error: 'invalid refresh token' });
+    throw new HttpError(400, 'Invalid refresh token', { error: 'invalid refresh token' });
   }
 
   /**
@@ -25,7 +36,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static Unauthorized(): HttpError {
-    return new HttpError(401, 'User not authorized', { error: 'not authorized' });
+    throw new HttpError(401, 'User not authorized', { error: 'not authorized' });
   }
 
   /**
@@ -33,7 +44,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static BadPassword(): HttpError {
-    return new HttpError(400, 'Bad password', { error: 'bad password' });
+    throw new HttpError(400, 'Bad password', { error: 'bad password' });
   }
 
   /**
@@ -41,7 +52,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static UsernameNotExists(): HttpError {
-    return new HttpError(
+    throw new HttpError(
       400,
       'Username not exists',
       { error: 'username not exists' },
@@ -53,7 +64,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static UsernameExists(): HttpError {
-    return new HttpError(
+    throw new HttpError(
       400,
       'Username already exists',
       { error: 'username already exists' },
@@ -65,7 +76,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static EmailExists(): HttpError {
-    return new HttpError(400, 'Email already exists', { error: 'email already exists' });
+    throw new HttpError(400, 'Email already exists', { error: 'email already exists' });
   }
 
   /**
@@ -73,7 +84,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static EmailNotExists(): HttpError {
-    return new HttpError(400, 'Email not exists', { error: 'email not exists' });
+    throw new HttpError(400, 'Email not exists', { error: 'email not exists' });
   }
 
   /**
@@ -81,7 +92,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static NotMaster(): HttpError {
-    return new HttpError(400, 'User is not master', { error: 'user is not a master' });
+    throw new HttpError(400, 'User is not master', { error: 'user is not a master' });
   }
 }
 
