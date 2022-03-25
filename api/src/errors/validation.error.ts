@@ -21,7 +21,7 @@ class ValidationError extends HttpError {
    * @param {IError} error Error response to client
    */
   static AllRequired(message: string, error: IError): HttpError {
-    return new HttpError(400, message, error);
+    return new this(400, message, error);
   }
 
   /**
@@ -30,7 +30,7 @@ class ValidationError extends HttpError {
    * @param {IError} error Error response to client
    */
   static AtLeastOne(message: string, error: IError): HttpError {
-    return new HttpError(400, message, error);
+    return new this(400, message, error);
   }
 }
 
