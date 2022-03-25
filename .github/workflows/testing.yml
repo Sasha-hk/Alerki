@@ -25,7 +25,6 @@ jobs:
 
       - name: Lint code
         run: |
-          cd ..
           yarn lint
 
   unit-testing:
