@@ -32,7 +32,7 @@ class Database implements IDatabase {
     } else if (this.env === 'test') {
       sequelize.sync({
         force: true,
-        logging: true,
+        logging: false,
       });
       console.log('Connected to testing database');
     } else if (this.env === 'prod') {
