@@ -1,21 +1,7 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
+import IUser from '../../interfaces/db/models/user.interface';
 
-export interface UserInterface {
-  id: number;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  pictureID: number;
-  password: string;
-  profileType: 'client' | 'master';
-  clientID: number;
-  masterID: number;
-  banned: boolean;
-}
-
-class UserModel extends Model implements UserInterface {
+class UserModel extends Model implements IUser {
   id!: number;
   username!: string;
   firstName!: string;
