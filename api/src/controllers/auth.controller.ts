@@ -84,7 +84,6 @@ class AuthController implements Controller {
         ...userDto,
       });
     } catch (e: IError | any) {
-      console.log(e.error);
       res.status(e?.status || 500).json(e?.error);
     }
   }
