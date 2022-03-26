@@ -14,15 +14,10 @@ export interface ITokens {
 
 interface IAuthService {
   findByDeviceName(deviceName: string): Promise<any>;
-  generateAccessToken(userData: ITokenizeUser): Promise<string>;
-  generateRefreshToken(userDate: ITokenizeUser): Promise<string>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
-  saveAccessToken(accessToken: string, userID: number, deviceName: string): any;
-  saveRefreshToken(refreshToken: string, userID: number, deviceName: string): any;
-  saveTokens(tokens: ITokens, userID: number, deviceName: string): any;
+  saveToken(refreshToken: string, userID: number, deviceName: string): any;
   validateAccessToken(): any;
   validateRefreshToken(): any;
-  saveAuthData(): any;
 }
 
 /**
@@ -38,11 +33,23 @@ class AuthService implements IAuthService {
     });
   }
 
-  async generateAccessToken({
+  async generateTokens({
     id,
     username,
     email,
   }: ITokenizeUser) {
+    const refreshToken = jwt.sign(
+      {
+        id,
+        username,
+        email,
+      },
+      process.env.JWT_REFRESH_SECRET as string,
+      {
+        expiresIn: 30 * 24 * 60 * 60,
+      },
+    );
+
     const accessToken = jwt.sign(
       {
         id,
@@ -50,56 +57,49 @@ class AuthService implements IAuthService {
         email,
       },
       process.env.JWT_ACCESS_SECRET as string,
-    );
-
-    return accessToken;
-  }
-
-  async generateRefreshToken({
-    id,
-    username,
-    email,
-  }: ITokenizeUser) {
-    const accessToken = jwt.sign(
       {
-        id,
-        username,
-        email,
+        expiresIn: 60 * 60 * 60,
       },
-      process.env.JWT_REFRESH_SECRET as string,
     );
 
-    return accessToken;
-  }
-
-  async generateTokens({
-    id,
-    username,
-    email,
-  }: ITokenizeUser) {
     return {
-      accessToken: await this.generateAccessToken({ id, username, email }),
-      refreshToken: await this.generateRefreshToken({ id, username, email }),
+      refreshToken,
+      accessToken,
     } as ITokens;
   }
 
-  async saveAccessToken(accessToken: string, userID: number, deviceName: string) {
+  async saveToken(refreshToken: string, userID: number, deviceName: string) {
+    const candidate = await AuthModel.findOne({
+      raw: true,
+      where: {
+        userID,
+        deviceName,
+      },
+    });
 
-  }
-
-  async saveRefreshToken(refreshToken: string, userID: number, deviceName: string) {
-
-  }
-
-  async saveTokens(tokens: ITokens, userID: number, deviceName: string) {
-
+    if (candidate) {
+      AuthModel.update(
+        {
+          refreshToken,
+        },
+        {
+          where: {
+            deviceName,
+          },
+        },
+      );
+    } else {
+      AuthModel.create({
+        userID,
+        deviceName,
+        refreshToken,
+      });
+    }
   }
 
   validateAccessToken() {}
 
   validateRefreshToken() {}
-
-  saveAuthData() {}
 }
 
 export default new AuthService();
