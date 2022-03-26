@@ -3,6 +3,8 @@ import Controller from '../interfaces/controller.interface';
 import Validator from '../utils/validator';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
+import getDeviceName from '../utils/deviceName';
+import PrivateUserDto from '../utils/dto/private-user.dto';
 
 /**
  * Implements authentication logic
@@ -63,14 +65,24 @@ class AuthController implements Controller {
         ],
       });
 
-      const newUser = await UserService.register({
+      const deviceName = getDeviceName(req);
+
+      const userData = await UserService.register({
         username,
         email,
         password,
         profileType,
+        deviceName,
       });
 
-      res.send('OK');
+      const userDto = new PrivateUserDto(userData.user);
+
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+      res.cookie('accessToken', userData.accessToken, { maxAge: 30 * 60 * 60 });
+
+      res.json({
+        ...userDto,
+      });
     } catch (e: IError | any) {
       console.log(e.error);
       res.status(e?.status || 500).json(e?.error);
