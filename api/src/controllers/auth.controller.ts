@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
 import Validator from '../utils/validator';
 import IError from '../interfaces/error.interface';
-// I import { UerMode, AuthModel } from '../db/models';
+import UserService from '../services/user.service';
 
 /**
  * Implements authentication logic
@@ -21,25 +21,53 @@ class AuthController implements Controller {
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
   }
 
-  private register(req: Request, res: Response) {
+  async register(req: Request, res: Response) {
     try {
       const {
         username,
         email,
+        password,
+        profileType,
       } = req.body;
 
       Validator({
-        atLeastOne: [
+        all: [
           {
             value: username,
             name: 'username',
             type: 'string',
+            maxLength: 20,
+            minLength: 4,
           },
           {
             value: email,
             name: 'email',
+            type: 'string',
+            pattern: /^\w+@\w+\.\w+/,
+            maxLength: 100,
+            minLength: 3,
+          },
+          {
+            value: password,
+            name: 'password',
+            type: 'string',
+            minLength: 4,
+            maxLength: 100,
+          },
+          {
+            value: profileType,
+            name: 'profileType',
+            type: 'string',
+            pattern: /(client|master)/,
           },
         ],
+      });
+
+      const newUser = await UserService.register({
+        username,
+        email,
+        password,
+        profileType,
       });
 
       res.send('OK');
@@ -49,7 +77,7 @@ class AuthController implements Controller {
     }
   }
 
-  private logIn(req: Request, res: Response) {
+  async logIn(req: Request, res: Response) {
     try {
       console.log(req, res);
     } catch (e) {
@@ -57,7 +85,7 @@ class AuthController implements Controller {
     }
   }
 
-  private logOut(req: Request, res: Response) {
+  async logOut(req: Request, res: Response) {
     try {
       console.log(req, res);
     } catch (e) {
@@ -65,7 +93,7 @@ class AuthController implements Controller {
     }
   }
 
-  private withGoogle(req: Request, res: Response) {
+  async withGoogle(req: Request, res: Response) {
     try {
       console.log(req, res);
     } catch (e) {
