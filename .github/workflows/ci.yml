@@ -39,6 +39,8 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: 1234
           POSTGRES_DB: appointment_test
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         ports:
           - 5432:5432
 
