@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import AuthError from '../errors/auth.error';
 import AuthService from './auth.service';
 import { UserModel } from '../db/models';
+import { ITokens } from './auth.service';
 
 interface IRegister {
   username: string;
@@ -18,12 +19,16 @@ interface ILogIn {
 }
 
 interface IUserService {
+  findUserByUsername(username: string): Promise<UserModel | null>
+
+  findUserByEmail(email: string): Promise<UserModel | null>
+
   register({
     username,
     email,
     password,
     profileType,
-  }: IRegister): any;
+  }: IRegister): Promise<ITokens>;
 
   logIn({
     username,
@@ -40,6 +45,11 @@ interface IUserService {
  * User service
  */
 class UserService implements IUserService {
+  /**
+   * Find user by email
+   * @param {string} email User email to find
+   * @returns {UserModel | null} User if exists
+   */
   async findUserByEmail(email: string) {
     return UserModel.findOne({
       raw: true,
@@ -49,6 +59,11 @@ class UserService implements IUserService {
     });
   }
 
+  /**
+   * Find user by username
+   * @param username Username to find
+   * @returns {UserModel | null} User if exists
+   */
   async findUserByUsername(username: string) {
     return UserModel.findOne({
       raw: true,
@@ -58,6 +73,11 @@ class UserService implements IUserService {
     });
   }
 
+  /**
+   * Try to register the user, if possible make it and return the tokens
+   * @param {IRegister} into Information required to register an user
+   * @returns {ITokens} Return tokens
+   */
   async register({
     username,
     email,
@@ -86,13 +106,17 @@ class UserService implements IUserService {
       profileType,
     });
 
+    // Generate tokens
     const tokens = await AuthService.generateTokens({
       id: newUser.id,
       username,
       email,
     });
 
+    // Save tokens
     AuthService.saveTokens(tokens, newUser.id, deviceName);
+
+    return tokens;
   }
 
   async logIn({
