@@ -1,37 +1,39 @@
 import bcrypt from 'bcrypt';
 import AuthError from '../errors/auth.error';
+import AuthService from './auth.service';
 import { UserModel } from '../db/models';
 
 interface IRegister {
-  username: string,
-  email: string,
-  password: string,
-  profileType: 'client' | 'master',
+  username: string;
+  email: string;
+  password: string;
+  profileType: 'client' | 'master';
+  deviceName: string;
 }
 
 interface ILogIn {
-  username?: string,
-  email?: string,
-  password: string,
+  username?: string;
+  email?: string;
+  password: string;
 }
 
 interface IUserService {
-  register: ({
+  register({
     username,
     email,
     password,
     profileType,
-  }: IRegister) => any;
+  }: IRegister): any;
 
-  logIn: ({
+  logIn({
     username,
     email,
     password,
-  }: ILogIn) => any;
+  }: ILogIn): any;
 
-  logOut: () => any;
+  logOut(): any;
 
-  withGoogle: () => any;
+  withGoogle(): any;
 }
 
 /**
@@ -61,6 +63,7 @@ class UserService implements IUserService {
     email,
     password,
     profileType,
+    deviceName,
   }: IRegister) {
     // Check if email already not exists
     if (await this.findUserByEmail(email)) {
@@ -83,7 +86,13 @@ class UserService implements IUserService {
       profileType,
     });
 
-    console.log(newUser);
+    const tokens = await AuthService.generateTokens({
+      id: newUser.id,
+      username,
+      email,
+    });
+
+    AuthService.saveTokens(tokens, newUser.id, deviceName);
   }
 
   async logIn({
