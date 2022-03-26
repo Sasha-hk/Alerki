@@ -19,6 +19,7 @@ class UserModel extends Model implements IUser {
     this.init({
       username: {
         type: DataTypes.STRING(20),
+        allowNull: false,
         unique: true,
       },
       firstName: {
@@ -29,6 +30,7 @@ class UserModel extends Model implements IUser {
       },
       email: {
         type: DataTypes.STRING(100),
+        allowNull: false,
         unique: true,
       },
       phoneNumber: {
@@ -40,6 +42,7 @@ class UserModel extends Model implements IUser {
       },
       profileType: {
         type: DataTypes.ENUM('client', 'master'),
+        allowNull: false,
         defaultValue: 'client',
       },
       banned: {

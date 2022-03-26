@@ -19,17 +19,23 @@ class AuthModel extends Model implements AuthInterface {
 
   public static initialize(sequelize: Sequelize) {
     this.init({
+      userID: {
+        type: DataTypes.NUMBER,
+        allowNull: false,
+      },
+      deviceName: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
       refreshToken: {
         type: DataTypes.STRING(1024),
+        allowNull: false,
       },
       googleAccessToken: {
         type: DataTypes.STRING(1024),
       },
       googleRefreshToken: {
         type: DataTypes.STRING(1024),
-      },
-      deviceName: {
-        type: DataTypes.STRING(50),
       },
     }, {
       tableName: 'AuthData',
