@@ -7,7 +7,7 @@ interface ITokenizeUser {
   email: string;
 }
 
-interface ITokens {
+export interface ITokens {
   accessToken: string;
   refreshToken: string;
 }
