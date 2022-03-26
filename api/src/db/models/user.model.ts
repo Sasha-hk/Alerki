@@ -33,6 +33,7 @@ class UserModel extends Model implements UserInterface {
     this.init({
       username: {
         type: DataTypes.STRING(20),
+        unique: true,
       },
       firstName: {
         type: DataTypes.STRING(30),
@@ -40,8 +41,13 @@ class UserModel extends Model implements UserInterface {
       lastName: {
         type: DataTypes.STRING(30),
       },
+      email: {
+        type: DataTypes.STRING(100),
+        unique: true,
+      },
       phoneNumber: {
         type: DataTypes.STRING(12),
+        unique: true,
       },
       password: {
         type: DataTypes.STRING(1024),
