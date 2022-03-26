@@ -20,7 +20,7 @@ class AuthModel extends Model implements AuthInterface {
   public static initialize(sequelize: Sequelize) {
     this.init({
       userID: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       deviceName: {
