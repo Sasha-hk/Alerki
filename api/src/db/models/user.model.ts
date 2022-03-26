@@ -32,25 +32,27 @@ class UserModel extends Model implements UserInterface {
   public static initialize(sequelize: Sequelize) {
     this.init({
       username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(20),
       },
       firstName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
       },
       lastName: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
       },
       phoneNumber: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(12),
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1024),
       },
       profileType: {
         type: DataTypes.ENUM('client', 'master'),
+        defaultValue: 'client',
       },
       banned: {
         type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     }, {
       tableName: 'Users',
