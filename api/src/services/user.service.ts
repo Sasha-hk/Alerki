@@ -74,9 +74,9 @@ class UserService implements IUserService {
   }
 
   /**
-   * Try to register the user, if possible make it and return the tokens
+   * Try to register the user, if possible make it and return new user and the tokens
    * @param {IRegister} into Information required to register an user
-   * @returns {ITokens} Return tokens
+   * @returns {object} Return user and tokens
    */
   async register({
     username,
@@ -114,9 +114,12 @@ class UserService implements IUserService {
     });
 
     // Save tokens
-    AuthService.saveTokens(tokens, newUser.id, deviceName);
+    AuthService.saveToken(tokens.refreshToken, newUser.id, deviceName);
 
-    return tokens;
+    return {
+      user: newUser,
+      ...tokens,
+    };
   }
 
   async logIn({
