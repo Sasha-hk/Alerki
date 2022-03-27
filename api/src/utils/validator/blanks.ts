@@ -1,4 +1,4 @@
-const username = (username: string) => ({
+const usernameField = (username: string) => ({
   value: username,
   name: 'username',
   type: 'string',
@@ -6,7 +6,7 @@ const username = (username: string) => ({
   minLength: 4,
 });
 
-const email = (email: string) => ({
+const emailField = (email: string) => ({
   value: email,
   name: 'email',
   type: 'string',
@@ -15,7 +15,7 @@ const email = (email: string) => ({
   minLength: 3,
 });
 
-const password = (password: string) => ({
+const passwordField = (password: string) => ({
   value: password,
   name: 'password',
   required: true,
@@ -24,7 +24,7 @@ const password = (password: string) => ({
   maxLength: 100,
 });
 
-const profileType = (profileType: string) => ({
+const profileTypeField = (profileType: string) => ({
   value: profileType,
   name: 'profileType',
   type: 'string',
@@ -32,8 +32,8 @@ const profileType = (profileType: string) => ({
 });
 
 export default {
-  username,
-  email,
-  profileType,
-  password,
+  usernameField,
+  emailField,
+  profileTypeField,
+  passwordField,
 };
