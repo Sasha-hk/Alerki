@@ -6,10 +6,19 @@ import UserService from '../services/user.service';
 import getDeviceName from '../utils/deviceName';
 import PrivateUserDto from '../utils/dto/private-user.dto';
 
+interface IAuthController extends Controller {
+  register(req: Request, res: Response): any;
+  logIn(req: Request, res: Response): any;
+  logOut(req: Request, res: Response): any;
+  withGoogle(req: Request, res: Response): any;
+  getDevices(req: Request, res: Response): any;
+  deleteDevice(req: Request, res: Response): any;
+}
+
 /**
  * Implements authentication logic
  */
-class AuthController implements Controller {
+class AuthController implements IAuthController {
   public path = '/auth';
   public router = Router();
 
@@ -106,6 +115,22 @@ class AuthController implements Controller {
   }
 
   async withGoogle(req: Request, res: Response) {
+    try {
+      console.log(req, res);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async getDevices(req: Request, res: Response) {
+    try {
+      console.log(req, res);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async deleteDevice(req: Request, res: Response) {
     try {
       console.log(req, res);
     } catch (e) {
