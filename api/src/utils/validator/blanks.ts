@@ -1,4 +1,6 @@
-const usernameField = (username: string) => ({
+import { IValidateItem } from '../../interfaces/validator.interface';
+
+export const usernameField = (username: string): IValidateItem => ({
   value: username,
   name: 'username',
   type: 'string',
@@ -6,7 +8,7 @@ const usernameField = (username: string) => ({
   minLength: 4,
 });
 
-const emailField = (email: string) => ({
+export const emailField = (email: string): IValidateItem => ({
   value: email,
   name: 'email',
   type: 'string',
@@ -15,7 +17,7 @@ const emailField = (email: string) => ({
   minLength: 3,
 });
 
-const passwordField = (password: string) => ({
+export const passwordField = (password: string): IValidateItem => ({
   value: password,
   name: 'password',
   required: true,
@@ -24,16 +26,9 @@ const passwordField = (password: string) => ({
   maxLength: 100,
 });
 
-const profileTypeField = (profileType: string) => ({
+export const profileTypeField = (profileType: string): IValidateItem => ({
   value: profileType,
   name: 'profileType',
   type: 'string',
   pattern: /(client|master)/,
 });
-
-export default {
-  usernameField,
-  emailField,
-  profileTypeField,
-  passwordField,
-};
