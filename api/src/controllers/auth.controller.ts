@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
-import Validator from '../utils/validator';
+import Validator, { fields } from '../utils/validator';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
 import getDeviceName from '../utils/deviceName';
@@ -43,34 +43,10 @@ class AuthController implements IAuthController {
 
       Validator({
         all: [
-          {
-            value: username,
-            name: 'username',
-            type: 'string',
-            maxLength: 20,
-            minLength: 4,
-          },
-          {
-            value: email,
-            name: 'email',
-            type: 'string',
-            pattern: /^\w+@\w+\.\w+/,
-            maxLength: 100,
-            minLength: 3,
-          },
-          {
-            value: password,
-            name: 'password',
-            type: 'string',
-            minLength: 4,
-            maxLength: 100,
-          },
-          {
-            value: profileType,
-            name: 'profileType',
-            type: 'string',
-            pattern: /(client|master)/,
-          },
+          { ...fields.usernameField(username) },
+          { ...fields.emailField(email) },
+          { ...fields.profileTypeField(profileType) },
+          { ...fields.passwordField(password) },
         ],
       });
 
@@ -93,16 +69,32 @@ class AuthController implements IAuthController {
         ...userDto,
       });
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }
 
   async logIn(req: Request, res: Response) {
     try {
-      console.log(req, res);
-    } catch (e) {
-      console.log(e);
+      const {
+        username,
+        email,
+        password,
+      } = req.body;
+
+      Validator({
+        all: [
+          { ...fields.passwordField(password) },
+        ],
+      });
+
+      Validator({
+        atLeastOne: [
+          { ...fields.usernameField(username) },
+          { ...fields.emailField(email) },
+        ],
+      });
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 
