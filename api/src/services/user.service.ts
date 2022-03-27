@@ -13,9 +13,15 @@ interface IRegister {
 }
 
 interface ILogIn {
-  username?: string;
-  email?: string;
   password: string;
+  deviceName: string,
+}
+interface ILogInByUsername extends ILogIn {
+  username: string;
+}
+
+interface ILogInByEmail extends ILogIn {
+  email: string;
 }
 
 interface IUserService {
@@ -30,11 +36,9 @@ interface IUserService {
     profileType,
   }: IRegister): Promise<ITokens>;
 
-  logIn({
-    username,
-    email,
-    password,
-  }: ILogIn): any;
+  logInByUsername({ username, password, deviceName }: ILogInByUsername): any;
+
+  logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
 
   logOut(): any;
 
@@ -122,11 +126,59 @@ class UserService implements IUserService {
     };
   }
 
-  async logIn({
-    username,
-    email,
-    password,
-  }: ILogIn) {}
+  async logInByUsername({ username, password, deviceName }: ILogInByUsername) {
+    const candidate = await this.findUserByUsername(username);
+
+    if (!candidate) {
+      throw AuthError.UsernameNotExists();
+    }
+
+    if (!bcrypt.compareSync(password, candidate.password)) {
+      throw AuthError.BadPassword();
+    }
+
+    // Generate tokens
+    const tokens = await AuthService.generateTokens({
+      id: candidate.id,
+      username: candidate.username,
+      email: candidate.email,
+    });
+
+    // Save tokens
+    AuthService.saveToken(tokens.refreshToken, candidate.id, deviceName);
+
+    return {
+      user: candidate,
+      ...tokens,
+    };
+  }
+
+  async logInByEmail({ email, password, deviceName }: ILogInByEmail) {
+    const candidate = await this.findUserByEmail(email);
+
+    if (!candidate) {
+      throw AuthError.UsernameNotExists();
+    }
+
+    if (!bcrypt.compareSync(password, candidate.password)) {
+      throw AuthError.BadPassword();
+    }
+
+    // Generate tokens
+    const tokens = await AuthService.generateTokens({
+      id: candidate.id,
+      username: candidate.username,
+      email: candidate.email,
+    });
+
+    // Save tokens
+    AuthService.saveToken(tokens.refreshToken, candidate.id, deviceName);
+
+    return {
+      user: candidate,
+      ...tokens,
+    };
+  }
 
   async logOut() {}
 

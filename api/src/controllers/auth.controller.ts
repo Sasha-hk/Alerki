@@ -93,6 +93,21 @@ class AuthController implements IAuthController {
           { ...fields.emailField(email) },
         ],
       });
+
+      const deviceName = getDeviceName(req);
+
+      const userData = email
+        ? await UserService.logInByEmail({ email, password, deviceName })
+        : await UserService.logInByUsername({ username, password, deviceName });
+
+      const userDto = new PrivateUserDto(userData.user);
+
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+      res.cookie('accessToken', userData.accessToken, { maxAge: 30 * 60 * 60 * 1000 });
+
+      res.json({
+        ...userDto,
+      });
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e?.error);
     }
