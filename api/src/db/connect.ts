@@ -23,21 +23,24 @@ class Database implements IDatabase {
   /**
    * Connect to database
    */
-  public connect() {
+  public async connect() {
     if (this.env === 'dev') {
-      sequelize.sync({
+      await sequelize.sync({
         logging: false,
+      }).then(() => {
+        console.log('Connected to development database');
       });
-      console.log('Connected to development database');
     } else if (this.env === 'test') {
-      sequelize.sync({
+      await sequelize.sync({
         force: true,
         logging: false,
+      }).then(() => {
+        console.log('Connected to testing database');
       });
-      console.log('Connected to testing database');
     } else if (this.env === 'prod') {
-      sequelize.sync({ logging: false });
-      console.log('Connected to production database');
+      await sequelize.sync({ logging: false }).then(() => {
+        console.log('Connected to production database');
+      });
     }
   }
 }
