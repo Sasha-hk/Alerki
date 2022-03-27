@@ -1,6 +1,7 @@
 import ValidationError from '../../errors/validation.error';
 import { IErrorItem } from '../../interfaces/error.interface';
 import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
+export * as fields from './blanks';
 import {
   checkExists,
   checkRequired,
