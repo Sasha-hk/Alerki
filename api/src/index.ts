@@ -1,8 +1,12 @@
 import App from './app';
 import Database from './db/connect';
 
-const db = new Database();
-const app = new App();
+async function start() {
+  const db = new Database();
+  const app = new App();
 
-db.connect();
-app.listen();
+  await db.connect();
+  app.listen();
+}
+
+start();

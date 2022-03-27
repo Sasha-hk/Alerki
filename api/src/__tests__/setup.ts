@@ -1,7 +1,7 @@
 import Database from '../db/connect';
 
-export default function setup() {
+export default async function setup() {
   const db = new Database();
 
-  db.connect();
+  await db.connect();
 }
