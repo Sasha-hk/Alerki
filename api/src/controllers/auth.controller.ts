@@ -1,4 +1,4 @@
-import { ITokenizeUser } from './../services/auth.service';
+import AuthService, { ITokenizeUser } from './../services/auth.service';
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
 import Validator, { fields } from '../utils/validator';
@@ -6,6 +6,7 @@ import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
 import getDeviceName from '../utils/deviceName';
 import PrivateUserDto from '../utils/dto/private-user.dto';
+import DevicesDto from '../utils/dto/devices.dto';
 import isAuthenticated, { AuthRequest } from '../middlewares/isAuthenticated';
 
 interface IAuthController extends Controller {
@@ -36,6 +37,11 @@ class AuthController implements IAuthController {
       this.logOut,
     );
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
+    this.router.get(
+      `${this.path}/devices`,
+      isAuthenticated,
+      this.getDevices,
+    );
   }
 
   async register(req: Request, res: Response) {
@@ -156,9 +162,17 @@ class AuthController implements IAuthController {
     }
   }
 
-  async getDevices(req: Request, res: Response) {
+  async getDevices(req: AuthRequest, res: Response) {
     try {
-      console.log(req, res);
+      const {
+        id,
+      } = req.token!;
+
+      const devices = await AuthService.findAllByUserID(id);
+
+      const devicesDto = new DevicesDto(devices);
+
+      res.json(devices).end();
     } catch (e: IError | any) {
       console.log(e);
       res.status(e?.status || 500).json(e?.error);
