@@ -140,6 +140,10 @@ describe('Authentication functionality', () => {
         ]);
 
       expect(r.statusCode).toEqual(200);
+
+      const cookies = getCookies(r.headers);
+
+      console.log(cookies);
     });
   });
 });
