@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
-    "test:unit": "export $(cat ../docker/.env.test | xargs) && jest",
+    "test": "export $(cat ../docker/.env.test | xargs) && jest",
     "makemigrations": "npx sequelize-mig migration:make -n",
     "migrate": "npx sequelize-cli db:migrate"
   },
