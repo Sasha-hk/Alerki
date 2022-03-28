@@ -16,14 +16,21 @@ export interface ITokens {
 
 interface IDeleteToken extends ILogOut {}
 
+interface IDeleteAuthData {
+  id: number;
+  userID: number;
+}
+
 interface IAuthService {
   findAllByUserID(userID: number): Promise<AuthModel[]>;
   findOneByUserID(userID: number): Promise<AuthModel | null>;
+  findOneByID(id: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: number, deviceName: string): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
   validateRefreshToken(refreshToken: string): ITokenizeUser;
   deleteToken({ userID, deviceName, refreshToken }: IDeleteToken): void;
+  deleteAuthData({ id, userID }: IDeleteAuthData): void;
 }
 
 /**
@@ -58,6 +65,25 @@ class AuthService implements IAuthService {
     });
   }
 
+  /**
+   * Find one auth data by id
+   * @param id Auth data id
+   * @returns {AuthModel | null} Auth data if exists
+   */
+  async findOneByID(id: number): Promise<AuthModel | null> {
+    return AuthModel.findOne({
+      raw: true,
+      where: {
+        id,
+      },
+    });
+  }
+
+  /**
+   * Generate access and refresh tokens
+   * @param {ITokenizeUser} object Data required to generate token
+   * @returns {ITokens} Access and refresh tokens
+   */
   async generateTokens({
     id,
     username,
@@ -161,6 +187,21 @@ class AuthService implements IAuthService {
         userID,
         deviceName,
         refreshToken,
+      },
+    });
+  }
+
+  async deleteAuthData({ id, userID }: IDeleteAuthData) {
+    const candidate = await this.findOneByUserID(id);
+
+    if (!candidate) {
+      throw AuthError.AuthDataNotExists();
+    }
+
+    AuthModel.destroy({
+      where: {
+        id,
+        userID,
       },
     });
   }

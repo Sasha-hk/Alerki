@@ -31,17 +31,10 @@ class AuthController implements IAuthController {
   constructor() {
     this.router.post(`${this.path}/register`, this.register);
     this.router.post(`${this.path}/log-in`, this.logIn);
-    this.router.get(
-      `${this.path}/log-out`,
-      isAuthenticated,
-      this.logOut,
-    );
+    this.router.get(`${this.path}/log-out`, isAuthenticated, this.logOut);
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
-    this.router.get(
-      `${this.path}/devices`,
-      isAuthenticated,
-      this.getDevices,
-    );
+    this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
+    this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
   }
 
   async register(req: Request, res: Response) {
@@ -178,9 +171,15 @@ class AuthController implements IAuthController {
     }
   }
 
-  async deleteDevice(req: Request, res: Response) {
+  async deleteDevice(req: AuthRequest, res: Response) {
     try {
-      console.log(req, res);
+      const {
+        id,
+      } = req.params;
+
+      await AuthService.deleteAuthData({ id: Number(id), userID: req.token?.id! });
+
+      res.sendStatus(200);
     } catch (e: IError | any) {
       console.log(e);
       res.status(e?.status || 500).json(e?.error);
