@@ -122,4 +122,24 @@ describe('Authentication functionality', () => {
       expect(r.statusCode).toEqual(400);
     });
   });
+
+  describe('test log-out endpoint', () => {
+    it('should not log-out user without tokens', async () => {
+      const r = await request(app)
+        .get('/auth/log-out');
+
+      expect(r.statusCode).toEqual(401);
+    });
+
+    it('should log-out user without tokens', async () => {
+      const r = await request(app)
+        .get('/auth/log-out')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(200);
+    });
+  });
 });
