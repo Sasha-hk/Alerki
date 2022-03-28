@@ -17,7 +17,8 @@ export interface ITokens {
 interface IDeleteToken extends ILogOut {}
 
 interface IAuthService {
-  findByUserID(userID: number): Promise<AuthModel | null>;
+  findAllByUserID(userID: number): Promise<AuthModel[]>;
+  findOneByUserID(userID: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: number, deviceName: string): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
@@ -29,7 +30,26 @@ interface IAuthService {
  * Authentication / authorization service
  */
 class AuthService implements IAuthService {
-  async findByUserID(userID: number): Promise<AuthModel | null> {
+  /**
+   * Find all auth data by user id
+   * @param userID User id
+   * @returns {AuthModel[]} Auth data array
+   */
+  async findAllByUserID(userID: number): Promise<AuthModel[]> {
+    return AuthModel.findAll({
+      raw: true,
+      where: {
+        userID,
+      },
+    });
+  }
+
+  /**
+   * Find one auth data by user id
+   * @param userID User id
+   * @returns {AuthModel[]} Auth data
+   */
+  async findOneByUserID(userID: number): Promise<AuthModel | null> {
     return AuthModel.findOne({
       raw: true,
       where: {
