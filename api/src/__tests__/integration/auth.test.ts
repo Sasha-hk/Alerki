@@ -78,7 +78,6 @@ describe('Authentication functionality', () => {
         ]);
 
       expect(r.statusCode).toEqual(200);
-      console.log(r.body);
     });
   });
 
@@ -153,6 +152,9 @@ describe('Authentication functionality', () => {
       expect(r.statusCode).toEqual(200);
 
       const cookies = getCookies(r);
+
+      expect(cookies.refreshToken).toEqual('');
+      expect(cookies.accessToken).toEqual('');
     });
   });
 });
