@@ -4,23 +4,22 @@ import IError from '../interfaces/error.interface';
 import AuthService, { ITokenizeUser } from '../services/auth.service';
 
 export interface AuthenticatedRequest extends Request {
-  token: ITokenizeUser;
+  token?: ITokenizeUser | null;
 }
 
 export default async function isAuthenticated(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   try {
-    console.log('middleware is run');
     const accessToken = req.cookies;
 
     if (!accessToken) {
       throw AuthError.Unauthorized();
     }
 
-    const decoded = AuthService.validateAccessToken(accessToken);
+    const decoded = AuthService.validateAccessToken(accessToken) as ITokenizeUser;
 
-    req.push({ token: decoded });
+    req.token = decoded || null;
 
-    next(req);
+    next();
   } catch (e: IError | any) {
     res.sendStatus(e?.status || 500).json(e?.errors);
   }
