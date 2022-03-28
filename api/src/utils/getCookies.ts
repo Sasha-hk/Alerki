@@ -1,22 +1,19 @@
-const shapeFlags = (flags: string[]) =>
-  flags.reduce((shapedFlags, flag: string) => {
-    const [flagName, rawValue] = flag.split('=');
-    const value = rawValue ? rawValue.replace('', '') : true;
-    return { ...shapedFlags, [flagName]: value };
-  }, {});
+interface ICookies {
+  [key: string]: string;
+}
 
-const extractCookies = (headers: any) => {
-  const cookies = headers['set-cookie'];
+const getCookies = (response: any) => {
+  const setCookiesHeder = response['set-cookie'] ? response['set-cookie'] : response.headers['set-cookie'];
+  const cookies: ICookies = {};
 
-  if (cookies) {
-    return cookies.reduce((shapedCookies: any, cookieString: string) => {
-      const [rawCookie, ...flags] = cookieString.split(' ');
-      const [cookieName, value] = rawCookie.split('=');
-      return { ...shapedCookies, [cookieName]: { value, flags: shapeFlags(flags) } };
-    }, {});
+  if (setCookiesHeder) {
+    setCookiesHeder.forEach((cookie: string) => {
+      const parsed = cookie.split(';')[0].split('=');
+      cookies[parsed[0]] = parsed[1];
+    });
   }
 
-  return null;
+  return cookies;
 };
 
-export default extractCookies;
+export default getCookies;
