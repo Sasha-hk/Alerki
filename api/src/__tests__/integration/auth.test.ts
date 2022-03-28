@@ -34,13 +34,13 @@ describe('Authentication functionality', () => {
 
       expect(r.status).toEqual(200);
 
-      const cookies = getCookies(r.headers);
+      const cookies = getCookies(r);
 
-      expect(cookies?.accessToken?.value).toBeTruthy();
-      expect(cookies?.refreshToken?.value).toBeTruthy();
+      expect(cookies?.accessToken).toBeTruthy();
+      expect(cookies?.refreshToken).toBeTruthy();
 
-      user.accessToken = cookies.accessToken.value;
-      user.refreshToken = cookies.refreshToken.value;
+      user.accessToken = cookies.accessToken;
+      user.refreshToken = cookies.refreshToken;
     });
 
     it('should not register user without any data', async () => {
@@ -79,13 +79,13 @@ describe('Authentication functionality', () => {
 
       expect(r.statusCode).toEqual(200);
 
-      const cookies = getCookies(r.headers);
+      const cookies = getCookies(r);
 
-      expect(cookies?.accessToken?.value).toBeTruthy();
-      expect(cookies?.refreshToken?.value).toBeTruthy();
+      expect(cookies?.accessToken).toBeTruthy();
+      expect(cookies?.refreshToken).toBeTruthy();
 
-      user.accessToken = cookies.accessToken.value;
-      user.refreshToken = cookies.refreshToken.value;
+      user.accessToken = cookies.accessToken;
+      user.refreshToken = cookies.refreshToken;
     });
 
     it('should not log-in user with bad password', async () => {
@@ -141,7 +141,7 @@ describe('Authentication functionality', () => {
 
       expect(r.statusCode).toEqual(200);
 
-      const cookies = getCookies(r.headers);
+      const cookies = getCookies(r);
     });
   });
 });
