@@ -7,16 +7,20 @@ Table of contents:
   - [Database](#database)
     - [Docker](#docker)
     - [Native environment](#native-environment)
-    - [PostgresSQL installation](#postgressql-installation)
-    - [Create database](#create-database)
+      - [PostgresSQL installation](#postgressql-installation)
+      - [Create database](#create-database)
   - [Create .env files](#create-env-files)
+  - [Development mode](#development-mode)
+  - [Testing mode](#testing-mode)
+
+Here you can find guide how to configure application for development and testing, but not for production mode.
 
 ## Install packages
 
 Install linter and husky, run it in root of the project:
 
 ```sh
-yarn install && yarn prepare
+yarn install
 ```
 
 Install API packages:
@@ -36,20 +40,37 @@ yarn install
 
 ## Database
 
-We develop in two environments:
-
-- Docker
-- native environment
+You can use Docker of native database, but we recommend to use Docker. See down below how to use Docker or native environment. Also you will need to create .env files, see how to make it below.
 
 ### Docker
 
-See soon...
+Install Docker on your computer. You can download it [here](https://www.docker.com/ "Docker official website")
+
+In root of the project install packages:
+
+```sh
+yarn install
+```
+
+And run the following command:
+
+```sh
+yarn start-dev-db
+```
+
+Now you started development database in Docker
+
+To start testing database run this:
+
+```sh
+yarn start-test-db
+```
 
 ### Native environment
 
 You need to install [PostgreSQL](https://www.postgresql.org/ "PostgreSQL official website").
 
-### PostgresSQL installation
+#### PostgresSQL installation
 
 One of the possible options:
 
@@ -76,7 +97,7 @@ Mar 20 22:57:58 username systemd[1]: Starting PostgreSQL RDBMS...
 Mar 20 22:57:58 username systemd[1]: Finished PostgreSQL RDBMS.
 ```
 
-### Create database
+#### Create database
 
 Connect to postgresql:
 
@@ -112,11 +133,6 @@ grant all privileges on database appointment_test to root;
 grant all privileges on database appointment_prod to root;
 ```
 
-Now you have user:
-
-- username: root
-- password: 1234
-
 ## Create .env files
 
 In root of the project run:
@@ -124,26 +140,64 @@ In root of the project run:
 ```sh
 cd docker
 touch .env.dev
-touch .env.test
-touch .env.prod
 ```
 
-According to the previously created user, and .env.template create .env.dev and .env.prod files:
+Put into .env.dev file the following variables:
 
 ```sh
-DB_MODE_USER=root
-DB_MODE_PASSWORD=1234
-DB_MODE_DATABASE=appointment_mode
-DB_MODE_HOST=localhost
-DB_MODE_DIALECT=postgres
-```
+API_PORT=3001
+FRONTEND_PORT=3000
 
-In result you need to get something like this for dev mode:
+API_URL="http://localhost:${API_PORT}"
+CLIENT_HOST="http://localhost:${FRONTEND_PORT}"
 
-```sh
-DB_DEV_USERNAME=root
+DB_DEV_USER=root
 DB_DEV_PASSWORD=1234
 DB_DEV_DATABASE=appointment_dev
 DB_DEV_HOST=localhost
+DB_DEV_PORT=5552
 DB_DEV_DIALECT=postgres
+
+JWT_ACCESS_SECRET=secret
+JWT_REFRESH_SECRET=secret
+
+GOOGLE_CLIENT_ID=id
+GOOGLE_CLIENT_SECRET=secret
+GOOGLE_REDIRECT_URL="http://localhost:${CLIENT_HOST}/"
+
+NODE_ENV=dev
+```
+
+> The example variables contains in [.env.template](../docker/.env.template) file.
+
+## Development mode
+
+To start development the API you need to start database:
+
+```sh
+yarn start-dev-db
+```
+
+Now you cat start development, run this:
+
+```sh
+cd api
+yarn dev
+```
+
+Ready!
+
+## Testing mode
+
+To start testing you need to start database, in the root of the project run:
+
+```sh
+yarn start-test-db
+```
+
+And start tests:
+
+```sh
+cd api
+yarn test
 ```
