@@ -172,9 +172,8 @@ class AuthController implements IAuthController {
 
       const devicesDto = new DevicesDto(devices);
 
-      res.json(devices).end();
+      res.json(devicesDto.devices).end();
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }

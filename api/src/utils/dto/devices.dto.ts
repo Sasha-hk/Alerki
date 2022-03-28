@@ -17,6 +17,8 @@ class DevicesDto {
    * @param {AuthModel} authData User date
    */
   constructor(authData: AuthModel[]) {
+    this.devices = [];
+
     if (authData.length !== 0) {
       for (const i of authData) {
         this.devices.push({
