@@ -20,8 +20,8 @@ interface IAuthService {
   findByUserID(userID: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: number, deviceName: string): any;
-  validateAccessToken(accessToken: string): any;
-  validateRefreshToken(refreshToken: string): any;
+  validateAccessToken(accessToken: string): ITokenizeUser;
+  validateRefreshToken(refreshToken: string): ITokenizeUser;
   deleteToken({ userID, deviceName, refreshToken }: IDeleteToken): void;
 }
 
@@ -106,7 +106,7 @@ class AuthService implements IAuthService {
     try {
       const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET as string);
 
-      return decoded;
+      return decoded as ITokenizeUser;
     } catch (e) {
       throw AuthError.BadAccessToken();
     }
@@ -116,7 +116,7 @@ class AuthService implements IAuthService {
     try {
       const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
 
-      return decoded;
+      return decoded as ITokenizeUser;
     } catch (e) {
       throw AuthError.BadAccessToken();
     }
