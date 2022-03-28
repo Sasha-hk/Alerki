@@ -100,7 +100,7 @@ class AuthError extends HttpError {
    * @returns {HttpError} Error
    */
   static AuthDataNotExists(): HttpError {
-    throw new HttpError(400, 'Auth data not exists', { error: 'auth data nto exists' });
+    throw new HttpError(404, 'Auth data not exists', { error: 'auth data nto exists' });
   }
 }
 
