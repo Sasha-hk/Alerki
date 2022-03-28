@@ -94,6 +94,14 @@ class AuthError extends HttpError {
   static NotMaster(): HttpError {
     throw new HttpError(400, 'User is not master', { error: 'user is not a master' });
   }
+
+  /**
+   * Auth data not exists
+   * @returns {HttpError} Error
+   */
+  static AuthDataNotExists(): HttpError {
+    throw new HttpError(400, 'Auth data not exists', { error: 'auth data nto exists' });
+  }
 }
 
 export default AuthError;
