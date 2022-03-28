@@ -1,3 +1,4 @@
+import { ITokenizeUser } from './../services/auth.service';
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
 import Validator, { fields } from '../utils/validator';
@@ -124,38 +125,52 @@ class AuthController implements IAuthController {
         refreshToken,
       } = req.cookies;
 
-      UserService.logOut(refreshToken);
+      const {
+        id,
+      } = req.token!;
+
+      const deviceName = getDeviceName(req);
+
+      UserService.logOut({
+        userID: id,
+        deviceName,
+        refreshToken,
+      });
 
       res.clearCookie('refreshToken');
       res.clearCookie('accessToken');
 
       res.sendStatus(200);
-    } catch (e) {
+    } catch (e: IError | any) {
       console.log(e);
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 
   async withGoogle(req: Request, res: Response) {
     try {
       console.log(req, res);
-    } catch (e) {
+    } catch (e: IError | any) {
       console.log(e);
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 
   async getDevices(req: Request, res: Response) {
     try {
       console.log(req, res);
-    } catch (e) {
+    } catch (e: IError | any) {
       console.log(e);
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 
   async deleteDevice(req: Request, res: Response) {
     try {
       console.log(req, res);
-    } catch (e) {
+    } catch (e: IError | any) {
       console.log(e);
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 }
