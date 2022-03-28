@@ -3,11 +3,11 @@ import AuthError from '../errors/auth.error';
 import IError from '../interfaces/error.interface';
 import AuthService, { ITokenizeUser } from '../services/auth.service';
 
-export interface AuthenticatedRequest extends Request {
+export interface AuthRequest extends Request {
   token?: ITokenizeUser | null;
 }
 
-export default async function isAuthenticated(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export default async function isAuthenticated(req: AuthRequest, res: Response, next: NextFunction) {
   try {
     const accessToken = req.cookies;
 
