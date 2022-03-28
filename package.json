@@ -43,6 +43,11 @@
   },
   "scripts": {
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "------------------------- local database -------------------------": "",
+    "start-dev-db": ". ./docker/db/start-dev.sh",
+    "start-test-db": ". ./docker/db/start-test.sh",
+    "stop-dev-db": ". ./docker/db/stop-dev.sh",
+    "stop-test-db": ". ./docker/db/stop-test.sh"
   }
 }
