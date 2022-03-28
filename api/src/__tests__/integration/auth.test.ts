@@ -2,38 +2,45 @@ import request from 'supertest';
 import App from '../../app';
 import AuthError from '../../errors/auth.error';
 import IError from '../../interfaces/error.interface';
+import getCookies from '../../utils/getCookies';
+import UserModel from '../../interfaces/db/models/user.interface';
 
 const APP = new App();
 const app = APP.getApp();
 
-const user: object = {
+const user = {
   username: 'user',
   email: 'user@user.com',
   profileType: 'client',
   password: 'user',
+  id: 0,
+  firstName: '',
+  lastName: '',
+  phoneNumber: '',
+  pictureID: 0,
+  clientID: 0,
+  masterID: 0,
+  banned: false,
+  accessToken: '',
+  refreshToken: '',
 };
-
-async function wrapAuthError(
-  actions: () => any,
-  callback: (e: IError | any) => any,
-) {
-  try {
-    await actions();
-
-    throw Error('Expected to catch AuthError');
-  } catch (e: IError | any) {
-    callback(e);
-  }
-}
 
 describe('Authentication functionality', () => {
   describe('test register endpoint', () => {
     it('should register user with correct data', async () => {
-      const res = await request(app)
+      const r = await request(app)
         .post('/auth/register')
         .send(user);
 
-      expect(res.status).toEqual(200);
+      expect(r.status).toEqual(200);
+
+      const cookies = getCookies(r.headers);
+
+      expect(cookies?.accessToken?.value).toBeTruthy();
+      expect(cookies?.refreshToken?.value).toBeTruthy();
+
+      user.accessToken = cookies.accessToken.value;
+      user.refreshToken = cookies.refreshToken.value;
     });
 
     it('should not register user without any data', async () => {
@@ -59,6 +66,58 @@ describe('Authentication functionality', () => {
       const r = await request(app)
         .post('/auth/register')
         .send(user);
+
+      expect(r.statusCode).toEqual(400);
+    });
+  });
+
+  describe('test log-in endpoints', () => {
+    it('should log-in the user', async () => {
+      const r = await request(app)
+        .post('/auth/log-in')
+        .send(user);
+
+      expect(r.statusCode).toEqual(200);
+
+      const cookies = getCookies(r.headers);
+
+      expect(cookies?.accessToken?.value).toBeTruthy();
+      expect(cookies?.refreshToken?.value).toBeTruthy();
+
+      user.accessToken = cookies.accessToken.value;
+      user.refreshToken = cookies.refreshToken.value;
+    });
+
+    it('should not log-in user with bad password', async () => {
+      const r = await request(app)
+        .post('/auth/log-in')
+        .send({
+          ...user,
+          password: 'bad password',
+        });
+
+      expect(r.statusCode).toEqual(400);
+    });
+
+    it('should not log-in user with bad email', async () => {
+      const r = await request(app)
+        .post('/auth/log-in')
+        .send({
+          ...user,
+          email: 'bad email',
+        });
+
+      expect(r.statusCode).toEqual(400);
+    });
+
+    it('should not log-in user with bad username', async () => {
+      const r = await request(app)
+        .post('/auth/log-in')
+        .send({
+          ...user,
+          username: 'bad username',
+          email: null,
+        });
 
       expect(r.statusCode).toEqual(400);
     });
