@@ -1,9 +1,6 @@
 import request from 'supertest';
 import App from '../../app';
-import AuthError from '../../errors/auth.error';
-import IError from '../../interfaces/error.interface';
 import getCookies from '../../utils/getCookies';
-import UserModel from '../../interfaces/db/models/user.interface';
 
 const APP = new App();
 const app = APP.getApp();
@@ -68,6 +65,20 @@ describe('Authentication functionality', () => {
         .send(user);
 
       expect(r.statusCode).toEqual(400);
+    });
+  });
+
+  describe('test get devices endpoint', () => {
+    it('should return devices array', async () => {
+      const r = await request(app)
+        .get('/auth/devices')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(200);
+      console.log(r.body);
     });
   });
 
