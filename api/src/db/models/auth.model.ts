@@ -8,6 +8,8 @@ class AuthModel extends Model implements IAuth {
   googleRefreshToken!: string;
   deviceName!: string;
   userID!: number;
+  createdAt!: string;
+  updatedAt!: string;
 
   public static initialize(sequelize: Sequelize) {
     this.init({
