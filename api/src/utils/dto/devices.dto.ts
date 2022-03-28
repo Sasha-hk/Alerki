@@ -1,7 +1,7 @@
 import IAuth from '../../interfaces/db/models/auth.interface';
 import { AuthModel } from '../../db/models';
 
-interface IDevicesDto extends Pick<IAuth, 'id' | 'deviceName' | 'userID'> {
+export interface IDevicesDto extends Pick<IAuth, 'id' | 'deviceName' | 'userID'> {
   createdAt: string;
   updatedAt: string;
 }
