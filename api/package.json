@@ -8,6 +8,7 @@
     "dev": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
     "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles",
+    "build": "tsc --project './tsconfig.json'",
     "makemigrations": "npx sequelize-mig migration:make -n",
     "migrate": "npx sequelize-cli db:migrate"
   },
