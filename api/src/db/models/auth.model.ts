@@ -1,15 +1,7 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
+import IAuth from '../../interfaces/db/models/auth.interface';
 
-export interface AuthInterface {
-  id: number;
-  refreshToken: string;
-  googleAccessToken: string;
-  googleRefreshToken: string;
-  deviceName: string;
-  userID: number;
-}
-
-class AuthModel extends Model implements AuthInterface {
+class AuthModel extends Model implements IAuth {
   id!: number;
   refreshToken!: string;
   googleAccessToken!: string;
