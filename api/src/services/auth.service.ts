@@ -198,12 +198,14 @@ class AuthService implements IAuthService {
       throw AuthError.AuthDataNotExists();
     }
 
-    AuthModel.destroy({
-      where: {
-        id,
-        userID,
-      },
-    });
+    if (candidate.userID === userID) {
+      AuthModel.destroy({
+        where: {
+          id,
+          userID,
+        },
+      });
+    }
   }
 }
 
