@@ -1,6 +1,7 @@
 import request from 'supertest';
 import App from '../../app';
 import getCookies from '../../utils/getCookies';
+import { IDevicesDto } from '../../utils/dto/devices.dto';
 
 const APP = new App();
 const app = APP.getApp();
@@ -21,6 +22,8 @@ const user = {
   accessToken: '',
   refreshToken: '',
 };
+
+let devices: IDevicesDto[] = [];
 
 describe('Authentication functionality', () => {
   describe('test register endpoint', () => {
@@ -72,6 +75,32 @@ describe('Authentication functionality', () => {
     it('should return devices array', async () => {
       const r = await request(app)
         .get('/auth/devices')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(200);
+      expect(r.body.length !== 0).toEqual(true);
+      devices = r.body;
+    });
+  });
+
+  describe('test delete device endpoint', () => {
+    it('should return 404 error', async () => {
+      const r = await request(app)
+        .delete('/auth/device/' + 1000)
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(404);
+    });
+
+    it('should delete device', async () => {
+      const r = await request(app)
+        .delete('/auth/device/' + devices[0].id)
         .set('Cookie', [
           'accessToken=' + user.accessToken,
           'refreshToken=' + user.refreshToken,
