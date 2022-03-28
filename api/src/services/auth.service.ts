@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import AuthError from '../errors/auth.error';
 import { AuthModel } from '../db/models';
+import { ILogOut } from './user.service';
 
 export interface ITokenizeUser {
   id: number;
@@ -13,34 +14,28 @@ export interface ITokens {
   refreshToken: string;
 }
 
+interface IDeleteToken extends ILogOut {}
+
 interface IAuthService {
-  findByDeviceName(deviceName: string): Promise<any>;
+  findByUserID(userID: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: number, deviceName: string): any;
   validateAccessToken(accessToken: string): any;
   validateRefreshToken(refreshToken: string): any;
+  deleteToken({ userID, deviceName, refreshToken }: IDeleteToken): void;
 }
 
 /**
  * Authentication / authorization service
  */
 class AuthService implements IAuthService {
-  async findByDeviceName(deviceName: string): Promise<any> {
+  async findByUserID(userID: number): Promise<AuthModel | null> {
     return AuthModel.findOne({
       raw: true,
       where: {
-        deviceName,
+        userID,
       },
     });
-  }
-
-  async findByRefreshToken(refreshToken: string): Promise<any> {
-    // L return AuthModel.findOne({
-    //   raw: true,
-    //   where: {
-    //     deviceName,
-    //   },
-    // });
   }
 
   async generateTokens({
@@ -125,6 +120,29 @@ class AuthService implements IAuthService {
     } catch (e) {
       throw AuthError.BadAccessToken();
     }
+  }
+
+  async deleteToken({ userID, deviceName, refreshToken }: IDeleteToken) {
+    const candidate = await AuthModel.findOne({
+      raw: true,
+      where: {
+        userID,
+        deviceName,
+        refreshToken,
+      },
+    });
+
+    if (!candidate) {
+      throw AuthError.AuthDataNotExists();
+    }
+
+    AuthModel.destroy({
+      where: {
+        userID,
+        deviceName,
+        refreshToken,
+      },
+    });
   }
 }
 
