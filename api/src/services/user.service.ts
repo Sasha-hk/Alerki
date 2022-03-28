@@ -24,24 +24,24 @@ interface ILogInByEmail extends ILogIn {
   email: string;
 }
 
+export interface ILogOut {
+  userID: number,
+  deviceName: string,
+  refreshToken: string,
+}
+
 interface IUserService {
   findUserByUsername(username: string): Promise<UserModel | null>
-
   findUserByEmail(email: string): Promise<UserModel | null>
-
   register({
     username,
     email,
     password,
     profileType,
   }: IRegister): Promise<ITokens>;
-
   logInByUsername({ username, password, deviceName }: ILogInByUsername): any;
-
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
-
-  logOut(): any;
-
+  logOut({ refreshToken, deviceName, userID }: ILogOut): void;
   withGoogle(): any;
 }
 
@@ -180,7 +180,9 @@ class UserService implements IUserService {
     };
   }
 
-  async logOut() {}
+  async logOut({ userID, deviceName, refreshToken }: ILogOut) {
+    AuthService.deleteToken({ userID, deviceName, refreshToken });
+  }
 
   async withGoogle() {}
 }
