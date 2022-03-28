@@ -5,6 +5,7 @@ import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
 import getDeviceName from '../utils/deviceName';
 import PrivateUserDto from '../utils/dto/private-user.dto';
+import isAuthenticated, { AuthRequest } from '../middlewares/isAuthenticated';
 
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
@@ -28,7 +29,11 @@ class AuthController implements IAuthController {
   constructor() {
     this.router.post(`${this.path}/register`, this.register);
     this.router.post(`${this.path}/log-in`, this.logIn);
-    this.router.get(`${this.path}/log-out`, this.logOut);
+    this.router.get(
+      `${this.path}/log-out`,
+      isAuthenticated,
+      this.logOut,
+    );
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
   }
 
@@ -113,9 +118,18 @@ class AuthController implements IAuthController {
     }
   }
 
-  async logOut(req: Request, res: Response) {
+  async logOut(req: AuthRequest, res: Response) {
     try {
-      console.log(req, res);
+      const {
+        refreshToken,
+      } = req.cookies;
+
+      UserService.logOut(refreshToken);
+
+      res.clearCookie('refreshToken');
+      res.clearCookie('accessToken');
+
+      res.sendStatus(200);
     } catch (e) {
       console.log(e);
     }
