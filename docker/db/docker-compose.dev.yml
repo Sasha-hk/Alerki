@@ -1,0 +1,12 @@
+version: "3.9"
+
+services:
+  postgres:
+    container_name: postgres-dev
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: sequelize_dev
+    ports:
+      - 5433:5432
