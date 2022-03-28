@@ -9,4 +9,4 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: appointment_dev
     ports:
-      - 5552:5432
+      - 5551:5432
