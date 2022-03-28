@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import AuthError from '../errors/auth.error';
 import { AuthModel } from '../db/models';
 
-interface ITokenizeUser {
+export interface ITokenizeUser {
   id: number;
   username: string;
   email: string;
@@ -16,8 +17,8 @@ interface IAuthService {
   findByDeviceName(deviceName: string): Promise<any>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: number, deviceName: string): any;
-  validateAccessToken(): any;
-  validateRefreshToken(): any;
+  validateAccessToken(accessToken: string): any;
+  validateRefreshToken(refreshToken: string): any;
 }
 
 /**
@@ -31,6 +32,15 @@ class AuthService implements IAuthService {
         deviceName,
       },
     });
+  }
+
+  async findByRefreshToken(refreshToken: string): Promise<any> {
+    // L return AuthModel.findOne({
+    //   raw: true,
+    //   where: {
+    //     deviceName,
+    //   },
+    // });
   }
 
   async generateTokens({
@@ -97,9 +107,25 @@ class AuthService implements IAuthService {
     }
   }
 
-  validateAccessToken() {}
+  validateAccessToken(accessToken: string) {
+    try {
+      const decoded = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET as string);
 
-  validateRefreshToken() {}
+      return decoded;
+    } catch (e) {
+      throw AuthError.BadAccessToken();
+    }
+  }
+
+  validateRefreshToken(refreshToken: string) {
+    try {
+      const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET as string);
+
+      return decoded;
+    } catch (e) {
+      throw AuthError.BadAccessToken();
+    }
+  }
 }
 
 export default new AuthService();
