@@ -87,9 +87,20 @@ describe('Authentication functionality', () => {
   });
 
   describe('test delete device endpoint', () => {
+    it('should return 400 error', async () => {
+      const r = await request(app)
+        .delete('/auth/device/bad-token')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(400);
+    });
+
     it('should return 404 error', async () => {
       const r = await request(app)
-        .delete('/auth/device/' + 1000)
+        .delete('/auth/device/00000000-0000-0000-0000-000000000000')
         .set('Cookie', [
           'accessToken=' + user.accessToken,
           'refreshToken=' + user.refreshToken,
