@@ -7,9 +7,8 @@ import UserService from '../services/user.service';
 import getDeviceName from '../utils/deviceName';
 import PrivateUserDto from '../utils/dto/private-user.dto';
 import DevicesDto from '../utils/dto/devices.dto';
-import isAuthenticated, { AuthRequest } from '../middlewares/isAuthenticated';
+import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 import authenticateWithGoogle from '../oauth/google.oauth';
-import { AxiosError } from 'axios';
 
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
