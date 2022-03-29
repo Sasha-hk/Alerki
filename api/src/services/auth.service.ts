@@ -21,12 +21,17 @@ interface IDeleteAuthData {
   userID: number;
 }
 
+interface ISaveTokenOptions {
+  googleRefreshToken: string;
+  googleAccessToken: string;
+}
+
 interface IAuthService {
   findAllByUserID(userID: number): Promise<AuthModel[]>;
   findOneByUserID(userID: number): Promise<AuthModel | null>;
   findOneByID(id: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
-  saveToken(refreshToken: string, userID: number, deviceName: string): any;
+  saveToken(refreshToken: string, userID: number, deviceName: string, options?: ISaveTokenOptions): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
   validateRefreshToken(refreshToken: string): ITokenizeUser;
   deleteToken({ userID, deviceName, refreshToken }: IDeleteToken): void;
@@ -119,7 +124,7 @@ class AuthService implements IAuthService {
     } as ITokens;
   }
 
-  async saveToken(refreshToken: string, userID: number, deviceName: string) {
+  async saveToken(refreshToken: string, userID: number, deviceName: string, options?: ISaveTokenOptions) {
     const candidate = await AuthModel.findOne({
       raw: true,
       where: {
@@ -136,6 +141,7 @@ class AuthService implements IAuthService {
         {
           where: {
             deviceName,
+            ...options,
           },
         },
       );
