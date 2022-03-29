@@ -8,6 +8,8 @@ import getDeviceName from '../utils/deviceName';
 import PrivateUserDto from '../utils/dto/private-user.dto';
 import DevicesDto from '../utils/dto/devices.dto';
 import isAuthenticated, { AuthRequest } from '../middlewares/isAuthenticated';
+import authenticateWithGoogle from '../oauth/google.oauth';
+import { AxiosError } from 'axios';
 
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
@@ -33,6 +35,7 @@ class AuthController implements IAuthController {
     this.router.post(`${this.path}/log-in`, this.logIn);
     this.router.get(`${this.path}/log-out`, isAuthenticated, this.logOut);
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
+    this.router.get(`${this.path}/oauth`, this.oauth);
     this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
     this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
   }
@@ -146,11 +149,45 @@ class AuthController implements IAuthController {
     }
   }
 
-  async withGoogle(req: Request, res: Response) {
+  async oauth(req: Request, res: Response) {
     try {
-      console.log(req, res);
+      const path = 'https://accounts.google.com/o/oauth2/v2/auth?'
+        + 'scope=https://www.googleapis.com/auth/userinfo.profile&'
+        + 'access_type=offline&'
+        + 'include_granted_scopes=true&'
+        + 'response_type=code&'
+        + 'state=state_parameter_passthrough_value&'
+        + 'client_id=' + process.env.GOOGLE_CLIENT_ID + '&'
+        + 'redirect_uri=' + process.env.GOOGLE_REDIRECT_URL;
+
+      console.log(path);
+      console.log(process.env.GOOGLE_REDIRECT_URL);
+
+      res.send(`<a href="${path}">google</a>`);
     } catch (e: IError | any) {
       console.log(e);
+      res.status(e?.status || 500).json(e?.error);
+    }
+  }
+
+  async withGoogle(req: Request, res: Response) {
+    try {
+      const { code } = req.query!;
+
+      const data = await authenticateWithGoogle(code as string);
+
+      const deviceName = getDeviceName(req);
+
+      const userData = await UserService.withGoogle(data, deviceName);
+
+      const userDto = new PrivateUserDto(userData.user);
+
+      res.cookie('refreshToken', userData.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+      res.cookie('accessToken', userData.accessToken, { maxAge: 30 * 60 * 60 * 1000 });
+
+      res.send({ ...userDto });
+    } catch (e: IError | any) {
+      console.log(e.response);
       res.status(e?.status || 500).json(e?.error);
     }
   }
@@ -181,7 +218,6 @@ class AuthController implements IAuthController {
 
       res.sendStatus(200);
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }

@@ -3,6 +3,7 @@ import AuthError from '../errors/auth.error';
 import AuthService from './auth.service';
 import { UserModel } from '../db/models';
 import { ITokens } from './auth.service';
+import { IGoogleResponse } from '../oauth/google.oauth';
 
 interface IRegister {
   username: string;
@@ -42,7 +43,7 @@ interface IUserService {
   logInByUsername({ username, password, deviceName }: ILogInByUsername): any;
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
   logOut({ refreshToken, deviceName, userID }: ILogOut): void;
-  withGoogle(): any;
+  withGoogle(data: IGoogleResponse, deviceName: string): any;
 }
 
 /**
@@ -184,7 +185,51 @@ class UserService implements IUserService {
     AuthService.deleteToken({ userID, deviceName, refreshToken });
   }
 
-  async withGoogle() {}
+  async withGoogle(data: IGoogleResponse, deviceName: string) {
+    const candidate = await this.findUserByEmail(data.decoded.email);
+
+    // If user with the email not exists then create new user
+    if (!candidate) {
+      const userData = data.decoded;
+
+      const newUser = await UserModel.create({
+        username: userData.email.split('@')[0],
+        email: userData.email,
+        profileType: 'client',
+      });
+
+      const tokens = await AuthService.generateTokens({
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      });
+
+      // Save tokens
+      AuthService.saveToken(tokens.refreshToken, newUser.id, deviceName, {
+        googleAccessToken: data.access_token,
+        googleRefreshToken: data.refresh_token,
+      });
+
+      return {
+        user: newUser,
+        ...tokens,
+      };
+    }
+
+    const tokens = await AuthService.generateTokens({
+      id: candidate.id,
+      username: candidate.username,
+      email: candidate.email,
+    });
+
+    // Save tokens
+    AuthService.saveToken(tokens.refreshToken, candidate.id, deviceName);
+
+    return {
+      user: candidate,
+      ...tokens,
+    };
+  }
 }
 
 export default new UserService();
