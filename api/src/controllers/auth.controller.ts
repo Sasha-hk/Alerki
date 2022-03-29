@@ -4,7 +4,7 @@ import Controller from '../interfaces/controller.interface';
 import Validator, { fields } from '../utils/validator';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
-import getDeviceName from '../utils/deviceName';
+import getDeviceName from '../utils/get-device-name';
 import PrivateUserDto from '../utils/dto/private-user.dto';
 import DevicesDto from '../utils/dto/devices.dto';
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';

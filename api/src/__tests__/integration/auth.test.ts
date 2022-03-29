@@ -1,6 +1,6 @@
 import request from 'supertest';
 import App from '../../app';
-import getCookies from '../../utils/getCookies';
+import getCookies from '../../utils/get-cookies';
 import { IDevicesDto } from '../../utils/dto/devices.dto';
 
 const APP = new App();
