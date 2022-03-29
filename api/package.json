@@ -13,6 +13,7 @@
     "migrate": "npx sequelize-cli db:migrate"
   },
   "dependencies": {
+    "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -23,6 +24,7 @@
     "typescript": "^4.6.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
