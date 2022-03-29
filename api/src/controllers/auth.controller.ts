@@ -228,6 +228,16 @@ class AuthController implements IAuthController {
         id,
       } = req.params;
 
+      Validator({
+        all: [
+          {
+            value: id,
+            name: 'id',
+            pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+          },
+        ],
+      });
+
       await AuthService.deleteAuthData({ id, userID: req.token?.id! });
 
       res.sendStatus(200);
