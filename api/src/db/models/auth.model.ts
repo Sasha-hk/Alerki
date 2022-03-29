@@ -7,7 +7,7 @@ class AuthModel extends Model implements IAuth {
   googleAccessToken!: string;
   googleRefreshToken!: string;
   deviceName!: string;
-  userID!: number;
+  userID!: string;
   createdAt!: string;
   updatedAt!: string;
 

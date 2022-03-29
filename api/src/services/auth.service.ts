@@ -29,7 +29,7 @@ interface ISaveTokenOptions {
 interface IAuthService {
   findAllByUserID(userID: string): Promise<AuthModel[]>;
   findOneByUserID(userID: string): Promise<AuthModel | null>;
-  findOneByID(id: number): Promise<AuthModel | null>;
+  findOneByID(id: string): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: string, deviceName: string, options?: ISaveTokenOptions): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
@@ -75,7 +75,7 @@ class AuthService implements IAuthService {
    * @param id Auth data id
    * @returns {AuthModel | null} Auth data if exists
    */
-  async findOneByID(id: number): Promise<AuthModel | null> {
+  async findOneByID(id: string): Promise<AuthModel | null> {
     return AuthModel.findOne({
       raw: true,
       where: {
@@ -198,7 +198,7 @@ class AuthService implements IAuthService {
   }
 
   async deleteAuthData({ id, userID }: IDeleteAuthData) {
-    const candidate = await this.findOneByUserID(id);
+    const candidate = await this.findOneByID(id);
 
     if (!candidate) {
       throw AuthError.AuthDataNotExists();
