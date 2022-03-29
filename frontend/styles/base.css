@@ -12,14 +12,34 @@ html {
 }
 
 .block {
-  background: #434343;
+  background: #000000;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
   transition: 1s;
 }
 
-.block {
-  font-size: 2rem;
+.welcome-block {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+.welcome-block b {
+  font-weight: 600;
+}
+.loading {
+  font-size: 20px;
+  opacity: 0.6;
+}
+
+.github-block {
+  position: fixed;
+  bottom: 30px;
+}
+.github-block a {
+  text-decoration: none;
+}
+.github-block a span {
+  text-decoration: underline;
 }

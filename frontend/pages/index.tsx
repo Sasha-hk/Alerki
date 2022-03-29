@@ -1,6 +1,6 @@
+/* eslint max-len: 0 */
 import { useState } from 'react';
 import { NextPage } from 'next';
-
 const Home: NextPage = () => {
   const [progress, setProgress] = useState(0);
   let progressView = '';
@@ -15,7 +15,16 @@ const Home: NextPage = () => {
 
   return (
     <div className="block">
-      Under development{progressView}
+      <div className="welcome-block">
+        <span>Welcome on </span><b>Alerki</b>
+      </div>
+      <small className="loading">Under development{progressView}</small>
+
+      <div className="github-block">
+        <a href="https://github.com/Sasha-hk/Alerki">
+          <b>GitHub</b> <span>Repository</span>
+        </a>
+      </div>
     </div>
   );
 };
