@@ -35,9 +35,12 @@ class AuthController implements IAuthController {
     this.router.post(`${this.path}/log-in`, this.logIn);
     this.router.get(`${this.path}/log-out`, isAuthenticated, this.logOut);
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
-    this.router.get(`${this.path}/oauth`, this.oauth);
     this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
     this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
+
+    if (process.env.NODE_ENV === 'dev') {
+      this.router.get(`${this.path}/oauth/test`, this.oauth);
+    }
   }
 
   async register(req: Request, res: Response) {
@@ -149,6 +152,9 @@ class AuthController implements IAuthController {
     }
   }
 
+  /**
+   * !!!The method only for testing!!!
+   */
   async oauth(req: Request, res: Response) {
     try {
       const path = 'https://accounts.google.com/o/oauth2/v2/auth?'
@@ -187,7 +193,7 @@ class AuthController implements IAuthController {
 
       res.send({ ...userDto });
     } catch (e: IError | any) {
-      console.log(e.response);
+      console.log('and here');
       res.status(e?.status || 500).json(e?.error);
     }
   }

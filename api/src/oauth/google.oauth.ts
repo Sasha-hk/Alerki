@@ -1,6 +1,7 @@
 /* eslint camelcase: 0 */
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
+import AuthError from '../errors/auth.error';
 
 interface IGoogleTokens {
   access_token: string;
@@ -36,6 +37,8 @@ export async function obtainToken(code: string): Promise<IGoogleTokens> {
       redirect_uri: process.env.GOOGLE_REDIRECT_URL,
       grant_type: 'authorization_code',
     },
+  }).catch(e => {
+    throw AuthError.WithGoogleError(e.response.data);
   });
 
   return response.data as IGoogleTokens;
