@@ -1,0 +1,24 @@
+{
+  "root": true,
+  "env": {
+    "es2021": true,
+    "jest": true
+  },
+  "extends": [
+    "xo"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "object-curly-spacing": ["error", "always"],
+    "max-len": ["error", { "code": 120 }],
+    "indent": ["error", 2],
+    "new-cap": 0,
+    "no-unused-vars": 0
+  }
+}

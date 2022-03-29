@@ -1,0 +1,55 @@
+{
+  "name": "linter",
+  "version": "1.0.0",
+  "repository": "https://github.com/Sasha-hk/Alerki",
+  "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
+  "license": "MIT",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint . --ext .ts,.tsx,.js,.jsx"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-angular"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "build",
+          "ci",
+          "docs",
+          "feat",
+          "fix",
+          "perf",
+          "refactor",
+          "revert",
+          "style",
+          "test",
+          "meta"
+        ]
+      ]
+    }
+  },
+  "devDependencies": {
+    "@commitlint/config-angular": "^16.2.1",
+    "@types/jest": "^27.4.1",
+    "@types/mocha": "^9.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "commitlint": "^16.2.1",
+    "eslint": "^8.11.0",
+    "eslint-config-xo": "^0.40.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.5"
+  },
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "prepare": "husky install",
+    "------------------------- local database -------------------------": "",
+    "start-dev-db": ". ./docker/db/start-dev.sh",
+    "start-test-db": ". ./docker/db/start-test.sh",
+    "stop-dev-db": ". ./docker/db/stop-dev.sh",
+    "stop-test-db": ". ./docker/db/stop-test.sh"
+  }
+}

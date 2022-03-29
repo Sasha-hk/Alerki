@@ -71,8 +71,8 @@ typings/
 
 # dotenv environment variables file
 .env
-.env.development
-.env.production
+.env.dev
+.env.prod
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -107,3 +107,7 @@ dist
 
 pgdata/
 migrations/
+.vscode
+.env.dev.
+.env.test
+.env.prod

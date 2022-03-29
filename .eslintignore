@@ -1,0 +1,8 @@
+.gin
+.github
+.husky
+docs
+docker
+node_modules
+pgdata
+dist
