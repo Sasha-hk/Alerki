@@ -1,5 +1,5 @@
 interface IAuth {
-  id: number;
+  id: string;
   refreshToken: string;
   googleAccessToken: string;
   googleRefreshToken: string;

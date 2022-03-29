@@ -17,6 +17,12 @@ class UserModel extends Model implements IUser {
 
   public static initialize(sequelize: Sequelize) {
     this.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
       username: {
         type: DataTypes.STRING(20),
         allowNull: false,

@@ -1,7 +1,7 @@
 import { Sequelize, Model, DataTypes } from 'sequelize';
 
 export interface WeekendDaysInterface {
-  id: number;
+  id: string;
   monday: boolean;
   tuesday: boolean;
   wednesday: boolean;
@@ -9,10 +9,11 @@ export interface WeekendDaysInterface {
   friday: boolean;
   saturday: boolean;
   sunday: boolean;
+
 }
 
 class WeekendDaysModel extends Model implements WeekendDaysInterface {
-  id!: number;
+  id!: string;
   monday!: boolean;
   tuesday!: boolean;
   wednesday!: boolean;
@@ -23,6 +24,12 @@ class WeekendDaysModel extends Model implements WeekendDaysInterface {
 
   public static initialize(sequelize: Sequelize) {
     this.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
       monday: {
         type: DataTypes.BOOLEAN,
       },
