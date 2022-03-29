@@ -2,7 +2,7 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import IUser from '../../interfaces/db/models/user.interface';
 
 class UserModel extends Model implements IUser {
-  id!: number;
+  id!: string;
   username!: string;
   firstName!: string;
   lastName!: string;

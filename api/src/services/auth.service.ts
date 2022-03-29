@@ -4,7 +4,7 @@ import { AuthModel } from '../db/models';
 import { ILogOut } from './user.service';
 
 export interface ITokenizeUser {
-  id: number;
+  id: string;
   username: string;
   email: string;
 }
@@ -17,8 +17,8 @@ export interface ITokens {
 interface IDeleteToken extends ILogOut {}
 
 interface IDeleteAuthData {
-  id: number;
-  userID: number;
+  id: string;
+  userID: string;
 }
 
 interface ISaveTokenOptions {
@@ -27,11 +27,11 @@ interface ISaveTokenOptions {
 }
 
 interface IAuthService {
-  findAllByUserID(userID: number): Promise<AuthModel[]>;
-  findOneByUserID(userID: number): Promise<AuthModel | null>;
+  findAllByUserID(userID: string): Promise<AuthModel[]>;
+  findOneByUserID(userID: string): Promise<AuthModel | null>;
   findOneByID(id: number): Promise<AuthModel | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
-  saveToken(refreshToken: string, userID: number, deviceName: string, options?: ISaveTokenOptions): any;
+  saveToken(refreshToken: string, userID: string, deviceName: string, options?: ISaveTokenOptions): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
   validateRefreshToken(refreshToken: string): ITokenizeUser;
   deleteToken({ userID, deviceName, refreshToken }: IDeleteToken): void;
@@ -47,7 +47,7 @@ class AuthService implements IAuthService {
    * @param userID User id
    * @returns {AuthModel[]} Auth data array
    */
-  async findAllByUserID(userID: number): Promise<AuthModel[]> {
+  async findAllByUserID(userID: string): Promise<AuthModel[]> {
     return AuthModel.findAll({
       raw: true,
       where: {
@@ -61,7 +61,7 @@ class AuthService implements IAuthService {
    * @param userID User id
    * @returns {AuthModel[]} Auth data
    */
-  async findOneByUserID(userID: number): Promise<AuthModel | null> {
+  async findOneByUserID(userID: string): Promise<AuthModel | null> {
     return AuthModel.findOne({
       raw: true,
       where: {
@@ -124,7 +124,7 @@ class AuthService implements IAuthService {
     } as ITokens;
   }
 
-  async saveToken(refreshToken: string, userID: number, deviceName: string, options?: ISaveTokenOptions) {
+  async saveToken(refreshToken: string, userID: string, deviceName: string, options?: ISaveTokenOptions) {
     const candidate = await AuthModel.findOne({
       raw: true,
       where: {

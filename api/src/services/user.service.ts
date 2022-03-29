@@ -26,7 +26,7 @@ interface ILogInByEmail extends ILogIn {
 }
 
 export interface ILogOut {
-  userID: number,
+  userID: string,
   deviceName: string,
   refreshToken: string,
 }
