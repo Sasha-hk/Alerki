@@ -179,6 +179,15 @@ class AuthController implements IAuthController {
     try {
       const { code } = req.query!;
 
+      Validator({
+        all: [
+          {
+            value: code,
+            name: 'code',
+          },
+        ],
+      });
+
       const data = await authenticateWithGoogle(code as string);
 
       const deviceName = getDeviceName(req);
@@ -219,7 +228,17 @@ class AuthController implements IAuthController {
         id,
       } = req.params;
 
-      await AuthService.deleteAuthData({ id: Number(id), userID: req.token?.id! });
+      Validator({
+        all: [
+          {
+            value: id,
+            name: 'id',
+            pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+          },
+        ],
+      });
+
+      await AuthService.deleteAuthData({ id, userID: req.token?.id! });
 
       res.sendStatus(200);
     } catch (e: IError | any) {

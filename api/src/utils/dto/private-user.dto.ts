@@ -7,7 +7,7 @@ interface IPrivateUserDto extends Omit<IUser, 'password'> {}
  * This data transfer object intended to transfer data that belongs only current user
  */
 class PrivateUserDto implements IPrivateUserDto {
-  id: number;
+  id: string;
   username: string;
   firstName: string;
   lastName: string;

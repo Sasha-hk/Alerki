@@ -1,10 +1,10 @@
 interface IAuth {
-  id: number;
+  id: string;
   refreshToken: string;
   googleAccessToken: string;
   googleRefreshToken: string;
   deviceName: string;
-  userID: number;
+  userID: string;
 }
 
 export default IAuth;

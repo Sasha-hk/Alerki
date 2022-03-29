@@ -2,20 +2,22 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import IAuth from '../../interfaces/db/models/auth.interface';
 
 class AuthModel extends Model implements IAuth {
-  id!: number;
+  id!: string;
   refreshToken!: string;
   googleAccessToken!: string;
   googleRefreshToken!: string;
   deviceName!: string;
-  userID!: number;
+  userID!: string;
   createdAt!: string;
   updatedAt!: string;
 
   public static initialize(sequelize: Sequelize) {
     this.init({
-      userID: {
-        type: DataTypes.INTEGER,
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
+        primaryKey: true,
       },
       deviceName: {
         type: DataTypes.STRING(50),

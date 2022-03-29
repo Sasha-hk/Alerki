@@ -2,7 +2,7 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import IUser from '../../interfaces/db/models/user.interface';
 
 class UserModel extends Model implements IUser {
-  id!: number;
+  id!: string;
   username!: string;
   firstName!: string;
   lastName!: string;
@@ -17,6 +17,12 @@ class UserModel extends Model implements IUser {
 
   public static initialize(sequelize: Sequelize) {
     this.init({
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        primaryKey: true,
+      },
       username: {
         type: DataTypes.STRING(20),
         allowNull: false,
