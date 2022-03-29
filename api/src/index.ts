@@ -1,13 +1,12 @@
 import App from './app';
-import AuthController from './controllers/auth.controller';
 import Database from './db/connect';
 
-const db = new Database();
-const app = new App();
+async function start() {
+  const db = new Database();
+  const app = new App();
 
-app.setControllers([
-  new AuthController(),
-]);
+  await db.connect();
+  app.listen();
+}
 
-db.connect();
-app.listen();
+start();

@@ -2,7 +2,7 @@ export interface IValidateItem {
   value: any;
   name: string;
   required?: boolean;
-  type?: any;
+  type?: 'string' | 'number' | 'boolean' | 'object' | 'array';
   pattern?: RegExp;
   maxValue?: number;
   minValue?: number;

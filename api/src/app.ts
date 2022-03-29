@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
+import AuthController from './controllers/auth.controller';
 
 interface IApp {
   readonly app: express.Application;
@@ -22,6 +23,9 @@ class App implements IApp {
    */
   constructor() {
     this.setMiddlewares();
+    this.setControllers([
+      new AuthController(),
+    ]);
   }
 
   /**
@@ -60,6 +64,10 @@ class App implements IApp {
         console.log(`Production server started on port ${this.port}`);
       });
     }
+  }
+
+  getApp() {
+    return this.app;
   }
 }
 

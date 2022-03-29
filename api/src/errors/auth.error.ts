@@ -94,6 +94,29 @@ class AuthError extends HttpError {
   static NotMaster(): HttpError {
     throw new HttpError(400, 'User is not master', { error: 'user is not a master' });
   }
+
+  /**
+   * Auth data not exists
+   * @returns {HttpError} Error
+   */
+  static AuthDataNotExists(): HttpError {
+    throw new HttpError(404, 'Auth data not exists', { error: 'auth data nto exists' });
+  }
+
+  /**
+   * Authenticate with Google
+   * @param {object} error Error response from Google if exists
+   * @returns {HttpError} Error
+   */
+  static WithGoogleError(error?: any): HttpError {
+    throw new HttpError(
+      400,
+      'With google error',
+      error
+        ? error
+        : { error: 'when trying to authenticate with google something went wrong' },
+    );
+  }
 }
 
 export default AuthError;

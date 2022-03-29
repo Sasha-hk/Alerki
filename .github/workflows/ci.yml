@@ -1,4 +1,4 @@
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -39,8 +39,10 @@ jobs:
           POSTGRES_USER: root
           POSTGRES_PASSWORD: 1234
           POSTGRES_DB: appointment_test
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
         ports:
-          - 5432:5432
+          - 5552:5432
 
     strategy:
       matrix:
@@ -56,4 +58,4 @@ jobs:
     - run: |
         cd api
         yarn install
-        yarn test:unit
+        yarn test

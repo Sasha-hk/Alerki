@@ -30,6 +30,12 @@ AuthModel.belongsTo(UserModel, {
   onDelete: 'CASCADE',
 });
 
+export {
+  UserModel,
+  WeekendDaysModel,
+  AuthModel,
+};
+
 export default {
   sequelize,
   UserModel,
