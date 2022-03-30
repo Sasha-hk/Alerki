@@ -1,6 +1,7 @@
 /* eslint max-len: 0 */
 import { useState } from 'react';
 import { NextPage } from 'next';
+
 const Home: NextPage = () => {
   const [progress, setProgress] = useState(0);
   let progressView = '';
