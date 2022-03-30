@@ -109,5 +109,5 @@ pgdata/
 migrations/
 .vscode
 .env.dev.
-.env.test
 .env.prod
+certbot
