@@ -66,11 +66,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Build and push
-        uses: docker/build-push-action@v2.10.0
+      # - name: Build and push
+      #   uses: docker/build-push-action@v2.10.0
+      #   with:
+      #     context: ./frontend
+      #     push: true
+      #     tags: sasha-hk/alerki-frontend:latest
+      #     secrets: |
+      #         GIT_AUTH_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
+
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_PACKAGES_TOKEN }}
+
+      - name: Build image and push it to GitHub Packages
+        uses: docker/build-push-action@v2
         with:
           context: ./frontend
-          push: true
           tags: sasha-hk/alerki-frontend:latest
-          secrets: |
-              GIT_AUTH_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
