@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: build-image
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
@@ -101,5 +101,5 @@ jobs:
             cd /home/petryk/www/Alerki
             git pull origin prod
             cd docker
-            dokcer-compose stop
-            dokcer-compose up
+            docker-compose stop
+            docker-compose up
