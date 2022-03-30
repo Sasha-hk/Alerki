@@ -63,7 +63,7 @@ jobs:
   build-image:
     runs-on: ubuntu-latest
     name: Build and push Docker image
-    needs: unit-testing
+    needs: api-testing
     steps:
       - uses: actions/checkout@v2
 
