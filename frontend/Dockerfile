@@ -4,10 +4,10 @@ WORKDIR /app
 
 COPY yarn.lock /app/
 
-RUN yarn install
+RUN yarn run install
 
 COPY . /app/
 
-RUN yarn build
+RUN yarn run build
 
 CMD ["yarn", "run", "start"]
