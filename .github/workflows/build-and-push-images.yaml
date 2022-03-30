@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and push docker image
     steps:
+      - uses: actions/checkout@v2
+
       - name: Wait for testing and linting
         uses: ./.github/workflows/ci.yml
 
