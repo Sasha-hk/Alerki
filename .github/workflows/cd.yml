@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     name: Deploy
-    needs: build
+    needs: build-image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repo
