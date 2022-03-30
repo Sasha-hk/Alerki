@@ -20,7 +20,7 @@ jobs:
         run: yarn install
 
       - name: Lint code
-        run: yarn lint
+        run: yarn run lint
 
   api-testing:
     name: Unit and integration testing
@@ -57,7 +57,7 @@ jobs:
       run: yarn install
 
     - name: Test the code
-      run: yarn test
+      run: yarn run test
 
   build-image:
     runs-on: ubuntu-latest
