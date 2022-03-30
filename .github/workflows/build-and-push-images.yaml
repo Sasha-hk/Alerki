@@ -22,7 +22,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Wait for testing and linting
-        uses: Sashs-hk/Alerki/.github/workflows/ci.yml
+        uses: .github/workflows/ci.yml
         with:
           username: ${{ inputs.username }}
           token: ${{ secrets.token }}
