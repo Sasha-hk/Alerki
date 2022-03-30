@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and push docker image
     steps:
-      - uses: r-lib/actions/check-r-package@master
+      - uses: actions/checkout@v2
 
       - name: Wait for testing and linting
         uses: ./.github/workflows/ci.yml
