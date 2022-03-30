@@ -5,13 +5,28 @@ on:
     branches:
       - prod
 
+  workflow_call:
+    inputs:
+      username:
+        required: true
+        type: string
+    secrets:
+      token:
+        required: true
+
+
 jobs:
   build:
     runs-on: ubuntu-latest
     name: Build and push docker image
     steps:
+      - uses: actions/checkout@v2
+
       - name: Wait for testing and linting
-        uses: ./.github/workflows/ci.yml
+        uses: ./.github/workflows/ci.yml@ci
+        with:
+          username: ${{ inputs.username }}
+          token: ${{ secrets.token }}
 
       - name: Build and push
         uses: docker/build-push-action@v2.10.0
