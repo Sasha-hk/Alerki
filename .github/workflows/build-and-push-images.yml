@@ -62,6 +62,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Build and push docker image
+    needs: unit-testing
     steps:
       - uses: actions/checkout@v2
 
@@ -70,6 +71,6 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: Sasha-hk/alerki-frontend:latest
+          tags: sasha-hk/alerki-frontend:latest
           secrets: |
               GIT_AUTH_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
