@@ -1,25 +1,105 @@
-name: Build and push Docker
+name: CI/CD
 
 on:
-  pull_request:
+  push:
     branches:
       - prod
 
 jobs:
-  build:
+  lint-code:
+    name: Lint code
     runs-on: ubuntu-latest
-    name: Build and push docker image
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.x
+          cache: yarn
+
+      - name: Install packages
+        run: yarn install
+
+      - name: Lint code
+        run: yarn run lint
+
+  api-testing:
+    name: Unit and integration testing
+    needs: lint-code
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:10.10
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: 1234
+          POSTGRES_DB: appointment_test
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+        ports:
+          - 5552:5432
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 17.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Unit testing with Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: yarn
+
+    - name: Install packages
+      run: |
+        cd api
+        yarn install
+
+    - name: Test the code
+      run: |
+        cd api
+        yarn run test
+
+  build-image:
+    runs-on: ubuntu-latest
+    name: Build and push Docker image
+    needs: api-testing
     steps:
       - uses: actions/checkout@v2
 
-      # - name: Lint and test the code
-      #   uses: ./.github/workflows/ci.yml
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_PACKAGES_TOKEN }}
 
-      - name: Build and push
-        uses: docker/build-push-action@v2.10.0
+      - name: Build image and push it to GitHub Packages
+        uses: docker/build-push-action@v2
         with:
           context: ./frontend
-          push: true
-          tags: Sasha-hk/alerki-frontend:latest
-          secrets: |
-              GIT_AUTH_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
+          tags: sasha-hk/alerki-frontend:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+
+  deploy:
+    name: Deploy
+    needs: build-image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v2
+
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/petryk/www/Alerki
+            git pull origin prod
+            cd docker
+            dokcer-compose stop
+            dokcer-compose up
