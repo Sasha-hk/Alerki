@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main
-      - "!prod"
+      - '!prod'
 
   pull_request:
+    branches:
+      - '*'
+      - '!prod'
 
 jobs:
   lint-code:
