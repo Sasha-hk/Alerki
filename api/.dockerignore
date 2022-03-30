@@ -1,0 +1,5 @@
+.npmrc
+README.md
+yarn-error.log
+jest.config.ts
+converage
