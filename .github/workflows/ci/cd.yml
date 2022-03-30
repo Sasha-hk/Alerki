@@ -1,7 +1,7 @@
 name: CI/CD
 
 on:
-  pull_request:
+  push:
     branches:
       - prod
 
@@ -17,17 +17,13 @@ jobs:
           cache: yarn
 
       - name: Install packages
-        run: |
-          yarn install
-          cd api
-          yarn install
+        run: yarn install
 
       - name: Lint code
-        run: |
-          yarn lint
+        run: yarn lint
 
-  unit-testing:
-    name: Unit testing
+  api-testing:
+    name: Unit and integration testing
     needs: lint-code
     runs-on: ubuntu-latest
     services:
@@ -44,7 +40,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x, 16.x, 17.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -54,26 +50,21 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: yarn
 
-    - run: |
-        cd api
-        yarn install
-        yarn test
+    - name: Change directory to api
+      run: cd api
 
-  build:
+    - name: Install packages
+      run: yarn install
+
+    - name: Test the code
+      run: yarn test
+
+  build-image:
     runs-on: ubuntu-latest
-    name: Build and push docker image
-    # needs: unit-testing
+    name: Build and push Docker image
+    needs: unit-testing
     steps:
       - uses: actions/checkout@v2
-
-      # - name: Build and push
-      #   uses: docker/build-push-action@v2.10.0
-      #   with:
-      #     context: ./frontend
-      #     push: true
-      #     tags: sasha-hk/alerki-frontend:latest
-      #     secrets: |
-      #         GIT_AUTH_TOKEN=${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Login to Github Packages
         uses: docker/login-action@v1
@@ -87,7 +78,6 @@ jobs:
         with:
           context: ./frontend
           tags: sasha-hk/alerki-frontend:latest
-          push: ${{ github.ref == 'refs/heads/main' }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

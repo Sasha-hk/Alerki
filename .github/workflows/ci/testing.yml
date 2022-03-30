@@ -7,9 +7,6 @@ on:
       - '!prod'
 
   pull_request:
-    branches:
-      - '*'
-      - '!prod'
 
 jobs:
   lint-code:
@@ -23,17 +20,13 @@ jobs:
           cache: yarn
 
       - name: Install packages
-        run: |
-          yarn install
-          cd api
-          yarn install
+        run: yarn install
 
       - name: Lint code
-        run: |
-          yarn lint
+        run: yarn lint
 
-  unit-testing:
-    name: Unit testing
+  api-testing:
+    name: Unit and integration testing
     needs: lint-code
     runs-on: ubuntu-latest
     services:
@@ -50,7 +43,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x, 16.x, 17.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -60,7 +53,11 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: yarn
 
-    - run: |
-        cd api
-        yarn install
-        yarn test
+    - name: Change directory to api
+      run: cd api
+
+    - name: Install packages
+      run: yarn install
+
+    - name: Test the code
+      run: yarn test
