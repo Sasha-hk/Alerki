@@ -1,13 +1,37 @@
-FROM node:17-alpine3.14
+# Packages stage
+FROM node:17-alpine3.14 AS deps
+
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-COPY yarn.lock package.json /app/
+COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
-COPY . /app/
+# Build stage
+FROM node:17-alpine3.14 AS builder
 
-RUN yarn run build
+WORKDIR /app
 
-CMD ["yarn", "run", "start"]
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN yarn build
+
+# Run stage
+FROM node:17-alpine3.14 AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/ .
+COPY --from=builder --chown=nextjs:nodejs /app/ .
+
+USER nextjs
+
+CMD ["yarn", "start"]
