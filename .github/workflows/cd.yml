@@ -1,12 +1,9 @@
-name: CI
+name: CI/CD
 
 on:
   push:
     branches:
-      - main
-      - '!prod'
-
-  pull_request:
+      - prod
 
 jobs:
   lint-code:
@@ -62,3 +59,26 @@ jobs:
       run: |
         cd api
         yarn run test
+
+  build-image:
+    runs-on: ubuntu-latest
+    name: Build and push Docker image
+    needs: unit-testing
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_PACKAGES_TOKEN }}
+
+      - name: Build image and push it to GitHub Packages
+        uses: docker/build-push-action@v2
+        with:
+          context: ./frontend
+          tags: sasha-hk/alerki-frontend:latest
+
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
