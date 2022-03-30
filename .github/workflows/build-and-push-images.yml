@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Lint and test the code
-        uses: ./.github/workflows/ci.yml
+      # - name: Lint and test the code
+      #   uses: ./.github/workflows/ci.yml
 
       - name: Build and push
         uses: docker/build-push-action@v2.10.0
