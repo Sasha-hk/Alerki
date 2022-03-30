@@ -57,7 +57,9 @@ jobs:
       run: yarn install
 
     - name: Test the code
-      run: yarn run test
+      run: |
+        cd api
+        yarn run test
 
   build-image:
     runs-on: ubuntu-latest

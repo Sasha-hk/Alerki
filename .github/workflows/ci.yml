@@ -60,4 +60,6 @@ jobs:
       run: yarn install
 
     - name: Test the code
-      run: yarn run test
+      run: |
+        cd api
+        yarn run test
