@@ -6,10 +6,10 @@ interface ICreateService {
 }
 
 interface IServiceService {
-  findByID(id: string): Promise<ServiceModel>;
-  findOneByName(name: string): Promise<ServiceModel>;
-  findAllByName(name: string): Promise<ServiceModel[]>;
-  create({ name }: ICreateService): Promise<ServiceModel>;
+  findByID(id: string): Promise<ServiceModel | null>;
+  findOneByName(name: string): Promise<ServiceModel | null>;
+  findAllByName(name: string): Promise<ServiceModel[] | null>;
+  create({ name }: ICreateService): Promise<ServiceModel | null>;
   createOrGet({ name }: ICreateService): Promise<ServiceModel>;
 }
 
@@ -48,8 +48,7 @@ class ServiceService implements IServiceService {
       name,
     });
 
-    console.log(newService);
-    return newService;
+    return newService.toJSON();
   }
 
   async createOrGet({ name }: ICreateService) {
