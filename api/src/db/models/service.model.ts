@@ -16,6 +16,7 @@ class ServiceModel extends Model implements IService {
       },
       name: {
         type: DataTypes.STRING(30),
+        unique: true,
         allowNull: false,
       },
       available: {
