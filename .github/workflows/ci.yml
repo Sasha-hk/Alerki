@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - '!prod'
 
   pull_request:
 
@@ -19,17 +20,13 @@ jobs:
           cache: yarn
 
       - name: Install packages
-        run: |
-          yarn install
-          cd api
-          yarn install
+        run: yarn install
 
       - name: Lint code
-        run: |
-          yarn lint
+        run: yarn run lint
 
-  unit-testing:
-    name: Unit testing
+  api-testing:
+    name: Unit and integration testing
     needs: lint-code
     runs-on: ubuntu-latest
     services:
@@ -46,7 +43,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x]
+        node-version: [14.x, 16.x, 17.x]
+
     steps:
     - uses: actions/checkout@v2
     - name: Unit testing with Node.js ${{ matrix.node-version }}
@@ -55,7 +53,12 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: yarn
 
-    - run: |
+    - name: Install packages
+      run: |
         cd api
         yarn install
-        yarn test
+
+    - name: Test the code
+      run: |
+        cd api
+        yarn run test

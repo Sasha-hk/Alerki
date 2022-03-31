@@ -9,8 +9,8 @@
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
     "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles",
     "build": "tsc --project './tsconfig.json'",
-    "makemigrations": "npx sequelize-mig migration:make -n",
-    "migrate": "npx sequelize-cli db:migrate"
+    "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
+    "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"
   },
   "dependencies": {
     "axios": "^0.26.1",
