@@ -105,7 +105,6 @@ typings/
 .tern-port
 
 pgdata/
-migrations/
 .vscode
 .env.dev.
 .env.prod
