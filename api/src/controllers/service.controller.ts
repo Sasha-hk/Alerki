@@ -39,7 +39,7 @@ class ServiceController implements IServiceController {
 
       const foundServices = await ServiceService.findAllByName(name as string);
 
-      if (!foundServices) {
+      if (foundServices.length === 0) {
         throw ServiceError.NotFound();
       }
 
