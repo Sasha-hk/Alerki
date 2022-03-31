@@ -2,9 +2,9 @@ import { Sequelize, Model, DataTypes } from 'sequelize';
 import IService from '../../interfaces/db/models/service.interface';
 
 class ServiceModel extends Model implements IService {
-  id: string;
-  name: string;
-  available: boolean;
+  id!: string;
+  name!: string;
+  available!: boolean;
 
   public static initialize(sequelize: Sequelize) {
     this.init({

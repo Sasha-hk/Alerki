@@ -3,6 +3,7 @@ import config from '../../config/database';
 import UserModel from './user.model';
 import WeekendDaysModel from './weekend-days.model';
 import AuthModel from './auth.model';
+import ServiceModel from './service.model';
 
 const env: string = process.env.NODE_ENV || 'dev';
 
@@ -20,6 +21,7 @@ const models = [
   UserModel,
   WeekendDaysModel,
   AuthModel,
+  ServiceModel,
 ];
 
 models.forEach(model => model.initialize(sequelize));
@@ -34,6 +36,7 @@ export {
   UserModel,
   WeekendDaysModel,
   AuthModel,
+  ServiceModel,
 };
 
 export default {
@@ -41,4 +44,5 @@ export default {
   UserModel,
   WeekendDaysModel,
   AuthModel,
+  ServiceModel,
 };
