@@ -37,7 +37,7 @@ class ServiceService implements IServiceService {
       raw: true,
       where: {
         name: {
-          [Op.like]: '%' + name + '%',
+          [Op.like]: name,
         },
       },
     });
