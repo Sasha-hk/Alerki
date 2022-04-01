@@ -13,6 +13,8 @@ Table of contents:
     - [OAuth2.0 with Google](#oauth20-with-google)
     - [Get devices](#get-devices)
     - [Delete device](#delete-device)
+  - [Services](#services)
+    - [Get services](#get-services)
 
 ## Conventions
 
@@ -151,3 +153,31 @@ DELETE /auth/:id
 | **Param** | **Type** | **Required** |
 | :--- | :--- | :--- |
 | `id` | string | true |
+
+## Services
+
+### Get services
+
+```http
+GET /services?name=...
+```
+
+**Query:**
+
+| **Param** | **Type** | **Required** | **Description** |
+| :--- | :--- | :--- | :--- |
+| `name` | string | true | Service name to find |
+
+**Response:**
+
+```json
+[
+  {
+    "id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "name": "haircut",
+    "available": true,
+    "createdAt": "1970-01-01T01:00:00.000Z",
+    "updatedAt": "1970-01-01T01:00:00.000Z",
+  }
+]
+```
