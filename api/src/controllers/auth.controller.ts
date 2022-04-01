@@ -20,7 +20,7 @@ interface IAuthController extends Controller {
 }
 
 /**
- * Implements authentication logic
+ * Authentication controller
  */
 class AuthController implements IAuthController {
   public path = '/auth';

@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
 import AuthController from './controllers/auth.controller';
+import ServiceController from './controllers/service.controller';
 
 interface IApp {
   readonly app: express.Application;
@@ -25,6 +26,7 @@ class App implements IApp {
     this.setMiddlewares();
     this.setControllers([
       new AuthController(),
+      new ServiceController(),
     ]);
   }
 
