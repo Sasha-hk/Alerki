@@ -1,3 +1,4 @@
+import ValidationError from '../../errors/validation.error';
 import IValidateFields, { IValidateField } from './validator.interface';
 
 export interface PartialCheck {
@@ -8,10 +9,10 @@ export interface FullCheck {
   (field: IValidateFields): boolean | never;
 }
 
-const required: PartialCheck = (field: IValidateField) => {
+const required: PartialCheck = (field: IValidateField, name: string) => {
   if (field?.required) {
     if (!field?.value) {
-      return true;
+      throw Error('required');
     }
   }
 
