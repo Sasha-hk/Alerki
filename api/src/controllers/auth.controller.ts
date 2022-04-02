@@ -201,7 +201,6 @@ class AuthController implements IAuthController {
 
       res.send({ ...userDto });
     } catch (e: IError | any) {
-      console.log('and here');
       res.status(e?.status || 500).json(e?.error);
     }
   }

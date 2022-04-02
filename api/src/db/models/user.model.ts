@@ -8,11 +8,11 @@ class UserModel extends Model implements IUser {
   lastName!: string;
   email!: string;
   phoneNumber!: string;
-  pictureID!: number;
+  pictureID!: string;
   password!: string;
   profileType!: 'client' | 'master';
-  clientID!: number;
-  masterID!: number;
+  clientID!: string;
+  masterID!: string;
   banned!: boolean;
 
   public static initialize(sequelize: Sequelize) {
