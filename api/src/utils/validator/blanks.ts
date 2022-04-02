@@ -13,8 +13,8 @@ export const emailField = (email: string): IValidateItem => ({
   name: 'email',
   type: 'string',
   pattern: /^\w+@\w+\.\w+/,
-  maxLength: 100,
-  minLength: 3,
+  maxLength: 319,
+  minLength: 4,
 });
 
 export const passwordField = (password: string): IValidateItem => ({

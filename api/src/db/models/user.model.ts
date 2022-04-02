@@ -35,7 +35,7 @@ class UserModel extends Model implements IUser {
         type: DataTypes.STRING(30),
       },
       email: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(319),
         allowNull: false,
         unique: true,
       },
