@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
+import axios from 'axios';
 import AuthError from '../errors/auth.error';
 import AuthService from './auth.service';
-import { UserModel } from '../db/models';
+import { UserModel, UserPictureModel } from '../db/models';
 import { ITokens } from './auth.service';
 import { IGoogleResponse } from '../oauth/google.oauth';
 
@@ -188,14 +189,26 @@ class UserService implements IUserService {
   async withGoogle(data: IGoogleResponse, deviceName: string) {
     const candidate = await this.findUserByEmail(data.decoded.email);
 
-    // If user with the email not exists then create new user
+    // If user not exists then create new user
     if (!candidate) {
       const userData = data.decoded;
+
+      const userPictureResponse = await axios.get(
+        userData.picture,
+        {
+          responseType: 'arraybuffer',
+        },
+      );
+
+      const newUserPicture = await UserPictureModel.create({
+        picture: userPictureResponse.data,
+      });
 
       const newUser = await UserModel.create({
         username: userData.email.split('@')[0],
         email: userData.email,
         profileType: 'client',
+        pictureID: newUserPicture.id,
       });
 
       const tokens = await AuthService.generateTokens({
