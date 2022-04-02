@@ -2,6 +2,8 @@
 
 This utility is designed to verify the correctness of the input data in the API.
 
+Utility version: `v0.1`
+
 Table of contents:
 
 - [Validation utility](#validation-utility)
