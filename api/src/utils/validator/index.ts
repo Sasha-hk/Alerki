@@ -1,151 +1,94 @@
+import IValidateFields, { IValidateField } from './validator.interface';
 import ValidationError from '../../errors/validation.error';
-import { IErrorItem } from '../../interfaces/error.interface';
-import IValidationTypes, { IValidateItem } from '../../interfaces/validator.interface';
-export * as fields from './blanks';
-import {
-  checkExists,
-  checkRequired,
-  checkType,
-  checkPattern,
-  checkLengthAndValue,
-} from './checks';
+import checks, { FullCheck, PartialCheck } from './check';
 
-/**
- * Validate and check if all exists
- * @param {Array<IValidateItem>} all Parameters to validate
- */
-function validateAll(all: Array<IValidateItem>) {
-  let existsError: boolean = false;
-  let requiredError: boolean = false;
-  let typeError: boolean = false;
-  let lengthAndValueError: boolean = false;
-  let patternError:boolean = false;
-  const errorDetails: IErrorItem[] = [];
+interface IValidator {
+  partialChecks: Array<PartialCheck>;
+  fullChecks: Array<FullCheck>;
 
-  for (const i of all) {
-    if (checkExists(i, errorDetails)) {
-      existsError = true;
-      continue;
-    }
-
-    if (checkRequired(i, errorDetails)) {
-      requiredError = true;
-      continue;
-    }
-
-    if (checkType(i, errorDetails)) {
-      typeError = true;
-      continue;
-    }
-
-    if (checkPattern(i, errorDetails)) {
-      patternError = true;
-      continue;
-    }
-
-    if (checkLengthAndValue(i, errorDetails)) {
-      lengthAndValueError = true;
-      continue;
-    }
-  }
-
-  if (existsError || typeError || lengthAndValueError || patternError || requiredError) {
-    throw ValidationError.AllRequired('Validation error', {
-      error: {
-        message: 'validation error',
-        details: errorDetails,
-      },
-    });
-  }
+  setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>): void;
+  setFullCheck(fullCheck: FullCheck | Array<FullCheck>): any;
+  validate(options: IValidateFields): any;
 }
 
 /**
- * Validate and check if at least one exists
- * @param {Array<IValidateItem>} atLeastOne Parameters to validate
+ * Params validation class
  */
-function validateAtLeastOne(atLeastOne: Array<IValidateItem>) {
-  let beforeExists: boolean = false;
-  let existsError: boolean = false;
-  let requiredError: boolean = false;
-  let typeError: boolean = false;
-  let lengthAndValueError: boolean = false;
-  let patternError: boolean = false;
-  let errorDetails: IErrorItem[] = [];
-  const existsErrorDetails: IErrorItem[] = [];
-  const requiredErrorDetails: IErrorItem[] = [];
+class Validator implements IValidator {
+  partialChecks: Array<PartialCheck>;
+  fullChecks: Array<FullCheck>;
 
-  for (const i of atLeastOne) {
-    if (checkRequired(i, requiredErrorDetails)) {
-      requiredError = true;
-      continue;
-    }
+  /**
+   * Validator constructor
+   */
+  constructor() {
+    this.partialChecks = checks.partialChecks;
+    this.fullChecks = checks.fullChecks;
+  }
 
-    if (checkExists(i, existsErrorDetails, 'atLeastOne')) {
-      existsError = true;
-      continue;
+  /**
+   * Add partial check
+   * @param partialCheck Partial checks
+   */
+  setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>) {
+    if (Array.isArray(partialCheck)) {
+      this.partialChecks.push(...partialCheck);
     } else {
-      beforeExists = true;
-    }
-
-    if (checkType(i, errorDetails)) {
-      typeError = true;
-      continue;
-    }
-
-    if (checkPattern(i, errorDetails)) {
-      patternError = true;
-      continue;
-    }
-
-    if (checkLengthAndValue(i, errorDetails)) {
-      lengthAndValueError = true;
-      continue;
+      this.partialChecks.push(partialCheck);
     }
   }
 
-  if (
-    (existsError === true && beforeExists !== true)
-    || typeError
-    || lengthAndValueError
-    || patternError
-    || requiredError
-  ) {
-    if (requiredError) {
-      errorDetails = [
-        ...errorDetails,
-        ...requiredErrorDetails,
-      ];
+  /**
+   * Add full check
+   * @param fullCheck Full check
+   */
+  setFullCheck(fullCheck: FullCheck | Array<FullCheck>) {
+    if (Array.isArray(fullCheck)) {
+      this.fullChecks.push(...fullCheck);
+    } else {
+      this.fullChecks.push(fullCheck);
+    }
+  }
+
+  /**
+   * Validate params
+   * @param fields Params to validate
+   */
+  validate(fields: IValidateFields) {
+    const keys = Object.keys(fields);
+
+    // Partial checks
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = 0; j < this.partialChecks.length; j++) {
+        this.partialChecks[j](fields[keys[i]], keys[i]);
+      }
     }
 
-    if (existsError === true && beforeExists !== true) {
-      errorDetails = [
-        ...errorDetails,
-        ...existsErrorDetails,
-      ];
+    // Full checks
+    for (let i = 0; i < this.fullChecks.length; i++) {
+      this.fullChecks[i](fields);
+    }
+  }
+
+  /**
+   * Static method to validate params, without user checks
+   * @param fields Params to validate
+   */
+  static validate(fields: IValidateFields) {
+    const keys = Object.keys(fields);
+
+    // Partial checks
+    for (let i = 0; i < keys.length; i++) {
+      for (let j = 0; j < checks.fullChecks.length; j++) {
+        checks.partialChecks[j](fields[keys[i]], keys[i]);
+      }
     }
 
-    throw ValidationError.AllRequired('Validation error', {
-      error: {
-        message: 'validation error',
-        details: errorDetails,
-      },
-    });
+    // Full checks
+    for (let i = 0; i < checks.fullChecks.length; i++) {
+      checks.fullChecks[i](fields);
+    }
   }
 }
 
-/**
- * Validate parameters
- * @throws {IError}
- * @return {boolean} If `true` all ok
- */
-export default (toValidate: IValidationTypes): boolean => {
-  if (toValidate?.all) {
-    validateAll(toValidate.all);
-  }
-
-  if (toValidate?.atLeastOne) {
-    validateAtLeastOne(toValidate.atLeastOne);
-  }
-
-  return true;
-};
+export default Validator;
