@@ -1,6 +1,6 @@
 interface IUserPicture {
   id: string;
-  picture: any;
+  picture: Buffer;
   createdAt: string;
   updatedAt: string;
 }

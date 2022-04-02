@@ -3,7 +3,7 @@ import IUserPicture from '../../interfaces/db/models/user-picture.interface';
 
 class UserPictureModel extends Model implements IUserPicture {
   id!: string;
-  picture!: any;
+  picture!: Buffer;
   createdAt!: string;
   updatedAt!: string;
 
@@ -20,7 +20,7 @@ class UserPictureModel extends Model implements IUserPicture {
         allowNull: false,
       },
     }, {
-      tableName: 'UserPicture',
+      tableName: 'UsersPicture',
       sequelize,
     });
   }
