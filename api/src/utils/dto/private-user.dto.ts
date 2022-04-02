@@ -13,10 +13,10 @@ class PrivateUserDto implements IPrivateUserDto {
   lastName: string;
   email: string;
   phoneNumber: string;
-  pictureID: number;
+  pictureID: string;
   profileType: 'client' | 'master';
-  clientID: number;
-  masterID: number;
+  clientID: string;
+  masterID: string;
   banned: boolean;
 
   /**
