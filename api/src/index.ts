@@ -1,12 +1,12 @@
-// D import App from './app';
-// import Database from './db/connect';
+import App from './app';
+import Database from './db/connect';
 
-// async function start() {
-//   const db = new Database();
-//   const app = new App();
+async function start() {
+  const db = new Database();
+  const app = new App();
 
-//   await db.connect();
-//   app.listen();
-// }
+  await db.connect();
+  app.listen();
+}
 
-// start();
+start();
