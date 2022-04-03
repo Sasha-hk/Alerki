@@ -2,26 +2,34 @@ import IValidateFields, { IValidateField } from './validator.interface';
 import ValidationError from '../../errors/validation.error';
 import checks, { FullCheck, PartialCheck } from './check';
 
+export interface IErrorPool {
+  [key: string]: string;
+}
+
+interface IPartialChecks {
+  [key: string]: PartialCheck,
+}
+
+interface IFullChecks {
+  [key: string]: FullCheck,
+}
+
 interface IValidator {
-  partialChecks: Array<PartialCheck>;
-  fullChecks: Array<FullCheck>;
+  partialChecks: IPartialChecks;
+  fullChecks: IFullChecks;
 
   setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>): void;
   setFullCheck(fullCheck: FullCheck | Array<FullCheck>): void;
   validate(options: IValidateFields): void;
-  // D trhowError(errorPool): never;
-}
-
-interface IErrorPool {
-  [key: string]: string[];
+  throwError(errorPool: IErrorPool): void;
 }
 
 /**
  * Params validation class
  */
 class Validator implements IValidator {
-  partialChecks: Array<PartialCheck>;
-  fullChecks: Array<FullCheck>;
+  partialChecks: IPartialChecks;
+  fullChecks: IFullChecks;
 
   /**
    * Validator constructor
@@ -35,24 +43,16 @@ class Validator implements IValidator {
    * Add partial check
    * @param partialCheck Partial checks
    */
-  setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>) {
-    if (Array.isArray(partialCheck)) {
-      this.partialChecks.push(...partialCheck);
-    } else {
-      this.partialChecks.push(partialCheck);
-    }
+  setPartialCheck(partialCheck: PartialCheck) {
+    this.partialChecks = { ...this.partialChecks, ...partialCheck };
   }
 
   /**
    * Add full check
    * @param fullCheck Full check
    */
-  setFullCheck(fullCheck: FullCheck | Array<FullCheck>) {
-    if (Array.isArray(fullCheck)) {
-      this.fullChecks.push(...fullCheck);
-    } else {
-      this.fullChecks.push(fullCheck);
-    }
+  setFullCheck(fullCheck: FullCheck) {
+    this.fullChecks = { ...this.fullChecks, ...fullCheck };
   }
 
   /**
@@ -60,24 +60,45 @@ class Validator implements IValidator {
    * @param fields Params to validate
    */
   validate(fields: IValidateFields) {
-    const keys = Object.keys(fields);
-    // L let errorPool: IErrorPool = {};
+    const fieldKeys = Object.keys(fields);
+    const fieldKeysLength = fieldKeys.length;
+
+    const partialCheckKeys = Object.keys(this.partialChecks);
+    const partialChecksLength = partialCheckKeys.length;
+    const fullCheckKeys = Object.keys(this.fullChecks);
+    const fullChecksLength = fullCheckKeys.length;
+
+    let errorPool: IErrorPool = {};
+    let throwError = false;
 
     // Partial checks
-    for (let i = 0; i < keys.length; i++) {
-      for (let j = 0; j < this.partialChecks.length; j++) {
-        const response = this.partialChecks[j](fields[keys[i]], keys[i]);
+    for (let i = 0; i < fieldKeysLength; i++) {
+      for (let j = 0; j < partialChecksLength; j++) {
+        // Check if validation type specified in field
+        if (fieldKeys[i] === partialCheckKeys[j]) {
+          const result = this.partialChecks[partialCheckKeys[j]](fields[fieldKeys[i]], fieldKeys[i]);
 
-        if (response) {
-          // D errors[keys[i]] = [...errors[keys[i]], response];
-          console.log(12);
+          if (result) {
+            errorPool = { ...errorPool, ...result };
+            throwError = true;
+            continue;
+          }
         }
       }
     }
 
     // Full checks
-    for (let i = 0; i < this.fullChecks.length; i++) {
-      this.fullChecks[i](fields);
+    for (let i = 0; i < fullChecksLength; i++) {
+      const result = this.fullChecks[i](fields);
+
+      if (result) {
+        errorPool = { ...errorPool, ...result };
+        throwError = true;
+      }
+    }
+
+    if (throwError) {
+      this.throwError(errorPool);
     }
   }
 
@@ -85,20 +106,19 @@ class Validator implements IValidator {
    * Static method to validate params, without user checks
    * @param fields Params to validate
    */
-  static validate(fields: IValidateFields) {
-    const keys = Object.keys(fields);
+  static validate(fields: IValidateFields) {}
 
-    // Partial checks
-    for (let i = 0; i < keys.length; i++) {
-      for (let j = 0; j < checks.fullChecks.length; j++) {
-        checks.partialChecks[j](fields[keys[i]], keys[i]);
-      }
-    }
-
-    // Full checks
-    for (let i = 0; i < checks.fullChecks.length; i++) {
-      checks.fullChecks[i](fields);
-    }
+  /**
+   * Throw error
+   * @param errorPool Errors
+   */
+  throwError(errorPool: IErrorPool) {
+    throw new ValidationError(400, 'Validation error', {
+      error: {
+        message: 'validation error',
+        details: errorPool,
+      },
+    });
   }
 }
 
