@@ -2,17 +2,17 @@ import ValidationError from '../../errors/validation.error';
 import IValidateFields, { IValidateField } from './validator.interface';
 
 export interface PartialCheck {
-  (field: IValidateField, name: string): boolean | never;
+  (field: IValidateField, name: string): boolean;
 }
 
 export interface FullCheck {
-  (field: IValidateFields): boolean | never;
+  (field: IValidateFields): boolean;
 }
 
 const required: PartialCheck = (field: IValidateField, name: string) => {
   if (field?.required) {
     if (!field?.value) {
-      throw Error('required');
+      return true;
     }
   }
 
@@ -30,7 +30,7 @@ const onlyOne: FullCheck = (fields: IValidateFields) => {
       if (!fields[keys[i]]?.value && !oneExists) {
         oneExists = true;
       } else {
-        throw Error('two exists');
+        return true;
       }
     }
   }
@@ -53,7 +53,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields) => {
   }
 
   if (!atLeastOneExists) {
-    throw Error('required at least one parameter');
+    return true;
   }
 
   return false;
@@ -62,7 +62,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields) => {
 const type: PartialCheck = (field: IValidateField) => {
   if (field?.type) {
     if (typeof field.value !== field.type) {
-      throw Error('bad type');
+      return true;
     }
   }
 
@@ -72,7 +72,7 @@ const type: PartialCheck = (field: IValidateField) => {
 const pattern: PartialCheck = (field: IValidateField) => {
   if (field?.pattern) {
     if (!RegExp(field.pattern).test(field.value)) {
-      throw Error('bad type');
+      return true;
     }
   }
 
@@ -82,13 +82,13 @@ const pattern: PartialCheck = (field: IValidateField) => {
 const valueSize: PartialCheck = (field: IValidateField, name: string) => {
   if (field?.minValue) {
     if (field.value < field.minValue) {
-      throw Error('bad value size');
+      return true;
     }
   }
 
   if (field?.maxValue) {
     if (field.value > field.maxValue) {
-      throw Error('bad value size');
+      return true;
     }
   }
 
@@ -98,13 +98,13 @@ const valueSize: PartialCheck = (field: IValidateField, name: string) => {
 const length: PartialCheck = (field: IValidateField) => {
   if (field?.minLength) {
     if (field.value.length < field.minLength) {
-      throw Error('bad length');
+      return true;
     }
   }
 
   if (field?.maxLength) {
     if (field.value.length > field.maxLength) {
-      throw Error('bad length');
+      return true;
     }
   }
 

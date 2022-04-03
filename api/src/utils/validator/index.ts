@@ -9,6 +9,11 @@ interface IValidator {
   setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>): void;
   setFullCheck(fullCheck: FullCheck | Array<FullCheck>): void;
   validate(options: IValidateFields): void;
+  // D trhowError(errorPool): never;
+}
+
+interface IErrorPool {
+  [key: string]: string[];
 }
 
 /**
@@ -56,11 +61,17 @@ class Validator implements IValidator {
    */
   validate(fields: IValidateFields) {
     const keys = Object.keys(fields);
+    // L let errorPool: IErrorPool = {};
 
     // Partial checks
     for (let i = 0; i < keys.length; i++) {
       for (let j = 0; j < this.partialChecks.length; j++) {
-        this.partialChecks[j](fields[keys[i]], keys[i]);
+        const response = this.partialChecks[j](fields[keys[i]], keys[i]);
+
+        if (response) {
+          // D errors[keys[i]] = [...errors[keys[i]], response];
+          console.log(12);
+        }
       }
     }
 
