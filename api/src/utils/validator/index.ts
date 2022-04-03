@@ -7,8 +7,8 @@ interface IValidator {
   fullChecks: Array<FullCheck>;
 
   setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>): void;
-  setFullCheck(fullCheck: FullCheck | Array<FullCheck>): any;
-  validate(options: IValidateFields): any;
+  setFullCheck(fullCheck: FullCheck | Array<FullCheck>): void;
+  validate(options: IValidateFields): void;
 }
 
 /**
