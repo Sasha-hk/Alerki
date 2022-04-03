@@ -1,44 +1,47 @@
 import ValidationError from '../../errors/validation.error';
 import IValidateFields, { IValidateField } from './validator.interface';
 import { IErrorPool } from './index';
+import { loadavg } from 'os';
 
 export interface PartialCheck {
-  (field: IValidateField, name: string): object | void;
+  (field: IValidateField, errorPool: IErrorPool, name: string): boolean;
 }
 
 export interface FullCheck {
-  (field: IValidateFields): object | void;
+  (field: IValidateFields, errorPool: IErrorPool): boolean;
 }
 
 interface IErrorField {
   [key: string]: string;
 }
 
-function genError(name: string, message: string) {
+function genError(errorPool: IErrorPool, name: string, message: string) {
   const error: IErrorField = {};
   error[name] = message;
-
-  return error;
+  errorPool = { ...errorPool, ...error };
 }
 
-const required: PartialCheck = (field: IValidateField, name: string) => {
+const required: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.required) {
     if (!field?.value) {
-      return genError(name, 'is required');
+      genError(errorPool, name, 'is required');
+      return true;
     }
   }
+
+  return false;
 };
 
-const onlyOne: FullCheck = (fields: IValidateFields) => {
+const onlyOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
   const keys = Object.keys(fields);
   const keysLength = keys.length;
-  const errorPool: IErrorPool = {};
+  const localError: IErrorPool = {};
   let oneExists = false;
 
   for (let i = 0; i < keysLength; i++) {
     if (fields[keys[i]]?.onlyOne) {
       if (fields[keys[i]]?.value && oneExists) {
-        errorPool[keys[i]] = 'required only one';
+        localError[keys[i]] = 'required only one';
       } else {
         oneExists = true;
       }
@@ -46,87 +49,92 @@ const onlyOne: FullCheck = (fields: IValidateFields) => {
   }
 
   if (oneExists) {
-    return errorPool;
+    errorPool = { ...errorPool, ...localError };
+    return true;
   }
+
+  return false;
 };
 
-const atLeastOne: FullCheck = (fields: IValidateFields) => {
+const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
   const keys = Object.keys(fields);
   const keysLength = keys.length;
-  const errorPool: IErrorPool = {};
+  const localError: IErrorPool = {};
   let atLeastOneExists = false;
 
   for (let i = 0; i < keysLength; i++) {
     if (fields[keys[i]]?.atLeastOne) {
-      if (fields[keys[i]]?.value) {
+      if (!fields[keys[i]]?.value) {
         atLeastOneExists = true;
-      } else {
-        errorPool[keys[i]] = 'is required or another one';
+        localError[keys[i]] = 'is required or another one';
       }
     }
   }
 
-  if (!atLeastOneExists) {
-    return errorPool;
+  if (atLeastOneExists) {
+    errorPool = { ...errorPool, ...localError };
+    return true;
   }
+
+  return false;
 };
 
-const type: PartialCheck = (field: IValidateField, name: string) => {
-  const errorPool: IErrorPool = {};
-
+const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.type) {
     if (typeof field.value !== field.type) {
-      errorPool[name] = `expected ${name} to be ${field.type}`;
-      return errorPool;
+      genError(errorPool, name, `expected ${name} to be ${field.type}`);
+      return true;
     }
   }
+
+  return false;
 };
 
-const pattern: PartialCheck = (field: IValidateField, name: string) => {
-  const errorPool: IErrorPool = {};
-
+const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.pattern) {
     if (!RegExp(field.pattern).test(field.value)) {
-      errorPool[name] = 'does not match pattern';
-      return errorPool;
+      genError(errorPool, name, 'does not match pattern');
+      return true;
     }
   }
+
+  return false;
 };
 
-const valueSize: PartialCheck = (field: IValidateField, name: string) => {
-  const errorPool: IErrorPool = {};
-
+const valueSize: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minValue) {
     if (field.value < field.minValue) {
-      errorPool[name] = `expected to be more than ${field.minLength}`;
-      return errorPool;
+      genError(errorPool, name, `expected to be more than ${field.minLength}`);
+      return true;
     }
   }
 
   if (field?.maxValue) {
     if (field.value > field.maxValue) {
-      errorPool[name] = `expected to be less than ${field.minLength}`;
-      return errorPool;
+      genError(errorPool, name, `expected to be less than ${field.minLength}`);
+      return true;
     }
   }
+
+  return false;
 };
 
-const length: PartialCheck = (field: IValidateField, name: string) => {
-  const errorPool: IErrorPool = {};
-
+const length: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minLength) {
     if (field.value.length < field.minLength) {
-      errorPool[name] = `expected to be longer than ${field.minLength}`;
-      return errorPool;
+      genError(errorPool, name, `expected to be longer than ${field.minLength}`);
+      return true;
     }
   }
 
   if (field?.maxLength) {
     if (field.value.length > field.maxLength) {
-      errorPool[name] = `expected to be shorter than ${field.minLength}`;
-      return errorPool;
+      genError(errorPool, name, `expected to be shorter than ${field.minLength}`);
+      return true;
     }
   }
+
+  return false;
 };
 
 export default {

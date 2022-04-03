@@ -68,7 +68,7 @@ class Validator implements IValidator {
     const fullCheckKeys = Object.keys(this.fullChecks);
     const fullChecksLength = fullCheckKeys.length;
 
-    let errorPool: IErrorPool = {};
+    const errorPool: IErrorPool = {};
     let throwError = false;
 
     // Partial checks
@@ -76,10 +76,7 @@ class Validator implements IValidator {
       for (let j = 0; j < partialChecksLength; j++) {
         // Check if validation type specified in field
         if (fieldKeys[i] === partialCheckKeys[j]) {
-          const result = this.partialChecks[partialCheckKeys[j]](fields[fieldKeys[i]], fieldKeys[i]);
-
-          if (result) {
-            errorPool = { ...errorPool, ...result };
+          if (this.partialChecks[partialCheckKeys[j]](fields[fieldKeys[i]], errorPool, fieldKeys[i])) {
             throwError = true;
             continue;
           }
@@ -89,10 +86,7 @@ class Validator implements IValidator {
 
     // Full checks
     for (let i = 0; i < fullChecksLength; i++) {
-      const result = this.fullChecks[i](fields);
-
-      if (result) {
-        errorPool = { ...errorPool, ...result };
+      if (this.fullChecks[fullCheckKeys[i]](fields, errorPool)) {
         throwError = true;
       }
     }
