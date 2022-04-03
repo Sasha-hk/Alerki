@@ -15,16 +15,16 @@ interface IErrorField {
   [key: string]: string;
 }
 
-function genError(errorPool: IErrorPool, name: string, message: string) {
+function setError(errorPool: IErrorPool, name: string, message: string) {
   const error: IErrorField = {};
   error[name] = message;
-  errorPool = { ...errorPool, ...error };
+  Object.assign(errorPool, error);
 }
 
 const required: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.required) {
     if (!field?.value) {
-      genError(errorPool, name, 'is required');
+      setError(errorPool, name, 'is required');
       return true;
     }
   }
@@ -49,7 +49,7 @@ const onlyOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
   }
 
   if (oneExists) {
-    errorPool = { ...errorPool, ...localError };
+    Object.assign(errorPool, localError);
     return true;
   }
 
@@ -72,7 +72,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
   }
 
   if (atLeastOneExists) {
-    errorPool = { ...errorPool, ...localError };
+    Object.assign(errorPool, localError);
     return true;
   }
 
@@ -82,7 +82,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
 const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.type) {
     if (typeof field.value !== field.type) {
-      genError(errorPool, name, `expected ${name} to be ${field.type}`);
+      setError(errorPool, name, `expected ${name} to be ${field.type}`);
       return true;
     }
   }
@@ -93,7 +93,7 @@ const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: 
 const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.pattern) {
     if (!RegExp(field.pattern).test(field.value)) {
-      genError(errorPool, name, 'does not match pattern');
+      setError(errorPool, name, 'does not match pattern');
       return true;
     }
   }
@@ -104,14 +104,14 @@ const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, nam
 const valueSize: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minValue) {
     if (field.value < field.minValue) {
-      genError(errorPool, name, `expected to be more than ${field.minLength}`);
+      setError(errorPool, name, `expected to be more than ${field.minLength}`);
       return true;
     }
   }
 
   if (field?.maxValue) {
     if (field.value > field.maxValue) {
-      genError(errorPool, name, `expected to be less than ${field.minLength}`);
+      setError(errorPool, name, `expected to be less than ${field.minLength}`);
       return true;
     }
   }
@@ -122,14 +122,14 @@ const valueSize: PartialCheck = (field: IValidateField, errorPool: IErrorPool, n
 const length: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minLength) {
     if (field.value.length < field.minLength) {
-      genError(errorPool, name, `expected to be longer than ${field.minLength}`);
+      setError(errorPool, name, `expected to be longer than ${field.minLength}`);
       return true;
     }
   }
 
   if (field?.maxLength) {
     if (field.value.length > field.maxLength) {
-      genError(errorPool, name, `expected to be shorter than ${field.minLength}`);
+      setError(errorPool, name, `expected to be shorter than ${field.minLength}`);
       return true;
     }
   }
