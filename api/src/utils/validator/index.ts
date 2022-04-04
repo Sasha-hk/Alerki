@@ -22,7 +22,6 @@ interface IValidator {
   setPartialCheck(partialCheck: PartialCheck | Array<PartialCheck>): void;
   setFullCheck(fullCheck: FullCheck | Array<FullCheck>): void;
   validate(options: IValidateFields): void;
-  throwError(errorPool: IErrorPool): void;
 }
 
 /**
