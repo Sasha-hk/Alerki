@@ -99,7 +99,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
 const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.type) {
     if (typeof field.value !== field.type) {
-      setError(errorPool, name, `expected ${name} to be ${field.type}`);
+      setError(errorPool, name, `expected to be a ${field.type}`);
       return true;
     }
   }
@@ -118,17 +118,10 @@ const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, nam
   return false;
 };
 
-const valueSize: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
+const minValue: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minValue) {
     if (field.value < field.minValue) {
-      setError(errorPool, name, `expected to be more than ${field.minLength}`);
-      return true;
-    }
-  }
-
-  if (field?.maxValue) {
-    if (field.value > field.maxValue) {
-      setError(errorPool, name, `expected to be less than ${field.minLength}`);
+      setError(errorPool, name, `expected value to be more than ${field.minValue}`);
       return true;
     }
   }
@@ -136,17 +129,32 @@ const valueSize: PartialCheck = (field: IValidateField, errorPool: IErrorPool, n
   return false;
 };
 
-const length: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
-  if (field?.minLength) {
-    if (field.value.length < field.minLength) {
-      setError(errorPool, name, `expected to be longer than ${field.minLength}`);
+const maxValue: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
+  if (field?.maxValue) {
+    if (field.value > field.maxValue) {
+      setError(errorPool, name, `expected value to be less than ${field.maxValue}`);
       return true;
     }
   }
 
+  return false;
+};
+
+const minLength: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
+  if (field?.minLength) {
+    if (field.value.length < field.minLength) {
+      setError(errorPool, name, `expected value to be longer than ${field.minLength} characters`);
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const maxLength: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.maxLength) {
     if (field.value.length > field.maxLength) {
-      setError(errorPool, name, `expected to be shorter than ${field.minLength}`);
+      setError(errorPool, name, `expected value to be shorter than ${field.maxLength} characters`);
       return true;
     }
   }
@@ -159,8 +167,10 @@ export default {
     required,
     type,
     pattern,
-    valueSize,
-    length,
+    minValue,
+    maxValue,
+    minLength,
+    maxLength,
   },
   fullChecks: {
     onlyOne,
