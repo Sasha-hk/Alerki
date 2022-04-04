@@ -2,6 +2,7 @@ import Validator from '../../utils/validator';
 import ValidationError from '../../errors/validation.error';
 import IError from '../../interfaces/error.interface';
 import IValidateFields, { IValidateField } from '../../utils/validator/validator.interface';
+import * as blanks from './../../utils/validator/blanks';
 
 const validator = new Validator();
 
@@ -479,5 +480,188 @@ describe('Test length property', () => {
         },
       },
     );
+  });
+});
+
+describe('Test blanks', () => {
+  describe('test username blank', () => {
+    it('should throw ValidationError due bad data type', () => {
+      wrapValidationError(
+        {
+          ...blanks.usernameField(123),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                username: 'expected to be a string',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should throw ValidationError due not does not match pattern value', () => {
+      wrapValidationError(
+        {
+          ...blanks.usernameField('user name'),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                username: 'does not match pattern',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should throw ValidationError due to too long value', () => {
+      wrapValidationError(
+        {
+          ...blanks.usernameField('too_long_username_too_long_username'),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                username: 'expected value to be shorter than 20 characters',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should throw ValidationError due bad data type', () => {
+      wrapValidationError(
+        {
+          ...blanks.usernameField('x'),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                username: 'expected value to be longer than 4 characters',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should not throw ValidationError', () => {
+      validator.validate(
+        {
+          ...blanks.usernameField('good_username'),
+        },
+      );
+    });
+  });
+
+  describe('test email blank', () => {
+    it('should throw ValidationError due not does not match pattern value', () => {
+      wrapValidationError(
+        {
+          ...blanks.emailField('not email value'),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                email: 'does not match pattern',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should not throw ValidationError', () => {
+      validator.validate(
+        {
+          ...blanks.emailField('goog@email.com'),
+        },
+      );
+    });
+  });
+
+  describe('test password blank', () => {
+    it('should throw ValidationError due not does not match pattern value', () => {
+      wrapValidationError(
+        {
+          ...blanks.passwordField(123),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                password: 'expected to be a string',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should not throw ValidationError', () => {
+      validator.validate(
+        {
+          ...blanks.passwordField('asfjk40123jkl*&#(#'),
+        },
+      );
+    });
+  });
+
+  describe('test profileType blank', () => {
+    it('should throw ValidationError due not does not match pattern value', () => {
+      wrapValidationError(
+        {
+          ...blanks.profileTypeField('not profile type'),
+        },
+        (e: IError | any) => {
+          expect(e?.status).toEqual(400);
+          expect(e?.error).toMatchObject({
+            error: {
+              message: 'validation error',
+              details: {
+                profileType: 'does not match pattern',
+              },
+            },
+          });
+        },
+      );
+    });
+
+    it('should not throw ValidationError', () => {
+      validator.validate(
+        {
+          ...blanks.profileTypeField('client'),
+        },
+      );
+    });
+
+    it('should not throw ValidationError', () => {
+      validator.validate(
+        {
+          ...blanks.profileTypeField('master'),
+        },
+      );
+    });
   });
 });
