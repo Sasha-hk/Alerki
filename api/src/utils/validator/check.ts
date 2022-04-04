@@ -1,7 +1,6 @@
 import ValidationError from '../../errors/validation.error';
 import IValidateFields, { IValidateField } from './validator.interface';
 import { IErrorPool } from './index';
-import { loadavg } from 'os';
 
 export interface PartialCheck {
   (field: IValidateField, errorPool: IErrorPool, name: string): boolean;
@@ -33,23 +32,41 @@ const required: PartialCheck = (field: IValidateField, errorPool: IErrorPool, na
 };
 
 const onlyOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
-  const keys = Object.keys(fields);
-  const keysLength = keys.length;
-  const localError: IErrorPool = {};
+  const fieldKeys = Object.keys(fields);
+  const fieldKeysLength = fieldKeys.length;
+  const notExistsErrorPool: IErrorPool = {};
+  const twoExistsErrorPool: IErrorPool = {};
   let oneExists = false;
+  let notExistsError = false;
+  let twoExistsError = false;
 
-  for (let i = 0; i < keysLength; i++) {
-    if (fields[keys[i]]?.onlyOne) {
-      if (fields[keys[i]]?.value && oneExists) {
-        localError[keys[i]] = 'required only one';
-      } else {
-        oneExists = true;
+  for (let i = 0; i < fieldKeysLength; i++) {
+    if (fields[fieldKeys[i]]?.onlyOne) {
+      // Check if value exists
+      if (fields[fieldKeys[i]]?.value) {
+        if (!oneExists) {
+          oneExists = true;
+          twoExistsErrorPool[fieldKeys[i]] = 'required only one';
+          continue;
+        }
+
+        twoExistsError = true;
+        twoExistsErrorPool[fieldKeys[i]] = 'required only one';
+        continue;
       }
+
+      notExistsError = true;
+      notExistsErrorPool[fieldKeys[i]] = 'is required or another one';
     }
   }
 
-  if (oneExists) {
-    Object.assign(errorPool, localError);
+  if (!oneExists && notExistsError) {
+    Object.assign(errorPool, notExistsErrorPool);
+    return true;
+  }
+
+  if (twoExistsError) {
+    Object.assign(errorPool, twoExistsErrorPool);
     return true;
   }
 
