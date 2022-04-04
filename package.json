@@ -47,8 +47,10 @@
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "prepare": "husky install",
     "------------------------- local database -------------------------": "",
+    "start-databases": "yarn start-dev-db && yarn start-test-db",
     "start-dev-db": ". ./docker/db/start-dev.sh",
     "start-test-db": ". ./docker/db/start-test.sh",
+    "stop-databases": "yarn stop-dev-db && yarn stop-test-db",
     "stop-dev-db": ". ./docker/db/stop-dev.sh",
     "stop-test-db": ". ./docker/db/stop-test.sh"
   }

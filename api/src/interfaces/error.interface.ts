@@ -5,7 +5,9 @@ export interface IErrorItem {
 
 export interface IErrorWrapper {
   message?: string;
-  details?: Array<IErrorItem> | [];
+  details?: Array<IErrorItem> | [] | {
+    [key: string]: string,
+  };
 }
 
 interface IError {
