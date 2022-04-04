@@ -20,7 +20,7 @@ function wrapValidationError(
 }
 
 describe('Test required property', () => {
-  it('should throw ValidationError when value is undefined', () => {
+  it('should throw ValidationError due to undefined value', () => {
     wrapValidationError(
       {
         username: {
@@ -42,7 +42,7 @@ describe('Test required property', () => {
     );
   });
 
-  it('should throw ValidationError when pass few undefined values', () => {
+  it('should throw ValidationError due to few undefined values', () => {
     wrapValidationError(
       {
         username: {
@@ -92,7 +92,7 @@ describe('Test required property', () => {
 });
 
 describe('Test onlyOne property', () => {
-  it('should throw ValidationError when two value not exists', () => {
+  it('should throw ValidationError due to two value not exists', () => {
     wrapValidationError(
       {
         username: {
@@ -119,7 +119,7 @@ describe('Test onlyOne property', () => {
     );
   });
 
-  it('should throw ValidationError when two value exists', () => {
+  it('should throw ValidationError due to two value exists', () => {
     wrapValidationError(
       {
         username: {
@@ -178,7 +178,7 @@ describe('Test onlyOne property', () => {
 });
 
 describe('Test atLestOne property', () => {
-  it('should throw ValidationError not exists any value', () => {
+  it('should throw ValidationError dut to not exists any value', () => {
     wrapValidationError(
       {
         username: {
@@ -215,6 +215,267 @@ describe('Test atLestOne property', () => {
         email: {
           value: 'email',
           atLeastOne: true,
+        },
+      },
+    );
+  });
+});
+
+describe('Test required property', () => {
+  it('should throw ValidationError due to not specified value', () => {
+    wrapValidationError(
+      {
+        username: {
+          value: undefined,
+          required: true,
+        },
+        email: {
+          value: undefined,
+        },
+      },
+      (e: IError | any) => {
+        expect(e?.status).toEqual(400);
+        expect(e?.error).toMatchObject({
+          error: {
+            message: 'validation error',
+            details: {
+              username: 'is required',
+            },
+          },
+        });
+      },
+    );
+  });
+
+  it('should not throw ValidationError', () => {
+    validator.validate(
+      {
+        username: {
+          value: 'username',
+          required: true,
+        },
+        email: {
+          value: 'email',
+          required: true,
+        },
+      },
+    );
+  });
+});
+
+describe('Test type property', () => {
+  it('should throw ValidationError due to incorrect data type', () => {
+    wrapValidationError(
+      {
+        username: {
+          value: 123,
+          type: 'string',
+        },
+        email: {
+          value: undefined,
+          type: 'string',
+        },
+      },
+      (e: IError | any) => {
+        expect(e?.status).toEqual(400);
+        expect(e?.error).toMatchObject({
+          error: {
+            message: 'validation error',
+            details: {
+              username: 'expected to be a string',
+              email: 'expected to be a string',
+            },
+          },
+        });
+      },
+    );
+  });
+
+  it('should not throw ValidationError', () => {
+    validator.validate(
+      {
+        username: {
+          value: 'username',
+          type: 'string',
+        },
+        email: {
+          value: 'email',
+          type: 'string',
+        },
+        password: {
+          value: 1234,
+          type: 'number',
+        },
+        active: {
+          value: true,
+          type: 'boolean',
+        },
+      },
+    );
+  });
+});
+
+describe('Test template property', () => {
+  it('should throw ValidationError due to not matched value', () => {
+    wrapValidationError(
+      {
+        username: {
+          value: 'username',
+          type: 'string',
+          pattern: /]w+/,
+        },
+        email: {
+          value: 'not email pattern',
+          type: 'string',
+          pattern: /\w+@\w+.\w+/,
+        },
+      },
+      (e: IError | any) => {
+        expect(e?.status).toEqual(400);
+        expect(e?.error).toMatchObject({
+          error: {
+            message: 'validation error',
+            details: {
+              email: 'does not match pattern',
+            },
+          },
+        });
+      },
+    );
+  });
+
+  it('should not throw ValidationError', () => {
+    validator.validate(
+      {
+        username: {
+          value: 'username',
+          type: 'string',
+          pattern: /\w+/,
+        },
+        email: {
+          value: 'email@gmail.com',
+          type: 'string',
+          pattern: /\w+@\w+.\w+/,
+        },
+        password: {
+          value: 1234,
+          type: 'number',
+          pattern: /\d+/,
+        },
+      },
+    );
+  });
+});
+
+describe('Test value size property', () => {
+  it('should throw ValidationError due to too less value', () => {
+    wrapValidationError(
+      {
+        age: {
+          value: 14,
+          type: 'number',
+          minValue: 18,
+          maxValue: 60,
+        },
+        otherAge: {
+          value: 90,
+          type: 'number',
+          minValue: 18,
+          maxValue: 60,
+        },
+      },
+      (e: IError | any) => {
+        expect(e?.status).toEqual(400);
+        expect(e?.error).toMatchObject({
+          error: {
+            message: 'validation error',
+            details: {
+              age: 'expected value to be more than 18',
+              otherAge: 'expected value to be less than 60',
+            },
+          },
+        });
+      },
+    );
+  });
+
+  it('should not throw ValidationError', () => {
+    validator.validate(
+      {
+        age: {
+          value: 18,
+          pattern: /\w+/,
+          minValue: 18,
+          maxValue: 60,
+        },
+        otherAge: {
+          value: 40,
+          type: 'number',
+          pattern: /\d+/,
+          minValue: 0,
+        },
+      },
+    );
+  });
+});
+
+describe('Test length property', () => {
+  it('should throw ValidationError due to too less value', () => {
+    wrapValidationError(
+      {
+        username: {
+          value: 'man',
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 20,
+        },
+        email: {
+          value: '0022222222222222@gmail.com',
+          type: 'string',
+          pattern: /\w+@\w+.\w+/,
+          minLength: 4,
+          maxLength: 10,
+        },
+      },
+      (e: IError | any) => {
+        expect(e?.status).toEqual(400);
+        expect(e?.error).toMatchObject({
+          error: {
+            message: 'validation error',
+            details: {
+              email: 'expected value to be shorter than 10 characters',
+              username: 'expected value to be longer than 4 characters',
+            },
+          },
+        });
+      },
+    );
+  });
+
+  it('should not throw ValidationError', () => {
+    validator.validate(
+      {
+        username: {
+          value: 'username',
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 20,
+        },
+        email: {
+          value: 'email@gmail.com',
+          type: 'string',
+          pattern: /\w+@\w+.\w+/,
+          minLength: 4,
+          maxLength: 319,
+        },
+        password: {
+          value: 1234,
+          type: 'number',
+          pattern: /\d+/,
+          minLength: 4,
+          maxLength: 30,
         },
       },
     );
