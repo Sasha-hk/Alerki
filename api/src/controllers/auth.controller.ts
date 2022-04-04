@@ -1,7 +1,7 @@
 import AuthService, { ITokenizeUser } from './../services/auth.service';
 import { Router, Request, Response } from 'express';
 import Controller from '../interfaces/controller.interface';
-import Validator, { fields } from '../utils/validator';
+import Validator, { blanks } from '../utils/validator';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
 import getDeviceName from '../utils/get-device-name';
@@ -51,13 +51,11 @@ class AuthController implements IAuthController {
         profileType,
       } = req.body;
 
-      Validator({
-        all: [
-          { ...fields.usernameField(username) },
-          { ...fields.emailField(email) },
-          { ...fields.profileTypeField(profileType) },
-          { ...fields.passwordField(password) },
-        ],
+      Validator.validate({
+        ...blanks.usernameField(username, { required: true }),
+        ...blanks.emailField(email, { required: true }),
+        ...blanks.profileTypeField(profileType, { required: true }),
+        ...blanks.passwordField(password, { required: true }),
       });
 
       const deviceName = getDeviceName(req);
@@ -91,17 +89,10 @@ class AuthController implements IAuthController {
         password,
       } = req.body;
 
-      Validator({
-        all: [
-          { ...fields.passwordField(password) },
-        ],
-      });
-
-      Validator({
-        atLeastOne: [
-          { ...fields.usernameField(username) },
-          { ...fields.emailField(email) },
-        ],
+      Validator.validate({
+        ...blanks.passwordField(password, { required: true }),
+        ...blanks.usernameField(username, { onlyOne: true }),
+        ...blanks.emailField(email, { onlyOne: true }),
       });
 
       const deviceName = getDeviceName(req);
@@ -179,13 +170,11 @@ class AuthController implements IAuthController {
     try {
       const { code } = req.query!;
 
-      Validator({
-        all: [
-          {
-            value: code,
-            name: 'code',
-          },
-        ],
+      Validator.validate({
+        code: {
+          value: code,
+          required: true,
+        },
       });
 
       const data = await authenticateWithGoogle(code as string);
@@ -227,14 +216,12 @@ class AuthController implements IAuthController {
         id,
       } = req.params;
 
-      Validator({
-        all: [
-          {
-            value: id,
-            name: 'id',
-            pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
-          },
-        ],
+      Validator.validate({
+        id: {
+          value: id,
+          pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+          required: true,
+        },
       });
 
       await AuthService.deleteAuthData({ id, userID: req.token?.id! });
