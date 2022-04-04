@@ -142,7 +142,7 @@ const maxValue: PartialCheck = (field: IValidateField, errorPool: IErrorPool, na
 
 const minLength: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.minLength) {
-    if (field.value.length < field.minLength) {
+    if (field?.value?.length < field.minLength) {
       setError(errorPool, name, `expected value to be longer than ${field.minLength} characters`);
       return true;
     }
@@ -153,7 +153,7 @@ const minLength: PartialCheck = (field: IValidateField, errorPool: IErrorPool, n
 
 const maxLength: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.maxLength) {
-    if (field.value.length > field.maxLength) {
+    if (field?.value?.length > field.maxLength) {
       setError(errorPool, name, `expected value to be shorter than ${field.maxLength} characters`);
       return true;
     }
