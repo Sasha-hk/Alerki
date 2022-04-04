@@ -83,7 +83,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
     if (fields[keys[i]]?.atLeastOne) {
       if (!fields[keys[i]]?.value) {
         atLeastOneExists = true;
-        localError[keys[i]] = 'is required or another one';
+        localError[keys[i]] = 'is required at least one';
       }
     }
   }
