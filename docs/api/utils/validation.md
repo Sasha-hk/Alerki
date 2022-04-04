@@ -2,6 +2,8 @@
 
 This utility is designed to verify the correctness of the input data in the API.
 
+Utility version: `v0.2`
+
 Table of contents:
 
 - [Validation utility](#validation-utility)
@@ -32,14 +34,11 @@ setAge(req: Request, res: Response) {
     const { age } = req.body;
 
     Validator({
-      all: [
-        {
-          value: age,
-          name: 'age',
-          minValue: 18,
-          maxValue: 60,
-        },
-      ],
+      age: {
+        value: age,
+        minValue: 18,
+        maxValue: 60,
+      },
     });
 
     res.send('OK');
@@ -57,16 +56,14 @@ We can use two validation types, the first type checks that all parameters are e
 
 ```ts
 Validator({
-  all: [
-    {
-      value: age,
-      name: 'age',
-    },
-    {
-      value: username,
-      name: 'username',
-    }
-  ],
+  age: {
+    value: age,
+    required: true,
+  },
+  username: {
+    value: username,
+    required: true,
+  }
 });
 ```
 
@@ -74,16 +71,14 @@ Validator({
 
 ```ts
 Validator({
-  atLeastOne: [
-    {
-      value: age,
-      name: 'age',
-    },
-    {
-      value: username,
-      name: 'username',
-    }
-  ],
+  {
+    value: age,
+    atLeastOne: true,
+  },
+  {
+    value: username,
+    atLeastOne: true,
+  }
 });
 ```
 
@@ -94,7 +89,6 @@ Validator({
 ```ts
 {
   value: age,
-  name: 'age',
   required: true,
 },
 ```
@@ -106,7 +100,6 @@ The property check if the param exists.
 ```ts
 {
   value: age,
-  name: 'age',
   type: 'number',
 },
 ```
@@ -118,7 +111,6 @@ The property checks if variable age is number.
 ```ts
 {
   value: username,
-  name: 'username',
   minLength: 4,
   maxLength: 30,
 },
@@ -131,7 +123,6 @@ The property checks if name are between 4 and 30 characters.
 ```ts
 {
   value: age,
-  name: 'age',
   minValue: 18,
   maxValue: 70,
 },
@@ -144,7 +135,6 @@ The property checks if age between 18 and 70.
 ```ts
 {
   value: email,
-  name: 'email',
   pattern: /\w+@\w+.\w/,
 },
 ```

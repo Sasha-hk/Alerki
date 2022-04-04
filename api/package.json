@@ -8,6 +8,8 @@
     "dev": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
     "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles",
+    "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles",
+    "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles",
     "build": "tsc --project './tsconfig.json'",
     "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
     "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"

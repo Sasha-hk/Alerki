@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import Validator from '../utils/validator';
+import Validator, { blanks } from '../utils/validator';
 import Controller from '../interfaces/controller.interface';
 import IError from '../interfaces/error.interface';
 import ServiceError from '../errors/service.error';
@@ -26,15 +26,13 @@ class ServiceController implements IServiceController {
         name,
       } = req.query;
 
-      Validator({
-        all: [
-          {
-            value: name,
-            name: 'name',
-            type: 'string',
-            maxLength: 30,
-          },
-        ],
+      Validator.validate({
+        name: {
+          value: name,
+          required: true,
+          type: 'string',
+          maxLength: 30,
+        },
       });
 
       const foundServices = await ServiceService.findAllByName(name as string);
