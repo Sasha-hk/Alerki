@@ -91,8 +91,8 @@ class AuthController implements IAuthController {
 
       Validator.validate({
         ...blanks.passwordField(password, { required: true }),
-        ...blanks.usernameField(username, { onlyOne: true }),
-        ...blanks.emailField(email, { onlyOne: true }),
+        ...blanks.usernameField(username, { atLeastOne: true }),
+        ...blanks.emailField(email, { atLeastOne: true }),
       });
 
       const deviceName = getDeviceName(req);
