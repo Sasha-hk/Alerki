@@ -1,5 +1,4 @@
-export interface IValidateField {
-  value: any;
+export interface IValidateProperties {
   required?: boolean;
   onlyOne?: boolean;
   atLeastOne?: boolean;
@@ -9,6 +8,10 @@ export interface IValidateField {
   minValue?: number;
   maxLength?: number;
   minLength?: number;
+}
+
+export interface IValidateField extends IValidateProperties {
+  value: any;
 }
 
 interface IValidateFields {

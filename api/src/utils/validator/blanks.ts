@@ -1,6 +1,6 @@
-import IValidateFields from './validator.interface';
+import IValidateFields, { IValidateProperties } from './validator.interface';
 
-export const usernameField = (username: string | any, options?: object): IValidateFields => ({
+export const usernameField = (username: string | any, options?: IValidateProperties): IValidateFields => ({
   username: {
     value: username,
     type: 'string',
@@ -11,7 +11,7 @@ export const usernameField = (username: string | any, options?: object): IValida
   },
 });
 
-export const emailField = (email: string | any, options?: object): IValidateFields => ({
+export const emailField = (email: string | any, options?: IValidateProperties): IValidateFields => ({
   email: {
     value: email,
     type: 'string',
@@ -22,7 +22,7 @@ export const emailField = (email: string | any, options?: object): IValidateFiel
   },
 });
 
-export const passwordField = (password: string | any, options?: object): IValidateFields => ({
+export const passwordField = (password: string | any, options?: IValidateProperties): IValidateFields => ({
   password: {
     value: password,
     type: 'string',
@@ -32,7 +32,7 @@ export const passwordField = (password: string | any, options?: object): IValida
   },
 });
 
-export const profileTypeField = (profileType: string | any, options?: object): IValidateFields => ({
+export const profileTypeField = (profileType: string | any, options?: IValidateProperties): IValidateFields => ({
   profileType: {
     value: profileType,
     type: 'string',
