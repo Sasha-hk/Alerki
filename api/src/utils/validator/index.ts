@@ -75,7 +75,7 @@ class Validator implements IValidator {
     for (let i = 0; i < fieldKeysLength; i++) {
       for (let j = 0; j < partialChecksLength; j++) {
         // Check if validation type specified in field
-        if (fieldKeys[i] === partialCheckKeys[j]) {
+        if (partialCheckKeys[j] in fields[fieldKeys[i]]) {
           if (this.partialChecks[partialCheckKeys[j]](fields[fieldKeys[i]], errorPool, fieldKeys[i])) {
             throwError = true;
             continue;
@@ -86,8 +86,14 @@ class Validator implements IValidator {
 
     // Full checks
     for (let i = 0; i < fullChecksLength; i++) {
-      if (this.fullChecks[fullCheckKeys[i]](fields, errorPool)) {
-        throwError = true;
+      let wasChecked = false;
+      for (let j = 0; j < fieldKeysLength; j++) {
+        if (!wasChecked && fullCheckKeys[i] in fields[fieldKeys[j]]) {
+          wasChecked = true;
+          if (this.fullChecks[fullCheckKeys[i]](fields, errorPool)) {
+            throwError = true;
+          }
+        }
       }
     }
 
