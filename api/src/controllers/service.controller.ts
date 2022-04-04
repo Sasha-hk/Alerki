@@ -29,6 +29,7 @@ class ServiceController implements IServiceController {
       Validator.validate({
         name: {
           value: name,
+          required: true,
           type: 'string',
           maxLength: 30,
         },
