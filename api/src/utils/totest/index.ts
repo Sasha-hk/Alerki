@@ -101,8 +101,6 @@ class Totest implements ITotest {
 
     const propertiesHit = Object.keys(token).length * 2;
 
-    console.log(token, tokenKeys[0], propertiesHit);
-
     delete this.tokens[tokenKeys[0]];
 
     for (let i = 0; i < propertiesHit; i++) {
