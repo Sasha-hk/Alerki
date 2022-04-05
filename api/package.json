@@ -10,6 +10,7 @@
     "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles",
     "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles",
     "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles",
+    "test:totest": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit/totest.test.ts --detectOpenHandles",
     "build": "tsc --project './tsconfig.json'",
     "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
     "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"
@@ -22,6 +23,7 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
+    "randexp": "^0.5.3",
     "sequelize": "^6.17.0",
     "typescript": "^4.6.2"
   },

@@ -84,7 +84,7 @@ DataGen(
         },
         refreshToken: {
           required: true,
-        }
+        },
       }
     }
   },
