@@ -2,6 +2,8 @@
 
 The utility is designed to generate data for testing API.
 
+Utility name: totest
+
 Table of contents:
 
 - [Data generator](#data-generator)
@@ -31,22 +33,76 @@ The utility should can:
 ## Example view
 
 ```js
-DataGen({
-  username: {
-    required: true,
-    minLength: 4,
-    maxLength: 30,
-    pattern: /\w{4,30}/,
-    unique: true,
+DataGen(
+  {
+    request: {
+      body: {
+        username: {
+          required: true,
+          minLength: 4,
+          maxLength: 30,
+          pattern: /\w{4,30}/,
+          unique: true,
+        },
+        email: {
+          required: true,
+          minLength: 4,
+          maxLength: 30,
+          pattern: /\w{4,30}/,
+          unique: true,
+        },
+        profileType: {
+          required: true,
+          pattern: /(client|master)/,
+        },
+        token: {
+          required: true,
+          dataset: [1, 2, 3, 4, 5],
+        }
+      },
+      cookies: {},
+      query: {},
+      url: {},
+      successCode: 200,
+      errorCode: 400,
+    },
+    response: {
+      body: {
+        username: {
+          required: true,
+        },
+        email: {
+          required: true,
+        },
+        id: {
+          required: true,
+        },
+      },
+      cookies: {
+        accessToken: {
+          required: true,
+        },
+        refreshToken: {
+          required: true,
+        }
+      }
+    }
   },
-  email: {
-    required: true,
-    minLength: 4,
-    maxLength: 30,
-    pattern: /\w{4,30}/,
-    unique: true,
+  (data) => {
+    const res = await request(app)
+      .get('/')
+      .send(data)
+
+    return {
+      body: res.body,
+      status: res.statusCode,
+      cookies: getCookies(res)
+    }
+  },
+  (r) => {
+    expect(r.statusCode).toEqual(r.expected)
   }
-})
+)
 ```
 
 ### Iteration count definition
