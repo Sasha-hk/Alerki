@@ -11,6 +11,7 @@
     "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles",
     "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles",
     "test:totest": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit/totest.test.ts --detectOpenHandles",
+    "dev:totest": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/utils/totest/index.test.ts",
     "build": "tsc --project './tsconfig.json'",
     "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
     "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"
