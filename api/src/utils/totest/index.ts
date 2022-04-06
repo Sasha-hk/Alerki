@@ -1,12 +1,11 @@
-import RandExp from 'randexp';
 import { IValidateProperties } from '../validator/validator.interface';
+import * as handlers from './property-handlers';
 
 interface IParams extends IValidateProperties {
+  pattern: RegExp;
   dataset?: Array<any>;
   exclude?: Array<any>;
   include?: Array<any>;
-  badCode?: number;
-  incorrectCode?: number;
 }
 
 interface IResponse {
@@ -106,6 +105,15 @@ class Totest implements ITotest {
     for (let i = 0; i < propertiesHit; i++) {
       this.test();
     }
+  }
+
+  getWeight(properties: IParams) {
+    // L const gen = [];
+
+    // for (const i of properties) {
+    //   console.log(i);
+    //   gen
+    // }
   }
 
   handlePattern(properties: IParams) {
