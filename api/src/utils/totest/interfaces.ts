@@ -1,40 +1,60 @@
 import { IValidateProperties } from '../validator/validator.interface';
 
-export interface Prop extends IValidateProperties {
+export interface Properties extends IValidateProperties {
   dataset: Array<any>,
   include: Array<any>,
   exclude: Array<any>,
 }
 
-interface Config {
-  request: {
-    body: { [key: string]: Prop },
-    cookies: { [key: string]: Prop },
-    query: { [key: string]: Prop },
-    successCode: number,
-  },
-  response: {
-    body: {},
-    cookies: {},
-    code: number,
-  }
+export interface Request {
+  body: { [key: string]: Properties },
+  cookies: { [key: string]: Properties },
+  query: { [key: string]: Properties },
+  successCode: number,
 }
 
-interface Generic {}
-
-interface Generics {
-  [key: string]: any,
+export interface Response {
+  body: { [key: string]: any },
+  cookies: { [key: string]: any },
+  code: number,
 }
 
-interface Handler {}
+export interface Config {
+  request: Request,
+  response: Response
+}
 
-interface ToTest {
-  readonly generics: { [key: string]: () => any },
-  readonly handlers: { [key: string]: () => any },
+export interface Handler {
+  (): any;
+}
 
-  setGenerics(): void;
-  setHandlers(): void;
+export interface Generic {
+  (): any;
+}
+
+export interface Generics {
+  [key: string]: Generic,
+}
+
+export interface Handlers {
+  [key: string]: Handler,
+}
+
+export interface ToTestConstructor {
+  new(): ToTestInterface;
+}
+
+export interface ToTestInterface {
+  generics: Generics;
+  handlers: Handlers;
+
+  setGenerics(generics: Generics): void;
+  setHandlers(handlers: Handlers): void;
   test(config: Config): void;
+  _test(request: Request, response: Response): Response;
+  handle(property: Properties): any;
 }
 
-export default ToTest;
+export default function (ctor: ToTestConstructor): ToTestInterface {
+  return new ctor();
+}
