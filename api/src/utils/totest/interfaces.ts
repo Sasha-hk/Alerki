@@ -27,7 +27,7 @@ export interface Response extends Dataset {
 }
 
 export interface TestingDataset extends Dataset {
-  query: { [key: string]: any },
+  query?: { [key: string]: any },
 }
 
 export interface Compare {
@@ -75,6 +75,12 @@ export interface ToTestInterface {
   generics: Generics;
   /** Handlers list */
   handlers: Handlers;
+  /** Testing configuration */
+  config: Config;
+  /** Send request */
+  send: SendRequestCallback;
+  /** Compare expected data and response */
+  compare: CompareCallback;
 
   /**
    * User custom generics.
@@ -109,12 +115,7 @@ export interface ToTestInterface {
    * @param request Request object
    * @param response Response object
    */
-  _test(
-    request: Request,
-    response: Response,
-    send: SendRequestCallback,
-    compare: CompareCallback,
-  ): Response | undefined;
+  _test(dataset: TestingDataset): Response | undefined;
 
   /**
    * Handle property
@@ -127,6 +128,8 @@ export interface ToTestInterface {
    * @param request Configuration object
    */
   prepareFirstProp(request: Request): { prop: Properties, key: string } | undefined;
+
+  sendAndCompare(data: Dataset): Promise<void>;
 }
 
 /**
