@@ -13,11 +13,15 @@ import {
   Handlers,
   SendRequestCallback,
   CompareCallback,
+  Dataset,
 } from './interfaces';
 
 class ToTest implements ToTestInterface {
   generics: Generics;
   handlers: Handlers;
+  config: Config;
+  send: SendRequestCallback;
+  compare: CompareCallback;
 
   constructor() {
     this.generics = {};
@@ -37,38 +41,40 @@ class ToTest implements ToTestInterface {
     send: SendRequestCallback,
     compare: CompareCallback,
   ) {
-    this._test(config.request, config.response, send, compare);
+    this.config = config;
+    this.send = send;
+    this.compare = compare;
+
+    const dataset: TestingDataset = {};
+
+    this._test(dataset);
   }
 
-  _test(
-    request: Request,
-    response: Response,
-    send: SendRequestCallback,
-    compare: CompareCallback,
-  ) {
-    const prop = this.prepareFirstProp(request);
+  _test(dataset: TestingDataset) {
+    const prop = this.prepareFirstProp(this.config.request);
 
     if (!prop) {
+      this.sendAndCompare(dataset);
       return undefined;
     }
 
     if (!prop.prop.cascade) {
-      const dataset: Array<any> = this.handle(prop.prop, prop.key);
+      const dataItem: Array<any> = this.handle(prop.prop, prop.key);
 
-      for (let i = 0; i < dataset.length; i++) {
-        const res: Response = {};
+      for (let i = 0; i < dataItem.length; i++) {
+        dataset[prop.key] = dataItem[i];
 
-        res[prop.key] = dataset[i];
-
-        this._test(request, response, send, compare);
+        this._test(dataset);
       }
 
-      return response;
+      return undefined;
     }
 
-    console.log(2);
+    // Here in for loop should iterates all the variants of date
+    // make it later
 
-    return response;
+    this.sendAndCompare(dataset);
+    return undefined;
   }
 
   handle(property: Properties, key: string) {
@@ -95,6 +101,11 @@ class ToTest implements ToTestInterface {
     }
 
     return { prop: firstProp, key: firstPropKey };
+  }
+
+  async sendAndCompare(data: Dataset): Promise<void> {
+    await this.send(data);
+    this.compare(null);
   }
 }
 
