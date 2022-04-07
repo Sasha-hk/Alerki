@@ -28,6 +28,7 @@ export interface Response extends Dataset {
 
 export interface TestingDataset extends Dataset {
   query?: { [key: string]: any },
+  code: number,
 }
 
 export interface Compare {
@@ -42,20 +43,20 @@ export interface Config {
   response: Response,
 }
 
-export interface Handler {
-  (): any;
-}
-
-export interface Generic {
-  (): any;
-}
-
 export interface SendRequestCallback {
-  (data: TestingDataset): any;
+  (data: TestingDataset): void;
 }
 
 export interface CompareCallback {
-  (data: Compare): any;
+  (data: Compare): void;
+}
+
+export interface Handler {
+  (props: Properties): any,
+}
+
+export interface Generic {
+  (...params: any): any,
 }
 
 export interface Generics {
