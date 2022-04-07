@@ -28,7 +28,7 @@ export interface Response extends Dataset {
 
 export interface TestingDataset extends Dataset {
   query?: { [key: string]: any },
-  code: number,
+  code?: number,
 }
 
 export interface Compare {
