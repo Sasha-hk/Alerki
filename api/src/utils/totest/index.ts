@@ -15,6 +15,7 @@ import {
   CompareCallback,
   Dataset,
 } from './interfaces';
+import handlers from './handlers';
 
 class ToTest implements ToTestInterface {
   generics: Generics;
@@ -25,7 +26,7 @@ class ToTest implements ToTestInterface {
 
   constructor() {
     this.generics = {};
-    this.handlers = {};
+    this.handlers = { ...handlers };
   }
 
   setGenerics(generics: Generics) {
@@ -61,6 +62,7 @@ class ToTest implements ToTestInterface {
     if (!prop.prop.cascade) {
       const dataItem: Array<any> = this.handle(prop.prop, prop.key);
 
+      console.log(dataItem);
       for (let i = 0; i < dataItem.length; i++) {
         dataset[prop.key] = dataItem[i];
 
@@ -77,10 +79,18 @@ class ToTest implements ToTestInterface {
     return undefined;
   }
 
-  handle(property: Properties, key: string) {
-    console.log('handler >>> ', property, key);
+  handle(prop: Properties, key: string) {
+    const propertyKeys = Object.keys(prop);
+    const propertyKeysLength = propertyKeys.length;
+    const dataset: Array<any> = [];
 
-    return [1, 2];
+    for (let i = 0; i < propertyKeysLength; i++) {
+      if (propertyKeys[i] in this.handlers) {
+        dataset.push(this.handlers[propertyKeys[i]](prop));
+      }
+    }
+
+    return dataset;
   }
 
   prepareFirstProp(request: Request) {
