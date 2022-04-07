@@ -1,34 +1,45 @@
 import { IValidateProperties } from '../validator/validator.interface';
 
 export interface Properties extends IValidateProperties {
-  dataset: Array<any>,
-  include: Array<any>,
-  exclude: Array<any>,
+  cascade?: boolean,
+  dataset?: Array<any>,
+  include?: Array<any>,
+  exclude?: Array<any>,
 }
 
-export interface Request {
+export interface Dataset {
   /** Body props */
-  body: { [key: string]: Properties },
+  body?: { [key: string]: Properties },
   /** Cookie props */
-  cookies: { [key: string]: Properties },
-  /** Query props */
-  query: { [key: string]: Properties },
-  /** Success code */
-  successCode: number,
+  cookies?: { [key: string]: Properties },
 }
 
-export interface Response {
-  /** Body response */
-  body: { [key: string]: any },
-  /** Cookie response */
-  cookies: { [key: string]: any },
+export interface Request extends Dataset {
+  /** Query props */
+  query?: { [key: string]: Properties },
+  /** Success code */
+  successCode?: number,
+}
+
+export interface Response extends Dataset {
   /** Response code */
-  code: number,
+  code?: number,
+}
+
+export interface TestingDataset extends Dataset {
+  query: { [key: string]: any },
+}
+
+export interface Compare {
+  expect: {
+    code: number,
+  } & Dataset,
+  received: Response,
 }
 
 export interface Config {
   request: Request,
-  response: Response
+  response: Response,
 }
 
 export interface Handler {
@@ -37,6 +48,14 @@ export interface Handler {
 
 export interface Generic {
   (): any;
+}
+
+export interface SendRequestCallback {
+  (data: TestingDataset): any;
+}
+
+export interface CompareCallback {
+  (data: Compare): any;
 }
 
 export interface Generics {
@@ -78,7 +97,11 @@ export interface ToTestInterface {
    * Run testing based on configuration.
    * @param config Test configuration object
    */
-  test(config: Config): void;
+  test(
+    config: Config,
+    send: SendRequestCallback,
+    compare: CompareCallback,
+  ): void;
 
   /**
    * Private recursive function designed to implement data generation
@@ -86,19 +109,24 @@ export interface ToTestInterface {
    * @param request Request object
    * @param response Response object
    */
-  _test(request: Request, response: Response): Response;
+  _test(
+    request: Request,
+    response: Response,
+    send: SendRequestCallback,
+    compare: CompareCallback,
+  ): Response | undefined;
 
   /**
    * Handle property
    * @param property Prop specification object
    */
-  handle(property: Properties): any;
+  handle(property: Properties, key: string): Array<any>;
 
   /**
    * Get first prop config and delete it.
-   * @param config Configuration object
+   * @param request Configuration object
    */
-  prepareFirstProp(config: Config): Properties;
+  prepareFirstProp(request: Request): { prop: Properties, key: string } | undefined;
 }
 
 /**
