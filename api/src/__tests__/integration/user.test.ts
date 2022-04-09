@@ -11,9 +11,9 @@ const user = {
   profileType: 'client',
   password: 'user-test',
   id: 0,
-  firstName: '',
-  lastName: '',
-  phoneNumber: '',
+  firstName: 'firstName_',
+  lastName: 'lastName_',
+  phoneNumber: '+380000000000',
   pictureID: 0,
   clientID: 0,
   masterID: 0,
@@ -87,6 +87,42 @@ describe('Services functionality', () => {
 
         expect(checkProfileType.status).toEqual(200);
         expect(checkProfileType.body.profileType).toEqual('client');
+      });
+    });
+  });
+
+  describe('test update user endpoints', () => {
+    describe('test for client', () => {
+      it('should set first / last name and phone number', async () => {
+        const r = await request(app)
+          .patch('/user/profile')
+          .set('Cookie', [
+            'accessToken=' + user.accessToken,
+            'refreshToken=' + user.refreshToken,
+          ])
+          .send(user);
+
+        expect(r.status).toEqual(200);
+        expect(r.body.firstName).toEqual(user.firstName);
+        expect(r.body.lastName).toEqual(user.lastName);
+        expect(r.body.phoneNumber).toEqual(user.phoneNumber);
+      });
+
+      it('should not update only phone number', async () => {
+        user.phoneNumber = '+380000000111';
+
+        const r = await request(app)
+          .patch('/user/profile')
+          .set('Cookie', [
+            'accessToken=' + user.accessToken,
+            'refreshToken=' + user.refreshToken,
+          ])
+          .send(user);
+
+        expect(r.status).toEqual(200);
+        expect(r.body.firstName).toEqual(user.firstName);
+        expect(r.body.lastName).toEqual(user.lastName);
+        expect(r.body.phoneNumber).toEqual(user.phoneNumber);
       });
     });
   });
