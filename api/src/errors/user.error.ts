@@ -22,6 +22,18 @@ class UserError extends HttpError {
   static UserNotExists(): HttpError {
     throw new HttpError(404, 'User not exists', { error: 'user not exists' });
   }
+
+  /**
+   * User not exists
+   * @returns {HttpError} Error
+   */
+  static UserPhoneNumberExists(): HttpError {
+    throw new HttpError(
+      404,
+      'User with the phone number already exists',
+      { error: 'user with such phone number already exists' },
+    );
+  }
 }
 
 export default UserError;
