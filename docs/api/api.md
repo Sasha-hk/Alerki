@@ -15,6 +15,7 @@ Table of contents:
     - [Delete device](#delete-device)
   - [Services](#services)
     - [Get services](#get-services)
+- [**Endpoints list**](#endpoints-list)
 
 ## Conventions
 
@@ -181,3 +182,46 @@ GET /services?name=...
   }
 ]
 ```
+
+# **Endpoints list**
+
+Endpoints list:
+
+- [`/auth`](#Authentication)
+  - [`/register`](#Registration)
+  - [`/log-in`](#Log-in)
+  - [`/log-out`](#Log-out)
+  - [`/callback/google`](#With-Google)
+  - [`/devices`]()
+  - [`/device`]()
+  - [`/refresh`](#Refresh)
+
+- [`/appointments`](#Appointments)
+  - [`/details/:slug`](#Appointment-details)
+  - `/client`
+    - [`/get-day`](#Get-appointments-for)
+    - [`/from-now`](#Get-appointments-from-now)
+    - [`/cancel/:slug`](#Cancel-appointment)
+  - `/master`
+    - [`/get-day`](#Get-appointments-for)
+    - [`/from-now`](#Get-appointments-from-now)
+    - [`/cancel/:slug`](#Cancel-appointment)
+    - [`/confirm/:slug`](#Master-confirm-appointment)
+  - [`/make-appointment`](#Make-appointment)
+
+- [`/profile`](#Profile)
+  - [`/:username`](#Get-profile)
+  - [`/:masterID`](#Get-services)
+  - [`/find-master`](#Find-master)
+  - [`/get-schedule`](#Get-master-schedule)
+  - [`/picture`](#Picture)
+  - [`/create/service`](#Create-master-service)
+  - [`/become-master`](#Become-master)
+  - `/master`
+    - [`/set-schdule`](#Set-master-schedule)
+    - [`/update`](#Update-master-profile)
+    - [`/update/weekend-days`](#Update-weekend-days)
+
+- [`/services`](#Services)
+  - [`/find`](#Find-service)
+  - [`/create`](#Create-service)
