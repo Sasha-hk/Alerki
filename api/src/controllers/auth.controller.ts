@@ -14,11 +14,11 @@ import AuthError from '../errors/auth.error';
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
   logIn(req: Request, res: Response): any;
-  logOut(req: Request, res: Response): any;
+  logOut(req: AuthRequest, res: Response): any;
   withGoogle(req: Request, res: Response): any;
-  getDevices(req: Request, res: Response): any;
-  deleteDevice(req: Request, res: Response): any;
-  refresh(req: Request, res: Response): any;
+  getDevices(req: AuthRequest, res: Response): any;
+  deleteDevice(req: AuthRequest, res: Response): any;
+  refresh(req: AuthRequest, res: Response): any;
 }
 
 /**
