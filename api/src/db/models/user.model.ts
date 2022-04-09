@@ -40,7 +40,7 @@ class UserModel extends Model implements IUser {
         unique: true,
       },
       phoneNumber: {
-        type: DataTypes.STRING(12),
+        type: DataTypes.STRING(13),
         unique: true,
       },
       password: {
