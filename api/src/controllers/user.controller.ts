@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { AuthRequest } from './../middlewares/is-authenticated';
+import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 import Controller from '../interfaces/controller.interface';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
@@ -20,35 +20,35 @@ class UserController implements IUserController {
   public path = '/user';
 
   constructor() {
-    this.router.patch(`${this.path}/become/master`, this.becomeMaster);
-    this.router.patch(`${this.path}/become/client`, this.becomeClient);
+    this.router.patch(`${this.path}/become/master`, isAuthenticated, this.becomeMaster);
+    this.router.patch(`${this.path}/become/client`, isAuthenticated, this.becomeClient);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
     try {
-      const {
-        id,
-      } = req.token;
+      const { id } = req.token!;
 
-      UserService.becomeMaster(id);
+      await UserService.becomeMaster(id);
 
       res.sendStatus(200);
     } catch (e: IError | any) {
+      console.log(e);
       res.status(e?.status || 500).json(e.error);
     }
   }
 
   async becomeClient(req: AuthRequest, res: Response<any, Record<string, any>>) {
     try {
-      const {
-        id,
-      } = req.token;
+      const { id } = req.token!;
 
-      UserService.becomeClient(id);
+      await UserService.becomeClient(id);
 
       res.sendStatus(200);
     } catch (e: IError | any) {
+      console.log(e);
       res.status(e?.status || 500).json(e.error);
     }
   }
 }
+
+export default UserController;
