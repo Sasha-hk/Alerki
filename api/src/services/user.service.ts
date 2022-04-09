@@ -35,6 +35,7 @@ export interface ILogOut {
 interface IUserService {
   findUserByUsername(username: string): Promise<UserModel | null>
   findUserByEmail(email: string): Promise<UserModel | null>
+  findUserByID(id: string): Promise<UserModel | null>
   register({
     username,
     email,
@@ -75,6 +76,20 @@ class UserService implements IUserService {
       raw: true,
       where: {
         username,
+      },
+    });
+  }
+
+  /**
+   * Find user by username
+   * @param username Username to find
+   * @returns {UserModel | null} User if exists
+   */
+  async findUserByID(id: string) {
+    return UserModel.findOne({
+      raw: true,
+      where: {
+        id,
       },
     });
   }

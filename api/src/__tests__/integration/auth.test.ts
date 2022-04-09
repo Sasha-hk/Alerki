@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import request from 'supertest';
 import App from '../../app';
 import getCookies from '../../utils/get-cookies';
@@ -195,6 +196,45 @@ describe('Authentication functionality', () => {
 
       expect(cookies.refreshToken).toEqual('');
       expect(cookies.accessToken).toEqual('');
+    });
+  });
+
+  describe('test refresh endpoint', () => {
+    it('should refresh tokens', async () => {
+      const r = await request(app)
+        .get('/auth/refresh')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(200);
+
+      console.log(r.body);
+
+      const cookies = getCookies(r);
+
+      expect(cookies.refreshToken).toBeTruthy();
+      expect(cookies.accessToken).toBeTruthy();
+    });
+
+    it('should not refresh token', async () => {
+      const refreshToken = jwt.sign(
+        {
+          id: '1234556',
+          username: user.username,
+          email: user.email,
+        },
+        'secret',
+      );
+
+      const r = await request(app)
+        .get('/auth/refresh')
+        .set('Cookie', [
+          refreshToken,
+        ]);
+
+      expect(r.statusCode).toEqual(401);
     });
   });
 });
