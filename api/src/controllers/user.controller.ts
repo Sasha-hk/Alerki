@@ -2,16 +2,17 @@ import { Router, Response } from 'express';
 import { AuthRequest } from './../middlewares/is-authenticated';
 import Controller from '../interfaces/controller.interface';
 import IError from '../interfaces/error.interface';
+import UserService from '../services/user.service';
 
 interface IUserController extends Controller {
-  // ClientAppointments(req: AuthRequest, res: Response): any;
-  // MasterAppointments(req: AuthRequest, res: Response): any;
-  // CreateMasterService(req: AuthRequest, res: Response): any;
-  // UpdateMasterService(req: AuthRequest, res: Response): any;
-  // DeleteMasterService(req: AuthRequest, res: Response): any;
-  // UpdateProfile(req: AuthRequest, res: Response): any;
-  BecomeMaster(req: AuthRequest, res: Response): any;
-  BecomeClient(req: AuthRequest, res: Response): any;
+  // L clientAppointments(req: AuthRequest, res: Response): any;
+  // masterAppointments(req: AuthRequest, res: Response): any;
+  // createMasterService(req: AuthRequest, res: Response): any;
+  // updateMasterService(req: AuthRequest, res: Response): any;
+  // deleteMasterService(req: AuthRequest, res: Response): any;
+  // updateProfile(req: AuthRequest, res: Response): any;
+  becomeMaster(req: AuthRequest, res: Response): any;
+  becomeClient(req: AuthRequest, res: Response): any;
 }
 
 class UserController implements IUserController {
@@ -19,21 +20,33 @@ class UserController implements IUserController {
   public path = '/user';
 
   constructor() {
-    this.router.patch(`${this.path}/become/master`, this.BecomeMaster);
-    this.router.patch(`${this.path}/become/client`, this.BecomeClient);
+    this.router.patch(`${this.path}/become/master`, this.becomeMaster);
+    this.router.patch(`${this.path}/become/client`, this.becomeClient);
   }
 
-  async BecomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
+  async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
     try {
-      console.log(req);
+      const {
+        id,
+      } = req.token;
+
+      UserService.becomeMaster(id);
+
+      res.sendStatus(200);
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e.error);
     }
   }
 
-  async BecomeClient(req: AuthRequest, res: Response<any, Record<string, any>>) {
+  async becomeClient(req: AuthRequest, res: Response<any, Record<string, any>>) {
     try {
-      console.log(req);
+      const {
+        id,
+      } = req.token;
+
+      UserService.becomeClient(id);
+
+      res.sendStatus(200);
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e.error);
     }
