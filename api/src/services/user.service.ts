@@ -5,6 +5,7 @@ import AuthService from './auth.service';
 import { UserModel, UserPictureModel } from '../db/models';
 import { ITokens } from './auth.service';
 import { IGoogleResponse } from '../oauth/google.oauth';
+import UserError from '../errors/user.error';
 
 interface IRegister {
   username: string;
@@ -46,6 +47,8 @@ interface IUserService {
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
   logOut({ refreshToken, deviceName, userID }: ILogOut): void;
   withGoogle(data: IGoogleResponse, deviceName: string): any;
+  becomeMaster(userID: string): Promise<void>;
+  becomeClient(userID: string): Promise<void>;
 }
 
 /**
@@ -257,6 +260,58 @@ class UserService implements IUserService {
       user: candidate,
       ...tokens,
     };
+  }
+
+  async becomeMaster(userID: string) {
+    const candidate = await UserModel.findOne({
+      raw: true,
+      where: {
+        userID,
+      },
+    });
+
+    if (!candidate) {
+      throw UserError.UserNotExists();
+    }
+
+    if (candidate?.profileType === 'client') {
+      UserModel.update(
+        {
+          profileType: 'master',
+        },
+        {
+          where: {
+            userID,
+          },
+        },
+      );
+    }
+  }
+
+  async becomeClient(userID: string) {
+    const candidate = await UserModel.findOne({
+      raw: true,
+      where: {
+        userID,
+      },
+    });
+
+    if (!candidate) {
+      throw UserError.UserNotExists();
+    }
+
+    if (candidate?.profileType === 'master') {
+      UserModel.update(
+        {
+          profileType: 'client',
+        },
+        {
+          where: {
+            userID,
+          },
+        },
+      );
+    }
   }
 }
 
