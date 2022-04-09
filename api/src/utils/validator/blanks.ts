@@ -11,6 +11,28 @@ export const usernameField = (username: string | any, options?: IValidatePropert
   },
 });
 
+export const firstNameField = (firstName: string | any, options?: IValidateProperties): IValidateFields => ({
+  firstName: {
+    value: firstName,
+    type: 'string',
+    pattern: /^\w+$/,
+    minLength: 4,
+    maxLength: 25,
+    ...options,
+  },
+});
+
+export const lastNameField = (lastName: string | any, options?: IValidateProperties): IValidateFields => ({
+  lastName: {
+    value: lastName,
+    type: 'string',
+    pattern: /^\w+$/,
+    minLength: 4,
+    maxLength: 25,
+    ...options,
+  },
+});
+
 export const emailField = (email: string | any, options?: IValidateProperties): IValidateFields => ({
   email: {
     value: email,
@@ -37,6 +59,15 @@ export const profileTypeField = (profileType: string | any, options?: IValidateP
     value: profileType,
     type: 'string',
     pattern: /(client|master)/,
+    ...options,
+  },
+});
+
+export const phoneNumberField = (phoneNumber: string | any, options?: IValidateProperties): IValidateFields => ({
+  phoneNumber: {
+    value: phoneNumber,
+    type: 'string',
+    pattern: /\+[0-9]{2,3}[0-9]{3}[0-9]{3}[0-9]{3}/,
     ...options,
   },
 });
