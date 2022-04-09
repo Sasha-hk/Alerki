@@ -269,7 +269,6 @@ class AuthController implements IAuthController {
       res.json({
         ...userDto,
       });
-      res.json('OK');
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e?.error);
     }
