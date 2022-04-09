@@ -47,8 +47,8 @@ interface IUserService {
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
   logOut({ refreshToken, deviceName, userID }: ILogOut): void;
   withGoogle(data: IGoogleResponse, deviceName: string): any;
-  becomeMaster(userID: string): Promise<void>;
-  becomeClient(userID: string): Promise<void>;
+  becomeMaster(id: string): Promise<void>;
+  becomeClient(id: string): Promise<void>;
 }
 
 /**
@@ -262,11 +262,11 @@ class UserService implements IUserService {
     };
   }
 
-  async becomeMaster(userID: string) {
+  async becomeMaster(id: string) {
     const candidate = await UserModel.findOne({
       raw: true,
       where: {
-        userID,
+        id,
       },
     });
 
@@ -281,18 +281,18 @@ class UserService implements IUserService {
         },
         {
           where: {
-            userID,
+            id,
           },
         },
       );
     }
   }
 
-  async becomeClient(userID: string) {
+  async becomeClient(id: string) {
     const candidate = await UserModel.findOne({
       raw: true,
       where: {
-        userID,
+        id,
       },
     });
 
@@ -307,7 +307,7 @@ class UserService implements IUserService {
         },
         {
           where: {
-            userID,
+            id,
           },
         },
       );
