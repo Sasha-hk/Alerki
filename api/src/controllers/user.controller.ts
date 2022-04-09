@@ -3,6 +3,8 @@ import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 import Controller from '../interfaces/controller.interface';
 import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
+import PrivateUserDto from '../utils/dto/private-user.dto';
+import Validator, { blanks } from '../utils/validator';
 
 interface IUserController extends Controller {
   // L clientAppointments(req: AuthRequest, res: Response): any;
@@ -10,7 +12,7 @@ interface IUserController extends Controller {
   // createMasterService(req: AuthRequest, res: Response): any;
   // updateMasterService(req: AuthRequest, res: Response): any;
   // deleteMasterService(req: AuthRequest, res: Response): any;
-  // updateProfile(req: AuthRequest, res: Response): any;
+  updateProfile(req: AuthRequest, res: Response): any;
   becomeMaster(req: AuthRequest, res: Response): any;
   becomeClient(req: AuthRequest, res: Response): any;
 }
@@ -22,6 +24,7 @@ class UserController implements IUserController {
   constructor() {
     this.router.patch(`${this.path}/become/master`, isAuthenticated, this.becomeMaster);
     this.router.patch(`${this.path}/become/client`, isAuthenticated, this.becomeClient);
+    this.router.patch(`${this.path}/profile`, isAuthenticated, this.updateProfile);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -32,12 +35,11 @@ class UserController implements IUserController {
 
       res.sendStatus(200);
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e.error);
     }
   }
 
-  async becomeClient(req: AuthRequest, res: Response<any, Record<string, any>>) {
+  async becomeClient(req: AuthRequest, res: Response) {
     try {
       const { id } = req.token!;
 
@@ -45,7 +47,39 @@ class UserController implements IUserController {
 
       res.sendStatus(200);
     } catch (e: IError | any) {
-      console.log(e);
+      res.status(e?.status || 500).json(e.error);
+    }
+  }
+
+  async updateProfile(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.token!;
+      const {
+        firstName,
+        lastName,
+        phoneNumber,
+      } = req.body;
+      const picture = req.files?.picture;
+
+      Validator.validate({
+        ...blanks.firstNameField(firstName, { atLeastOne: true }),
+        ...blanks.firstNameField(lastName, { atLeastOne: true }),
+        ...blanks.phoneNumberField(phoneNumber, { atLeastOne: true }),
+      });
+
+      const userData = await UserService.updateUser(
+        id,
+        {
+          firstName,
+          lastName,
+          phoneNumber,
+        },
+      );
+
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
+    } catch (e: IError | any) {
       res.status(e?.status || 500).json(e.error);
     }
   }
