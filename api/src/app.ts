@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import Controller from './interfaces/controller.interface';
 import AuthController from './controllers/auth.controller';
 import ServiceController from './controllers/service.controller';
+import UserController from './controllers/user.controller';
 
 interface IApp {
   readonly app: express.Application;
@@ -27,6 +28,7 @@ class App implements IApp {
     this.setControllers([
       new AuthController(),
       new ServiceController(),
+      new UserController(),
     ]);
   }
 
