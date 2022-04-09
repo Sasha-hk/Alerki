@@ -6,6 +6,7 @@ import { UserModel, UserPictureModel } from '../db/models';
 import { ITokens } from './auth.service';
 import { IGoogleResponse } from '../oauth/google.oauth';
 import UserError from '../errors/user.error';
+import check from '../utils/validator/check';
 
 interface IRegister {
   username: string;
@@ -33,10 +34,17 @@ export interface ILogOut {
   refreshToken: string,
 }
 
+interface IUpdateUser {
+  firstName: string,
+  lastName: string,
+  phoneNumber: string,
+}
+
 interface IUserService {
-  findUserByUsername(username: string): Promise<UserModel | null>
-  findUserByEmail(email: string): Promise<UserModel | null>
-  findUserByID(id: string): Promise<UserModel | null>
+  findUserByUsername(username: string): Promise<UserModel | null>;
+  findUserByEmail(email: string): Promise<UserModel | null>;
+  findUserByID(id: string): Promise<UserModel | null>;
+  findUserByPhoneNumber(id: string): Promise<UserModel | null>;
   register({
     username,
     email,
@@ -49,6 +57,7 @@ interface IUserService {
   withGoogle(data: IGoogleResponse, deviceName: string): any;
   becomeMaster(id: string): Promise<void>;
   becomeClient(id: string): Promise<void>;
+  updateUser(id: string, { firstName, lastName, phoneNumber }: IUpdateUser): Promise<UserModel>;
 }
 
 /**
@@ -93,6 +102,20 @@ class UserService implements IUserService {
       raw: true,
       where: {
         id,
+      },
+    });
+  }
+
+  /**
+   * Find user by phone number
+   * @param {string} phoneNumber User phone number to find
+   * @returns {UserModel | null} User if exists
+   */
+  async findUserByPhoneNumber(phoneNumber: string) {
+    return UserModel.findOne({
+      raw: true,
+      where: {
+        phoneNumber,
       },
     });
   }
@@ -312,6 +335,39 @@ class UserService implements IUserService {
         },
       );
     }
+  }
+
+  async updateUser(id: string, { firstName, lastName, phoneNumber }: IUpdateUser) {
+    const candidate = await this.findUserByID(id);
+
+    if (!candidate) {
+      throw UserError.UserNotExists();
+    }
+
+    if (phoneNumber) {
+      const checkPhoneNumber = await this.findUserByPhoneNumber(phoneNumber);
+
+      if (checkPhoneNumber && checkPhoneNumber.id !== candidate.id) {
+        throw UserError.UserPhoneNumberExists();
+      }
+    }
+
+    if (firstName || lastName || phoneNumber) {
+      await UserModel.update(
+        {
+          firstName,
+          lastName,
+          phoneNumber,
+        },
+        {
+          where: {
+            id,
+          },
+        },
+      );
+    }
+
+    return await this.findUserByID(id) as UserModel;
   }
 }
 
