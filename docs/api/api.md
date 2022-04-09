@@ -219,7 +219,7 @@ GET /services?name=...
     - [`GET /appointments?for=[date]`](# "under development")
     - [`POST /service`](# "under development")
     - [`DELETE /service`](# "under development")
-    - [`PAtCH /service`](# "under development")
+    - [`PATCH /service`](# "under development")
   - [`PATCH /profile`](# "under development")
   - /become
     - [`PATCH /master`](# "under development")
@@ -233,7 +233,7 @@ GET /services?name=...
   - /master
     - [`POST /service`](# "under development")
     - [`DELETE /service`](# "under development")
-    - [`PAtCH /service`](# "under development")
+    - [`PATCH /service`](# "under development")
   - /become
     - [`PATCH /master`](# "under development")
     - [`PATCH /client`](# "under development")
