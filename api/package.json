@@ -22,6 +22,7 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
+    "randexp": "^0.5.3",
     "sequelize": "^6.17.0",
     "typescript": "^4.6.2"
   },

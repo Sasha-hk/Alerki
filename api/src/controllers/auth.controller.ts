@@ -9,14 +9,16 @@ import PrivateUserDto from '../utils/dto/private-user.dto';
 import DevicesDto from '../utils/dto/devices.dto';
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 import authenticateWithGoogle from '../oauth/google.oauth';
+import AuthError from '../errors/auth.error';
 
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
   logIn(req: Request, res: Response): any;
-  logOut(req: Request, res: Response): any;
+  logOut(req: AuthRequest, res: Response): any;
   withGoogle(req: Request, res: Response): any;
-  getDevices(req: Request, res: Response): any;
-  deleteDevice(req: Request, res: Response): any;
+  getDevices(req: AuthRequest, res: Response): any;
+  deleteDevice(req: AuthRequest, res: Response): any;
+  refresh(req: AuthRequest, res: Response): any;
 }
 
 /**
@@ -36,6 +38,7 @@ class AuthController implements IAuthController {
     this.router.get(`${this.path}/oauth/google`, this.withGoogle);
     this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
     this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
+    this.router.get(`${this.path}/refresh`, isAuthenticated, this.refresh);
 
     if (process.env.NODE_ENV === 'dev') {
       this.router.get(`${this.path}/oauth/test`, this.oauth);
@@ -227,6 +230,46 @@ class AuthController implements IAuthController {
       await AuthService.deleteAuthData({ id, userID: req.token?.id! });
 
       res.sendStatus(200);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
+    }
+  }
+
+  async refresh(req: AuthRequest, res: Response) {
+    try {
+      const {
+        refreshToken,
+      } = req.cookies;
+
+      Validator.validate({
+        refreshToken: {
+          value: refreshToken,
+          pattern: /\w+\.\w+\.\w+/,
+          required: true,
+        },
+      });
+
+      const token = req.token!;
+      const userData = await UserService.findUserByID(token.id)!;
+      const newTokens = await AuthService.generateTokens({
+        id: token.id,
+        username: token.username,
+        email: token.email,
+      });
+
+      if (!userData) {
+        throw AuthError.BadRefreshToken();
+      }
+
+      const userDto = new PrivateUserDto(userData);
+
+      res.cookie('refreshToken', newTokens.refreshToken, { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true });
+      res.cookie('accessToken', newTokens.accessToken, { maxAge: 30 * 60 * 60 * 1000 });
+
+      res.json({
+        ...userDto,
+      });
+      res.json('OK');
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e?.error);
     }

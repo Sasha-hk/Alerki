@@ -13,8 +13,10 @@ Table of contents:
     - [OAuth2.0 with Google](#oauth20-with-google)
     - [Get devices](#get-devices)
     - [Delete device](#delete-device)
+    - [Refresh tokens](#refresh-tokens)
   - [Services](#services)
     - [Get services](#get-services)
+  - [**Endpoints list**](#endpoints-list)
 
 ## Conventions
 
@@ -154,6 +156,20 @@ DELETE /auth/:id
 | :--- | :--- | :--- |
 | `id` | string | true |
 
+### Refresh tokens
+
+```http
+GET /auth/refresh
+```
+
+**Requirements:**
+
+- user need to be authenticated
+
+**Response:**
+
+[General user type response](#private-user-data)
+
 ## Services
 
 ### Get services
@@ -181,3 +197,55 @@ GET /services?name=...
   }
 ]
 ```
+
+## **Endpoints list**
+
+<!-- no toc -->
+- [`/auth`](#authentication)
+  - [`POST /register`](#registration)
+  - [`POST /log-in`](#log-in)
+  - [`GET /log-out`](#log-out)
+  - [`GET /callback/google`](#oauth20-with-google)
+  - [`GET /devices`](#get-devices)
+  - [`DELETE /device`](#delete-device)
+  - [`GET /refresh`](#refresh-tokens)
+
+- [`/services GET`](#services)
+
+- /user
+  - /client
+    - [`GET /appointments?for=[date]`](# "under development")
+  - /master
+    - [`GET /appointments?for=[date]`](# "under development")
+    - [`POST /service`](# "under development")
+    - [`DELETE /service`](# "under development")
+    - [`PAtCH /service`](# "under development")
+  - [`PATCH /profile`](# "under development")
+  - /become
+    - [`PATCH /master`](# "under development")
+    - [`PATCH /client`](# "under development")
+
+- /profile
+  - [`GET /[username]`](# "under development")
+  - [`GET /services/[master_id]`](# "under development")
+  - [`GET /picture/[id]`](# "under development")
+  - [`PATCH /profile`](# "under development")
+  - /master
+    - [`POST /service`](# "under development")
+    - [`DELETE /service`](# "under development")
+    - [`PAtCH /service`](# "under development")
+  - /become
+    - [`PATCH /master`](# "under development")
+    - [`PATCH /client`](# "under development")
+
+- /appointment
+  - [`GET /details/[slug]`](# "under development")
+  - /steps
+    - [`GET /masters?service_id=[id]`](# "under development")
+    - [`GET /schedule?master_id=[id]&for=[date]`](# "under development")
+    - [`POST /make`](# "under development")
+  - /client
+    - [`POST /cancel/[slug]`](# "under development")
+  - /master
+    - [`POST /cancel/[slug]`](# "under development")
+    - [`POST /confirm/[slug]`](# "under development")
