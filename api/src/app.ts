@@ -1,6 +1,11 @@
 import express from 'express';
+
+// Middlewares
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import fileUpload from 'express-fileupload';
+
+// Controllers
 import Controller from './interfaces/controller.interface';
 import AuthController from './controllers/auth.controller';
 import ServiceController from './controllers/service.controller';
@@ -39,6 +44,7 @@ class App implements IApp {
     this.app.use(express.json());
     this.app.use(cookieParser());
     this.app.use(cors());
+    this.app.use(fileUpload());
   }
 
   /**
