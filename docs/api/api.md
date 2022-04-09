@@ -13,6 +13,7 @@ Table of contents:
     - [OAuth2.0 with Google](#oauth20-with-google)
     - [Get devices](#get-devices)
     - [Delete device](#delete-device)
+    - [Refresh tokens](#refresh-tokens)
   - [Services](#services)
     - [Get services](#get-services)
   - [**Endpoints list**](#endpoints-list)
@@ -155,6 +156,20 @@ DELETE /auth/:id
 | :--- | :--- | :--- |
 | `id` | string | true |
 
+### Refresh tokens
+
+```http
+GET /auth/refresh
+```
+
+**Requirements:**
+
+- user need to be authenticated
+
+**Response:**
+
+[General user type response](#private-user-data)
+
 ## Services
 
 ### Get services
@@ -192,8 +207,8 @@ Endpoints list:
   - [`/log-in`](#Log-in)
   - [`/log-out`](#Log-out)
   - [`/callback/google`](#With-Google)
-  - [`/devices`]()
-  - [`/device`]()
+  - [`/devices`](#Get-devices)
+  - [`/device`](#Delete-device)
   - [`/refresh`](#Refresh)
 
 - [`/appointments`](#Appointments)
