@@ -200,7 +200,6 @@ GET /services?name=...
 
 ## **Endpoints list**
 
-<<<<<<< HEAD
 <!-- no toc -->
 - [`/auth`](#authentication)
   - [`POST /register`](#registration)
