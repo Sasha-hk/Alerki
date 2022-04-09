@@ -15,7 +15,7 @@ Table of contents:
     - [Delete device](#delete-device)
   - [Services](#services)
     - [Get services](#get-services)
-- [**Endpoints list**](#endpoints-list)
+  - [**Endpoints list**](#endpoints-list)
 
 ## Conventions
 
@@ -183,7 +183,7 @@ GET /services?name=...
 ]
 ```
 
-# **Endpoints list**
+## **Endpoints list**
 
 Endpoints list:
 
