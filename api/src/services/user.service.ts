@@ -394,7 +394,7 @@ class UserService implements IUserService {
       }
     }
 
-    if (firstName || lastName || phoneNumber) {
+    if (firstName || lastName || phoneNumber || userPictureID) {
       await UserModel.update(
         {
           firstName,
