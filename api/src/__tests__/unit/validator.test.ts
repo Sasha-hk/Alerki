@@ -220,6 +220,25 @@ describe('Test atLestOne property', () => {
       },
     );
   });
+
+  it('should not throw ValidationError with one undefined field', () => {
+    validator.validate(
+      {
+        username: {
+          value: 'username',
+          atLeastOne: true,
+        },
+        email: {
+          value: 'email',
+          atLeastOne: true,
+        },
+        picture: {
+          value: undefined,
+          atLeastOne: true,
+        },
+      },
+    );
+  });
 });
 
 describe('Test required property', () => {
