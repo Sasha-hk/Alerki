@@ -31,6 +31,26 @@ const required: PartialCheck = (field: IValidateField, errorPool: IErrorPool, na
   return false;
 };
 
+const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
+  if (field?.type) {
+    if (field.required) {
+      if (typeof field.value !== field.type) {
+        setError(errorPool, name, `expected to be a ${field.type}`);
+        return true;
+      }
+    } else if (field.value !== undefined) {
+      if (typeof field.value !== field.type) {
+        if (field.atLeastOne || field.onlyOne) {
+          setError(errorPool, name, `expected to be a ${field.type}`);
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
 const onlyOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
   const fieldKeys = Object.keys(fields);
   const fieldKeysLength = fieldKeys.length;
@@ -78,12 +98,12 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
   const keysLength = keys.length;
   const localError: IErrorPool = {};
   let beforeExists = false;
-  let atLeastOneExists = false;
+  let notExists = false;
 
   for (let i = 0; i < keysLength; i++) {
     if (fields[keys[i]]?.atLeastOne) {
       if (!fields[keys[i]]?.value) {
-        atLeastOneExists = true;
+        notExists = true;
         localError[keys[i]] = 'is required at least one';
         continue;
       }
@@ -92,20 +112,9 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
     }
   }
 
-  if (!beforeExists && atLeastOneExists) {
+  if (!beforeExists && notExists) {
     Object.assign(errorPool, localError);
     return true;
-  }
-
-  return false;
-};
-
-const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
-  if (field?.type) {
-    if (typeof field.value !== field.type) {
-      setError(errorPool, name, `expected to be a ${field.type}`);
-      return true;
-    }
   }
 
   return false;
