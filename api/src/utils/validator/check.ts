@@ -122,9 +122,18 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
 
 const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.pattern) {
-    if (!RegExp(field.pattern).test(field.value)) {
-      setError(errorPool, name, 'does not match pattern');
-      return true;
+    if (field.required) {
+      if (!RegExp(field.pattern).test(field.value)) {
+        setError(errorPool, name, 'does not match pattern');
+        return true;
+      }
+    } else if (field.value !== undefined) {
+      if (field.atLeastOne || field.onlyOne) {
+        if (!RegExp(field.pattern).test(field.value)) {
+          setError(errorPool, name, 'does not match pattern');
+          return true;
+        }
+      }
     }
   }
 
