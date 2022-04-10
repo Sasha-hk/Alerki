@@ -1,10 +1,6 @@
 import { UserPictureModel } from '../db/models';
 import UserPictureError from '../errors/user-picture.error';
 
-interface ICreateService {
-  name: string;
-}
-
 interface IUserPictureService {
   findPicture(id: string): Promise<UserPictureModel | null>;
   savePicture(picture: Buffer): Promise<UserPictureModel>;
