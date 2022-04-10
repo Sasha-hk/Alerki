@@ -77,6 +77,7 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
   const keys = Object.keys(fields);
   const keysLength = keys.length;
   const localError: IErrorPool = {};
+  let beforeExists = false;
   let atLeastOneExists = false;
 
   for (let i = 0; i < keysLength; i++) {
@@ -84,11 +85,14 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
       if (!fields[keys[i]]?.value) {
         atLeastOneExists = true;
         localError[keys[i]] = 'is required at least one';
+        continue;
       }
+
+      beforeExists = true;
     }
   }
 
-  if (atLeastOneExists) {
+  if (!beforeExists && atLeastOneExists) {
     Object.assign(errorPool, localError);
     return true;
   }
