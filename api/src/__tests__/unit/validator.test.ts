@@ -1,7 +1,7 @@
 import Validator from '../../utils/validator';
 import ValidationError from '../../errors/validation.error';
 import IError from '../../interfaces/error.interface';
-import IValidateFields, { IValidateField } from '../../utils/validator/validator.interface';
+import IValidateFields from '../../utils/validator/validator.interface';
 import * as blanks from './../../utils/validator/blanks';
 
 const validator = new Validator();
@@ -1016,5 +1016,18 @@ describe('Last complex test', () => {
         );
       },
     );
+  });
+
+  it('check hard value', () => {
+    validator.validate({
+      ...blanks.phoneNumberField(undefined, { atLeastOne: true }),
+      ...blanks.firstNameField(undefined, { atLeastOne: true }),
+      ...blanks.lastNameField(undefined, { atLeastOne: true }),
+      picture: {
+        value: 'asdf',
+        type: 'string',
+        atLeastOne: true,
+      },
+    });
   });
 });
