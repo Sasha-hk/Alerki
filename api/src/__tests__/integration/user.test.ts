@@ -148,7 +148,6 @@ describe('Services functionality', () => {
           .type('form')
           .attach('picture', Buffer.from(picture.data, 'base64'), 'picture.jpg');
 
-        console.log(r.body.pictureID);
         expect(r.status).toEqual(200);
         expect(r.body.firstName).toEqual(user.firstName);
         expect(r.body.lastName).toEqual(user.lastName);
