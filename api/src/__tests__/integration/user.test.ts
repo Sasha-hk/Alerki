@@ -1,4 +1,5 @@
 import request from 'supertest';
+import axios from 'axios';
 import App from '../../app';
 import getCookies from '../../utils/get-cookies';
 
@@ -117,12 +118,42 @@ describe('Services functionality', () => {
             'accessToken=' + user.accessToken,
             'refreshToken=' + user.refreshToken,
           ])
-          .send(user);
+          .send({
+            phoneNumber: user.phoneNumber,
+          });
 
         expect(r.status).toEqual(200);
         expect(r.body.firstName).toEqual(user.firstName);
         expect(r.body.lastName).toEqual(user.lastName);
         expect(r.body.phoneNumber).toEqual(user.phoneNumber);
+      });
+    });
+
+    describe('test update user with picture', () => {
+      it('should not update user picture', async () => {
+        const pictureUrl = 'https://petryk.me/_next/static/media/road-image.41cd4142.jpg';
+
+        const picture = await axios({
+          url: pictureUrl,
+          method: 'get',
+          responseType: 'arraybuffer',
+        });
+
+        const r = await request(app)
+          .patch('/user/profile')
+          .set('Cookie', [
+            'accessToken=' + user.accessToken,
+            'refreshToken=' + user.refreshToken,
+          ])
+          .type('form')
+          .attach('picture', Buffer.from(picture.data, 'base64'), 'picture.jpg');
+
+        console.log(r.body.pictureID);
+        expect(r.status).toEqual(200);
+        expect(r.body.firstName).toEqual(user.firstName);
+        expect(r.body.lastName).toEqual(user.lastName);
+        expect(r.body.phoneNumber).toEqual(user.phoneNumber);
+        expect(r.body.pictureID).toBeTruthy();
       });
     });
   });
