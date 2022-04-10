@@ -63,10 +63,10 @@ class UserController implements IUserController {
       const picture = (req.files?.picture as any) as IPicture;
 
       Validator.validate({
-        ...blanks.firstNameField(firstName, { atLeastOne: true }),
-        ...blanks.firstNameField(lastName, { atLeastOne: true }),
         ...blanks.phoneNumberField(phoneNumber, { atLeastOne: true }),
-        ...blanks.userPictureField(picture?.data, { atLeastOne: true }),
+        ...blanks.firstNameField(firstName, { atLeastOne: true }),
+        ...blanks.lastNameField(lastName, { atLeastOne: true }),
+        ...blanks.userPictureField(picture?.data, { atLeastOne: true, type: 'object' }),
       });
 
       const userData = await UserService.updateUser(
