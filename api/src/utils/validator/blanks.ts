@@ -71,3 +71,11 @@ export const phoneNumberField = (phoneNumber: string | any, options?: IValidateP
     ...options,
   },
 });
+
+export const userPictureField = (userPictureField: string | any, options?: IValidateProperties): IValidateFields => ({
+  userPictureField: {
+    value: userPictureField,
+    type: 'Buffer',
+    ...options,
+  },
+});
