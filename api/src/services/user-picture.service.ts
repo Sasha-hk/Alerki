@@ -1,15 +1,18 @@
 import { UserPictureModel } from '../db/models';
 import UserPictureError from '../errors/user-picture.error';
+import { UploadedFile } from 'express-fileupload';
+
+export type IPicture = UploadedFile | undefined;
 
 interface ISavePicture {
   id?: string,
-  picture: Buffer,
+  picture: IPicture,
 }
 
 interface IUserPictureService {
   findPicture(id: string): Promise<UserPictureModel | null>;
-  createPicture(picture: Buffer): Promise<UserPictureModel>;
-  updatePicture(id: string, picture: Buffer): Promise<any>;
+  createPicture(picture: IPicture): Promise<UserPictureModel>;
+  updatePicture(id: string, picture: IPicture): Promise<UserPictureModel>;
   savePicture({ id, picture }: ISavePicture): Promise<UserPictureModel>;
 }
 
@@ -36,9 +39,9 @@ class UserPictureService implements IUserPictureService {
    * @param picture Picture
    * @returns UserPictureModel
    */
-  async createPicture(picture: Buffer) {
+  async createPicture(picture: IPicture) {
     return UserPictureModel.create({
-      picture,
+      picture: picture?.data,
     });
   }
 
@@ -48,7 +51,7 @@ class UserPictureService implements IUserPictureService {
    * @param picture Picture
    * @returns UserPictureModel
    */
-  async updatePicture(id: string, picture: Buffer) {
+  async updatePicture(id: string, picture: IPicture) {
     const candidate = await this.findPicture(id);
 
     if (!candidate) {
@@ -57,7 +60,7 @@ class UserPictureService implements IUserPictureService {
 
     await UserPictureModel.update(
       {
-        picture,
+        picture: picture?.data,
       },
       {
         where: {
@@ -66,7 +69,7 @@ class UserPictureService implements IUserPictureService {
       },
     );
 
-    return this.findPicture(id);
+    return await this.findPicture(id) as UserPictureModel;
   }
 
   /**
