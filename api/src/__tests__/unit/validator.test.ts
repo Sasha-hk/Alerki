@@ -16,6 +16,7 @@ function wrapValidationError(
     throw new Error('Expected ValidationError');
   } catch (e: IError | any) {
     expect(e).toBeInstanceOf(ValidationError);
+    expect(e.status).toEqual(400);
     callback(e);
   }
 }
@@ -224,16 +225,39 @@ describe('Test atLestOne property', () => {
   it('should not throw ValidationError with one undefined field', () => {
     validator.validate(
       {
-        picture: {
-          value: undefined,
-          atLeastOne: true,
-        },
         username: {
           value: 'username',
+          type: 'string',
+          atLeastOne: true,
+        },
+        picture: {
+          value: undefined,
+          type: 'string',
           atLeastOne: true,
         },
         email: {
           value: 'email',
+          type: 'string',
+          atLeastOne: true,
+        },
+      },
+    );
+
+    validator.validate(
+      {
+        picture: {
+          value: undefined,
+          type: 'string',
+          atLeastOne: true,
+        },
+        username: {
+          value: 'username',
+          type: 'string',
+          atLeastOne: true,
+        },
+        email: {
+          value: 'email',
+          type: 'string',
           atLeastOne: true,
         },
       },
@@ -243,14 +267,17 @@ describe('Test atLestOne property', () => {
       {
         username: {
           value: 'username',
+          type: 'string',
           atLeastOne: true,
         },
         picture: {
           value: undefined,
+          type: 'string',
           atLeastOne: true,
         },
         email: {
           value: 'email',
+          type: 'string',
           atLeastOne: true,
         },
       },
@@ -260,14 +287,17 @@ describe('Test atLestOne property', () => {
       {
         username: {
           value: 'username',
+          type: 'string',
           atLeastOne: true,
         },
         email: {
           value: 'email',
+          type: 'string',
           atLeastOne: true,
         },
         picture: {
           value: undefined,
+          type: 'string',
           atLeastOne: true,
         },
       },
@@ -323,10 +353,12 @@ describe('Test type property', () => {
       {
         username: {
           value: 123,
+          required: true,
           type: 'string',
         },
         email: {
           value: undefined,
+          required: true,
           type: 'string',
         },
       },
@@ -350,10 +382,12 @@ describe('Test type property', () => {
       {
         username: {
           value: 'username',
+          required: true,
           type: 'string',
         },
         email: {
           value: 'email',
+          required: true,
           type: 'string',
         },
         password: {
@@ -362,6 +396,7 @@ describe('Test type property', () => {
         },
         active: {
           value: true,
+          required: true,
           type: 'boolean',
         },
       },
@@ -375,11 +410,13 @@ describe('Test template property', () => {
       {
         username: {
           value: 'username',
+          required: true,
           type: 'string',
           pattern: /]w+/,
         },
         email: {
           value: 'not email pattern',
+          required: true,
           type: 'string',
           pattern: /\w+@\w+.\w+/,
         },
@@ -403,16 +440,19 @@ describe('Test template property', () => {
       {
         username: {
           value: 'username',
+          required: true,
           type: 'string',
           pattern: /\w+/,
         },
         email: {
           value: 'email@gmail.com',
+          required: true,
           type: 'string',
           pattern: /\w+@\w+.\w+/,
         },
         password: {
           value: 1234,
+          required: true,
           type: 'number',
           pattern: /\d+/,
         },
@@ -428,6 +468,7 @@ describe('Test value size property', () => {
         age: {
           value: 14,
           type: 'number',
+          required: true,
           minValue: 18,
           maxValue: 60,
         },
@@ -458,12 +499,14 @@ describe('Test value size property', () => {
       {
         age: {
           value: 18,
+          required: true,
           pattern: /\w+/,
           minValue: 18,
           maxValue: 60,
         },
         otherAge: {
           value: 40,
+          required: true,
           type: 'number',
           pattern: /\d+/,
           minValue: 0,
@@ -479,6 +522,7 @@ describe('Test length property', () => {
       {
         username: {
           value: 'man',
+          required: true,
           type: 'string',
           pattern: /\w+/,
           minLength: 4,
@@ -486,6 +530,7 @@ describe('Test length property', () => {
         },
         email: {
           value: '0022222222222222@gmail.com',
+          required: true,
           type: 'string',
           pattern: /\w+@\w+.\w+/,
           minLength: 4,
@@ -512,6 +557,7 @@ describe('Test length property', () => {
       {
         username: {
           value: 'username',
+          required: true,
           type: 'string',
           pattern: /\w+/,
           minLength: 4,
@@ -519,6 +565,7 @@ describe('Test length property', () => {
         },
         email: {
           value: 'email@gmail.com',
+          required: true,
           type: 'string',
           pattern: /\w+@\w+.\w+/,
           minLength: 4,
@@ -526,6 +573,7 @@ describe('Test length property', () => {
         },
         password: {
           value: 1234,
+          required: true,
           type: 'number',
           pattern: /\d+/,
           minLength: 4,
@@ -541,7 +589,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due bad data type', () => {
       wrapValidationError(
         {
-          ...blanks.usernameField(123),
+          ...blanks.usernameField(123, { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -560,7 +608,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due not does not match pattern value', () => {
       wrapValidationError(
         {
-          ...blanks.usernameField('user name'),
+          ...blanks.usernameField('user name', { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -579,7 +627,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due to too long value', () => {
       wrapValidationError(
         {
-          ...blanks.usernameField('too_long_username_too_long_username'),
+          ...blanks.usernameField('too_long_username_too_long_username', { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -598,7 +646,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due bad data type', () => {
       wrapValidationError(
         {
-          ...blanks.usernameField('x'),
+          ...blanks.usernameField('x', { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -617,7 +665,7 @@ describe('Test blanks', () => {
     it('should not throw ValidationError', () => {
       validator.validate(
         {
-          ...blanks.usernameField('good_username'),
+          ...blanks.usernameField('good_username', { required: true }),
         },
       );
     });
@@ -627,7 +675,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due not does not match pattern value', () => {
       wrapValidationError(
         {
-          ...blanks.emailField('not email value'),
+          ...blanks.emailField('not email value', { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -646,7 +694,7 @@ describe('Test blanks', () => {
     it('should not throw ValidationError', () => {
       validator.validate(
         {
-          ...blanks.emailField('goog@email.com'),
+          ...blanks.emailField('goog@email.com', { required: true }),
         },
       );
     });
@@ -656,7 +704,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due not does not match pattern value', () => {
       wrapValidationError(
         {
-          ...blanks.passwordField(123),
+          ...blanks.passwordField(123, { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -675,7 +723,7 @@ describe('Test blanks', () => {
     it('should not throw ValidationError', () => {
       validator.validate(
         {
-          ...blanks.passwordField('asfjk40123jkl*&#(#'),
+          ...blanks.passwordField('asfjk40123jkl*&#(#', { required: true }),
         },
       );
     });
@@ -685,7 +733,7 @@ describe('Test blanks', () => {
     it('should throw ValidationError due not does not match pattern value', () => {
       wrapValidationError(
         {
-          ...blanks.profileTypeField('not profile type'),
+          ...blanks.profileTypeField('not profile type', { required: true }),
         },
         (e: IError | any) => {
           expect(e?.status).toEqual(400);
@@ -704,7 +752,7 @@ describe('Test blanks', () => {
     it('should not throw ValidationError', () => {
       validator.validate(
         {
-          ...blanks.profileTypeField('client'),
+          ...blanks.profileTypeField('client', { required: true }),
         },
       );
     });
@@ -712,9 +760,261 @@ describe('Test blanks', () => {
     it('should not throw ValidationError', () => {
       validator.validate(
         {
-          ...blanks.profileTypeField('master'),
+          ...blanks.profileTypeField('master', { required: true }),
         },
       );
     });
+  });
+});
+
+describe('Last complex test', () => {
+  describe('with correct values', () => {
+    it('should not throw error', () => {
+      validator.validate({
+        username: {
+          value: undefined,
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 20,
+        },
+        email: {
+          value: 'email@email.com',
+          required: true,
+          type: 'string',
+          pattern: /\w+@\w+.\w/,
+          minLength: 5,
+          maxLength: 319,
+        },
+        firstName: {
+          value: 'Igor',
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 30,
+        },
+      });
+    });
+
+    it('should not throw error', () => {
+      validator.validate({
+        username: {
+          value: undefined,
+          atLeastOne: true,
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 20,
+        },
+        email: {
+          value: 'email@email.com',
+          atLeastOne: true,
+          type: 'string',
+          pattern: /\w+@\w+.\w/,
+          minLength: 5,
+          maxLength: 319,
+        },
+        firstName: {
+          value: 'Igor',
+          atLeastOne: true,
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 30,
+        },
+      });
+    });
+
+    it('should not throw error', () => {
+      validator.validate({
+        username: {
+          value: undefined,
+          onlyOne: true,
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 20,
+        },
+        email: {
+          value: 'email@email.com',
+          onlyOne: true,
+          type: 'string',
+          pattern: /\w+@\w+.\w/,
+          minLength: 5,
+          maxLength: 319,
+        },
+        firstName: {
+          value: 'Igor',
+          required: true,
+          type: 'string',
+          pattern: /\w+/,
+          minLength: 4,
+          maxLength: 30,
+        },
+      });
+    });
+  });
+
+  describe('with incorrect values', () => {
+    it('should not throw error', () => {
+      wrapValidationError(
+        {
+          username: {
+            value: undefined,
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 20,
+          },
+          email: {
+            value: undefined,
+            required: true,
+            type: 'string',
+            pattern: /\w+@\w+.\w/,
+            minLength: 5,
+            maxLength: 319,
+          },
+          firstName: {
+            value: 'Igor',
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 30,
+          },
+        },
+        (e: IError | any) => {
+          expect(e.status).toEqual(400);
+          expect(e.error).toMatchObject(
+            {
+              error: {
+                message: 'validation error',
+                details: {
+                  email: 'does not match pattern',
+                },
+              },
+            },
+          );
+        },
+      );
+    });
+
+    it('should not throw error', () => {
+      wrapValidationError(
+        {
+          username: {
+            value: undefined,
+            atLeastOne: true,
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 20,
+          },
+          email: {
+            value: undefined,
+            atLeastOne: true,
+            type: 'string',
+            pattern: /\w+@\w+.\w/,
+            minLength: 5,
+            maxLength: 319,
+          },
+          firstName: {
+            value: undefined,
+            atLeastOne: true,
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 30,
+          },
+        },
+        (e: IError | any) => {
+          expect(e.status).toEqual(400);
+          expect(e.error).toMatchObject(
+            {
+              error: {
+                message: 'validation error',
+                details: {
+                  email: 'is required at least one',
+                  firstName: 'is required at least one',
+                  username: 'is required at least one',
+                },
+              },
+            },
+          );
+        },
+      );
+    });
+
+    it('should not throw error', () => {
+      wrapValidationError(
+        {
+          username: {
+            value: undefined,
+            onlyOne: true,
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 20,
+          },
+          email: {
+            value: 'emailemail.com',
+            onlyOne: true,
+            type: 'string',
+            pattern: /\w+@\w+.\w/,
+            minLength: 5,
+            maxLength: 319,
+          },
+          firstName: {
+            value: 'Igor',
+            required: true,
+            type: 'string',
+            pattern: /\w+/,
+            minLength: 4,
+            maxLength: 30,
+          },
+        },
+        (e: IError | any) => {
+          expect(e.status).toEqual(400);
+          expect(e.error).toMatchObject(
+            {
+              error: {
+                message: 'validation error',
+                details: {
+                  email: 'does not match pattern',
+                },
+              },
+            },
+          );
+        },
+      );
+    });
+  });
+
+  it('check if type checking works with atLeastOne property', () => {
+    wrapValidationError(
+      {
+        username: {
+          value: undefined,
+          type: 'string',
+          atLeastOne: true,
+        },
+        email: {
+          value: [1, 2, 3],
+          type: 'string',
+          atLeastOne: true,
+        },
+      },
+      (e: IError | any) => {
+        expect(e.error).toMatchObject(
+          {
+            error: {
+              message: 'validation error',
+              details: {
+                email: 'expected to be a string',
+              },
+            },
+          },
+        );
+      },
+    );
   });
 });
