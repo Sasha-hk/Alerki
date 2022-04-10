@@ -5,6 +5,7 @@ import IError from '../interfaces/error.interface';
 import UserService from '../services/user.service';
 import PrivateUserDto from '../utils/dto/private-user.dto';
 import Validator, { blanks } from '../utils/validator';
+import { IPicture } from '../services/user-picture.service';
 
 interface IUserController extends Controller {
   // L clientAppointments(req: AuthRequest, res: Response): any;
@@ -59,12 +60,13 @@ class UserController implements IUserController {
         lastName,
         phoneNumber,
       } = req.body;
-      const picture = req.files?.picture;
+      const picture = (req.files?.picture as any) as IPicture;
 
       Validator.validate({
         ...blanks.firstNameField(firstName, { atLeastOne: true }),
         ...blanks.firstNameField(lastName, { atLeastOne: true }),
         ...blanks.phoneNumberField(phoneNumber, { atLeastOne: true }),
+        ...blanks.userPictureField(picture?.data, { atLeastOne: true }),
       });
 
       const userData = await UserService.updateUser(
@@ -73,6 +75,7 @@ class UserController implements IUserController {
           firstName,
           lastName,
           phoneNumber,
+          picture,
         },
       );
 
