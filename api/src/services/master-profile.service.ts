@@ -1,5 +1,12 @@
-import { MasterProfileModel } from '../db/models';
+// Errors
 import MasterProfileError from '../errors/master-profile.error';
+
+// Models
+import { MasterProfileModel } from '../db/models';
+
+interface IUpdateProfile {
+  biography: string,
+}
 
 interface IMasterProfileService {
   createProfile(): Promise<MasterProfileModel>;
@@ -7,6 +14,7 @@ interface IMasterProfileService {
   findAvailableByID(id: string): Promise<MasterProfileModel | null>;
   block(id: string): Promise<void>;
   unblock(id: string): Promise<void>;
+  update(id: string, { biography }: IUpdateProfile): Promise<MasterProfileModel>;
 }
 
 class MasterProfileService implements IMasterProfileService {
@@ -71,6 +79,27 @@ class MasterProfileService implements IMasterProfileService {
         },
       },
     );
+  }
+
+  async update(id: string, { biography }: IUpdateProfile): Promise<MasterProfileModel> {
+    const candidate = await this.findByID(id);
+
+    if (!candidate) {
+      throw MasterProfileError.NotFound();
+    }
+
+    await MasterProfileModel.update(
+      {
+        biography,
+      },
+      {
+        where: {
+          id,
+        },
+      },
+    );
+
+    return await this.findByID(id) as MasterProfileModel;
   }
 }
 
