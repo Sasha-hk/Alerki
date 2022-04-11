@@ -32,9 +32,11 @@ class UserController implements IUserController {
     try {
       const { id } = req.token!;
 
-      await UserService.becomeMaster(id);
+      const userData = await UserService.becomeMaster(id);
 
-      res.sendStatus(200);
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e.error);
     }
@@ -44,9 +46,11 @@ class UserController implements IUserController {
     try {
       const { id } = req.token!;
 
-      await UserService.becomeClient(id);
+      const userData = await UserService.becomeClient(id);
 
-      res.sendStatus(200);
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e.error);
     }
