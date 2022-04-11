@@ -83,6 +83,7 @@ class UserController implements IUserController {
         ...blanks.userPictureField(picture?.data, { atLeastOne: true, type: 'object' }),
         biography: {
           value: biography,
+          atLeastOne: true,
           type: 'string',
           pattern: /\w{0,100}/,
         },
@@ -103,6 +104,7 @@ class UserController implements IUserController {
 
       res.json(userDto);
     } catch (e: IError | any) {
+      console.log(e.error);
       res.status(e?.status || 500).json(e.error);
     }
   }
