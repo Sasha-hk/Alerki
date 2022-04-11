@@ -3,7 +3,6 @@ import IClientProfile from '../../interfaces/db/models/client-profile.model';
 
 class ClientProfile extends Model implements IClientProfile {
   id!: string;
-  biography!: string;
   available!: boolean;
   createdAt!: string;
   updatedAt!: string;
@@ -15,9 +14,6 @@ class ClientProfile extends Model implements IClientProfile {
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
-      },
-      biography: {
-        type: DataTypes.STRING(100),
       },
       available: {
         type: DataTypes.BOOLEAN,
