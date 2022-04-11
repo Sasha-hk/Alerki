@@ -1,11 +1,20 @@
-import { Router, Response } from 'express';
-import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
-import Controller from '../interfaces/controller.interface';
+// Interfaces
 import IError from '../interfaces/error.interface';
+import Controller from '../interfaces/controller.interface';
+
+// Middlewares
+import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
+
+// Services
 import UserService from '../services/user.service';
+import { IPicture } from '../services/user-picture.service';
+
+// Utils
 import PrivateUserDto from '../utils/dto/private-user.dto';
 import Validator, { blanks } from '../utils/validator';
-import { IPicture } from '../services/user-picture.service';
+
+// Third-party packages
+import { Router, Response } from 'express';
 
 interface IUserController extends Controller {
   // L clientAppointments(req: AuthRequest, res: Response): any;
@@ -63,6 +72,7 @@ class UserController implements IUserController {
         firstName,
         lastName,
         phoneNumber,
+        biography,
       } = req.body;
       const picture = (req.files?.picture as any) as IPicture;
 
@@ -71,6 +81,11 @@ class UserController implements IUserController {
         ...blanks.firstNameField(firstName, { atLeastOne: true }),
         ...blanks.lastNameField(lastName, { atLeastOne: true }),
         ...blanks.userPictureField(picture?.data, { atLeastOne: true, type: 'object' }),
+        biography: {
+          value: biography,
+          type: 'string',
+          pattern: /\w{0,100}/,
+        },
       });
 
       const userData = await UserService.updateUser(
@@ -80,6 +95,7 @@ class UserController implements IUserController {
           lastName,
           phoneNumber,
           picture,
+          biography,
         },
       );
 
