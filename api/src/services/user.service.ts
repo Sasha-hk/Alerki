@@ -61,8 +61,8 @@ interface IUserService {
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
   logOut({ refreshToken, deviceName, userID }: ILogOut): void;
   withGoogle(data: IGoogleResponse, deviceName: string): any;
-  becomeMaster(id: string): Promise<void>;
-  becomeClient(id: string): Promise<void>;
+  becomeMaster(id: string): Promise<UserModel>;
+  becomeClient(id: string): Promise<UserModel>;
   updateUser(id: string, { firstName, lastName, phoneNumber }: IUpdateUser): Promise<UserModel>;
 }
 
@@ -364,7 +364,7 @@ class UserService implements IUserService {
 
     // Change profile type
     if (candidate?.profileType === 'client') {
-      UserModel.update(
+      await UserModel.update(
         {
           profileType: 'master',
           masterID,
@@ -376,6 +376,8 @@ class UserService implements IUserService {
         },
       );
     }
+
+    return await this.findUserByID(id) as UserModel;
   }
 
   /**
@@ -400,7 +402,7 @@ class UserService implements IUserService {
     }
 
     if (candidate?.profileType === 'master') {
-      UserModel.update(
+      await UserModel.update(
         {
           profileType: 'client',
         },
@@ -411,6 +413,8 @@ class UserService implements IUserService {
         },
       );
     }
+
+    return await this.findUserByID(id) as UserModel;
   }
 
   /**
