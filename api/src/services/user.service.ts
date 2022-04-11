@@ -1,13 +1,22 @@
+// Errors
+import AuthError from '../errors/auth.error';
+import UserError from '../errors/user.error';
+
+// Interfaces
+import { IGoogleResponse } from '../oauth/google.oauth';
+
+// Models
+import { UserModel, UserPictureModel, MasterProfileModel } from '../db/models';
+
+// Services
+import AuthService, { ITokens } from './auth.service';
+import UserPictureService, { IPicture } from './user-picture.service';
+import ClientProfileService from './client-profile.service';
+import MasterProfileService from './master-profile.service';
+
+// Third-party packages
 import bcrypt from 'bcrypt';
 import axios from 'axios';
-import AuthError from '../errors/auth.error';
-import AuthService from './auth.service';
-import UserPictureService from './user-picture.service';
-import { UserModel, UserPictureModel } from '../db/models';
-import { ITokens } from './auth.service';
-import { IGoogleResponse } from '../oauth/google.oauth';
-import UserError from '../errors/user.error';
-import { IPicture } from './user-picture.service';
 
 interface IRegister {
   username: string;
@@ -142,12 +151,22 @@ class UserService implements IUserService {
     // Prepare password
     const hashedPassword = bcrypt.hashSync(password, 1);
 
+    // Create client and master profile if required
+    const clientProfileID = (await ClientProfileService.createProfile()).id;
+    let masterProfileID: string | null = null;
+
+    if (profileType === 'master') {
+      masterProfileID = (await MasterProfileService.createProfile()).id;
+    }
+
     // Create new user
     const newUser = await UserModel.create({
       username,
       email,
       password: hashedPassword,
       profileType,
+      clientID: clientProfileID,
+      masterID: masterProfileID,
     });
 
     // Generate tokens
@@ -251,22 +270,37 @@ class UserService implements IUserService {
     if (!candidate) {
       const userData = data.decoded;
 
-      const userPictureResponse = await axios.get(
-        userData.picture,
-        {
-          responseType: 'arraybuffer',
-        },
-      );
+      // Save picture
+      let pictureID: string | null = null;
 
-      const newUserPicture = await UserPictureModel.create({
-        picture: userPictureResponse.data,
-      });
+      if (userData.picture) {
+        const userPictureResponse = await axios.get(
+          userData.picture,
+          {
+            responseType: 'arraybuffer',
+          },
+        );
+
+        pictureID = (await UserPictureModel.create({
+          picture: userPictureResponse.data,
+        })).id;
+      }
+
+      // Create client and master profile if required
+      const clientID = (await ClientProfileService.createProfile()).id;
+      let masterID: string | null = null;
+
+      if (data?.profileType === 'master') {
+        masterID = (await MasterProfileService.createProfile()).id;
+      }
 
       const newUser = await UserModel.create({
         username: userData.email.split('@')[0],
         email: userData.email,
         profileType: 'client',
-        pictureID: newUserPicture.id,
+        pictureID,
+        clientID,
+        masterID,
       });
 
       const tokens = await AuthService.generateTokens({
@@ -318,10 +352,22 @@ class UserService implements IUserService {
       throw UserError.UserNotExists();
     }
 
+    // If master profile not exists create it
+    let masterID: string | null = candidate?.masterID;
+
+    if (!masterID) {
+      masterID = (await MasterProfileService.createProfile()).id;
+    }
+
+    // Unblock master profile if blocked
+    await MasterProfileService.unblock(masterID);
+
+    // Change profile type
     if (candidate?.profileType === 'client') {
       UserModel.update(
         {
           profileType: 'master',
+          masterID,
         },
         {
           where: {
@@ -346,6 +392,11 @@ class UserService implements IUserService {
 
     if (!candidate) {
       throw UserError.UserNotExists();
+    }
+
+    // Block master profile
+    if (candidate?.masterID) {
+      await MasterProfileService.block(candidate.masterID);
     }
 
     if (candidate?.profileType === 'master') {
