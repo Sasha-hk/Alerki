@@ -25,7 +25,7 @@ class MasterProfile extends Model implements IMasterProfile {
         allowNull: false,
       },
     }, {
-      tableName: 'AuthData',
+      tableName: 'MasterProfiles',
       sequelize,
     });
   }

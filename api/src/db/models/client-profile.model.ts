@@ -21,7 +21,7 @@ class ClientProfile extends Model implements IClientProfile {
         allowNull: false,
       },
     }, {
-      tableName: 'AuthData',
+      tableName: 'ClientProfiles',
       sequelize,
     });
   }
