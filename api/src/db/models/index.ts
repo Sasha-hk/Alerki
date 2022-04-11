@@ -5,6 +5,8 @@ import WeekendDaysModel from './weekend-days.model';
 import AuthModel from './auth.model';
 import ServiceModel from './service.model';
 import UserPictureModel from './user-picture.model';
+import ClientProfileModel from './client-profile.model';
+import MasterProfileModel from './master-profile.mode';
 
 const env: string = process.env.NODE_ENV || 'dev';
 
@@ -24,6 +26,8 @@ const models = [
   AuthModel,
   ServiceModel,
   UserPictureModel,
+  ClientProfileModel,
+  MasterProfileModel,
 ];
 
 models.forEach(model => model.initialize(sequelize));
@@ -39,12 +43,24 @@ UserModel.belongsTo(UserPictureModel, {
   onDelete: 'CASCADE',
 });
 
+UserModel.belongsTo(ClientProfileModel, {
+  foreignKey: 'clientID',
+  onDelete: 'CASCADE',
+});
+
+UserModel.belongsTo(MasterProfileModel, {
+  foreignKey: 'masterID',
+  onDelete: 'CASCADE',
+});
+
 export {
   UserModel,
   WeekendDaysModel,
   AuthModel,
   ServiceModel,
   UserPictureModel,
+  ClientProfileModel,
+  MasterProfileModel,
 };
 
 export default {
@@ -54,4 +70,6 @@ export default {
   AuthModel,
   ServiceModel,
   UserPictureModel,
+  ClientProfileModel,
+  MasterProfileModel,
 };
