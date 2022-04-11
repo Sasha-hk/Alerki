@@ -51,6 +51,8 @@ describe('Services functionality', () => {
           ]);
 
         expect(r.status).toEqual(200);
+        expect(r.body.profileType).toEqual('master');
+        expect(r.body.masterID).toBeTruthy();
       });
 
       it('should get profile type as master', async () => {
@@ -76,6 +78,8 @@ describe('Services functionality', () => {
           ]);
 
         expect(r.status).toEqual(200);
+        expect(r.body.profileType).toEqual('client');
+        expect(r.body.clientID).toBeTruthy();
       });
 
       it('should get profile type as client', async () => {
