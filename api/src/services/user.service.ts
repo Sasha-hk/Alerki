@@ -6,7 +6,7 @@ import UserError from '../errors/user.error';
 import { IGoogleResponse } from '../oauth/google.oauth';
 
 // Models
-import { UserModel, UserPictureModel, MasterProfileModel } from '../db/models';
+import { UserModel, UserPictureModel } from '../db/models';
 
 // Services
 import AuthService, { ITokens } from './auth.service';
@@ -49,6 +49,7 @@ interface IUpdateUser {
   lastName: string,
   phoneNumber: string,
   picture: IPicture,
+  biography: string,
 }
 
 interface IUserService {
@@ -423,7 +424,7 @@ class UserService implements IUserService {
    * @param options Update data
    * @returns UserModel
    */
-  async updateUser(id: string, { firstName, lastName, phoneNumber, picture }: IUpdateUser) {
+  async updateUser(id: string, { firstName, lastName, phoneNumber, picture, biography }: IUpdateUser) {
     const candidate = await this.findUserByID(id);
 
     if (!candidate) {
@@ -437,6 +438,11 @@ class UserService implements IUserService {
       if (checkPhoneNumber && checkPhoneNumber.id !== candidate.id) {
         throw UserError.UserPhoneNumberExists();
       }
+    }
+
+    // If user is master update biography for master profile
+    if (candidate?.profileType === 'master' && candidate?.masterID) {
+      MasterProfileService.update(candidate?.masterID, { biography });
     }
 
     // Prepare picture ID
