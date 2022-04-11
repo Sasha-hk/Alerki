@@ -18,7 +18,7 @@ class ClientProfileService implements IClientProfileService {
     return newProfile.toJSON();
   }
 
-  async findByID(id: string): Promise<ClientProfileModel> {
+  async findByID(id: string): Promise<ClientProfileModel | null> {
     return ClientProfileModel.findOne({
       where: {
         id,
@@ -26,7 +26,7 @@ class ClientProfileService implements IClientProfileService {
     });
   }
 
-  async findAvailableByID(id: string): Promise<ClientProfileModel> {
+  async findAvailableByID(id: string): Promise<ClientProfileModel | null> {
     return ClientProfileModel.findOne({
       where: {
         id,

@@ -16,7 +16,7 @@ class MasterProfileService implements IMasterProfileService {
     return newProfile.toJSON();
   }
 
-  async findByID(id: string): Promise<MasterProfileModel> {
+  async findByID(id: string): Promise<MasterProfileModel | null> {
     return MasterProfileModel.findOne({
       raw: true,
       where: {
@@ -25,7 +25,7 @@ class MasterProfileService implements IMasterProfileService {
     });
   }
 
-  async findAvailableByID(id: string): Promise<MasterProfileModel> {
+  async findAvailableByID(id: string): Promise<MasterProfileModel | null> {
     return MasterProfileModel.findOne({
       raw: true,
       where: {
