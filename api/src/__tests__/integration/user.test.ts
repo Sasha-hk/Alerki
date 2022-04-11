@@ -136,4 +136,20 @@ describe('Services functionality', () => {
       });
     });
   });
+
+  describe('test update master data', () => {
+    it('should update master biography', async () => {
+      const r = await request(app)
+        .patch('/user/profile')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ])
+        .send({
+          biography: 'I am a good programmer',
+        });
+
+      expect(r.status).toEqual(200);
+    });
+  });
 });
