@@ -54,18 +54,6 @@ describe('Services functionality', () => {
         expect(r.body.profileType).toEqual('master');
         expect(r.body.masterID).toBeTruthy();
       });
-
-      it('should get profile type as master', async () => {
-        const checkProfileType = await request(app)
-          .get('/auth/user')
-          .set('Cookie', [
-            'accessToken=' + user.accessToken,
-            'refreshToken=' + user.refreshToken,
-          ]);
-
-        expect(checkProfileType.status).toEqual(200);
-        expect(checkProfileType.body.profileType).toEqual('master');
-      });
     });
 
     describe('become client', () => {
@@ -80,18 +68,6 @@ describe('Services functionality', () => {
         expect(r.status).toEqual(200);
         expect(r.body.profileType).toEqual('client');
         expect(r.body.clientID).toBeTruthy();
-      });
-
-      it('should get profile type as client', async () => {
-        const checkProfileType = await request(app)
-          .get('/auth/user')
-          .set('Cookie', [
-            'accessToken=' + user.accessToken,
-            'refreshToken=' + user.refreshToken,
-          ]);
-
-        expect(checkProfileType.status).toEqual(200);
-        expect(checkProfileType.body.profileType).toEqual('client');
       });
     });
   });
