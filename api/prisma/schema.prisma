@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -7,6 +8,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model MasterWeekendDays {
+  id         String          @id @default(uuid())
+  monday     Boolean         @default(false)
+  tuesday    Boolean         @default(false)
+  wednesday  Boolean         @default(false)
+  thursday   Boolean         @default(false)
+  friday     Boolean         @default(false)
+  saturday   Boolean         @default(false)
+  sunday     Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  user       MasterProfile?
+}
+
+model MasterProfile {
+  id             String             @id @default(uuid())
+  biography      String?            @db.VarChar(100)
+  weekendDays    MasterWeekendDays? @relation(fields: [weekendDaysID], references: [id])
+  weekendDaysID  String?            @db.VarChar(36)
+  available      Boolean            @default(true)
+  startWorking   DateTime?          @db.Timetz(6)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           User?
+
+  @@map("MasterProfiile")
+}
+
+model ClientProfile {
+  id         String    @id @default(uuid())
+  available  Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User?
+
+  @@map("ClientProfiile")
+}
 
 model UserPicture {
   id         String    @id @default(uuid())
@@ -19,19 +57,23 @@ model UserPicture {
 }
 
 model User {
-  id           String       @id @default(uuid())
-  username     String       @unique @db.VarChar(20)
-  email        String       @unique @db.VarChar(319)
-  firstName    String?      @db.VarChar(30)
-  lastName     String?      @db.VarChar(30)
-  phoneNumber  String?      @unique @db.VarChar(12)
-  password     String?      @db.VarChar(60)
-  picture      UserPicture? @relation(fields: [pictureID], references: [id])
-  pictureID    String?      @db.VarChar(36)
-  profileType  ProfileType  @default(client)
-  banned       Boolean      @default(false)
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id           String         @id @default(uuid())
+  username     String         @unique @db.VarChar(20)
+  email        String         @unique @db.VarChar(319)
+  firstName    String?        @db.VarChar(30)
+  lastName     String?        @db.VarChar(30)
+  phoneNumber  String?        @unique @db.VarChar(12)
+  password     String?        @db.VarChar(60)
+  picture      UserPicture?   @relation(fields: [pictureID], references: [id])
+  pictureID    String?        @db.VarChar(36)
+  profileType  ProfileType    @default(client)
+  client       ClientProfile  @relation(fields: [clientID], references: [id])
+  clientID     String         @db.VarChar(36)
+  master       MasterProfile? @relation(fields: [masterID], references: [id])
+  masterID     String?        @db.VarChar(36)
+  banned       Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
   auth         Auth?
 
   @@map("Users")
@@ -60,41 +102,6 @@ model Service {
   @@map("Services")
 }
 
-model MasterWeekendDays {
-  id         String          @id @default(uuid())
-  monday     Boolean         @default(false)
-  tuesday    Boolean         @default(false)
-  wednesday  Boolean         @default(false)
-  thursday   Boolean         @default(false)
-  friday     Boolean         @default(false)
-  saturday   Boolean         @default(false)
-  sunday     Boolean         @default(false)
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-  user       MasterProfile?
-}
-
-model MasterProfile {
-  id             String             @id @default(uuid())
-  biography      String             @db.VarChar(100)
-  weekendDays    MasterWeekendDays  @relation(fields: [weekendDaysID], references: [id])
-  weekendDaysID  String             @db.VarChar(36)
-  available      Boolean            @default(true)
-  startWorking   DateTime           @db.Timetz(6)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-
-  @@map("MasterProfiile")
-}
-
-model ClientProfile {
-  id         String    @id @default(uuid())
-  available  Boolean   @default(true)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  @@map("ClientProfiile")
-}
 
 
 enum ProfileType {
