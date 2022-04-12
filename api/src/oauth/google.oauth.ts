@@ -14,16 +14,17 @@ interface IGoogleTokens {
 
 export interface IGoogleResponse extends IGoogleTokens {
   decoded: {
-    email: string;
-    email_verified: boolean;
-    name: string;
-    picture: string;
-    given_name: string;
-    family_name: string;
-    locale: string;
-    iat: number;
-    exp: number;
-  }
+    email: string,
+    email_verified: boolean,
+    name: string,
+    picture: string,
+    given_name: string,
+    family_name: string,
+    locale: string,
+    iat: number,
+    exp: number,
+  },
+  profileType?: 'client' | 'master',
 }
 
 export async function obtainToken(code: string): Promise<IGoogleTokens> {

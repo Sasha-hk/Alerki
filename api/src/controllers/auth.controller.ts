@@ -10,6 +10,7 @@ import DevicesDto from '../utils/dto/devices.dto';
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 import authenticateWithGoogle from '../oauth/google.oauth';
 import AuthError from '../errors/auth.error';
+import UserError from '../errors/user.error';
 
 interface IAuthController extends Controller {
   register(req: Request, res: Response): any;
@@ -19,6 +20,7 @@ interface IAuthController extends Controller {
   getDevices(req: AuthRequest, res: Response): any;
   deleteDevice(req: AuthRequest, res: Response): any;
   refresh(req: AuthRequest, res: Response): any;
+  user(req: AuthRequest, res: Response): any;
 }
 
 /**
@@ -39,6 +41,7 @@ class AuthController implements IAuthController {
     this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
     this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
     this.router.get(`${this.path}/refresh`, isAuthenticated, this.refresh);
+    this.router.get(`${this.path}/user`, isAuthenticated, this.user);
 
     if (process.env.NODE_ENV === 'dev') {
       this.router.get(`${this.path}/oauth/test`, this.oauth);
@@ -269,7 +272,25 @@ class AuthController implements IAuthController {
       res.json({
         ...userDto,
       });
-      res.json('OK');
+    } catch (e: IError | any) {
+      console.log(e);
+      res.status(e?.status || 500).json(e?.error);
+    }
+  }
+
+  async user(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.token!;
+
+      const userData = await UserService.findUserByID(id);
+
+      if (!userData) {
+        throw UserError.UserNotExists();
+      }
+
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e?.error);
     }

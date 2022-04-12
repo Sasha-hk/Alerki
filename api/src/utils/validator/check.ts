@@ -31,6 +31,26 @@ const required: PartialCheck = (field: IValidateField, errorPool: IErrorPool, na
   return false;
 };
 
+const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
+  if (field?.type) {
+    if (field.required) {
+      if (typeof field.value !== field.type) {
+        setError(errorPool, name, `expected to be a ${field.type}`);
+        return true;
+      }
+    } else if (field.value !== undefined) {
+      if (typeof field.value !== field.type) {
+        if (field.atLeastOne || field.onlyOne) {
+          setError(errorPool, name, `expected to be a ${field.type}`);
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
 const onlyOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) => {
   const fieldKeys = Object.keys(fields);
   const fieldKeysLength = fieldKeys.length;
@@ -77,18 +97,22 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
   const keys = Object.keys(fields);
   const keysLength = keys.length;
   const localError: IErrorPool = {};
-  let atLeastOneExists = false;
+  let beforeExists = false;
+  let notExists = false;
 
   for (let i = 0; i < keysLength; i++) {
     if (fields[keys[i]]?.atLeastOne) {
       if (!fields[keys[i]]?.value) {
-        atLeastOneExists = true;
+        notExists = true;
         localError[keys[i]] = 'is required at least one';
+        continue;
       }
+
+      beforeExists = true;
     }
   }
 
-  if (atLeastOneExists) {
+  if (!beforeExists && notExists) {
     Object.assign(errorPool, localError);
     return true;
   }
@@ -96,22 +120,20 @@ const atLeastOne: FullCheck = (fields: IValidateFields, errorPool: IErrorPool) =
   return false;
 };
 
-const type: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
-  if (field?.type) {
-    if (typeof field.value !== field.type) {
-      setError(errorPool, name, `expected to be a ${field.type}`);
-      return true;
-    }
-  }
-
-  return false;
-};
-
 const pattern: PartialCheck = (field: IValidateField, errorPool: IErrorPool, name: string) => {
   if (field?.pattern) {
-    if (!RegExp(field.pattern).test(field.value)) {
-      setError(errorPool, name, 'does not match pattern');
-      return true;
+    if (field.required) {
+      if (!RegExp(field.pattern).test(field.value)) {
+        setError(errorPool, name, 'does not match pattern');
+        return true;
+      }
+    } else if (field.value !== undefined) {
+      if (field.atLeastOne || field.onlyOne) {
+        if (!RegExp(field.pattern).test(field.value)) {
+          setError(errorPool, name, 'does not match pattern');
+          return true;
+        }
+      }
     }
   }
 
