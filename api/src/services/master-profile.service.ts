@@ -1,41 +1,40 @@
 // Errors
 import MasterProfileError from '../errors/master-profile.error';
 
-// Models
-import { MasterProfileModel } from '../db/models';
+// Staff
+import prisma from '../prisma';
+
+// Third-party packages
+import Prisma from '@prisma/client';
 
 interface IUpdateProfile {
   biography: string,
 }
 
 interface IMasterProfileService {
-  createProfile(): Promise<MasterProfileModel>;
-  findByID(id: string): Promise<MasterProfileModel | null>;
-  findAvailableByID(id: string): Promise<MasterProfileModel | null>;
+  createProfile(): Promise<Prisma.MasterProfile>;
+  findByID(id: string): Promise<Prisma.MasterProfile | null>;
+  findAvailableByID(id: string): Promise<Prisma.MasterProfile | null>;
   block(id: string): Promise<void>;
   unblock(id: string): Promise<void>;
-  update(id: string, { biography }: IUpdateProfile): Promise<MasterProfileModel>;
+  update(id: string, { biography }: IUpdateProfile): Promise<Prisma.MasterProfile>;
 }
 
 class MasterProfileService implements IMasterProfileService {
-  async createProfile(): Promise<MasterProfileModel> {
-    const newProfile = await MasterProfileModel.create();
-
-    return newProfile.toJSON();
+  async createProfile() {
+    return prisma.masterProfile.create({ data: {} });
   }
 
-  async findByID(id: string): Promise<MasterProfileModel | null> {
-    return MasterProfileModel.findOne({
-      raw: true,
+  async findByID(id: string) {
+    return prisma.masterProfile.findFirst({
       where: {
         id,
       },
     });
   }
 
-  async findAvailableByID(id: string): Promise<MasterProfileModel | null> {
-    return MasterProfileModel.findOne({
-      raw: true,
+  async findAvailableByID(id: string) {
+    return prisma.masterProfile.findFirst({
       where: {
         id,
         available: true,
@@ -43,63 +42,63 @@ class MasterProfileService implements IMasterProfileService {
     });
   }
 
-  async block(id: string): Promise<void> {
+  async block(id: string) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
       throw MasterProfileError.NotFound();
     }
 
-    MasterProfileModel.update(
-      {
-        available: false,
-      },
+    prisma.masterProfile.update(
       {
         where: {
           id,
+        },
+        data: {
+          available: false,
         },
       },
     );
   }
 
-  async unblock(id: string): Promise<void> {
+  async unblock(id: string) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
       throw MasterProfileError.NotFound();
     }
 
-    MasterProfileModel.update(
-      {
-        available: true,
-      },
+    prisma.masterProfile.update(
       {
         where: {
           id,
+        },
+        data: {
+          available: true,
         },
       },
     );
   }
 
-  async update(id: string, { biography }: IUpdateProfile): Promise<MasterProfileModel> {
+  async update(id: string, { biography }: IUpdateProfile) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
       throw MasterProfileError.NotFound();
     }
 
-    await MasterProfileModel.update(
-      {
-        biography,
-      },
+    await prisma.masterProfile.update(
       {
         where: {
           id,
         },
+        data: {
+          biography,
+        },
       },
     );
 
-    return await this.findByID(id) as MasterProfileModel;
+    return this.findByID(id);
   }
 }
 
