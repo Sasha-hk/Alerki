@@ -1,6 +1,11 @@
-import Prisma from '@prisma/client';
-import prisma from '../prisma';
+// Errors
 import UserPictureError from '../errors/user-picture.error';
+
+// Staff
+import prisma from '../prisma';
+
+// Third-party packages
+import Prisma from '@prisma/client';
 import { UploadedFile } from 'express-fileupload';
 
 export type IPicture = UploadedFile | undefined;
