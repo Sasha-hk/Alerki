@@ -1,5 +1,8 @@
+// Interfaces
 import IUser from '../../interfaces/db/models/user.interface';
-import { UserModel } from '../../db/models';
+
+// Third-party packages
+import Prisma from '@prisma/client';
 
 interface IPrivateUserDto extends Omit<IUser, 'password'> {}
 
@@ -9,21 +12,21 @@ interface IPrivateUserDto extends Omit<IUser, 'password'> {}
 class PrivateUserDto implements IPrivateUserDto {
   id: string;
   username: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
-  phoneNumber: string;
-  pictureID: string;
+  phoneNumber: string | null;
+  pictureID: string | null;
   profileType: 'client' | 'master';
   clientID: string;
-  masterID: string;
+  masterID: string | null;
   banned: boolean;
 
   /**
    * Private user DTO constructor
-   * @param {UserModel} user User date
+   * @param user User date
    */
-  constructor(user: UserModel) {
+  constructor(user: Prisma.User) {
     this.id = user.id;
     this.username = user.username;
     this.firstName = user.firstName;
@@ -31,7 +34,7 @@ class PrivateUserDto implements IPrivateUserDto {
     this.email = user.email;
     this.phoneNumber = user.phoneNumber;
     this.pictureID = user.pictureID;
-    this.profileType = user.profileType;
+    this.profileType = user.profileType || null;
     this.clientID = user.clientID;
     this.masterID = user.masterID;
     this.banned = user.banned;
