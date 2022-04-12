@@ -1,22 +1,21 @@
-import { Op } from 'sequelize';
-import { ServiceModel } from '../db/models';
+import prisma from '../prisma';
+import Prisma from '@prisma/client';
 
 interface ICreateService {
   name: string;
 }
 
 interface IServiceService {
-  findByID(id: string): Promise<ServiceModel | null>;
-  findOneByName(name: string): Promise<ServiceModel | null>;
-  findAllByName(name: string): Promise<ServiceModel[] | null>;
-  create({ name }: ICreateService): Promise<ServiceModel | null>;
-  createOrGet({ name }: ICreateService): Promise<ServiceModel>;
+  findByID(id: string): Promise<Prisma.Service | null>;
+  findOneByName(name: string): Promise<Prisma.Service | null>;
+  findAllByName(name: string): Promise<Prisma.Service[] | null>;
+  create({ name }: ICreateService): Promise<Prisma.Service | null>;
+  createOrGet({ name }: ICreateService): Promise<Prisma.Service>;
 }
 
 class ServiceService implements IServiceService {
   async findByID(id: string) {
-    return ServiceModel.findOne({
-      raw: true,
+    return prisma.service.findFirst({
       where: {
         id,
       },
@@ -24,8 +23,7 @@ class ServiceService implements IServiceService {
   }
 
   async findOneByName(name: string) {
-    return ServiceModel.findOne({
-      raw: true,
+    return prisma.service.findFirst({
       where: {
         name,
       },
@@ -33,22 +31,21 @@ class ServiceService implements IServiceService {
   }
 
   async findAllByName(name: string) {
-    return ServiceModel.findAll({
-      raw: true,
+    return prisma.service.findMany({
       where: {
-        name: {
-          [Op.like]: name,
-        },
+        name,
       },
     });
   }
 
   async create({ name }: ICreateService) {
-    const newService = await ServiceModel.create({
-      name,
+    const newService = await prisma.service.create({
+      data: {
+        name,
+      },
     });
 
-    return newService.toJSON();
+    return newService;
   }
 
   async createOrGet({ name }: ICreateService) {
