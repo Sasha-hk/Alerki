@@ -1,11 +1,13 @@
-// Third-party packages
-import Prisma from '@prisma/client';
-import jwt from 'jsonwebtoken';
-import prisma from '../prisma';
-
 // Errors
 import AuthError from '../errors/auth.error';
 import { ILogOut } from './user.service';
+
+// Staff
+import prisma from '../prisma';
+
+// Third-party packages
+import Prisma from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 export interface ITokenizeUser {
   id: string;
