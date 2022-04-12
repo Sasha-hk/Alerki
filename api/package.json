@@ -11,8 +11,9 @@
     "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles",
     "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles",
     "build": "tsc --project './tsconfig.json'",
-    "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
-    "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"
+    "dev:migrate": "export $(cat ../docker/.env.dev | xargs) && yarn prisma migrate dev --name",
+    "test:migrate": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate dev --name",
+    "prod:migrate": "export $(cat ../docker/.env.prod | xargs) && yarn prisma migrate dev --name"
   },
   "dependencies": {
     "@prisma/client": "^3.12.0",
