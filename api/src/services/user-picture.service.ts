@@ -1,4 +1,5 @@
-import { UserPictureModel } from '../db/models';
+import Prisma from '@prisma/client';
+import prisma from '../prisma';
 import UserPictureError from '../errors/user-picture.error';
 import { UploadedFile } from 'express-fileupload';
 
@@ -10,10 +11,10 @@ interface ISavePicture {
 }
 
 interface IUserPictureService {
-  findPicture(id: string): Promise<UserPictureModel | null>;
-  createPicture(picture: IPicture): Promise<UserPictureModel>;
-  updatePicture(id: string, picture: IPicture): Promise<UserPictureModel>;
-  savePicture({ id, picture }: ISavePicture): Promise<UserPictureModel>;
+  findPicture(id: string): Promise<Prisma.UserPicture | null>;
+  createPicture(picture: IPicture): Promise<Prisma.UserPicture>;
+  updatePicture(id: string, picture: IPicture): Promise<Prisma.UserPicture>;
+  savePicture({ id, picture }: ISavePicture): Promise<Prisma.UserPicture>;
 }
 
 /**
@@ -26,8 +27,7 @@ class UserPictureService implements IUserPictureService {
    * @returns UserPictureModel
    */
   async findPicture(id: string) {
-    return UserPictureModel.findOne({
-      raw: true,
+    return prisma.userPicture.findFirst({
       where: {
         id,
       },
@@ -40,8 +40,10 @@ class UserPictureService implements IUserPictureService {
    * @returns UserPictureModel
    */
   async createPicture(picture: IPicture) {
-    return UserPictureModel.create({
-      picture: picture?.data,
+    return prisma.userPicture.create({
+      data: {
+        picture: picture?.data,
+      },
     });
   }
 
@@ -58,18 +60,14 @@ class UserPictureService implements IUserPictureService {
       throw UserPictureError.NotFound();
     }
 
-    await UserPictureModel.update(
-      {
+    return prisma.userPicture.update({
+      where: {
+        id,
+      },
+      data: {
         picture: picture?.data,
       },
-      {
-        where: {
-          id,
-        },
-      },
-    );
-
-    return await this.findPicture(id) as UserPictureModel;
+    });
   }
 
   /**
