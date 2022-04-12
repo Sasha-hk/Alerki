@@ -98,7 +98,7 @@ class MasterProfileService implements IMasterProfileService {
       },
     );
 
-    return this.findByID(id);
+    return await this.findByID(id) as Prisma.MasterProfile;
   }
 }
 

@@ -47,7 +47,7 @@ class UserPictureService implements IUserPictureService {
   async createPicture(picture: IPicture) {
     return prisma.userPicture.create({
       data: {
-        picture: picture?.data,
+        picture: picture?.data!,
       },
     });
   }

@@ -197,7 +197,7 @@ class UserService implements IUserService {
       throw AuthError.UsernameNotExists();
     }
 
-    if (!bcrypt.compareSync(password, candidate.password)) {
+    if (!bcrypt.compareSync(password, candidate.password!)) {
       throw AuthError.BadPassword();
     }
 
@@ -229,7 +229,7 @@ class UserService implements IUserService {
       throw AuthError.UsernameNotExists();
     }
 
-    if (!bcrypt.compareSync(password, candidate.password)) {
+    if (!bcrypt.compareSync(password, candidate.password!)) {
       throw AuthError.BadPassword();
     }
 
@@ -380,7 +380,7 @@ class UserService implements IUserService {
       );
     }
 
-    return this.findUserByID(id);
+    return await this.findUserByID(id) as Prisma.User;
   }
 
   /**
@@ -416,7 +416,7 @@ class UserService implements IUserService {
       );
     }
 
-    return this.findUserByID(id);
+    return await this.findUserByID(id) as Prisma.User;
   }
 
   /**
@@ -472,7 +472,7 @@ class UserService implements IUserService {
       );
     }
 
-    return this.findUserByID(id);
+    return await this.findUserByID(id) as Prisma.User;
   }
 }
 

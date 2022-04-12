@@ -53,7 +53,7 @@ class AuthService implements IAuthService {
    * @param userID User id
    * @returns Auth data array
    */
-  async findAllByUserID(userID: string): Promise<Prisma.Auth[]> {
+  async findAllByUserID(userID: string) {
     return prisma.auth.findMany({
       where: {
         userID,
@@ -136,7 +136,7 @@ class AuthService implements IAuthService {
     });
 
     if (candidate) {
-      prisma.auth.updateMany(
+      await prisma.auth.updateMany(
         {
           where: {
             userID,
@@ -149,7 +149,7 @@ class AuthService implements IAuthService {
         },
       );
     } else {
-      prisma.auth.create({
+      await prisma.auth.create({
         data: {
           userID,
           deviceName,
