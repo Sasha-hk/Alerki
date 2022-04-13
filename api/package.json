@@ -7,13 +7,13 @@
   "scripts": {
     "dev": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
-    "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles --forceExit",
-    "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles --forceExit",
-    "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles --forceExit",
+    "test": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose --detectOpenHandles --forceExit",
+    "test:unit": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles --forceExit",
+    "test:integration": "export $(cat ../docker/.env.test | xargs) && test:migrate && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles --forceExit",
     "build": "tsc --project './tsconfig.json'",
     "dev:migrate": "export $(cat ../docker/.env.dev | xargs) && yarn prisma migrate dev --name",
-    "test:migrate": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate dev --name",
-    "prod:migrate": "export $(cat ../docker/.env.prod | xargs) && yarn prisma migrate dev --name"
+    "test:migrate": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate reset --force",
+    "prod:migrate": "export $(cat ../docker/.env.prod | xargs) && yarn prisma migrate --name"
   },
   "dependencies": {
     "@prisma/client": "^3.12.0",
