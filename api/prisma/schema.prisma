@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model MasterWeekendDays {
+  id         String          @id @default(uuid())
+  monday     Boolean         @default(false)
+  tuesday    Boolean         @default(false)
+  wednesday  Boolean         @default(false)
+  thursday   Boolean         @default(false)
+  friday     Boolean         @default(false)
+  saturday   Boolean         @default(false)
+  sunday     Boolean         @default(false)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  user       MasterProfile?
+}
+
+model MasterProfile {
+  id             String             @id @default(uuid())
+  biography      String?            @db.VarChar(100)
+  weekendDays    MasterWeekendDays? @relation(fields: [weekendDaysID], references: [id])
+  weekendDaysID  String?            @db.VarChar(36)
+  available      Boolean            @default(true)
+  startWorking   DateTime?          @db.Timetz(6)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  user           User?
+
+  @@map("MasterProfiile")
+}
+
+model ClientProfile {
+  id         String    @id @default(uuid())
+  available  Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User?
+
+  @@map("ClientProfiile")
+}
+
+model UserPicture {
+  id         String    @id @default(uuid())
+  picture    Bytes     @db.ByteA()
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User?
+
+  @@map("UserPictures")
+}
+
+model User {
+  id           String         @id @default(uuid())
+  username     String         @unique @db.VarChar(20)
+  email        String         @unique @db.VarChar(319)
+  firstName    String?        @db.VarChar(30)
+  lastName     String?        @db.VarChar(30)
+  phoneNumber  String?        @unique @db.VarChar(13)
+  password     String?        @db.VarChar(60)
+  profileType  ProfileType    @default(client)
+  picture      UserPicture?   @relation(fields: [pictureID], references: [id])
+  pictureID    String?        @db.VarChar(36)
+  client       ClientProfile  @relation(fields: [clientID], references: [id])
+  clientID     String         @db.VarChar(36)
+  master       MasterProfile? @relation(fields: [masterID], references: [id])
+  masterID     String?        @db.VarChar(36)
+  banned       Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  auth         Auth?
+
+  @@map("Users")
+}
+
+model Auth {
+  id                  String    @id @default(uuid())
+  user                User      @relation(fields: [userID], references: [id])
+  userID              String    @db.VarChar(36)
+  deviceName          String    @db.VarChar(30)
+  refreshToken        String    @db.VarChar(1024)
+  googleAccessToken   String?   @db.VarChar(1024)
+  googleRefreshToken  String?   @db.VarChar(1026)
+  createdAt           DateTime  @default(now())
+
+  @@map("AuthData")
+}
+
+model Service {
+  id          String    @id @default(uuid())
+  name        String    @db.VarChar(30)
+  available   Boolean   @unique @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("Services")
+}
+
+
+
+enum ProfileType {
+  client
+  master
+}

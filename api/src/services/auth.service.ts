@@ -1,7 +1,13 @@
-import jwt from 'jsonwebtoken';
+// Errors
 import AuthError from '../errors/auth.error';
-import { AuthModel } from '../db/models';
 import { ILogOut } from './user.service';
+
+// Staff
+import prisma from '../prisma';
+
+// Third-party packages
+import Prisma from '@prisma/client';
+import jwt from 'jsonwebtoken';
 
 export interface ITokenizeUser {
   id: string;
@@ -27,9 +33,9 @@ interface ISaveTokenOptions {
 }
 
 interface IAuthService {
-  findAllByUserID(userID: string): Promise<AuthModel[]>;
-  findOneByUserID(userID: string): Promise<AuthModel | null>;
-  findOneByID(id: string): Promise<AuthModel | null>;
+  findAllByUserID(userID: string): Promise<Prisma.Auth[]>;
+  findOneByUserID(userID: string): Promise<Prisma.Auth | null>;
+  findOneByID(id: string): Promise<Prisma.Auth | null>;
   generateTokens(userData: ITokenizeUser): Promise<ITokens>;
   saveToken(refreshToken: string, userID: string, deviceName: string, options?: ISaveTokenOptions): any;
   validateAccessToken(accessToken: string): ITokenizeUser;
@@ -45,11 +51,10 @@ class AuthService implements IAuthService {
   /**
    * Find all auth data by user id
    * @param userID User id
-   * @returns {AuthModel[]} Auth data array
+   * @returns Auth data array
    */
-  async findAllByUserID(userID: string): Promise<AuthModel[]> {
-    return AuthModel.findAll({
-      raw: true,
+  async findAllByUserID(userID: string) {
+    return prisma.auth.findMany({
       where: {
         userID,
       },
@@ -59,11 +64,10 @@ class AuthService implements IAuthService {
   /**
    * Find one auth data by user id
    * @param userID User id
-   * @returns {AuthModel[]} Auth data
+   * @returns Auth data
    */
-  async findOneByUserID(userID: string): Promise<AuthModel | null> {
-    return AuthModel.findOne({
-      raw: true,
+  async findOneByUserID(userID: string): Promise<Prisma.Auth | null> {
+    return prisma.auth.findFirst({
       where: {
         userID,
       },
@@ -73,11 +77,10 @@ class AuthService implements IAuthService {
   /**
    * Find one auth data by id
    * @param id Auth data id
-   * @returns {AuthModel | null} Auth data if exists
+   * @returns Auth data if exists
    */
-  async findOneByID(id: string): Promise<AuthModel | null> {
-    return AuthModel.findOne({
-      raw: true,
+  async findOneByID(id: string): Promise<Prisma.Auth | null> {
+    return prisma.auth.findFirst({
       where: {
         id,
       },
@@ -86,8 +89,8 @@ class AuthService implements IAuthService {
 
   /**
    * Generate access and refresh tokens
-   * @param {ITokenizeUser} object Data required to generate token
-   * @returns {ITokens} Access and refresh tokens
+   * @param object Data required to generate token
+   * @returns Access and refresh tokens
    */
   async generateTokens({
     id,
@@ -125,8 +128,7 @@ class AuthService implements IAuthService {
   }
 
   async saveToken(refreshToken: string, userID: string, deviceName: string, options?: ISaveTokenOptions) {
-    const candidate = await AuthModel.findOne({
-      raw: true,
+    const candidate = await prisma.auth.findFirst({
       where: {
         userID,
         deviceName,
@@ -134,22 +136,25 @@ class AuthService implements IAuthService {
     });
 
     if (candidate) {
-      AuthModel.update(
-        {
-          refreshToken,
-        },
+      await prisma.auth.updateMany(
         {
           where: {
+            userID,
             deviceName,
             ...options,
+          },
+          data: {
+            refreshToken,
           },
         },
       );
     } else {
-      AuthModel.create({
-        userID,
-        deviceName,
-        refreshToken,
+      await prisma.auth.create({
+        data: {
+          userID,
+          deviceName,
+          refreshToken,
+        },
       });
     }
   }
@@ -175,8 +180,7 @@ class AuthService implements IAuthService {
   }
 
   async deleteToken({ userID, deviceName, refreshToken }: IDeleteToken) {
-    const candidate = await AuthModel.findOne({
-      raw: true,
+    const candidate = await prisma.auth.findFirst({
       where: {
         userID,
         deviceName,
@@ -188,7 +192,7 @@ class AuthService implements IAuthService {
       throw AuthError.AuthDataNotExists();
     }
 
-    AuthModel.destroy({
+    prisma.auth.deleteMany({
       where: {
         userID,
         deviceName,
@@ -205,7 +209,7 @@ class AuthService implements IAuthService {
     }
 
     if (candidate.userID === userID) {
-      AuthModel.destroy({
+      prisma.auth.delete({
         where: {
           id,
           userID,

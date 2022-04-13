@@ -5,6 +5,7 @@ interface IAuth {
   googleRefreshToken: string;
   deviceName: string;
   userID: string;
+  createdAt: Date;
 }
 
 export default IAuth;
