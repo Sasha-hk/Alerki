@@ -10,7 +10,7 @@ const serviceName = 'haircut';
 describe('Services functionality', () => {
   describe('test get services endpoint', () => {
     it('should return 200 status with services list', async () => {
-      await serviceService.create({ name: serviceName });
+      await serviceService.createOrGet({ name: serviceName });
 
       const r = await request(app)
         .get('/services/')
