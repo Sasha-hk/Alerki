@@ -39,13 +39,11 @@ class ServiceService implements IServiceService {
   }
 
   async create({ name }: ICreateService) {
-    const newService = await prisma.service.create({
+    return prisma.service.create({
       data: {
         name,
       },
     });
-
-    return newService;
   }
 
   async createOrGet({ name }: ICreateService) {
