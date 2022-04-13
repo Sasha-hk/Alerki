@@ -1,33 +1,35 @@
-import { ClientProfileModel } from '../db/models';
+// Errors
 import ClientProfileError from '../errors/client-profile.error';
 
+// Staff
+import prisma from '../prisma';
+
+// Third-party packages
+import Prisma from '@prisma/client';
+
 interface IClientProfileService {
-  createProfile(): Promise<ClientProfileModel>;
-  findByID(id: string): Promise<ClientProfileModel | null>;
-  findAvailableByID(id: string): Promise<ClientProfileModel | null>;
+  createProfile(): Promise<Prisma.ClientProfile>;
+  findByID(id: string): Promise<Prisma.ClientProfile | null>;
+  findAvailableByID(id: string): Promise<Prisma.ClientProfile | null>;
   block(id: string): Promise<void>;
   unblock(id: string): Promise<void>;
 }
 
 class ClientProfileService implements IClientProfileService {
-  async createProfile(): Promise<ClientProfileModel> {
-    const newProfile = await ClientProfileModel.create({
-      raw: true,
-    });
-
-    return newProfile.toJSON();
+  async createProfile() {
+    return prisma.clientProfile.create({ data: {} });
   }
 
-  async findByID(id: string): Promise<ClientProfileModel | null> {
-    return ClientProfileModel.findOne({
+  async findByID(id: string) {
+    return prisma.clientProfile.findFirst({
       where: {
         id,
       },
     });
   }
 
-  async findAvailableByID(id: string): Promise<ClientProfileModel | null> {
-    return ClientProfileModel.findOne({
+  async findAvailableByID(id: string) {
+    return prisma.clientProfile.findFirst({
       where: {
         id,
         available: true,
@@ -35,20 +37,20 @@ class ClientProfileService implements IClientProfileService {
     });
   }
 
-  async block(id: string): Promise<void> {
+  async block(id: string) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
       throw ClientProfileError.NotFound();
     }
 
-    ClientProfileModel.update(
-      {
-        available: false,
-      },
+    prisma.clientProfile.update(
       {
         where: {
           id,
+        },
+        data: {
+          available: false,
         },
       },
     );
@@ -61,13 +63,13 @@ class ClientProfileService implements IClientProfileService {
       throw ClientProfileError.NotFound();
     }
 
-    ClientProfileModel.update(
-      {
-        available: true,
-      },
+    prisma.clientProfile.update(
       {
         where: {
           id,
+        },
+        data: {
+          available: true,
         },
       },
     );

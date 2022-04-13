@@ -143,7 +143,6 @@ class AuthController implements IAuthController {
 
       res.sendStatus(200);
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }
@@ -162,12 +161,8 @@ class AuthController implements IAuthController {
         + 'client_id=' + process.env.GOOGLE_CLIENT_ID + '&'
         + 'redirect_uri=' + process.env.GOOGLE_REDIRECT_URL;
 
-      console.log(path);
-      console.log(process.env.GOOGLE_REDIRECT_URL);
-
       res.send(`<a href="${path}">google</a>`);
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }
@@ -273,7 +268,6 @@ class AuthController implements IAuthController {
         ...userDto,
       });
     } catch (e: IError | any) {
-      console.log(e);
       res.status(e?.status || 500).json(e?.error);
     }
   }

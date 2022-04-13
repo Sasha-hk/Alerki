@@ -1,15 +1,15 @@
 interface IUser {
   id: string;
   username: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
-  phoneNumber: string;
-  pictureID: string;
-  password: string;
+  phoneNumber: string | null;
+  pictureID: string | null;
+  password: string | null;
   profileType: 'client' | 'master';
   clientID: string;
-  masterID: string;
+  masterID: string | null;
   banned: boolean;
 }
 
