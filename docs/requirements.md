@@ -175,7 +175,7 @@ The project consists of two parts:
 Frameworks:
 
 - [Express.js](https://expressjs.com/ "Express.js official website")
-- [Sequelize](https://sequelize.org/ "Sequelize official website")
+- [Prisma](https://www.prisma.io/ "Prisma official website")
 
 ### Frontend
 

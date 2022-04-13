@@ -1,10 +1,10 @@
+// Interfaces
 import IAuth from '../../interfaces/db/models/auth.interface';
-import { AuthModel } from '../../db/models';
 
-export interface IDevicesDto extends Pick<IAuth, 'id' | 'deviceName' | 'userID'> {
-  createdAt: string;
-  updatedAt: string;
-}
+// Third-party packages
+import Prisma from '@prisma/client';
+
+export interface IDevicesDto extends Pick<IAuth, 'id' | 'userID' | 'deviceName' | 'createdAt'> {}
 
 /**
  * This data transfer object intended to transfer data that belongs only current user
@@ -14,9 +14,9 @@ class DevicesDto {
 
   /**
    * Private user DTO constructor
-   * @param {AuthModel} authData User date
+   * @param authData User date
    */
-  constructor(authData: AuthModel[]) {
+  constructor(authData: Prisma.Auth[]) {
     this.devices = [];
 
     if (authData.length !== 0) {
@@ -26,7 +26,6 @@ class DevicesDto {
           userID: i.userID,
           deviceName: i.deviceName,
           createdAt: i.createdAt,
-          updatedAt: i.updatedAt,
         });
       }
     }

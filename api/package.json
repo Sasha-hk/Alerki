@@ -7,14 +7,16 @@
   "scripts": {
     "dev": "export $(cat ../docker/.env.dev | xargs) && ts-node-dev --respawn --transpile-only ./src/index.ts",
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
-    "test": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose --detectOpenHandles",
-    "test:unit": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles",
-    "test:integration": "export $(cat ../docker/.env.test | xargs) && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles",
+    "test": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose --detectOpenHandles --forceExit",
+    "test:unit": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles --forceExit",
+    "test:integration": "export $(cat ../docker/.env.test | xargs) && test:migrate && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles --forceExit",
     "build": "tsc --project './tsconfig.json'",
-    "makemigrations": "export $(cat ../docker/.env.test | xargs) && npx sequelize-mig migration:make -n",
-    "migrate": "export $(cat ../docker/.env.test | xargs) && npx sequelize-cli db:migrate"
+    "dev:migrate": "export $(cat ../docker/.env.dev | xargs) && yarn prisma migrate dev --name",
+    "test:migrate": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate reset --force",
+    "prod:migrate": "export $(cat ../docker/.env.prod | xargs) && yarn prisma migrate --name"
   },
   "dependencies": {
+    "@prisma/client": "^3.12.0",
     "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
@@ -24,7 +26,6 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.7.3",
     "randexp": "^0.5.3",
-    "sequelize": "^6.17.0",
     "typescript": "^4.6.2"
   },
   "devDependencies": {
@@ -36,13 +37,11 @@
     "@types/jest": "^27.4.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^17.0.21",
-    "@types/sequelize": "^4.28.11",
     "@types/supertest": "^2.0.12",
     "@types/uuid": "^8.3.4",
     "jest": "^27.5.1",
     "nodemon": "^2.0.15",
-    "sequelize-cli": "^6.4.1",
-    "sequelize-mig": "^3.1.3",
+    "prisma": "^3.12.0",
     "supertest": "^6.2.2",
     "ts-jest": "^27.1.4",
     "ts-node": "^10.7.0",

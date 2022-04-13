@@ -5,16 +5,17 @@ import UserError from '../errors/user.error';
 // Interfaces
 import { IGoogleResponse } from '../oauth/google.oauth';
 
-// Models
-import { UserModel, UserPictureModel } from '../db/models';
-
 // Services
 import AuthService, { ITokens } from './auth.service';
 import UserPictureService, { IPicture } from './user-picture.service';
 import ClientProfileService from './client-profile.service';
 import MasterProfileService from './master-profile.service';
 
+// Staff
+import prisma from '../prisma';
+
 // Third-party packages
+import Prisma from '@prisma/client';
 import bcrypt from 'bcrypt';
 import axios from 'axios';
 
@@ -53,18 +54,18 @@ interface IUpdateUser {
 }
 
 interface IUserService {
-  findUserByUsername(username: string): Promise<UserModel | null>;
-  findUserByEmail(email: string): Promise<UserModel | null>;
-  findUserByID(id: string): Promise<UserModel | null>;
-  findUserByPhoneNumber(id: string): Promise<UserModel | null>;
+  findUserByUsername(username: string): Promise<Prisma.User | null>;
+  findUserByEmail(email: string): Promise<Prisma.User | null>;
+  findUserByID(id: string): Promise<Prisma.User | null>;
+  findUserByPhoneNumber(id: string): Promise<Prisma.User | null>;
   register({ username, email, password, profileType }: IRegister): Promise<ITokens>;
   logInByUsername({ username, password, deviceName }: ILogInByUsername): any;
   logInByEmail({ email, password, deviceName }: ILogInByEmail): any;
   logOut({ refreshToken, deviceName, userID }: ILogOut): void;
   withGoogle(data: IGoogleResponse, deviceName: string): any;
-  becomeMaster(id: string): Promise<UserModel>;
-  becomeClient(id: string): Promise<UserModel>;
-  updateUser(id: string, { firstName, lastName, phoneNumber }: IUpdateUser): Promise<UserModel>;
+  becomeMaster(id: string): Promise<Prisma.User>;
+  becomeClient(id: string): Promise<Prisma.User>;
+  updateUser(id: string, { firstName, lastName, phoneNumber }: IUpdateUser): Promise<Prisma.User>;
 }
 
 /**
@@ -77,8 +78,7 @@ class UserService implements IUserService {
    * @returns User if exists
    */
   async findUserByEmail(email: string) {
-    return UserModel.findOne({
-      raw: true,
+    return prisma.user.findFirst({
       where: {
         email,
       },
@@ -91,8 +91,7 @@ class UserService implements IUserService {
    * @returns User if exists
    */
   async findUserByUsername(username: string) {
-    return UserModel.findOne({
-      raw: true,
+    return prisma.user.findFirst({
       where: {
         username,
       },
@@ -105,8 +104,7 @@ class UserService implements IUserService {
    * @returns User if exists
    */
   async findUserByID(id: string) {
-    return UserModel.findOne({
-      raw: true,
+    return prisma.user.findFirst({
       where: {
         id,
       },
@@ -119,8 +117,7 @@ class UserService implements IUserService {
    * @returns User if exists
    */
   async findUserByPhoneNumber(phoneNumber: string) {
-    return UserModel.findOne({
-      raw: true,
+    return prisma.user.findFirst({
       where: {
         phoneNumber,
       },
@@ -153,21 +150,23 @@ class UserService implements IUserService {
     const hashedPassword = bcrypt.hashSync(password, 1);
 
     // Create client and master profile if required
-    const clientProfileID = (await ClientProfileService.createProfile()).id;
-    let masterProfileID: string | null = null;
+    const clientID = (await ClientProfileService.createProfile()).id;
+    let masterID: string | null = null;
 
     if (profileType === 'master') {
-      masterProfileID = (await MasterProfileService.createProfile()).id;
+      masterID = (await MasterProfileService.createProfile()).id;
     }
 
     // Create new user
-    const newUser = await UserModel.create({
-      username,
-      email,
-      password: hashedPassword,
-      profileType,
-      clientID: clientProfileID,
-      masterID: masterProfileID,
+    const newUser = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPassword,
+        profileType,
+        clientID,
+        masterID,
+      },
     });
 
     // Generate tokens
@@ -198,7 +197,7 @@ class UserService implements IUserService {
       throw AuthError.UsernameNotExists();
     }
 
-    if (!bcrypt.compareSync(password, candidate.password)) {
+    if (!bcrypt.compareSync(password, candidate.password!)) {
       throw AuthError.BadPassword();
     }
 
@@ -230,7 +229,7 @@ class UserService implements IUserService {
       throw AuthError.UsernameNotExists();
     }
 
-    if (!bcrypt.compareSync(password, candidate.password)) {
+    if (!bcrypt.compareSync(password, candidate.password!)) {
       throw AuthError.BadPassword();
     }
 
@@ -282,8 +281,10 @@ class UserService implements IUserService {
           },
         );
 
-        pictureID = (await UserPictureModel.create({
-          picture: userPictureResponse.data,
+        pictureID = (await prisma.userPicture.create({
+          data: {
+            picture: userPictureResponse.data,
+          },
         })).id;
       }
 
@@ -295,13 +296,15 @@ class UserService implements IUserService {
         masterID = (await MasterProfileService.createProfile()).id;
       }
 
-      const newUser = await UserModel.create({
-        username: userData.email.split('@')[0],
-        email: userData.email,
-        profileType: 'client',
-        pictureID,
-        clientID,
-        masterID,
+      const newUser = await prisma.user.create({
+        data: {
+          username: userData.email.split('@')[0],
+          email: userData.email,
+          profileType: 'client',
+          pictureID,
+          clientID,
+          masterID,
+        },
       });
 
       const tokens = await AuthService.generateTokens({
@@ -342,8 +345,7 @@ class UserService implements IUserService {
    * @param id User ID to become master
    */
   async becomeMaster(id: string) {
-    const candidate = await UserModel.findOne({
-      raw: true,
+    const candidate = await prisma.user.findFirst({
       where: {
         id,
       },
@@ -365,20 +367,20 @@ class UserService implements IUserService {
 
     // Change profile type
     if (candidate?.profileType === 'client') {
-      await UserModel.update(
-        {
-          profileType: 'master',
-          masterID,
-        },
+      return prisma.user.update(
         {
           where: {
             id,
+          },
+          data: {
+            profileType: 'master',
+            masterID,
           },
         },
       );
     }
 
-    return await this.findUserByID(id) as UserModel;
+    return await this.findUserByID(id) as Prisma.User;
   }
 
   /**
@@ -386,8 +388,7 @@ class UserService implements IUserService {
    * @param id User ID to become client
    */
   async becomeClient(id: string) {
-    const candidate = await UserModel.findOne({
-      raw: true,
+    const candidate = await prisma.user.findFirst({
       where: {
         id,
       },
@@ -403,19 +404,19 @@ class UserService implements IUserService {
     }
 
     if (candidate?.profileType === 'master') {
-      await UserModel.update(
-        {
-          profileType: 'client',
-        },
+      await prisma.user.update(
         {
           where: {
             id,
+          },
+          data: {
+            profileType: 'client',
           },
         },
       );
     }
 
-    return await this.findUserByID(id) as UserModel;
+    return await this.findUserByID(id) as Prisma.User;
   }
 
   /**
@@ -456,22 +457,22 @@ class UserService implements IUserService {
     }
 
     if (firstName || lastName || phoneNumber || userPictureID) {
-      await UserModel.update(
-        {
-          firstName,
-          lastName,
-          phoneNumber,
-          pictureID: userPictureID,
-        },
+      await prisma.user.update(
         {
           where: {
             id,
+          },
+          data: {
+            firstName,
+            lastName,
+            phoneNumber,
+            pictureID: userPictureID,
           },
         },
       );
     }
 
-    return await this.findUserByID(id) as UserModel;
+    return await this.findUserByID(id) as Prisma.User;
   }
 }
 
