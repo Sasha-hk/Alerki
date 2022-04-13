@@ -48,7 +48,7 @@ model ClientProfile {
 
 model UserPicture {
   id         String    @id @default(uuid())
-  picture    Bytes
+  picture    Bytes     @db.ByteA()
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   user       User?
@@ -62,7 +62,7 @@ model User {
   email        String         @unique @db.VarChar(319)
   firstName    String?        @db.VarChar(30)
   lastName     String?        @db.VarChar(30)
-  phoneNumber  String?        @unique @db.VarChar(12)
+  phoneNumber  String?        @unique @db.VarChar(13)
   password     String?        @db.VarChar(60)
   profileType  ProfileType    @default(client)
   picture      UserPicture?   @relation(fields: [pictureID], references: [id])
@@ -84,7 +84,7 @@ model Auth {
   user                User      @relation(fields: [userID], references: [id])
   userID              String    @db.VarChar(36)
   deviceName          String    @db.VarChar(30)
-  refreshToken        String    @db.VarChar(243)
+  refreshToken        String    @db.VarChar(1024)
   googleAccessToken   String?   @db.VarChar(1024)
   googleRefreshToken  String?   @db.VarChar(1026)
   createdAt           DateTime  @default(now())
