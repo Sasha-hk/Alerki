@@ -1,10 +1,7 @@
-// Interfaces
-import IAuth from '../../interfaces/db/auth.interface';
-
 // Third-party packages
 import Prisma from '@prisma/client';
 
-export interface IDevicesDto extends Pick<IAuth, 'id' | 'userID' | 'deviceName' | 'createdAt'> {}
+export interface IDevicesDto extends Pick<Prisma.Auth, 'id' | 'userID' | 'deviceName' | 'createdAt'> {}
 
 /**
  * This data transfer object intended to transfer data that belongs only current user
