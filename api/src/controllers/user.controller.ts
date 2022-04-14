@@ -34,7 +34,7 @@ class UserController implements IUserController {
   constructor() {
     this.router.patch(`${this.path}/become/master`, isAuthenticated, this.becomeMaster);
     this.router.patch(`${this.path}/become/client`, isAuthenticated, this.becomeClient);
-    this.router.patch(`${this.path}/profile`, isAuthenticated, this.updateProfile);
+    this.router.patch(`${this.path}/`, isAuthenticated, this.updateProfile);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {

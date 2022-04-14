@@ -76,7 +76,7 @@ describe('Services functionality', () => {
     describe('test for client', () => {
       it('should set first / last name and phone number', async () => {
         const r = await request(app)
-          .patch('/user/profile')
+          .patch('/user')
           .set('Cookie', [
             'accessToken=' + user.accessToken,
             'refreshToken=' + user.refreshToken,
@@ -93,7 +93,7 @@ describe('Services functionality', () => {
         user.phoneNumber = '+380000000111';
 
         const r = await request(app)
-          .patch('/user/profile')
+          .patch('/user')
           .set('Cookie', [
             'accessToken=' + user.accessToken,
             'refreshToken=' + user.refreshToken,
@@ -120,7 +120,7 @@ describe('Services functionality', () => {
         });
 
         const r = await request(app)
-          .patch('/user/profile')
+          .patch('/user')
           .set('Cookie', [
             'accessToken=' + user.accessToken,
             'refreshToken=' + user.refreshToken,
@@ -140,7 +140,7 @@ describe('Services functionality', () => {
   describe('test update master data', () => {
     it('should update master biography', async () => {
       const r = await request(app)
-        .patch('/user/profile')
+        .patch('/user')
         .set('Cookie', [
           'accessToken=' + user.accessToken,
           'refreshToken=' + user.refreshToken,
