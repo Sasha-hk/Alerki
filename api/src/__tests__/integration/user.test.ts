@@ -9,7 +9,7 @@ const app = APP.getApp();
 const user = {
   username: 'user_test',
   email: 'user_test@gamil.com',
-  profileType: 'client',
+  profileType: 'master',
   password: 'user-test',
   id: 0,
   firstName: 'firstName_',
@@ -41,21 +41,6 @@ describe('Services functionality', () => {
   });
 
   describe('test become master / client endpoints', () => {
-    describe('become master', () => {
-      it('should make profile type as master', async () => {
-        const r = await request(app)
-          .patch('/user/become/master')
-          .set('Cookie', [
-            'accessToken=' + user.accessToken,
-            'refreshToken=' + user.refreshToken,
-          ]);
-
-        expect(r.status).toEqual(200);
-        expect(r.body.profileType).toEqual('master');
-        expect(r.body.masterID).toBeTruthy();
-      });
-    });
-
     describe('become client', () => {
       it('should make profile type as client', async () => {
         const r = await request(app)
@@ -70,9 +55,24 @@ describe('Services functionality', () => {
         expect(r.body.clientID).toBeTruthy();
       });
     });
+
+    describe('become master', () => {
+      it('should make profile type as master', async () => {
+        const r = await request(app)
+          .patch('/user/become/master')
+          .set('Cookie', [
+            'accessToken=' + user.accessToken,
+            'refreshToken=' + user.refreshToken,
+          ]);
+
+        expect(r.status).toEqual(200);
+        expect(r.body.profileType).toEqual('master');
+        expect(r.body.masterID).toBeTruthy();
+      });
+    });
   });
 
-  describe('test update user endpoints', () => {
+  describe('test update `user` endpoints', () => {
     describe('test for client', () => {
       it('should set first / last name and phone number', async () => {
         const r = await request(app)
@@ -139,17 +139,19 @@ describe('Services functionality', () => {
 
   describe('test update master data', () => {
     it('should update master biography', async () => {
+      const biography = 'I am a good programmer';
       const r = await request(app)
-        .patch('/user')
+        .patch('/user/master')
         .set('Cookie', [
           'accessToken=' + user.accessToken,
           'refreshToken=' + user.refreshToken,
         ])
         .send({
-          biography: 'I am a good programmer',
+          biography,
         });
 
       expect(r.status).toEqual(200);
+      expect(r.body.master.biography).toEqual(biography);
     });
   });
 
