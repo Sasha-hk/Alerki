@@ -1,9 +1,9 @@
 interface IMasterProfile {
   id: string;
-  biography: string;
+  biography: string | null;
   available: boolean;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default IMasterProfile;

@@ -11,6 +11,8 @@ interface IUser {
   clientID: string;
   masterID: string | null;
   banned: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export default IUser;
