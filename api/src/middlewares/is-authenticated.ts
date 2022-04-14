@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { read } from 'fs';
 import AuthError from '../errors/auth.error';
 import IError from '../interfaces/error.interface';
 import AuthService, { ITokenizeUser } from '../services/auth.service';
