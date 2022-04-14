@@ -7,17 +7,21 @@ import UserError from '../errors/user.error';
 
 // Middlewares
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
+import isMaster from '../middlewares/is-master';
 
 // Services
 import UserService from '../services/user.service';
+import MasterProfileService from '../services/master-profile.service';
 import { IPicture } from '../services/user-picture.service';
 
 // Utils
 import PrivateUserDto from '../utils/dto/private-user.dto';
+import MasterProfileDto from '../utils/dto/master-profile.dto';
 import Validator, { blanks } from '../utils/validator';
 
 // Third-party packages
 import { Router, Response } from 'express';
+import MasterProfileError from '../errors/master-profile.error';
 
 interface IUserController extends Controller {
   // L clientAppointments(req: AuthRequest, res: Response): any;
@@ -26,6 +30,7 @@ interface IUserController extends Controller {
   // updateMasterService(req: AuthRequest, res: Response): any;
   // deleteMasterService(req: AuthRequest, res: Response): any;
   updateProfile(req: AuthRequest, res: Response): any;
+  updateMasterProfile(req: AuthRequest, res: Response): any;
   becomeMaster(req: AuthRequest, res: Response): any;
   becomeClient(req: AuthRequest, res: Response): any;
   getUser(req: AuthRequest, res: Response): any;
@@ -40,6 +45,7 @@ class UserController implements IUserController {
     this.router.patch(`${this.path}/become/client`, isAuthenticated, this.becomeClient);
     this.router.patch(`${this.path}/`, isAuthenticated, this.updateProfile);
     this.router.get(`${this.path}`, isAuthenticated, this.getUser);
+    this.router.patch(`${this.path}/master`, isAuthenticated, isMaster, this.updateMasterProfile);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -106,6 +112,42 @@ class UserController implements IUserController {
       );
 
       const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
+    } catch (e: IError | any) {
+      console.log(e);
+      res.status(e?.status || 500).json(e.error);
+    }
+  }
+
+  async updateMasterProfile(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.token!;
+      const { biography } = req.body;
+
+      Validator.validate({
+        biography: {
+          value: biography,
+          required: true,
+          type: 'string',
+          pattern: /\w{0,100}/,
+        },
+      });
+
+      const userCandidate = await UserService.findUserByID(id);
+
+      if (!userCandidate?.masterID) {
+        throw MasterProfileError.NotFound();
+      }
+
+      const userData = await MasterProfileService.update(
+        userCandidate?.masterID!,
+        {
+          biography,
+        },
+      );
+
+      const userDto = new PrivateUserDto(userCandidate, userData);
 
       res.json(userDto);
     } catch (e: IError | any) {
