@@ -2,14 +2,13 @@
 import MasterProfileError from '../errors/master-profile.error';
 
 // Service
-import MasterWeekendDays from './master-weekend-days.service';
+import masterWeekendDaysService from './master-weekend-days.service';
 
 // Staff
 import prisma from '../prisma';
 
 // Third-party packages
 import Prisma from '@prisma/client';
-import masterWeekendDaysService from './master-weekend-days.service';
 
 interface IUpdateProfile {
   biography: string,

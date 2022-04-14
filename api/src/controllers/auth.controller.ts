@@ -269,6 +269,24 @@ class AuthController implements IAuthController {
       res.status(e?.status || 500).json(e?.error);
     }
   }
+
+  async user(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.token!;
+
+      const userData = await UserService.findUserByID(id);
+
+      if (!userData) {
+        throw UserError.UserNotExists();
+      }
+
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
+    }
+  }
 }
 
 export default AuthController;
