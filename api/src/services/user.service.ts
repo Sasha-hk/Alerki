@@ -442,7 +442,7 @@ class UserService implements IUserService {
     }
 
     // If user is master update biography for master profile
-    if (candidate?.profileType === 'master' && candidate?.masterID) {
+    if (candidate?.profileType === 'master' && candidate?.masterID && biography) {
       MasterProfileService.update(candidate?.masterID, { biography });
     }
 
