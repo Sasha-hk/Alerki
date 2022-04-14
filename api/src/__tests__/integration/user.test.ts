@@ -152,4 +152,18 @@ describe('Services functionality', () => {
       expect(r.status).toEqual(200);
     });
   });
+
+  describe('test user endpoint', () => {
+    it('should return user data', async () => {
+      const r = await request(app)
+        .get('/user')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+          'refreshToken=' + user.refreshToken,
+        ]);
+
+      expect(r.status).toEqual(200);
+      expect(r.body).toBeTruthy();
+    });
+  });
 });

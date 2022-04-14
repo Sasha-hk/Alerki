@@ -2,6 +2,9 @@
 import IError from '../interfaces/error.interface';
 import Controller from '../interfaces/controller.interface';
 
+// Errors
+import UserError from '../errors/user.error';
+
 // Middlewares
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
 
@@ -25,6 +28,7 @@ interface IUserController extends Controller {
   updateProfile(req: AuthRequest, res: Response): any;
   becomeMaster(req: AuthRequest, res: Response): any;
   becomeClient(req: AuthRequest, res: Response): any;
+  getUser(req: AuthRequest, res: Response): any;
 }
 
 class UserController implements IUserController {
@@ -35,6 +39,7 @@ class UserController implements IUserController {
     this.router.patch(`${this.path}/become/master`, isAuthenticated, this.becomeMaster);
     this.router.patch(`${this.path}/become/client`, isAuthenticated, this.becomeClient);
     this.router.patch(`${this.path}/`, isAuthenticated, this.updateProfile);
+    this.router.get(`${this.path}`, isAuthenticated, this.getUser);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -106,6 +111,24 @@ class UserController implements IUserController {
     } catch (e: IError | any) {
       console.log(e);
       res.status(e?.status || 500).json(e.error);
+    }
+  }
+
+  async getUser(req: AuthRequest, res: Response) {
+    try {
+      const { id } = req.token!;
+
+      const userData = await UserService.findUserByID(id);
+
+      if (!userData) {
+        throw UserError.UserNotExists();
+      }
+
+      const userDto = new PrivateUserDto(userData);
+
+      res.json(userDto);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
     }
   }
 }
