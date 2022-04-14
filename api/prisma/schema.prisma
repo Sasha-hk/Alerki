@@ -15,8 +15,8 @@ model MasterWeekendDays {
   wednesday  Boolean         @default(false)
   thursday   Boolean         @default(false)
   friday     Boolean         @default(false)
-  saturday   Boolean         @default(false)
-  sunday     Boolean         @default(false)
+  saturday   Boolean         @default(true)
+  sunday     Boolean         @default(true)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   user       MasterProfile?

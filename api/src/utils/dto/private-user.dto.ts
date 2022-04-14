@@ -1,5 +1,5 @@
 // Interfaces
-import IUser from '../../interfaces/db/models/user.interface';
+import IUser from '../../interfaces/db/user.interface';
 
 // Third-party packages
 import Prisma from '@prisma/client';

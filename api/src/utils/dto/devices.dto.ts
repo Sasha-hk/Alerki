@@ -1,5 +1,5 @@
 // Interfaces
-import IAuth from '../../interfaces/db/models/auth.interface';
+import IAuth from '../../interfaces/db/auth.interface';
 
 // Third-party packages
 import Prisma from '@prisma/client';
