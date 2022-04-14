@@ -28,7 +28,6 @@ model MasterProfile {
   weekendDays    MasterWeekendDays? @relation(fields: [weekendDaysID], references: [id])
   weekendDaysID  String?            @db.VarChar(36)
   available      Boolean            @default(true)
-  startWorking   DateTime?          @db.Timetz(6)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   user           User?
