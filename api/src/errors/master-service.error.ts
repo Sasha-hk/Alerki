@@ -20,7 +20,15 @@ class MasterServiceError extends HttpError {
    * @returns {HttpError} Error
    */
   static ServiceNotBelongsToUser(): HttpError {
-    throw new HttpError(404, 'The service not belongs to user', { error: 'the service not belong to you' });
+    throw new HttpError(400, 'The service not belongs to user', { error: 'the service not belong to you' });
+  }
+
+  /**
+   * Services not found
+   * @returns {HttpError} Error
+   */
+  static NotFound(): HttpError {
+    throw new HttpError(404, 'The service not found', { error: 'the service not found' });
   }
 }
 
