@@ -79,8 +79,8 @@ jobs:
       - name: Build image and push it to GitHub Packages
         run: |
           cd frontend
-          docker build . --tag ghcr.io/sasha-hk/alerki-frontend:latest
-          docker push ghcr.io/sasha-hk/alerki-frontend:latest
+          docker build . --tag ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION}
+          docker push ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION}
 
   deploy:
     name: Deploy
@@ -101,5 +101,5 @@ jobs:
             git pull origin prod
             cd docker
             docker-compose stop
-            docker pull ghcr.io/sasha-hk/alerki-frontend:${env.RELEASE_VERSION}
+            docker pull ghcr.io/sasha-hk/alerki-frontend:latest
             docker-compose up
