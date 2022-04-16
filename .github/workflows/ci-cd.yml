@@ -102,4 +102,4 @@ jobs:
             cd docker
             docker-compose stop
             docker pull ghcr.io/sasha-hk/alerki-frontend:latest
-            docker-compose up
+            docker-compose up -d
