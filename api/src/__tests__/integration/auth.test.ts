@@ -235,18 +235,4 @@ describe('Authentication functionality', () => {
       expect(r.statusCode).toEqual(401);
     });
   });
-
-  describe('test user endpoint', () => {
-    it('should return user data', async () => {
-      const r = await request(app)
-        .get('/auth/user')
-        .set('Cookie', [
-          'accessToken=' + user.accessToken,
-          'refreshToken=' + user.refreshToken,
-        ]);
-
-      expect(r.status).toEqual(200);
-      expect(r.body).toBeTruthy();
-    });
-  });
 });

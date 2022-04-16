@@ -79,3 +79,20 @@ export const userPictureField = (userPictureField: string | any, options?: IVali
     ...options,
   },
 });
+
+export const uuidField = (name: string, value: string | any, options?: IValidateProperties) => {
+  interface I {
+    [key: string]: any,
+  }
+
+  const config: I = {};
+
+  config[name] = {
+    value,
+    type: 'string',
+    pattern: /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
+    ...options,
+  };
+
+  return config;
+};

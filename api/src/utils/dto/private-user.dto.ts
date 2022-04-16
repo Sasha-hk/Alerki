@@ -1,10 +1,12 @@
-// Interfaces
-import IUser from '../../interfaces/db/models/user.interface';
-
 // Third-party packages
 import Prisma from '@prisma/client';
 
-interface IPrivateUserDto extends Omit<IUser, 'password'> {}
+// Utils
+import MasterProfileDto, { IMasterDto } from './master-profile.dto';
+
+interface IPrivateUserDto extends Omit<Prisma.User, 'password' | 'banned'> {
+  master?: IMasterDto,
+}
 
 /**
  * This data transfer object intended to transfer data that belongs only current user
@@ -20,13 +22,16 @@ class PrivateUserDto implements IPrivateUserDto {
   profileType: 'client' | 'master';
   clientID: string;
   masterID: string | null;
-  banned: boolean;
+  master?: IMasterDto;
+  createdAt: Date;
+  updatedAt: Date;
 
   /**
    * Private user DTO constructor
    * @param user User date
+   * @param master Not required master profile
    */
-  constructor(user: Prisma.User) {
+  constructor(user: Prisma.User, master?: Prisma.MasterProfile) {
     this.id = user.id;
     this.username = user.username;
     this.firstName = user.firstName;
@@ -37,7 +42,12 @@ class PrivateUserDto implements IPrivateUserDto {
     this.profileType = user.profileType || null;
     this.clientID = user.clientID;
     this.masterID = user.masterID;
-    this.banned = user.banned;
+    this.createdAt = user.createdAt;
+    this.updatedAt = user.updatedAt;
+
+    if (master) {
+      this.master = new MasterProfileDto(master);
+    }
   }
 }
 

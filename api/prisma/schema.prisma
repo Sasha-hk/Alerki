@@ -15,8 +15,8 @@ model MasterWeekendDays {
   wednesday  Boolean         @default(false)
   thursday   Boolean         @default(false)
   friday     Boolean         @default(false)
-  saturday   Boolean         @default(false)
-  sunday     Boolean         @default(false)
+  saturday   Boolean         @default(true)
+  sunday     Boolean         @default(true)
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
   user       MasterProfile?
@@ -27,21 +27,28 @@ model MasterProfile {
   biography      String?            @db.VarChar(100)
   weekendDays    MasterWeekendDays? @relation(fields: [weekendDaysID], references: [id])
   weekendDaysID  String?            @db.VarChar(36)
+  startTime      Int?               /// Start work time / in milliseconds
+  endTime        Int?               /// End work time / in milliseconds
+  delayBefore    Int?               /// Delay before appointment / in milliseconds
+  delayAfter     Int?               /// Delay after appointment / in milliseconds
   available      Boolean            @default(true)
-  startWorking   DateTime?          @db.Timetz(6)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
   user           User?
+  services       MasterService?
+  schedule       MasterSchedule?
+  appointments   Appointment?
 
   @@map("MasterProfiile")
 }
 
 model ClientProfile {
-  id         String    @id @default(uuid())
-  available  Boolean   @default(true)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  user       User?
+  id            String    @id @default(uuid())
+  available     Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User?
+  appointments  Appointment?
 
   @@map("ClientProfiile")
 }
@@ -57,24 +64,26 @@ model UserPicture {
 }
 
 model User {
-  id           String         @id @default(uuid())
-  username     String         @unique @db.VarChar(20)
-  email        String         @unique @db.VarChar(319)
-  firstName    String?        @db.VarChar(30)
-  lastName     String?        @db.VarChar(30)
-  phoneNumber  String?        @unique @db.VarChar(13)
-  password     String?        @db.VarChar(60)
-  profileType  ProfileType    @default(client)
-  picture      UserPicture?   @relation(fields: [pictureID], references: [id])
-  pictureID    String?        @db.VarChar(36)
-  client       ClientProfile  @relation(fields: [clientID], references: [id])
-  clientID     String         @db.VarChar(36)
-  master       MasterProfile? @relation(fields: [masterID], references: [id])
-  masterID     String?        @db.VarChar(36)
-  banned       Boolean        @default(false)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  auth         Auth?
+  id                    String         @id @default(uuid())
+  username              String         @unique @db.VarChar(20)
+  email                 String         @unique @db.VarChar(319)
+  firstName             String?        @db.VarChar(30)
+  lastName              String?        @db.VarChar(30)
+  phoneNumber           String?        @unique @db.VarChar(13)
+  password              String?        @db.VarChar(60)
+  profileType           ProfileType    @default(client)
+  picture               UserPicture?   @relation(fields: [pictureID], references: [id])
+  pictureID             String?        @db.VarChar(36)
+  client                ClientProfile  @relation(fields: [clientID], references: [id])
+  clientID              String         @db.VarChar(36)
+  master                MasterProfile? @relation(fields: [masterID], references: [id])
+  masterID              String?        @db.VarChar(36)
+  banned                Boolean        @default(false)
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  auth                  Auth?
+  notificatinoActor     Notification?  @relation("actor")
+  notificatinoNotifier  Notification?  @relation("notifier")
 
   @@map("Users")
 }
@@ -93,15 +102,77 @@ model Auth {
 }
 
 model Service {
-  id          String    @id @default(uuid())
-  name        String    @db.VarChar(30)
-  available   Boolean   @unique @default(true)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          String         @id @default(uuid())
+  name        String         @unique @db.VarChar(30)
+  available   Boolean        @default(true)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  services    MasterService?
 
   @@map("Services")
 }
 
+model MasterService {
+  id            String         @id @default(uuid())
+  currency      String
+  price         Int
+  locationLat   Float
+  locationLng   Float
+  duration      Int
+  service       Service        @relation(fields: [serviceID], references: [id])
+  serviceID     String         @db.VarChar(36)
+  master        MasterProfile  @relation(fields: [masterID], references: [id])
+  masterID      String         @db.VarChar(36)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  appointments  Appointment?
+
+  @@map("MasterServices")
+}
+
+model MasterSchedule {
+  id         String         @id @default(uuid())
+  master     MasterProfile  @relation(fields: [masterID], references: [id])
+  masterID   String         @db.VarChar(36)
+  startTime  Int
+  endTime    Int
+  weekend    Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model Appointment {
+  id               String          @id @default(uuid())
+  masterService    MasterService   @relation(fields: [masterServiceID], references: [id])
+  masterServiceID  String          @db.VarChar(36)
+  master           MasterProfile   @relation(fields: [masterID], references: [id])
+  masterID         String          @db.VarChar(36)
+  client           ClientProfile   @relation(fields: [clientID], references: [id])
+  clientID         String          @db.VarChar(36)
+  clientConfirm    Boolean         @default(true)
+  masterConfirm    Boolean         @default(false)
+  masterCancel     Boolean         @default(false)
+  startTime        DateTime
+  endTime          DateTime
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@map("Appointments")
+}
+
+model Notification {
+  id          String         @id @default(uuid())
+  actor       User           @relation(fields: [actorID], references: [id], name: "actor")
+  actorID     String         @db.VarChar(36)
+  notifier    User           @relation(fields: [notifierID], references: [id], name: "notifier")
+  notifierID  String         @db.VarChar(36)
+  entity      Int
+  entityType  Int
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@map("Notifications")
+}
 
 
 enum ProfileType {

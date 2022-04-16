@@ -1,6 +1,9 @@
 // Errors
 import MasterProfileError from '../errors/master-profile.error';
 
+// Service
+import masterWeekendDaysService from './master-weekend-days.service';
+
 // Staff
 import prisma from '../prisma';
 
@@ -8,7 +11,11 @@ import prisma from '../prisma';
 import Prisma from '@prisma/client';
 
 interface IUpdateProfile {
-  biography: string,
+  biography?: string,
+  startTime?: number,
+  endTime?: number,
+  delayBefore?: number,
+  delayAfter?: number,
 }
 
 interface IMasterProfileService {
@@ -22,7 +29,9 @@ interface IMasterProfileService {
 
 class MasterProfileService implements IMasterProfileService {
   async createProfile() {
-    return prisma.masterProfile.create({ data: {} });
+    const weekendDays = await masterWeekendDaysService.create();
+
+    return prisma.masterProfile.create({ data: { weekendDaysID: weekendDays.id } });
   }
 
   async findByID(id: string) {
@@ -80,7 +89,7 @@ class MasterProfileService implements IMasterProfileService {
     );
   }
 
-  async update(id: string, { biography }: IUpdateProfile) {
+  async update(id: string, updateOptions: IUpdateProfile) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
@@ -92,9 +101,7 @@ class MasterProfileService implements IMasterProfileService {
         where: {
           id,
         },
-        data: {
-          biography,
-        },
+        data: updateOptions,
       },
     );
 

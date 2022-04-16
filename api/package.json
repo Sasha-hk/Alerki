@@ -9,7 +9,7 @@
     "start": "export $(cat ../docker/.env.prod | xargs) && node ./dist/index.js",
     "test": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose --detectOpenHandles --forceExit",
     "test:unit": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose ./src/__tests__/unit --detectOpenHandles --forceExit",
-    "test:integration": "export $(cat ../docker/.env.test | xargs) && test:migrate && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles --forceExit",
+    "test:integration": "export $(cat ../docker/.env.test | xargs) && yarn test:migrate && jest --collect-coverage --verbose ./src/__tests__/integration --detectOpenHandles --forceExit",
     "build": "tsc --project './tsconfig.json'",
     "dev:migrate": "export $(cat ../docker/.env.dev | xargs) && yarn prisma migrate dev --name",
     "test:migrate": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate reset --force",

@@ -20,7 +20,6 @@ interface IAuthController extends Controller {
   getDevices(req: AuthRequest, res: Response): any;
   deleteDevice(req: AuthRequest, res: Response): any;
   refresh(req: AuthRequest, res: Response): any;
-  user(req: AuthRequest, res: Response): any;
 }
 
 /**
@@ -41,7 +40,6 @@ class AuthController implements IAuthController {
     this.router.get(`${this.path}/devices`, isAuthenticated, this.getDevices);
     this.router.delete(`${this.path}/device/:id`, isAuthenticated, this.deleteDevice);
     this.router.get(`${this.path}/refresh`, isAuthenticated, this.refresh);
-    this.router.get(`${this.path}/user`, isAuthenticated, this.user);
 
     if (process.env.NODE_ENV === 'dev') {
       this.router.get(`${this.path}/oauth/test`, this.oauth);
