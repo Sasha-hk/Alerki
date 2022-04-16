@@ -47,8 +47,8 @@ class UserController implements IUserController {
     this.router.get(`${this.path}`, isAuthenticated, this.getUser);
     this.router.patch(`${this.path}/master`, isAuthenticated, isMaster, this.updateMasterProfile);
     this.router.post(`${this.path}/master/service`, isAuthenticated, isMaster, this.createMasterService);
-    this.router.patch(`${this.path}/master/service:serviceID`, isAuthenticated, isMaster, this.updateMasterService);
-    this.router.delete(`${this.path}/master/service:serviceID`, isAuthenticated, isMaster, this.deleteMasterService);
+    this.router.patch(`${this.path}/master/service/:serviceID`, isAuthenticated, isMaster, this.updateMasterService);
+    this.router.delete(`${this.path}/master/service/:serviceID`, isAuthenticated, isMaster, this.deleteMasterService);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -241,7 +241,6 @@ class UserController implements IUserController {
     try {
       const {
         serviceID,
-        masterID,
         duration,
         price,
         currency,
@@ -249,9 +248,10 @@ class UserController implements IUserController {
         locationLng,
       } = req.body;
 
+      const user = await UserService.findUserByID(req.token?.id!);
+
       Validator.validate({
-        ...blanks.uuidField(serviceID, { required: true }),
-        ...blanks.uuidField(masterID, { required: true }),
+        ...blanks.uuidField('serviceID', serviceID, { required: true }),
         duration: {
           value: duration,
           type: 'number',
@@ -281,7 +281,7 @@ class UserController implements IUserController {
 
       const serviceData = await MasterServiceService.create({
         serviceID,
-        masterID,
+        masterID: user?.masterID!,
         duration,
         price,
         currency,
@@ -306,42 +306,38 @@ class UserController implements IUserController {
       } = req.body;
       const { serviceID } = req.params;
 
-      const master = await UserService.findUserByID(req.token?.id!);
-
-      if (!master) {
-        throw MasterProfileError.NotFound();
-      }
+      const user = await UserService.findUserByID(req.token?.id!);
 
       Validator.validate({
-        ...blanks.uuidField(serviceID, { required: true }),
+        ...blanks.uuidField('serviceID', serviceID, { required: true }),
         duration: {
           value: duration,
           type: 'number',
-          required: true,
+          atLeastOne: true,
         },
         price: {
           value: price,
           type: 'number',
-          required: true,
+          atLeastOne: true,
         },
         currency: {
           value: currency,
           type: 'string',
-          required: true,
+          atLeastOne: true,
         },
         locationLat: {
           value: locationLat,
           type: 'number',
-          required: true,
+          atLeastOne: true,
         },
         locationLng: {
           value: locationLng,
           type: 'number',
-          required: true,
+          atLeastOne: true,
         },
       });
 
-      const serviceData = await MasterServiceService.update(master.id, serviceID, {
+      const serviceData = await MasterServiceService.update(user?.masterID!, serviceID, {
         duration,
         price,
         currency,
@@ -351,6 +347,8 @@ class UserController implements IUserController {
 
       res.json(serviceData);
     } catch (e: IError | any) {
+      console.log(e);
+      console.log(e.error);
       res.status(e?.status || 500).json(e?.error);
     }
   }
@@ -359,17 +357,17 @@ class UserController implements IUserController {
     try {
       const { serviceID } = req.params;
 
-      const master = await UserService.findUserByID(req.token?.id!);
+      const user = await UserService.findUserByID(req.token?.id!);
 
-      if (!master) {
+      if (!user) {
         throw MasterProfileError.NotFound();
       }
 
       Validator.validate({
-        ...blanks.uuidField(serviceID, { required: true }),
+        ...blanks.uuidField('serviceID', serviceID, { required: true }),
       });
 
-      const serviceData = await MasterServiceService.delete(master.id, serviceID);
+      const serviceData = await MasterServiceService.delete(user.masterID!, serviceID);
 
       res.json(serviceData);
     } catch (e: IError | any) {
