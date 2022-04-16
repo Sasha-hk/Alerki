@@ -18,7 +18,6 @@ import { IPicture } from '../services/user-picture.service';
 
 // Utils
 import PrivateUserDto from '../utils/dto/private-user.dto';
-import MasterProfileDto from '../utils/dto/master-profile.dto';
 import Validator, { blanks } from '../utils/validator';
 
 // Third-party packages
@@ -26,8 +25,6 @@ import { Router, Response } from 'express';
 import MasterProfileError from '../errors/master-profile.error';
 
 interface IUserController extends Controller {
-  // L clientAppointments(req: AuthRequest, res: Response): any;
-  // masterAppointments(req: AuthRequest, res: Response): any;
   createMasterService(req: AuthRequest, res: Response): any;
   updateMasterService(req: AuthRequest, res: Response): any;
   deleteMasterService(req: AuthRequest, res: Response): any;
