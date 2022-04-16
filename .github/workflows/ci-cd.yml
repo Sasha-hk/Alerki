@@ -89,10 +89,9 @@ jobs:
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          echo $RELEASE_VERSION
-          # cd frontend
-          # docker build --tag ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION} .
-          # docker push ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION}
+          cd frontend
+          docker build --tag ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION} .
+          docker push ghcr.io/sasha-hk/alerki-frontend:${RELEASE_VERSION}
 
   # deploy:
   #   name: Deploy
