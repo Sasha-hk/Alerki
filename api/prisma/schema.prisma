@@ -27,10 +27,10 @@ model MasterProfile {
   biography      String?            @db.VarChar(100)
   weekendDays    MasterWeekendDays? @relation(fields: [weekendDaysID], references: [id])
   weekendDaysID  String?            @db.VarChar(36)
-  startTime      Int                /// Start work time / in milliseconds
-  endTime        Int                /// End work time / in milliseconds
-  delayBefore    Int                /// Gap before appointment / in milliseconds
-  delatAfter     Int                /// Gap after appointment / in milliseconds
+  startTime      Int?               /// Start work time / in milliseconds
+  endTime        Int?               /// End work time / in milliseconds
+  delayBefore    Int?               /// Delay before appointment / in milliseconds
+  delayAfter     Int?               /// Delay after appointment / in milliseconds
   available      Boolean            @default(true)
   createdAt      DateTime           @default(now())
   updatedAt      DateTime           @updatedAt
