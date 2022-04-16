@@ -39,7 +39,7 @@ class MasterServiceService implements IMasterServiceService {
   async checkBelongs(masterID: string, serviceID: string) {
     const candidate = await this.findByID(serviceID);
 
-    if (candidate.masterID !== masterID) {
+    if (candidate?.masterID !== masterID) {
       throw MasterServiceError.ServiceNotBelongsToUser();
     }
   }
@@ -58,7 +58,7 @@ class MasterServiceService implements IMasterServiceService {
     });
   }
 
-  async update(masterID, serviceID, fields: UpdateService) {
+  async update(masterID: string, serviceID: string, fields: UpdateService) {
     await this.checkBelongs(masterID, serviceID);
 
     return prisma.masterService.update({
