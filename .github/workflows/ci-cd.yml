@@ -78,19 +78,9 @@ jobs:
 
       - name: Build image and push it to GitHub Packages
         run: |
-          echo $RELEASE_VERSION
-
-      - name: x1
-
-        run: |
           cd frontend
-          docker build . --tag ghcr.io/${ github.actor }/alerki-frontend:${RELEASE_VERSION}
-
-      - name: x
-
-        run: |
-          cd frontend
-          docker push ghcr.io/${ github.actor }/alerki-frontend:${RELEASE_VERSION}
+          docker build . --tag ghcr.io/sasha-hk/alerki-frontend:latest
+          docker push ghcr.io/sasha-hk/alerki-frontend:latest
 
   deploy:
     name: Deploy
