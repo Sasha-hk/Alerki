@@ -13,6 +13,7 @@ import isMaster from '../middlewares/is-master';
 // Services
 import UserService from '../services/user.service';
 import MasterProfileService from '../services/master-profile.service';
+import MasterServiceService from '../services/master-service.service';
 import { IPicture } from '../services/user-picture.service';
 
 // Utils
@@ -48,8 +49,8 @@ class UserController implements IUserController {
     this.router.get(`${this.path}`, isAuthenticated, this.getUser);
     this.router.patch(`${this.path}/master`, isAuthenticated, isMaster, this.updateMasterProfile);
     this.router.post(`${this.path}/master/service`, isAuthenticated, isMaster, this.createMasterService);
-    this.router.patch(`${this.path}/master/service`, isAuthenticated, isMaster, this.updateMasterService);
-    this.router.delete(`${this.path}/master/service`, isAuthenticated, isMaster, this.deleteMasterService);
+    this.router.patch(`${this.path}/master/service:serviceID`, isAuthenticated, isMaster, this.updateMasterService);
+    this.router.delete(`${this.path}/master/service:serviceID`, isAuthenticated, isMaster, this.deleteMasterService);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -133,6 +134,7 @@ class UserController implements IUserController {
         endTime,
         delayBefore,
         delayAfter,
+        weekendDays,
       } = req.body;
 
       Validator.validate({
@@ -155,7 +157,7 @@ class UserController implements IUserController {
       }
 
       // Check if pass at least one params for master profile
-      if (startTime || endTime || delayBefore || delayAfter) {
+      if (startTime || endTime || delayBefore || delayAfter || weekendDays) {
         // Check if profile type is master
         if (userCandidate.profileType !== 'master') {
           throw AuthError.NotMaster();
@@ -198,6 +200,10 @@ class UserController implements IUserController {
             delayAfter,
           });
         }
+
+        if (weekendDays) {
+          Object.assign(updateOptions, { weekendDays });
+        }
       }
 
       const userData = await MasterProfileService.update(userCandidate?.masterID!, updateOptions);
@@ -230,22 +236,143 @@ class UserController implements IUserController {
   }
 
   async createMasterService(req: AuthRequest, res: Response) {
-    const {
-      masterID,
-      startTime,
-      endTime,
-      weekend,
-      createdAt,
-      updatedAt,
-    } = req.body;
+    try {
+      const {
+        serviceID,
+        masterID,
+        duration,
+        price,
+        currency,
+        locationLat,
+        locationLng,
+      } = req.body;
+
+      Validator.validate({
+        ...blanks.uuidField(serviceID, { required: true }),
+        ...blanks.uuidField(masterID, { required: true }),
+        duration: {
+          value: duration,
+          type: 'number',
+          required: true,
+        },
+        price: {
+          value: price,
+          type: 'number',
+          required: true,
+        },
+        currency: {
+          value: currency,
+          type: 'string',
+          required: true,
+        },
+        locationLat: {
+          value: locationLat,
+          type: 'number',
+          required: true,
+        },
+        locationLng: {
+          value: locationLng,
+          type: 'number',
+          required: true,
+        },
+      });
+
+      const serviceData = await MasterServiceService.create({
+        serviceID,
+        masterID,
+        duration,
+        price,
+        currency,
+        locationLat,
+        locationLng,
+      });
+
+      res.json(serviceData);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
+    }
   }
 
   async updateMasterService(req: AuthRequest, res: Response) {
+    try {
+      const {
+        duration,
+        price,
+        currency,
+        locationLat,
+        locationLng,
+      } = req.body;
+      const { serviceID } = req.params;
 
+      const master = await UserService.findUserByID(req.token?.id!);
+
+      if (!master) {
+        throw MasterProfileError.NotFound();
+      }
+
+      Validator.validate({
+        ...blanks.uuidField(serviceID, { required: true }),
+        duration: {
+          value: duration,
+          type: 'number',
+          required: true,
+        },
+        price: {
+          value: price,
+          type: 'number',
+          required: true,
+        },
+        currency: {
+          value: currency,
+          type: 'string',
+          required: true,
+        },
+        locationLat: {
+          value: locationLat,
+          type: 'number',
+          required: true,
+        },
+        locationLng: {
+          value: locationLng,
+          type: 'number',
+          required: true,
+        },
+      });
+
+      const serviceData = await MasterServiceService.update(master.id, serviceID, {
+        duration,
+        price,
+        currency,
+        locationLat,
+        locationLng,
+      });
+
+      res.json(serviceData);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
+    }
   }
 
   async deleteMasterService(req: AuthRequest, res: Response) {
+    try {
+      const { serviceID } = req.params;
 
+      const master = await UserService.findUserByID(req.token?.id!);
+
+      if (!master) {
+        throw MasterProfileError.NotFound();
+      }
+
+      Validator.validate({
+        ...blanks.uuidField(serviceID, { required: true }),
+      });
+
+      const serviceData = await MasterServiceService.delete(master.id, serviceID);
+
+      res.json(serviceData);
+    } catch (e: IError | any) {
+      res.status(e?.status || 500).json(e?.error);
+    }
   }
 }
 
