@@ -75,9 +75,6 @@ jobs:
         run: |
           echo $CR_PAT | docker login ghcr.io -u petryk --password-stdin
 
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Check output
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
@@ -85,13 +82,13 @@ jobs:
           echo $RELEASE_VERSION
           echo ${{ steps.vars.outputs.tag }}
 
-      # - name: Build image and push it to GitHub Packages
-      #   env:
-      #     RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-      #   run: |
-      #     cd frontend
-      #     docker build . --tag ghcr.io/sasha-hk/alerki-frontend:$RELEASE_VERSION
-      #     docker push ghcr.io/sasha-hk/alerki-frontend:$RELEASE_VERSION
+      - name: Build image and push it to GitHub Packages
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: |
+          cd frontend
+          docker build . --tag ghcr.io/sasha-hk/alerki-frontend:$RELEASE_VERSION
+          docker push ghcr.io/sasha-hk/alerki-frontend:$RELEASE_VERSION
 
   deploy:
     name: Deploy
