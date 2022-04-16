@@ -68,22 +68,11 @@ jobs:
     # needs: api-testing
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-
       - name: Login to Github Packages
         env:
           CR_PAT: ${{ secrets.GH_PACKAGES_TOKEN }}
         run: |
           echo $CR_PAT | docker login ghcr.io -u petryk --password-stdin
-
-      - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
 
       - name: Build image and push it to GitHub Packages
         env:
