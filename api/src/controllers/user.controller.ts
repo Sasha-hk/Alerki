@@ -4,6 +4,7 @@ import Controller from '../interfaces/controller.interface';
 
 // Errors
 import UserError from '../errors/user.error';
+import AuthError from '../errors/auth.error';
 
 // Middlewares
 import isAuthenticated, { AuthRequest } from '../middlewares/is-authenticated';
@@ -123,7 +124,13 @@ class UserController implements IUserController {
   async updateMasterProfile(req: AuthRequest, res: Response) {
     try {
       const { id } = req.token!;
-      const { biography } = req.body;
+      const {
+        biography,
+        startTime,
+        endTime,
+        delayBefore,
+        delayAfter,
+      } = req.body;
 
       Validator.validate({
         biography: {
@@ -134,18 +141,63 @@ class UserController implements IUserController {
         },
       });
 
+      const updateOptions = {
+        biography,
+      };
+
       const userCandidate = await UserService.findUserByID(id);
 
       if (!userCandidate?.masterID) {
         throw MasterProfileError.NotFound();
       }
 
-      const userData = await MasterProfileService.update(
-        userCandidate?.masterID!,
-        {
-          biography,
-        },
-      );
+      // Check if pass at least one params for master profile
+      if (startTime || endTime || delayBefore || delayAfter) {
+        // Check if profile type is master
+        if (userCandidate.profileType !== 'master') {
+          throw AuthError.NotMaster();
+        }
+
+        Validator.validate({
+          startTime: {
+            value: startTime,
+            required: true,
+            type: 'number',
+          },
+          endTime: {
+            value: endTime,
+            required: true,
+            type: 'number',
+          },
+        });
+
+        Object.assign(updateOptions, {
+          startTime,
+          endTime,
+        });
+
+        if (delayBefore || delayAfter) {
+          Validator.validate({
+            delayBefore: {
+              value: delayBefore,
+              required: true,
+              type: 'number',
+            },
+            delayAfter: {
+              value: delayAfter,
+              required: true,
+              type: 'number',
+            },
+          });
+
+          Object.assign(updateOptions, {
+            delayBefore,
+            delayAfter,
+          });
+        }
+      }
+
+      const userData = await MasterProfileService.update(userCandidate?.masterID!, updateOptions);
 
       const userDto = new PrivateUserDto(userCandidate, userData);
 
