@@ -181,7 +181,7 @@ CREATE UNIQUE INDEX "Users_pictureID_key" ON "Users"("pictureID");
 CREATE UNIQUE INDEX "AuthData_userID_key" ON "AuthData"("userID");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Services_available_key" ON "Services"("available");
+CREATE UNIQUE INDEX "Services_name_key" ON "Services"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "MasterServices_masterID_key" ON "MasterServices"("masterID");

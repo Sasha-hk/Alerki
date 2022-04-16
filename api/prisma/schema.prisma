@@ -103,8 +103,8 @@ model Auth {
 
 model Service {
   id          String         @id @default(uuid())
-  name        String         @db.VarChar(30)
-  available   Boolean        @unique @default(true)
+  name        String         @unique @db.VarChar(30)
+  available   Boolean        @default(true)
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
   services    MasterService?
