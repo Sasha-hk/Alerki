@@ -11,6 +11,10 @@ class MasterProfileDto implements IMasterProfileDto {
   id: string;
   biography: string | null;
   weekendDaysID: string | null;
+  startTime: number | null;
+  endTime: number | null;
+  delayBefore: number | null;
+  delayAfter: number | null;
   createdAt: Date;
   updatedAt: Date;
 
@@ -22,6 +26,10 @@ class MasterProfileDto implements IMasterProfileDto {
     this.id = master.id;
     this.biography = master.biography;
     this.weekendDaysID = master?.weekendDaysID;
+    this.startTime = master?.startTime;
+    this.endTime = master?.endTime;
+    this.delayBefore = master?.delayBefore;
+    this.delayAfter = master?.delayAfter;
     this.createdAt = master.createdAt;
     this.updatedAt = master.updatedAt;
   }

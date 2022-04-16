@@ -11,7 +11,11 @@ import prisma from '../prisma';
 import Prisma from '@prisma/client';
 
 interface IUpdateProfile {
-  biography: string,
+  biography?: string,
+  startTime?: number,
+  endTime?: number,
+  delayBefore?: number,
+  delayAfter?: number,
 }
 
 interface IMasterProfileService {
@@ -85,7 +89,7 @@ class MasterProfileService implements IMasterProfileService {
     );
   }
 
-  async update(id: string, { biography }: IUpdateProfile) {
+  async update(id: string, updateOptions: IUpdateProfile) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
@@ -97,9 +101,7 @@ class MasterProfileService implements IMasterProfileService {
         where: {
           id,
         },
-        data: {
-          biography,
-        },
+        data: updateOptions,
       },
     );
 
