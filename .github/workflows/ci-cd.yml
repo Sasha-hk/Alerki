@@ -71,9 +71,9 @@ jobs:
 
       - name: Login to Github Packages
         run: |
-          echo $CR_PAT | docker login ghcr.io -u YourAccountOrGHOrgaNameHere --password-stdin
+          echo $CR_PAT | docker login ghcr.io -u petryk --password-stdin
         env:
-          CR_PAT: ${{ secrets.CR_PAT }}
+          CR_PAT: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Build image and push it to GitHub Packages
         run: |
