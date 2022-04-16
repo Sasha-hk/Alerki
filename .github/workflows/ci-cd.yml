@@ -3,9 +3,9 @@ name: CI/CD
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   # lint-code:
