@@ -27,9 +27,9 @@ import MasterProfileError from '../errors/master-profile.error';
 interface IUserController extends Controller {
   // L clientAppointments(req: AuthRequest, res: Response): any;
   // masterAppointments(req: AuthRequest, res: Response): any;
-  // createMasterService(req: AuthRequest, res: Response): any;
-  // updateMasterService(req: AuthRequest, res: Response): any;
-  // deleteMasterService(req: AuthRequest, res: Response): any;
+  createMasterService(req: AuthRequest, res: Response): any;
+  updateMasterService(req: AuthRequest, res: Response): any;
+  deleteMasterService(req: AuthRequest, res: Response): any;
   updateProfile(req: AuthRequest, res: Response): any;
   updateMasterProfile(req: AuthRequest, res: Response): any;
   becomeMaster(req: AuthRequest, res: Response): any;
@@ -47,6 +47,9 @@ class UserController implements IUserController {
     this.router.patch(`${this.path}/`, isAuthenticated, this.updateProfile);
     this.router.get(`${this.path}`, isAuthenticated, this.getUser);
     this.router.patch(`${this.path}/master`, isAuthenticated, isMaster, this.updateMasterProfile);
+    this.router.post(`${this.path}/master/service`, isAuthenticated, isMaster, this.createMasterService);
+    this.router.patch(`${this.path}/master/service`, isAuthenticated, isMaster, this.updateMasterService);
+    this.router.delete(`${this.path}/master/service`, isAuthenticated, isMaster, this.deleteMasterService);
   }
 
   async becomeMaster(req: AuthRequest, res: Response<any, Record<string, any>>) {
@@ -224,6 +227,25 @@ class UserController implements IUserController {
     } catch (e: IError | any) {
       res.status(e?.status || 500).json(e?.error);
     }
+  }
+
+  async createMasterService(req: AuthRequest, res: Response) {
+    const {
+      masterID,
+      startTime,
+      endTime,
+      weekend,
+      createdAt,
+      updatedAt,
+    } = req.body;
+  }
+
+  async updateMasterService(req: AuthRequest, res: Response) {
+
+  }
+
+  async deleteMasterService(req: AuthRequest, res: Response) {
+
   }
 }
 
