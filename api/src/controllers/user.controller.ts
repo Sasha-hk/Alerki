@@ -23,6 +23,7 @@ import Validator, { blanks } from '../utils/validator';
 // Third-party packages
 import { Router, Response } from 'express';
 import MasterProfileError from '../errors/master-profile.error';
+import masterWeekendDaysService from '../services/master-weekend-days.service';
 
 interface IUserController extends Controller {
   createMasterService(req: AuthRequest, res: Response): any;
@@ -137,7 +138,6 @@ class UserController implements IUserController {
       Validator.validate({
         biography: {
           value: biography,
-          required: true,
           type: 'string',
           pattern: /\w{0,100}/,
         },
@@ -153,6 +153,8 @@ class UserController implements IUserController {
         throw MasterProfileError.NotFound();
       }
 
+      const masterCandidate = await MasterProfileService.findByID(userCandidate.masterID);
+
       // Check if pass at least one params for master profile
       if (startTime || endTime || delayBefore || delayAfter || weekendDays) {
         // Check if profile type is master
@@ -160,23 +162,25 @@ class UserController implements IUserController {
           throw AuthError.NotMaster();
         }
 
-        Validator.validate({
-          startTime: {
-            value: startTime,
-            required: true,
-            type: 'number',
-          },
-          endTime: {
-            value: endTime,
-            required: true,
-            type: 'number',
-          },
-        });
+        if (startTime || endTime) {
+          Validator.validate({
+            startTime: {
+              value: startTime,
+              required: true,
+              type: 'number',
+            },
+            endTime: {
+              value: endTime,
+              required: true,
+              type: 'number',
+            },
+          });
 
-        Object.assign(updateOptions, {
-          startTime,
-          endTime,
-        });
+          Object.assign(updateOptions, {
+            startTime,
+            endTime,
+          });
+        }
 
         if (delayBefore || delayAfter) {
           Validator.validate({
@@ -199,7 +203,7 @@ class UserController implements IUserController {
         }
 
         if (weekendDays) {
-          Object.assign(updateOptions, { weekendDays });
+          masterWeekendDaysService.update(masterCandidate?.weekendDaysID!, weekendDays);
         }
       }
 
@@ -210,6 +214,7 @@ class UserController implements IUserController {
       res.json(userDto);
     } catch (e: IError | any) {
       console.log(e);
+      console.log(e.error);
       res.status(e?.status || 500).json(e.error);
     }
   }
