@@ -77,6 +77,7 @@ jobs:
 
       - name: Build image and push it to GitHub Packages
         run: |
+          echo ${ env.RELEASE_VERSION }
           docker build . --tag ghcr.io/${ github.actor }/alerki-frontend:${ env.RELEASE_VERSION }
           docker push ghcr.io/${ github.actor }/alerki-frontend:${ env.RELEASE_VERSION }
 
