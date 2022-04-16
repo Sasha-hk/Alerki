@@ -4,7 +4,7 @@ import IError from '../interfaces/error.interface';
 import { Response, NextFunction } from 'express';
 import UserService from '../services/user.service';
 import AuthError from '../errors/auth.error';
-import isAuthenticated, { AuthRequest } from './is-authenticated';
+import { AuthRequest } from './is-authenticated';
 
 export default async function isMaster(req: AuthRequest, res: Response, next: NextFunction) {
   try {
