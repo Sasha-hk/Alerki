@@ -8,64 +8,64 @@ on:
       - main
 
 jobs:
-  lint-code:
-    name: Lint code
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
-          cache: yarn
+  # lint-code:
+  #   name: Lint code
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16.x
+  #         cache: yarn
 
-      - name: Install packages
-        run: yarn install
+  #     - name: Install packages
+  #       run: yarn install
 
-      - name: Lint code
-        run: yarn run lint
+  #     - name: Lint code
+  #       run: yarn run lint
 
-  api-testing:
-    name: Unit and integration testing
-    needs: lint-code
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:10.10
-        env:
-          POSTGRES_USER: root
-          POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: appointment_test
-          POSTGRES_HOST: localhost
-          POSTGRES_PORT: 5432
-        ports:
-          - 5552:5432
+  # api-testing:
+  #   name: Unit and integration testing
+  #   needs: lint-code
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     postgres:
+  #       image: postgres:10.10
+  #       env:
+  #         POSTGRES_USER: root
+  #         POSTGRES_PASSWORD: 1234
+  #         POSTGRES_DB: appointment_test
+  #         POSTGRES_HOST: localhost
+  #         POSTGRES_PORT: 5432
+  #       ports:
+  #         - 5552:5432
 
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 17.x]
+  #   strategy:
+  #     matrix:
+  #       node-version: [14.x, 16.x, 17.x]
 
-    steps:
-    - uses: actions/checkout@v2
-    - name: Unit testing with Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: yarn
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Unit testing with Node.js ${{ matrix.node-version }}
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       node-version: ${{ matrix.node-version }}
+  #       cache: yarn
 
-    - name: Install packages
-      run: |
-        cd api
-        yarn install
+  #   - name: Install packages
+  #     run: |
+  #       cd api
+  #       yarn install
 
-    - name: Test the code
-      run: |
-        cd api
-        yarn run test
+  #   - name: Test the code
+  #     run: |
+  #       cd api
+  #       yarn run test
 
   build-image:
     runs-on: ubuntu-latest
     name: Build and push Docker image
-    needs: api-testing
+    # needs: api-testing
     steps:
       - uses: actions/checkout@v2
 
