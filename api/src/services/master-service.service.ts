@@ -36,8 +36,12 @@ interface IMasterServiceService {
 }
 
 class MasterServiceService implements IMasterServiceService {
-  async checkBelongs(masterID: string, serviceID: string) {
-    const candidate = await this.findByID(serviceID);
+  async checkBelongs(masterID: string, masterServiceID: string) {
+    const candidate = await this.findByID(masterServiceID);
+
+    if (!candidate) {
+      throw MasterServiceError.NotFound();
+    }
 
     if (candidate?.masterID !== masterID) {
       throw MasterServiceError.ServiceNotBelongsToUser();
@@ -47,7 +51,7 @@ class MasterServiceService implements IMasterServiceService {
   async findByID(serviceID: string) {
     return prisma.masterService.findFirst({
       where: {
-        serviceID,
+        id: serviceID,
       },
     });
   }
@@ -58,23 +62,23 @@ class MasterServiceService implements IMasterServiceService {
     });
   }
 
-  async update(masterID: string, serviceID: string, fields: UpdateService) {
-    await this.checkBelongs(masterID, serviceID);
+  async update(masterID: string, masterServiceID: string, fields: UpdateService) {
+    await this.checkBelongs(masterID, masterServiceID);
 
     return prisma.masterService.update({
       where: {
-        serviceID,
+        id: masterServiceID,
       },
       data: fields,
     });
   }
 
-  async delete(masterID: string, serviceID: string) {
-    await this.checkBelongs(masterID, serviceID);
+  async delete(masterID: string, masterServiceID: string) {
+    await this.checkBelongs(masterID, masterServiceID);
 
     return prisma.masterService.delete({
       where: {
-        serviceID,
+        id: masterServiceID,
       },
     });
   }
