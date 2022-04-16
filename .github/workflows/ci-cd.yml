@@ -73,10 +73,14 @@ jobs:
         run: |
           echo $CR_PAT | docker login ghcr.io -u petryk --password-stdin
         env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
           CR_PAT: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Build image and push it to GitHub Packages
         run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
+          echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
           docker build . --tag ghcr.io/${ github.actor }/alerki-frontend:${ env.RELEASE_VERSION }
           docker push ghcr.io/${ github.actor }/alerki-frontend:${ env.RELEASE_VERSION }
