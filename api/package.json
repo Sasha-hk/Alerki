@@ -10,7 +10,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "export $(cat ../docker/.prod.env | xargs) && nest start",
-    "start:dev": "export $(cat ../docker/.dev.env | xargs) && yarn migrate:dev &&  nest start --watch",
+    "start:dev": "export $(cat ../docker/.dev.env | xargs) &&  nest start --watch",
     "start:debug": "export $(cat ../docker/.test.env | xargs) && nest start --debug --watch",
     "start:prod": "export $(cat ../docker/.prod.env | xargs) && node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
