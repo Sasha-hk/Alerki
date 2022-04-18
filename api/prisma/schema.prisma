@@ -81,14 +81,14 @@ model User {
   banned                Boolean        @default(false)
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
-  auth                  Auth?
+  auth                  Session?
   notificatinoActor     Notification?  @relation("actor")
   notificatinoNotifier  Notification?  @relation("notifier")
 
   @@map("Users")
 }
 
-model Auth {
+model Session {
   id                  String    @id @default(uuid())
   user                User      @relation(fields: [userID], references: [id])
   userID              String    @db.VarChar(36)
@@ -98,7 +98,7 @@ model Auth {
   googleRefreshToken  String?   @db.VarChar(1026)
   createdAt           DateTime  @default(now())
 
-  @@map("AuthData")
+  @@map("Sessions")
 }
 
 model Service {

@@ -74,7 +74,7 @@ CREATE TABLE "Users" (
 );
 
 -- CreateTable
-CREATE TABLE "AuthData" (
+CREATE TABLE "Sessions" (
     "id" TEXT NOT NULL,
     "userID" VARCHAR(36) NOT NULL,
     "deviceName" VARCHAR(30) NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE "AuthData" (
     "googleRefreshToken" VARCHAR(1026),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "AuthData_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Sessions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -178,7 +178,7 @@ CREATE UNIQUE INDEX "Users_clientID_key" ON "Users"("clientID");
 CREATE UNIQUE INDEX "Users_pictureID_key" ON "Users"("pictureID");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AuthData_userID_key" ON "AuthData"("userID");
+CREATE UNIQUE INDEX "Sessions_userID_key" ON "Sessions"("userID");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Services_name_key" ON "Services"("name");
@@ -220,7 +220,7 @@ ALTER TABLE "Users" ADD CONSTRAINT "Users_clientID_fkey" FOREIGN KEY ("clientID"
 ALTER TABLE "Users" ADD CONSTRAINT "Users_pictureID_fkey" FOREIGN KEY ("pictureID") REFERENCES "UserPictures"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AuthData" ADD CONSTRAINT "AuthData_userID_fkey" FOREIGN KEY ("userID") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Sessions" ADD CONSTRAINT "Sessions_userID_fkey" FOREIGN KEY ("userID") REFERENCES "Users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "MasterServices" ADD CONSTRAINT "MasterServices_masterID_fkey" FOREIGN KEY ("masterID") REFERENCES "MasterProfiile"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
