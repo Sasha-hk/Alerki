@@ -13,10 +13,11 @@ async function start() {
   app.enableCors();
   app.use(cookieParser());
 
+  // Setup swagger
   const config = new DocumentBuilder()
     .setTitle('Alerki')
-    .setDescription('The Alerki API description')
-    .setVersion('1.0')
+    .setDescription('The Alerki API documentation')
+    .setVersion('0.3.1')
     .addTag('alerki')
     .build();
 
