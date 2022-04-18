@@ -63,6 +63,13 @@ model UserPicture {
   @@map("UserPictures")
 }
 
+model Roles {
+  id           String  @id @default(uuid())
+  value        String  @db.VarChar(20)
+  description  String  @db.VarChar(50)
+  users        UserRoles[]
+}
+
 model User {
   id                    String         @id @default(uuid())
   username              String         @unique @db.VarChar(20)
@@ -71,11 +78,10 @@ model User {
   lastName              String?        @db.VarChar(30)
   phoneNumber           String?        @unique @db.VarChar(13)
   password              String?        @db.VarChar(60)
-  profileType           ProfileType    @default(client)
   picture               UserPicture?   @relation(fields: [pictureID], references: [id])
   pictureID             String?        @db.VarChar(36)
-  client                ClientProfile  @relation(fields: [clientID], references: [id])
-  clientID              String         @db.VarChar(36)
+  client                ClientProfile? @relation(fields: [clientID], references: [id])
+  clientID              String?        @db.VarChar(36)
   master                MasterProfile? @relation(fields: [masterID], references: [id])
   masterID              String?        @db.VarChar(36)
   banned                Boolean        @default(false)
@@ -84,8 +90,18 @@ model User {
   auth                  Session?
   notificatinoActor     Notification?  @relation("actor")
   notificatinoNotifier  Notification?  @relation("notifier")
+  roles                 UserRoles[]
 
   @@map("Users")
+}
+
+model UserRoles {
+  user           User       @relation(fields: [userID], references: [id])
+  userID         String     @db.VarChar(36)
+  role           Roles       @relation(fields: [roleID], references: [id])
+  roleID         String     @db.VarChar(36)
+
+  @@id([userID, roleID])
 }
 
 model Session {
@@ -97,6 +113,7 @@ model Session {
   googleAccessToken   String?   @db.VarChar(1024)
   googleRefreshToken  String?   @db.VarChar(1026)
   createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   @@map("Sessions")
 }
@@ -172,10 +189,4 @@ model Notification {
   updatedAt   DateTime       @updatedAt
 
   @@map("Notifications")
-}
-
-
-enum ProfileType {
-  client
-  master
 }
