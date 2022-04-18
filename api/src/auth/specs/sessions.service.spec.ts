@@ -1,20 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthModule } from '../auth.module';
+import { SessionService } from '../session.service';
 import { PrismaService } from '../../shared/services/prisma.service';
 
-describe('AuthController', () => {
-  let Module: AuthModule;
+describe('AuthService', () => {
+  let service: SessionService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [PrismaService],
-      imports: [AuthModule],
+      providers: [SessionService, PrismaService],
     }).compile();
 
-    Module = module.get<AuthModule>(AuthModule);
+    service = module.get<SessionService>(SessionService);
   });
 
   it('should be defined', () => {
-    expect(Module).toBeDefined();
+    expect(service).toBeDefined();
   });
 });
