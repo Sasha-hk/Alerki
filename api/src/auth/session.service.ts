@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Session } from '@prisma/client';
 
 import { PrismaService } from '../shared/services/prisma.service';
+import { SessionDto } from './dto/session.dto';
 
 interface UpdateSession extends Pick<Session, 'deviceName' | 'refreshToken'> {}
 
@@ -28,9 +29,15 @@ export class SessionService {
    * @param userID User ID
    * @returns Array of sessions if exists
    */
-  async findAllByUserID(userID: string): Promise<Array<Session> | null> {
+  async findAllByUserID(userID: string): Promise<Array<SessionDto> | null> {
     return this.prisma.session.findMany({
       where: { userID },
+      select: {
+        id: true,
+        deviceName: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
