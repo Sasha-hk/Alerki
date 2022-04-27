@@ -7,10 +7,12 @@ import {
   Post,
   Body,
   Param,
+  Req,
   Res,
   UseGuards,
   HttpStatus,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,7 +22,7 @@ import {
   ApiParam,
   ApiOperation,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { SessionService } from './session.service';
@@ -28,6 +30,7 @@ import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { SessionDto } from './dto/session.dto';
 import { DeviceName } from '../shared/decorators/device-name.decorator';
+import { GetUser, CurrentUser } from '../shared/decorators/get-user.decorator';
 import { AuthGuard } from './auth.guard';
 
 /**
@@ -132,8 +135,18 @@ export class AuthController {
     name: 'id',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
+  @UseGuards(AuthGuard)
   @ApiResponse({ description: 'Service deleted', status: 200 })
-  async deleteSession(@Param('id') id: string): Promise<string> {
-    return 'delete service';
+  async deleteSession(
+    @Param('id') id: string,
+    @GetUser() user: CurrentUser,
+  ): Promise<void> {
+    const candidate = await this.sessionService.findByID(id);
+
+    if (candidate.userID !== user.accessToken) {
+      throw new HttpException('The session not belongs to the user', HttpStatus.FORBIDDEN);
+    }
+
+    await this.sessionService.delete(id);
   }
 }
