@@ -6,5 +6,4 @@ import { UserModule } from './user/user.module';
   imports: [AuthModule, UserModule],
   controllers: [],
 })
-
 export class AppModule {}
