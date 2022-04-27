@@ -10,6 +10,7 @@ import {
   Res,
   UseGuards,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -22,6 +23,7 @@ import {
 import { Response } from 'express';
 
 import { AuthService } from './auth.service';
+import { SessionService } from './session.service';
 import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { SessionDto } from './dto/session.dto';
@@ -34,7 +36,10 @@ import { AuthGuard } from './auth.guard';
 @ApiTags('Authentication / authorization')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService,
+  ) {}
 
   /**
    * Register user
@@ -74,7 +79,6 @@ export class AuthController {
     @Body() logInDto: LogInDto,
     @DeviceName() deviceName: string,
   ): Promise<void> {
-    console.log(1);
     const tokens = await this.authService.logIn(logInDto, deviceName);
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
     res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
@@ -88,9 +92,13 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'User log-out' })
   @ApiCookieAuth('accessToken')
+  @ApiResponse({ status: HttpStatus.OK, description: 'User logged out' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User not authorized' })
   @ApiResponse({ description: 'User de authenticated', status: 200 })
-  async logOut(): Promise<void> {
-    console.log(1);
+  async logOut(@Res() res: Response): Promise<void> {
+    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
+    res.sendStatus(200);
   }
 
   /**
@@ -101,8 +109,14 @@ export class AuthController {
   @ApiOperation({ summary: 'Get sessions' })
   @ApiCookieAuth('accessToken')
   @ApiResponse({ description: 'Devices list', type: [SessionDto] })
-  async getSessions(): Promise<string> {
-    return 'sessions';
+  async getSessions(): Promise<any> {
+    const sessions = await this.sessionService.findAllByUserID('d');
+
+    if (!sessions) {
+      throw new HttpException('Sessions not found', HttpStatus.NOT_FOUND);
+    }
+
+    return sessions;
   }
 
   /**
