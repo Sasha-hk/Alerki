@@ -52,6 +52,7 @@ services:
   frontend:
     container_name: frontend
     image:  ghcr.io/sasha-hk/alerki-frontend:latest
+    restart: always
     # depends_on:
     #   - backend
     ports:
