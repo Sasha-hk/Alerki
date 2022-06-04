@@ -17,4 +17,4 @@ jspm_packages/
 .next
 .cache
 pgdata/
-api_old
+dist/
