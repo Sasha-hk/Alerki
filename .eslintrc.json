@@ -25,6 +25,7 @@
     "no-useless-constructor": 0,
     "arrow-body-style": 0,
     "capitalized-comments": "off",
+    "no-useless-escape": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
