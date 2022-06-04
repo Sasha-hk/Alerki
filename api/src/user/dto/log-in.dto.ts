@@ -24,7 +24,6 @@ export class LogInDto implements ILogIn {
   @IsString()
   @MinLength(4)
   @MaxLength(15)
-  @ValidateIf(o => !o.email || o.username)
   readonly username?: string;
 
   @ApiProperty({
@@ -39,7 +38,6 @@ export class LogInDto implements ILogIn {
   @MinLength(5)
   @MaxLength(319)
   @Matches(/[a-z]+@[a-z]+.[a-z]+/)
-  @ValidateIf(o => !o.username || o.email)
   readonly email?: string;
 
   @ApiProperty({

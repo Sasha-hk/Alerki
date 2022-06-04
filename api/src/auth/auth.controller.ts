@@ -24,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+import AuthRequest from './interfaces/authRequest';
 import { AuthService } from './auth.service';
 import { SessionService } from './session.service';
 import { RegisterDto } from '../user/dto/register.dto';

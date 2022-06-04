@@ -37,7 +37,6 @@ export class AuthGuard implements CanActivate {
       req.user.decodedAccessToken = verified;
       return true;
     } catch (e) {
-      console.log(e);
       throw new UnauthorizedException({ message: 'user not authorized' });
     }
   }
