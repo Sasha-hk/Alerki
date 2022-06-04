@@ -104,9 +104,9 @@ export class AuthService {
    * @param accessToken Access token
    * @returns Verified token or exception
    */
-  async verifyAccessToken(accessToken) {
+  async verifyAccessToken(accessToken: string) {
     return this.jwtService.verifyAsync(accessToken, {
-      secret: process.env.JWT_ACCESS_TOKEN,
+      secret: process.env.JWT_ACCESS_SECRET,
     });
   }
 
@@ -115,9 +115,9 @@ export class AuthService {
    * @param refreshToken Refresh token
    * @returns Verified refresh token or exception
    */
-  async verifyRefreshToken(refreshToken) {
+  async verifyRefreshToken(refreshToken: string) {
     return this.jwtService.verifyAsync(refreshToken, {
-      secret: process.env.JWT_REFRESH_TOKEN,
+      secret: process.env.JWT_REFRESH_SECRET,
     });
   }
 }
