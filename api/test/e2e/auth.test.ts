@@ -25,10 +25,22 @@ describe('Auth testing', () => {
   });
 
   describe('/auth/register (POST)', () => {
-    it('should register user with correct body', async () => {
+    it('should register user(client)', async () => {
       await request(app)
         .post('/auth/register')
         .send(user)
+        .expect(200);
+    });
+
+    it('should register user(master)', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'auth1',
+          email: 'auth1@gmail.com',
+          role: 'client',
+          password: '123456',
+        })
         .expect(200);
     });
 
