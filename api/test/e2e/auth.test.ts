@@ -44,10 +44,24 @@ describe('Auth testing', () => {
         .expect(400);
     });
 
+    it('should not register user with exists uppercase email', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({ ...user, email: user.email.toUpperCase() })
+        .expect(400);
+    });
+
     it('should not register user with exists username', async () => {
       await request(app)
         .post('/auth/register')
         .send({ ...user, email: 'not_exists@gmail.com' })
+        .expect(400);
+    });
+
+    it('should not register user with exists uppercase username', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({ ...user, username: user.username.toUpperCase() })
         .expect(400);
     });
   });
