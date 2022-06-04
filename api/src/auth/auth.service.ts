@@ -53,7 +53,7 @@ export class AuthService {
     }
 
     // Compare input password and password from database
-    if (!bcryptjs.compare(logInDto.password, candidate.password)) {
+    if (!bcryptjs.compareSync(logInDto.password, candidate.password)) {
       throw new HttpException('Bad password', HttpStatus.BAD_REQUEST);
     }
 
