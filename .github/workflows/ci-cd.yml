@@ -51,7 +51,6 @@ jobs:
 
     - name: Install packages
       run: |
-        cd api
         yarn install
 
     - name: Test the code
