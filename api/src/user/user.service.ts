@@ -34,7 +34,7 @@ export class UserService {
     return this.prisma.user.findFirst({
       where: {
         username: {
-          equals: username,
+          equals: username.toLowerCase(),
           mode: 'insensitive',
         },
       },
@@ -50,7 +50,7 @@ export class UserService {
     return this.prisma.user.findFirst({
       where: {
         email: {
-          equals: email,
+          equals: email.toLowerCase(),
           mode: 'insensitive',
         },
       },
