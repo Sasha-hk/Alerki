@@ -28,10 +28,16 @@ export class AuthGuard implements CanActivate {
 
       const verified = await this.authService.verifyAccessToken(accessToken);
 
+      if (!verified) {
+        throw new UnauthorizedException({ message: 'bad access token' });
+      }
+
       req.user = {};
-      req.user.accessToken = verified;
+      req.user.accessToken = accessToken;
+      req.user.decodedAccessToken = verified;
       return true;
     } catch (e) {
+      console.log(e);
       throw new UnauthorizedException({ message: 'user not authorized' });
     }
   }
