@@ -100,6 +100,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User not authorized' })
   @ApiResponse({ description: 'User de authenticated', status: 200 })
   async logOut(@Res() res: Response) {
+    // TODO: delete current session
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     res.sendStatus(200);
