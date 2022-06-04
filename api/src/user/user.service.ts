@@ -75,9 +75,9 @@ export class UserService {
       throw new HttpException('User with such username already exists', HttpStatus.BAD_REQUEST);
     }
 
-    const hashedPassword = await bcryptjs.hash(registerDto.password, 5);
+    const hashedPassword = bcryptjs.hashSync(registerDto.password, 5);
 
-    const newUser = this.prisma.user.create({
+    const newUser = await this.prisma.user.create({
       data: {
         email: registerDto.email.toLowerCase(),
         username: registerDto.username,

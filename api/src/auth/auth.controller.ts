@@ -59,7 +59,7 @@ export class AuthController {
     @Res() res: Response,
     @Body() registerDto: RegisterDto,
     @DeviceName() deviceName: string,
-  ): Promise<void> {
+  ) {
     const tokens = await this.authService.register(registerDto, deviceName);
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
     res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
@@ -81,7 +81,7 @@ export class AuthController {
     @Res() res: Response,
     @Body() logInDto: LogInDto,
     @DeviceName() deviceName: string,
-  ): Promise<void> {
+  ) {
     const tokens = await this.authService.logIn(logInDto, deviceName);
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
     res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
@@ -98,7 +98,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.OK, description: 'User logged out' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User not authorized' })
   @ApiResponse({ description: 'User de authenticated', status: 200 })
-  async logOut(@Res() res: Response): Promise<void> {
+  async logOut(@Res() res: Response) {
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     res.sendStatus(200);
@@ -112,7 +112,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Get sessions' })
   @ApiCookieAuth('accessToken')
   @ApiResponse({ description: 'Devices list', type: [SessionDto] })
-  async getSessions(): Promise<any> {
+  async getSessions() {
     const sessions = await this.sessionService.findAllByUserID('d');
 
     if (!sessions) {
@@ -140,7 +140,7 @@ export class AuthController {
   async deleteSession(
     @Param('id') id: string,
     @GetUser() user: CurrentUser,
-  ): Promise<void> {
+  ) {
     const candidate = await this.sessionService.findByID(id);
 
     if (candidate.userID !== user.accessToken) {

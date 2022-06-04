@@ -17,7 +17,7 @@ import { AuthService } from './auth.service';
 export class AuthGuard implements CanActivate {
   constructor(private readonly authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     try {
       const accessToken = req.cookies?.accessToken;
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException({ message: 'user not authorized' });
       }
 
-      const verified = this.authService.verifyAccessToken(accessToken);
+      const verified = await this.authService.verifyAccessToken(accessToken);
 
       req.user = {};
       req.user.accessToken = verified;

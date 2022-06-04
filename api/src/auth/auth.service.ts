@@ -29,7 +29,7 @@ export class AuthService {
   async register(registerDto: RegisterDto, deviceName: string) {
     const userData = await this.userService.register(registerDto);
     const tokens = await this.generateTokens({ username: userData.username, email: userData.email });
-    this.sessionService.create(userData.id, deviceName, tokens.refreshToken);
+    await this.sessionService.create(userData.id, deviceName, tokens.refreshToken);
 
     return tokens;
   }
