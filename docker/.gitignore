@@ -1,2 +1,3 @@
-.prod.env
-.dev.env
+.env.prod
+.env.dev
+
