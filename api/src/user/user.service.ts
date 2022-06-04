@@ -2,6 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { User } from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 
+import usernameBlockList from '@Config/username-block-list';
 import { PrismaService } from '../shared/services/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 
@@ -63,16 +64,25 @@ export class UserService {
    * @returns Tokens
    */
   async register(registerDto: RegisterDto) {
+    // Check if email already exists
     const checkEmail = await this.findByEmail(registerDto.email);
 
     if (checkEmail) {
       throw new HttpException('User with such email already exists', HttpStatus.BAD_REQUEST);
     }
 
+    // Check if username already exists
     const checkUsername = await this.findByUsername(registerDto.username);
 
     if (checkUsername) {
       throw new HttpException('User with such username already exists', HttpStatus.BAD_REQUEST);
+    }
+
+    // Check if username in block list
+    for (const ignoreItem of usernameBlockList) {
+      if (ignoreItem === registerDto.username) {
+        throw new HttpException('Not available username', HttpStatus.BAD_REQUEST);
+      }
     }
 
     const hashedPassword = bcryptjs.hashSync(registerDto.password, 5);

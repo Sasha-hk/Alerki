@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
+
+import usernameBlockList from '@Config/username-block-list';
 import { AppModule } from '../../src/app.module';
 
 const user = {
@@ -30,6 +32,28 @@ describe('Auth testing', () => {
         .expect(200);
     });
 
+    it('should not register user without role', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'guess',
+          email: 'guess@gmail.com',
+          password: '123456',
+        })
+        .expect(400);
+    });
+
+    it('should not register user without password', async () => {
+      await request(app)
+        .post('/auth/register')
+        .send({
+          username: 'guess',
+          role: 'client',
+          email: 'guess@gmail.com',
+        })
+        .expect(400);
+    });
+
     it('should not register user with incorrect body', async () => {
       await request(app)
         .post('/auth/register')
@@ -42,9 +66,7 @@ describe('Auth testing', () => {
         .post('/auth/register')
         .send({ ...user, username: 'not_exists' })
         .expect(400);
-    });
 
-    it('should not register user with exists uppercase email', async () => {
       await request(app)
         .post('/auth/register')
         .send({ ...user, email: user.email.toUpperCase() })
@@ -56,13 +78,21 @@ describe('Auth testing', () => {
         .post('/auth/register')
         .send({ ...user, email: 'not_exists@gmail.com' })
         .expect(400);
-    });
 
-    it('should not register user with exists uppercase username', async () => {
       await request(app)
         .post('/auth/register')
         .send({ ...user, username: user.username.toUpperCase() })
         .expect(400);
+    });
+
+    it('should prohibit registration with forbidden username', async () => {
+      /* eslint-disable no-await-in-loop */
+      for (const username of usernameBlockList) {
+        await request(app)
+          .post('/auth/register')
+          .send({ ...user, username })
+          .expect(400);
+      }
     });
   });
 });
