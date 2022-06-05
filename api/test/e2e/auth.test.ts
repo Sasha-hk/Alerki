@@ -195,8 +195,8 @@ describe('Auth testing', () => {
       const first = await logInUser(app, user);
       const second = await logInUser(app, user);
 
-      expect(first.cookies.accessToken).not.toBe(second.cookies.accessToken);
-      expect(first.cookies.refreshToken).not.toBe(second.cookies.refreshToken);
+      expect(first.cookies.accessToken === second.cookies.accessToken).toBe(false);
+      expect(first.cookies.refreshToken === second.cookies.refreshToken).toBe(false);
     });
   });
 
