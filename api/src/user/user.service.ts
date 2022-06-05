@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 
 import usernameBlockList from '@Config/username-block-list';
-import { PrismaService } from '../shared/services/prisma.service';
+import { PrismaService } from '@Shared/services/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 
 /**

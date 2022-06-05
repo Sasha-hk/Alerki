@@ -12,7 +12,6 @@ import {
   UseGuards,
   HttpStatus,
   HttpException,
-  HttpCode,
   UnauthorizedException,
 } from '@nestjs/common';
 import {
@@ -25,14 +24,13 @@ import {
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-import AuthRequest from './interfaces/authRequest';
 import { AuthService } from './auth.service';
 import { SessionService } from './session.service';
 import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { SessionDto } from './dto/session.dto';
-import { DeviceName } from '../shared/decorators/device-name.decorator';
-import { GetIP } from '../shared/decorators/get-ip.decorator';
+import { DeviceName } from '@Shared/decorators/device-name.decorator';
+import { GetIP } from '@Shared/decorators/get-ip.decorator';
 import { GetUser, CurrentUser } from './get-user.decorator';
 import { AuthGuard } from './auth.guard';
 

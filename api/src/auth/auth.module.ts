@@ -4,7 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { SessionService } from './session.service';
-import { PrismaService } from '../shared/services/prisma.service';
+import { PrismaService } from '@Shared/services/prisma.service';
 import { UserModule } from '../user/user.module';
 
 @Module({
