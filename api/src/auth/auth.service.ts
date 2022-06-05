@@ -66,7 +66,8 @@ export class AuthService {
       username: candidate.username,
       email: candidate.email,
     });
-    this.sessionService.updateOrCreate(candidate.id, deviceName, tokens.refreshToken);
+
+    await this.sessionService.updateOrCreate(candidate.id, deviceName, tokens.refreshToken);
 
     return tokens;
   }

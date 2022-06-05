@@ -111,14 +111,16 @@ export class SessionService {
    *
    * @param id session ID
    */
-  async deleteByID(id: string) {
-    const candidate = await this.findByID(id);
+  async deleteByID(id: string, check: boolean = false) {
+    if (check) {
+      const candidate = await this.findByID(id);
 
-    if (!candidate) {
-      throw new HttpException('Session not exists', HttpStatus.NOT_FOUND);
+      if (!candidate) {
+        throw new HttpException('Session not exists', HttpStatus.NOT_FOUND);
+      }
     }
 
-    this.prisma.session.delete({
+    await this.prisma.session.delete({
       where: { id },
     });
   }
@@ -138,11 +140,7 @@ export class SessionService {
 
     for (const session of sessions) {
       if (session.refreshToken === refreshToken) {
-        return this.prisma.session.delete({
-          where: {
-            id: session.id,
-          },
-        });
+        return this.deleteByID(session.id);
       }
     }
   }
@@ -154,19 +152,16 @@ export class SessionService {
    * @param deviceName device name
    */
   async deleteByDeviceName(userID: string, deviceName: string) {
-    const session = await this.prisma.session.findFirst({
+    const session = await this.prisma.session.findMany({
       where: {
         userID,
         deviceName,
       },
     });
 
-    if (session) {
-      return this.prisma.session.delete({
-        where: {
-          id: session.id,
-        },
-      });
+    // Check if session exists and unique device name
+    if (session && session.length === 1) {
+      return this.deleteByID(session[0].id);
     }
   }
 }
