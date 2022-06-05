@@ -7,9 +7,22 @@ import { AppModule } from '../../src/app.module';
 import getCookies from '../utils/getCookies';
 import * as cookieParser from 'cookie-parser';
 
+const sleep = (ms: number) => {
+  return new Promise((res: any) => {
+    setTimeout(() => res(), ms);
+  });
+};
+
 const user: { [key: string]: any } = {
   username: 'james',
   email: 'james@gmail.com',
+  role: 'client',
+  password: '123456',
+};
+
+const otherUser: { [key: string]: any } = {
+  username: 'auth1',
+  email: 'auth1@gmail.com',
   role: 'client',
   password: '123456',
 };
@@ -61,15 +74,12 @@ describe('Auth testing', () => {
     it('should register user(master)', async () => {
       const res = await request(app)
         .post('/auth/register')
-        .send({
-          username: 'auth1',
-          email: 'auth1@gmail.com',
-          role: 'client',
-          password: '123456',
-        });
+        .send(otherUser)
+        .expect(200);
 
-      expect(res.statusCode).toBe(200);
-      checkTokens(res);
+      const cookies = checkTokens(res);
+      otherUser.accessToken = cookies.accessToken;
+      otherUser.refreshToken = cookies.refreshToken;
     });
 
     it('should not register user without role', async () => {
@@ -148,9 +158,9 @@ describe('Auth testing', () => {
         .send({
           ...user,
           username: undefined,
-        });
+        })
+        .expect(200);
 
-      expect(res.statusCode).toBe(200);
       const cookies = checkTokens(res);
       user.refreshToken = cookies.refreshToken;
       user.accessToken = cookies.accessToken;
@@ -162,22 +172,35 @@ describe('Auth testing', () => {
         .send({
           ...user,
           email: undefined,
-        });
+        })
+        .expect(200);
 
-      expect(res.statusCode).toBe(200);
       checkTokens(res);
     });
 
-    it('should log-in user with username', async () => {
+    it('should log-in and update exists session', async () => {
+      await request(app)
+        .post('/auth/log-in')
+        .send(user)
+        .set({ 'user-agent': 'IPhone XR' })
+        .expect(200);
+
+      await request(app)
+        .post('/auth/log-in')
+        .send(user)
+        .set({ 'user-agent': 'IPhone XR' })
+        .expect(200);
+    });
+
+    it('should not log-in user', async () => {
       const res = await request(app)
         .post('/auth/log-in')
         .send({
           ...user,
           email: undefined,
           username: undefined,
-        });
-
-      expect(res.statusCode).toBe(400);
+        })
+        .expect(400);
     });
 
     it('should not log-in user with bad password', async () => {
@@ -186,13 +209,13 @@ describe('Auth testing', () => {
         .send({
           ...user,
           password: '1234567',
-        });
-
-      expect(res.statusCode).toBe(400);
+        })
+        .expect(400);
     });
 
     it('should generate different access and refresh keys', async () => {
       const first = await logInUser(app, user);
+      await sleep(1000);
       const second = await logInUser(app, user);
 
       expect(first.cookies.accessToken === second.cookies.accessToken).toBe(false);
@@ -213,18 +236,22 @@ describe('Auth testing', () => {
 
     it('should log-out user by device name', async () => {
       await request(app)
-        .post('/auth/log-in')
-        .send(user)
-        .set({ 'user-agent': 'IPhone XR' })
-        .expect(200);
-
-      await request(app)
         .get('/auth/log-out')
         .set('Cookie', [
           'accessToken=' + user.accessToken,
         ])
         .set({ 'user-agent': 'IPhone XR' })
         .expect(200);
+    });
+
+    it('should forbid access with bad access token', async () => {
+      await request(app)
+        .get('/auth/log-out')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken + 'c',
+        ])
+        .set({ 'user-agent': 'IPhone XR' })
+        .expect(401);
     });
 
     it('should not delete session by user with \'undefined\' device name', async () => {
@@ -255,6 +282,85 @@ describe('Auth testing', () => {
           'accessToken=' + user.accessToken,
         ])
         .expect(200);
+
+      expect(res.body).toBeTruthy();
+    });
+
+    it('should return 404 code', async () => {
+      const res = await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
+
+      for (const session of res.body) {
+        await request(app)
+          .delete('/auth/sessions/' + session.id)
+          .set('Cookie', 'accessToken=' + user.accessToken);
+      }
+
+      await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(404);
+    });
+  });
+
+  describe('/auth/sessions/:id (DELETE)', () => {
+    it('should delete all sessions', async () => {
+      const countOfSessions = 10;
+
+      for (let i = 0; i < countOfSessions; i++) {
+        await logInUser(app, user);
+      }
+
+      const res = await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
+
+      expect(res.body).toBeTruthy();
+      expect(res.body.length).toBe(10);
+
+      for (const session of res.body) {
+        await request(app)
+          .delete('/auth/sessions/' + session.id)
+          .set('Cookie', 'accessToken=' + user.accessToken);
+      }
+
+      const logInData = await logInUser(app, user);
+
+      user.accessToken = logInData.cookies.accessToken;
+
+      const checkSessions = await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
+
+      expect(checkSessions.body.length).toBe(1);
+    });
+
+    it('should forbid to delete session that not belongs to user', async () => {
+      const checkSessions = await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
+
+      await request(app)
+        .delete('/auth/sessions/' + checkSessions.body[0].id)
+        .set('Cookie', [
+          'accessToken=' + otherUser.accessToken,
+        ])
+        .expect(403);
     });
   });
 });

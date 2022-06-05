@@ -123,7 +123,7 @@ export class AuthController {
   async getSessions(@GetUser() user: CurrentUser) {
     const sessions = await this.sessionService.findAllByUserID(user.decodedAccessToken.id);
 
-    if (!sessions) {
+    if (sessions.length === 0) {
       throw new HttpException('Sessions not found', HttpStatus.NOT_FOUND);
     }
 
@@ -136,6 +136,7 @@ export class AuthController {
    * @returns Deleted session
    */
   @Delete('sessions/:id')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Delete session by ID' })
   @ApiCookieAuth('accessToken')
   @ApiParam({
@@ -143,7 +144,6 @@ export class AuthController {
     name: 'id',
     example: '123e4567-e89b-12d3-a456-426614174000',
   })
-  @UseGuards(AuthGuard)
   @ApiResponse({ description: 'Service deleted', status: 200 })
   async deleteSession(
     @Param('id') id: string,
@@ -151,7 +151,7 @@ export class AuthController {
   ) {
     const candidate = await this.sessionService.findByID(id);
 
-    if (candidate.userID !== user.accessToken) {
+    if (candidate.userID !== user.decodedAccessToken.id) {
       throw new HttpException('The session not belongs to the user', HttpStatus.FORBIDDEN);
     }
 

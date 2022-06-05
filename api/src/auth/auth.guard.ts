@@ -20,18 +20,14 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     try {
-      const accessToken = req.cookies?.accessToken;
-      const refreshToken = req.cookies?.refreshToken;
+      const accessToken = req.cookies.accessToken!;
+      const refreshToken = req.cookies.refreshToken!;
 
       if (!accessToken) {
         throw new UnauthorizedException({ message: 'user not authorized' });
       }
 
       const verified = await this.authService.verifyAccessToken(accessToken);
-
-      if (!verified) {
-        throw new UnauthorizedException({ message: 'bad access token' });
-      }
 
       req.user = {};
       req.user.accessToken = accessToken;

@@ -89,18 +89,15 @@ export class SessionService {
    * @returns Session
    */
   async updateOrCreate(userID: string, deviceName: string, refreshToken: string) {
-    const candidate = await this.prisma.session.findFirst({
-      where: {
-        userID,
-        deviceName,
-      },
-    });
+    const candidates = await this.findAllByUserID(userID);
 
-    if (candidate && candidate?.deviceName !== 'undefined') {
-      return this.update(candidate.id, {
-        deviceName,
-        refreshToken,
-      });
+    for (const candidate of candidates) {
+      if (candidate.deviceName === deviceName && candidate.deviceName !== 'undefined') {
+        return this.update(candidate.id, {
+          deviceName,
+          refreshToken,
+        });
+      }
     }
 
     return this.create(userID, deviceName, refreshToken);
@@ -111,15 +108,7 @@ export class SessionService {
    *
    * @param id session ID
    */
-  async deleteByID(id: string, check: boolean = false) {
-    if (check) {
-      const candidate = await this.findByID(id);
-
-      if (!candidate) {
-        throw new HttpException('Session not exists', HttpStatus.NOT_FOUND);
-      }
-    }
-
+  async deleteByID(id: string) {
     await this.prisma.session.delete({
       where: { id },
     });
