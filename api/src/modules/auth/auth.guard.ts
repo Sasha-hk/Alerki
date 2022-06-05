@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { AuthService } from './auth.service';
+import { AuthService } from '@Module/auth/auth.service';
 
 /**
  * Authentication guard

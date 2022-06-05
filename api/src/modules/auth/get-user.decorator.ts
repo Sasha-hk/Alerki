@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import { JWT } from './interfaces/jwt.interface';
+import { JWT } from '@Module/auth/interfaces/jwt.interface';
 
 /**
  * Get user

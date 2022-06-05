@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SessionService } from '../session.service';
-import { PrismaService } from '../../shared/services/prisma.service';
+import { SessionService } from '@Module/auth/session.service';
+import { PrismaService } from '@Shared/services/prisma.service';
 
 describe('AuthService', () => {
   let service: SessionService;

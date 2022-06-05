@@ -4,7 +4,7 @@ import * as bcryptjs from 'bcryptjs';
 
 import usernameBlockList from '@Config/username-block-list';
 import { PrismaService } from '@Shared/services/prisma.service';
-import { RegisterDto } from './dto/register.dto';
+import { RegisterDto } from '@Module/user/dto/register.dto';
 
 /**
  * User service

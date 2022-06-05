@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Session } from '@prisma/client';
 
 import { PrismaService } from '@Shared/services/prisma.service';
-import { SessionDto } from './dto/session.dto';
+import { SessionDto } from '@Module/auth/dto/session.dto';
 
 interface UpdateSession extends Pick<Session, 'deviceName' | 'refreshToken'> {}
 

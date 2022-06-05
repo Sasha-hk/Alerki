@@ -2,11 +2,11 @@ import { forwardRef } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 
-import { AuthController } from '../auth.controller';
-import { AuthService } from '../auth.service';
-import { SessionService } from '../session.service';
-import { PrismaService } from '../../shared/services/prisma.service';
-import { UserModule } from '../../user/user.module';
+import { AuthController } from '@Module/auth/auth.controller';
+import { AuthService } from '@Module/auth/auth.service';
+import { SessionService } from '@Module/auth/session.service';
+import { PrismaService } from '@Shared/services/prisma.service';
+import { UserModule } from '@Module/user/user.module';
 
 describe('AuthController', () => {
   let controller: AuthController;

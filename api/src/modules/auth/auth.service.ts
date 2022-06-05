@@ -3,11 +3,11 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 
-import { RegisterDto } from '../user/dto/register.dto';
-import { LogInDto } from '../user/dto/log-in.dto';
-import { UserService } from '../user/user.service';
-import { SessionService } from './session.service';
-import { JWT } from './interfaces/jwt.interface';
+import { RegisterDto } from '@Module/user/dto/register.dto';
+import { LogInDto } from '@Module/user/dto/log-in.dto';
+import { UserService } from '@Module/user/user.service';
+import { SessionService } from '@Module/auth/session.service';
+import { JWT } from '@Module/auth/interfaces/jwt.interface';
 
 /**
  * Auth service
