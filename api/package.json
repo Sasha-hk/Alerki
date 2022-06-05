@@ -22,7 +22,9 @@
     "migrate:dev": "export $(cat ../docker/.env.dev | xargs) && yarn prisma migrate dev --name",
     "migrate:test": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate reset --force",
     "migrate:prod": "export $(cat ../docker/.env.prod | xargs) && yarn prisma migrate --name",
-    "makemigrations": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate dev --create-only"
+    "makemigrations": "export $(cat ../docker/.env.test | xargs) && yarn prisma migrate dev --create-only",
+    "studio:test": "export $(cat ../docker/.env.test | xargs) && npx prisma studio",
+    "studio:dev": "export $(cat ../docker/.env.dev | xargs) && npx prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
