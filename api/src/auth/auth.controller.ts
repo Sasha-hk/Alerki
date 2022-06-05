@@ -13,6 +13,7 @@ import {
   HttpStatus,
   HttpException,
   HttpCode,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -102,7 +103,11 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.OK, description: 'User logged out' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User not authorized' })
   @ApiResponse({ description: 'User de authenticated', status: 200 })
-  async logOut(@Res() res: Response, @GetUser() user: CurrentUser, @DeviceName() deviceName: string) {
+  async logOut(
+    @Res() res: Response,
+    @GetUser() user: CurrentUser,
+    @DeviceName() deviceName: string,
+  ) {
     if (user.refreshToken) {
       await this.sessionService.deleteByRefreshToken(user.id, user.refreshToken);
     } else if (deviceName !== 'undefined') {
@@ -112,6 +117,39 @@ export class AuthController {
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     res.sendStatus(200);
+  }
+
+  /**
+   * Refresh tokens
+   */
+  @Get('refresh')
+  async refresh(
+    @Req() req: Request,
+    @Res() res: Response,
+    @DeviceName() deviceName: string,
+    @GetIP() ip: string,
+  ) {
+    try {
+      const refreshToken = req.cookies.refreshToken!;
+
+      if (!refreshToken) {
+        throw new UnauthorizedException({ message: 'refreshToken not exists' });
+      }
+
+      const verified = await this.authService.verifyRefreshToken(refreshToken);
+
+      const tokens = await this.authService.refresh(
+        verified.id,
+        refreshToken,
+        deviceName,
+        ip,
+      );
+      res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
+      res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
+      res.sendStatus(200);
+    } catch (e) {
+      throw new UnauthorizedException({ message: 'user not authorized' });
+    }
   }
 
   /**

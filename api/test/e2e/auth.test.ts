@@ -270,6 +270,33 @@ describe('Auth testing', () => {
     });
   });
 
+  describe('/auth/refresh (GET)', () => {
+    it('should refresh tokens', async () => {
+      const res = await request(app)
+        .get('/auth/refresh')
+        .set('Cookie', 'refreshToken=' + user.refreshToken)
+        .expect(200);
+
+      const cookies = getCookies(res);
+
+      expect(cookies.refreshToken).toBeTruthy();
+      expect(cookies.accessToken).toBeTruthy();
+    });
+
+    it('should not refresh tokens with bad refresh token', async () => {
+      await request(app)
+        .get('/auth/refresh')
+        .set('Cookie', 'refreshToken=' + user.refreshToken + '1')
+        .expect(401);
+    });
+
+    it('should not refresh tokens without refresh token', async () => {
+      await request(app)
+        .get('/auth/refresh')
+        .expect(401);
+    });
+  });
+
   describe('/auth/sessions (GET)', () => {
     it('should return list of sessions', async () => {
       const logInData = await logInUser(app, user);

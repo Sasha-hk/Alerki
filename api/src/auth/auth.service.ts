@@ -73,6 +73,29 @@ export class AuthService {
   }
 
   /**
+   * Refresh tokens
+   *
+   * @param userID user ID
+   * @param deviceName device name
+   * @param ip client IP
+   */
+  async refresh(userID: string, refreshToken: string, deviceName: string, ip: string) {
+    const candidate = await this.userService.findOneByID(userID);
+
+    await this.verifyRefreshToken(refreshToken);
+
+    const tokens = await this.generateTokens({
+      id: candidate.id,
+      username: candidate.username,
+      email: candidate.email,
+    });
+
+    await this.sessionService.updateOrCreate(candidate.id, deviceName, ip, tokens.refreshToken);
+
+    return tokens;
+  }
+
+  /**
    * Generate access token
    * @param jwtPayload JWT payload
    * @returns Access token

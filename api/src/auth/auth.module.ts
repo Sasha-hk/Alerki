@@ -14,4 +14,3 @@ import { UserModule } from '../user/user.module';
   imports: [forwardRef(() => UserModule), JwtModule.register({})],
 })
 export class AuthModule {}
-

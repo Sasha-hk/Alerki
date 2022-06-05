@@ -29,6 +29,7 @@
     "no-extra-semi": "off",
     "no-warning-comments": "off",
     "no-dupe-class-members": "off",
+    "max-params": "off",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
