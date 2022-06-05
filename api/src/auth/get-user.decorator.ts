@@ -1,5 +1,7 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
+import { JWT } from './interfaces/jwt.interface';
+
 /**
  * Get user
  */
@@ -14,5 +16,7 @@ export const GetUser = createParamDecorator(
 export interface CurrentUser {
   accessToken: string;
   refreshToken?: string;
+  decodedAccessToken: JWT;
+  decodedRefreshToken?: JWT;
   [key: string]: any;
 }

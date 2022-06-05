@@ -31,7 +31,7 @@ import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { SessionDto } from './dto/session.dto';
 import { DeviceName } from '../shared/decorators/device-name.decorator';
-import { GetUser, CurrentUser } from '../shared/decorators/get-user.decorator';
+import { GetUser, CurrentUser } from './get-user.decorator';
 import { AuthGuard } from './auth.guard';
 
 /**
@@ -99,8 +99,13 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.OK, description: 'User logged out' })
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User not authorized' })
   @ApiResponse({ description: 'User de authenticated', status: 200 })
-  async logOut(@Res() res: Response) {
-    // TODO: delete current session
+  async logOut(@Res() res: Response, @GetUser() user: CurrentUser, @DeviceName() deviceName: string) {
+    if (user.refreshToken) {
+      await this.sessionService.deleteByRefreshToken(user.id, user.refreshToken);
+    } else if (deviceName !== 'undefined') {
+      await this.sessionService.deleteByDeviceName(user.id, deviceName);
+    }
+
     res.clearCookie('refreshToken');
     res.clearCookie('accessToken');
     res.sendStatus(200);
@@ -149,6 +154,6 @@ export class AuthController {
       throw new HttpException('The session not belongs to the user', HttpStatus.FORBIDDEN);
     }
 
-    await this.sessionService.delete(id);
+    await this.sessionService.deleteByID(id);
   }
 }

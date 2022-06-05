@@ -179,22 +179,45 @@ describe('Auth testing', () => {
   });
 
   describe('/auth/log-out (GET)', () => {
-    it('should log-out user with bad password', async () => {
-      const res = await request(app)
+    it('should log-out user by refresh token', async () => {
+      await request(app)
         .get('/auth/log-out')
         .set('Cookie', [
           'accessToken=' + user.accessToken,
           'refreshToken=' + user.refreshToken,
-        ]);
-
-      expect(res.statusCode).toBe(200);
+        ])
+        .expect(200);
     });
 
-    it('should log-out user with bad password', async () => {
-      const res = await request(app)
-        .get('/auth/log-out');
+    it('should log-out user by device name', async () => {
+      await request(app)
+        .post('/auth/log-in')
+        .send(user)
+        .set({ 'user-agent': 'IPhone XR' })
+        .expect(200);
 
-      expect(res.statusCode).toBe(401);
+      await request(app)
+        .get('/auth/log-out')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .set({ 'user-agent': 'IPhone XR' })
+        .expect(200);
+    });
+
+    it('should not delete session by user with \'undefined\' device name', async () => {
+      await request(app)
+        .get('/auth/log-out')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
+    });
+
+    it('should not log-out unauthenticated user', async () => {
+      await request(app)
+        .get('/auth/log-out')
+        .expect(401);
     });
   });
 });

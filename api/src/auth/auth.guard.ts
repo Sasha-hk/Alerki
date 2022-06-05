@@ -21,6 +21,7 @@ export class AuthGuard implements CanActivate {
     const req = context.switchToHttp().getRequest();
     try {
       const accessToken = req.cookies?.accessToken;
+      const refreshToken = req.cookies?.refreshToken;
 
       if (!accessToken) {
         throw new UnauthorizedException({ message: 'user not authorized' });
@@ -34,6 +35,7 @@ export class AuthGuard implements CanActivate {
 
       req.user = {};
       req.user.accessToken = accessToken;
+      req.user.refreshToken = refreshToken;
       req.user.decodedAccessToken = verified;
       return true;
     } catch (e) {

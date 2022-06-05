@@ -15,7 +15,9 @@ export class SessionService {
 
   /**
    * Find session by ID
+   *
    * @param id Session ID
+   *
    * @returns Session if exists
    */
   async findByID(id: string): Promise<Session | null> {
@@ -26,7 +28,9 @@ export class SessionService {
 
   /**
    * Find sessions by user ID
+   *
    * @param userID User ID
+   *
    * @returns Array of sessions if exists
    */
   async findAllByUserID(userID: string): Promise<Array<SessionDto> | null> {
@@ -43,9 +47,11 @@ export class SessionService {
 
   /**
    * Create session
+   *
    * @param userID User ID
    * @param deviceName Device name
    * @param refreshToken Refresh token
+   *
    * @returns Session object
    */
   async create(userID: string, deviceName: string, refreshToken: string) {
@@ -60,8 +66,10 @@ export class SessionService {
 
   /**
    * Update session
+   *
    * @param id Session ID
    * @param options Options
+   *
    * @returns Updated session
    */
   async update(id: string, options: UpdateSession) {
@@ -73,9 +81,11 @@ export class SessionService {
 
   /**
    * Create or get updated session
+   *
    * @param userID User ID
    * @param deviceName Device name
    * @param refreshToken Refresh token
+   *
    * @returns Session
    */
   async updateOrCreate(userID: string, deviceName: string, refreshToken: string) {
@@ -98,9 +108,10 @@ export class SessionService {
 
   /**
    * Delete session by ID
-   * @param id Session ID
+   *
+   * @param id session ID
    */
-  async delete(id: string) {
+  async deleteByID(id: string) {
     const candidate = await this.findByID(id);
 
     if (!candidate) {
@@ -110,5 +121,52 @@ export class SessionService {
     this.prisma.session.delete({
       where: { id },
     });
+  }
+
+  /**
+   * Delete session by user ID and refresh token
+   *
+   * @param userID user ID
+   * @param refreshToken refresh token to delete
+   */
+  async deleteByRefreshToken(userID: string, refreshToken: string) {
+    const sessions = await this.prisma.session.findMany({
+      where: {
+        userID,
+      },
+    });
+
+    for (const session of sessions) {
+      if (session.refreshToken === refreshToken) {
+        return this.prisma.session.delete({
+          where: {
+            id: session.id,
+          },
+        });
+      }
+    }
+  }
+
+  /**
+   * Delete session by deviceName
+   *
+   * @param userID user ID
+   * @param deviceName device name
+   */
+  async deleteByDeviceName(userID: string, deviceName: string) {
+    const session = await this.prisma.session.findFirst({
+      where: {
+        userID,
+        deviceName,
+      },
+    });
+
+    if (session) {
+      return this.prisma.session.delete({
+        where: {
+          id: session.id,
+        },
+      });
+    }
   }
 }

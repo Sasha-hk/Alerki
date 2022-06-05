@@ -7,7 +7,7 @@ import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { UserService } from '../user/user.service';
 import { SessionService } from './session.service';
-import { JwtPayload } from './interfaces/jwt.payload.interface';
+import { JWT } from './interfaces/jwt.interface';
 
 /**
  * Auth service
@@ -28,7 +28,11 @@ export class AuthService {
    */
   async register(registerDto: RegisterDto, deviceName: string) {
     const userData = await this.userService.register(registerDto);
-    const tokens = await this.generateTokens({ username: userData.username, email: userData.email });
+    const tokens = await this.generateTokens({
+      id: userData.id,
+      username: userData.username,
+      email: userData.email,
+    });
     await this.sessionService.create(userData.id, deviceName, tokens.refreshToken);
 
     return tokens;
@@ -57,7 +61,11 @@ export class AuthService {
       throw new HttpException('Bad password', HttpStatus.BAD_REQUEST);
     }
 
-    const tokens = await this.generateTokens({ username: candidate.username, email: candidate.email });
+    const tokens = await this.generateTokens({
+      id: candidate.id,
+      username: candidate.username,
+      email: candidate.email,
+    });
     this.sessionService.updateOrCreate(candidate.id, deviceName, tokens.refreshToken);
 
     return tokens;
@@ -68,7 +76,7 @@ export class AuthService {
    * @param jwtPayload JWT payload
    * @returns Access token
    */
-  private async generateAccessToken(jwtPayload: JwtPayload) {
+  private async generateAccessToken(jwtPayload: JWT) {
     return this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_ACCESS_SECRET,
       expiresIn: '30m',
@@ -80,7 +88,7 @@ export class AuthService {
    * @param jwtPayload JWT payload
    * @returns Refresh token
    */
-  private async generateRefreshToken(jwtPayload: JwtPayload) {
+  private async generateRefreshToken(jwtPayload: JWT) {
     return this.jwtService.sign(jwtPayload, {
       secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '30d',
@@ -92,7 +100,7 @@ export class AuthService {
    * @param jwtPayload JWT payload
    * @returns Pair of tokens
    */
-  private async generateTokens(jwtPayload: JwtPayload) {
+  private async generateTokens(jwtPayload: JWT) {
     return {
       accessToken: await this.generateAccessToken(jwtPayload),
       refreshToken: await this.generateRefreshToken(jwtPayload),
