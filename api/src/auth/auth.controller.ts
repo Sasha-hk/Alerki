@@ -31,6 +31,7 @@ import { RegisterDto } from '../user/dto/register.dto';
 import { LogInDto } from '../user/dto/log-in.dto';
 import { SessionDto } from './dto/session.dto';
 import { DeviceName } from '../shared/decorators/device-name.decorator';
+import { GetIP } from '../shared/decorators/get-ip.decorator';
 import { GetUser, CurrentUser } from './get-user.decorator';
 import { AuthGuard } from './auth.guard';
 
@@ -60,8 +61,9 @@ export class AuthController {
     @Res() res: Response,
     @Body() registerDto: RegisterDto,
     @DeviceName() deviceName: string,
+    @GetIP() ip: string,
   ) {
-    const tokens = await this.authService.register(registerDto, deviceName);
+    const tokens = await this.authService.register(registerDto, deviceName, ip);
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
     res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
     res.sendStatus(200);
@@ -82,8 +84,9 @@ export class AuthController {
     @Res() res: Response,
     @Body() logInDto: LogInDto,
     @DeviceName() deviceName: string,
+    @GetIP() ip: string,
   ) {
-    const tokens = await this.authService.logIn(logInDto, deviceName);
+    const tokens = await this.authService.logIn(logInDto, deviceName, ip);
     res.cookie('refreshToken', tokens.refreshToken, { maxAge: 30 * 24 * 60 * 1000, httpOnly: true });
     res.cookie('accessToken', tokens.accessToken, { maxAge: 30 * 60 * 1000 });
     res.sendStatus(200);

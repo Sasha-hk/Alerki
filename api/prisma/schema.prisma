@@ -109,6 +109,7 @@ model Session {
   user                User      @relation(fields: [userID], references: [id])
   userID              String    @db.VarChar(36)
   deviceName          String    @db.VarChar(30)
+  ip                  String    @db.VarChar(16)
   refreshToken        String    @db.VarChar(1024)
   googleAccessToken   String?   @db.VarChar(1024)
   googleRefreshToken  String?   @db.VarChar(1026)

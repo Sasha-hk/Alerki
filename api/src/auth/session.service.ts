@@ -39,6 +39,7 @@ export class SessionService {
       select: {
         id: true,
         deviceName: true,
+        ip: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -54,11 +55,12 @@ export class SessionService {
    *
    * @returns Session object
    */
-  async create(userID: string, deviceName: string, refreshToken: string) {
+  async create(userID: string, deviceName: string, ip: string, refreshToken: string) {
     return this.prisma.session.create({
       data: {
         userID,
         deviceName,
+        ip,
         refreshToken,
       },
     });
@@ -88,19 +90,26 @@ export class SessionService {
    *
    * @returns Session
    */
-  async updateOrCreate(userID: string, deviceName: string, refreshToken: string) {
-    const candidates = await this.findAllByUserID(userID);
+  async updateOrCreate(userID: string, deviceName: string, ip: string, refreshToken: string) {
+    const candidates = await this.prisma.session.findMany({
+      where: {
+        userID,
+        ip,
+      },
+    });
 
     for (const candidate of candidates) {
       if (candidate.deviceName === deviceName && candidate.deviceName !== 'undefined') {
-        return this.update(candidate.id, {
-          deviceName,
-          refreshToken,
-        });
+        if (candidate.ip === ip) {
+          return this.update(candidate.id, {
+            deviceName,
+            refreshToken,
+          });
+        }
       }
     }
 
-    return this.create(userID, deviceName, refreshToken);
+    return this.create(userID, deviceName, ip, refreshToken);
   }
 
   /**

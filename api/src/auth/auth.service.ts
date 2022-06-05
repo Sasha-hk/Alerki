@@ -26,14 +26,14 @@ export class AuthService {
    * @param deviceName Device name
    * @returns Tokens
    */
-  async register(registerDto: RegisterDto, deviceName: string) {
+  async register(registerDto: RegisterDto, deviceName: string, ip: string) {
     const userData = await this.userService.register(registerDto);
     const tokens = await this.generateTokens({
       id: userData.id,
       username: userData.username,
       email: userData.email,
     });
-    await this.sessionService.create(userData.id, deviceName, tokens.refreshToken);
+    await this.sessionService.create(userData.id, deviceName, ip, tokens.refreshToken);
 
     return tokens;
   }
@@ -44,7 +44,7 @@ export class AuthService {
    * @param deviceName Device name
    * @returns Tokens
    */
-  async logIn(logInDto: LogInDto, deviceName: string) {
+  async logIn(logInDto: LogInDto, deviceName: string, ip: string) {
     let candidate: User;
 
     // Bind user bu email or username
@@ -67,7 +67,7 @@ export class AuthService {
       email: candidate.email,
     });
 
-    await this.sessionService.updateOrCreate(candidate.id, deviceName, tokens.refreshToken);
+    await this.sessionService.updateOrCreate(candidate.id, deviceName, ip, tokens.refreshToken);
 
     return tokens;
   }

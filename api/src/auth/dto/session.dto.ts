@@ -20,6 +20,14 @@ export class SessionDto implements ISession {
   })
   readonly deviceName: string;
 
+  @ApiProperty({
+    description: 'Client ip',
+    maxLength: 16,
+    type: 'string',
+    example: '100.100.100.100',
+  })
+  readonly ip: string;
+
   readonly createdAt: Date;
 
   readonly updatedAt: Date;
