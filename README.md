@@ -6,6 +6,7 @@ The website give easy way for clients to find master and make an appointment, fo
 
 [![CI/CD](https://github.com/Sasha-hk/Alerki/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Sasha-hk/Alerki/actions/workflows/ci-cd.yml)
 [![CI](https://github.com/Sasha-hk/Alerki/actions/workflows/ci.yml/badge.svg)](https://github.com/Sasha-hk/Alerki/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Sasha-hk/Alerki/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Sasha-hk/Alerki/actions/workflows/codeql-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Services structure:
