@@ -116,11 +116,12 @@ export class AuthController {
    * @returns Sessions list
    */
   @Get('sessions')
+  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Get sessions' })
   @ApiCookieAuth('accessToken')
   @ApiResponse({ description: 'Devices list', type: [SessionDto] })
-  async getSessions() {
-    const sessions = await this.sessionService.findAllByUserID('d');
+  async getSessions(@GetUser() user: CurrentUser) {
+    const sessions = await this.sessionService.findAllByUserID(user.decodedAccessToken.id);
 
     if (!sessions) {
       throw new HttpException('Sessions not found', HttpStatus.NOT_FOUND);

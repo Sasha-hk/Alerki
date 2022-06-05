@@ -87,7 +87,7 @@ model User {
   banned                Boolean        @default(false)
   createdAt             DateTime       @default(now())
   updatedAt             DateTime       @updatedAt
-  auth                  Session?
+  auth                  Session[]
   notificatinoActor     Notification?  @relation("actor")
   notificatinoNotifier  Notification?  @relation("notifier")
   roles                 UserRoles[]

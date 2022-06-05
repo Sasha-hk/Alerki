@@ -22,6 +22,20 @@ const checkTokens = (res: any) => {
   return cookies;
 };
 
+const logInUser = async (app: any, user: any) => {
+  const res = await request(app)
+    .post('/auth/log-in')
+    .send(user)
+    .expect(200);
+
+  const cookies = getCookies(res.headers);
+
+  return {
+    res,
+    cookies,
+  };
+};
+
 describe('Auth testing', () => {
   let app: INestApplication;
 
@@ -176,6 +190,14 @@ describe('Auth testing', () => {
 
       expect(res.statusCode).toBe(400);
     });
+
+    it('should generate different access and refresh keys', async () => {
+      const first = await logInUser(app, user);
+      const second = await logInUser(app, user);
+
+      expect(first.cookies.accessToken).not.toBe(second.cookies.accessToken);
+      expect(first.cookies.refreshToken).not.toBe(second.cookies.refreshToken);
+    });
   });
 
   describe('/auth/log-out (GET)', () => {
@@ -218,6 +240,21 @@ describe('Auth testing', () => {
       await request(app)
         .get('/auth/log-out')
         .expect(401);
+    });
+  });
+
+  describe('/auth/sessions (GET)', () => {
+    it('should return list of sessions', async () => {
+      const logInData = await logInUser(app, user);
+
+      user.accessToken = logInData.cookies.accessToken;
+
+      const res = await request(app)
+        .get('/auth/sessions')
+        .set('Cookie', [
+          'accessToken=' + user.accessToken,
+        ])
+        .expect(200);
     });
   });
 });

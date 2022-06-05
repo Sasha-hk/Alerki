@@ -96,14 +96,14 @@ export class SessionService {
       },
     });
 
-    if (!candidate) {
-      return this.create(userID, deviceName, refreshToken);
+    if (candidate && candidate?.deviceName !== 'undefined') {
+      return this.update(candidate.id, {
+        deviceName,
+        refreshToken,
+      });
     }
 
-    return this.update(candidate.id, {
-      deviceName,
-      refreshToken,
-    });
+    return this.create(userID, deviceName, refreshToken);
   }
 
   /**
