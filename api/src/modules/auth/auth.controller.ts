@@ -33,6 +33,7 @@ import { DeviceName } from '@Shared/decorators/device-name.decorator';
 import { GetIP } from '@Shared/decorators/get-ip.decorator';
 import { GetUser, CurrentUser } from '@Module/auth/get-user.decorator';
 import { AuthGuard } from '@Module/auth/auth.guard';
+import { Cookies } from '@Shared/decorators/cookies.decorator';
 
 /**
  * Auth controller
@@ -122,14 +123,12 @@ export class AuthController {
    */
   @Get('refresh')
   async refresh(
-    @Req() req: Request,
     @Res() res: Response,
     @DeviceName() deviceName: string,
     @GetIP() ip: string,
+    @Cookies('refreshToken') refreshToken: string | undefined,
   ) {
     try {
-      const refreshToken = req.cookies.refreshToken!;
-
       if (!refreshToken) {
         throw new UnauthorizedException({ message: 'refreshToken not exists' });
       }
