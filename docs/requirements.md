@@ -174,7 +174,7 @@ The project consists of two parts:
 
 Frameworks:
 
-- [Express.js](https://expressjs.com/ "Express.js official website")
+- [Nest.js](https://nestjs.com/ "Nest.js official website")
 - [Prisma](https://www.prisma.io/ "Prisma official website")
 
 ### Frontend

@@ -1,9 +1,24 @@
 {
-  "name": "linter",
-  "version": "1.0.0",
+  "name": "wrapper",
+  "version": "0.3.1",
   "repository": "https://github.com/Sasha-hk/Alerki",
   "author": "Petryk Oleksandr <sachapos50@gmail.com> (https://petryk.me/)",
-  "license": "MIT",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "prepare": "husky install && cp ./docker/.env.template ./docker/.env.dev",
+    "------------------------- local database -------------------------": "",
+    "start-databases": "yarn start-dev-db && yarn start-test-db",
+    "start-dev-db": ". ./docker/db/start-dev.sh",
+    "start-test-db": ". ./docker/db/start-test.sh",
+    "stop-databases": "yarn stop-dev-db && yarn stop-test-db",
+    "stop-dev-db": ". ./docker/db/stop-dev.sh",
+    "stop-test-db": ". ./docker/db/stop-test.sh"
+  },
+  "workspaces": [
+    "api"
+  ],
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint . --ext .ts,.tsx,.js,.jsx"
   },
@@ -42,16 +57,5 @@
     "eslint-config-xo": "^0.40.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.5"
-  },
-  "scripts": {
-    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "prepare": "husky install",
-    "------------------------- local database -------------------------": "",
-    "start-databases": "yarn start-dev-db && yarn start-test-db",
-    "start-dev-db": ". ./docker/db/start-dev.sh",
-    "start-test-db": ". ./docker/db/start-test.sh",
-    "stop-databases": "yarn stop-dev-db && yarn stop-test-db",
-    "stop-dev-db": ". ./docker/db/stop-dev.sh",
-    "stop-test-db": ". ./docker/db/stop-test.sh"
   }
 }
