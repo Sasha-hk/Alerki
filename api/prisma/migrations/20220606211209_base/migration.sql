@@ -91,6 +91,7 @@ CREATE TABLE "Sessions" (
     "id" TEXT NOT NULL,
     "userID" VARCHAR(36) NOT NULL,
     "deviceName" VARCHAR(30) NOT NULL,
+    "ip" VARCHAR(16) NOT NULL,
     "refreshToken" VARCHAR(1024) NOT NULL,
     "googleAccessToken" VARCHAR(1024),
     "googleRefreshToken" VARCHAR(1026),
@@ -190,9 +191,6 @@ CREATE UNIQUE INDEX "Users_clientID_key" ON "Users"("clientID");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Users_pictureID_key" ON "Users"("pictureID");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Sessions_userID_key" ON "Sessions"("userID");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Services_name_key" ON "Services"("name");

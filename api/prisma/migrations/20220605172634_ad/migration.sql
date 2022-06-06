@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Sessions" ALTER COLUMN "ip" SET DATA TYPE VARCHAR(16);
