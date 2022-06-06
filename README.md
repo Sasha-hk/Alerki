@@ -18,4 +18,19 @@ Services structure:
 
 ## Documentation
 
-You can read the documentation [here](./docs/README.md "Alerki documentation")
+The project based on such technologies:
+
+- Nest.js
+- Prisma
+- Next.js
+- React.js
+- Redux
+- Docker
+- Nginx
+- PostgreSQL
+
+Read more about:
+
+- [database structure](./docs/database-structure.md)
+- [project structure](./docs/project-structure.md)
+- [requirements](./docs/requirements.md)
