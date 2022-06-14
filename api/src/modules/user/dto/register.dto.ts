@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import Prisma from '@prisma/client';
 import {
   MinLength,
@@ -8,12 +7,11 @@ import {
   Matches,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { emailPattern } from '@Module/user/dto/patterns';
 
 interface IRegister extends Pick<Prisma.User, 'username' | 'email' | 'password'> {
   role: 'client' | 'master';
 }
-
-const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export class RegisterDto implements IRegister {
   @ApiProperty({
