@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import Prisma from '@prisma/client';
 import {
   MinLength,
@@ -8,13 +7,12 @@ import {
   ValidateIf,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { emailPattern } from '@Module/user/dto/patterns';
 
 interface ILogIn extends Pick<Prisma.User, 'password'> {
   username?: string;
   email?: string;
 }
-
-const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export class LogInDto implements ILogIn {
   @ApiProperty({

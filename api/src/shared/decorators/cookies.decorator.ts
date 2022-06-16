@@ -11,9 +11,9 @@ export const Cookies = createParamDecorator(
     if (Array.isArray(data)) {
       const result: { [key: string]: string } = {};
 
-      data.forEach(e => {
-        if (request.cookies?.[e]) {
-          result[e] = request.cookies?.[e];
+      data.forEach((e: string) => {
+        if (request.cookies[e]) {
+          result[e] = request.cookies[e];
         }
       });
 
