@@ -5,5 +5,88 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
+}
+
+model Session {
+  id              String         @id @default(uuid())
+
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String         @db.VarChar(36)
+  ip              String         @db.VarChar(16)
+  deviceName      String         @db.VarChar(50)
+  refreshToken    String         @db.VarChar(1024)
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@map("Sessions")
+}
+
+model UserPicture {
+  id              String         @id @default(uuid())
+
+  picture         Bytes
+  user            User?
+
+  createdAd       DateTime       @default(now())
+  updatedAd       DateTime       @updatedAt
+
+  @@map("UsersPicture")
+}
+
+model Role {
+  id              String        @id @default(uuid())
+
+  name            String        @unique @db.VarChar(20)
+  users           RolesOfUser[]
+
+  createdAd       DateTime       @default(now())
+  updatedAd       DateTime       @updatedAt
+
+  @@map("Roles")
+}
+
+model User {
+  id              String         @id @default(uuid())
+
+  email           String         @unique @db.VarChar(319)
+  username        String         @unique @db.VarChar(20)
+  password        String?        @db.VarChar(60)
+  banned          Boolean        @default(false)
+  firstName       String?        @db.VarChar(30)
+  lastName        String?        @db.VarChar(30)
+  picture         UserPicture?   @relation(fields: [pictureId], references: [id])
+  pictureId       String?        @unique @db.VarChar(36)
+  roles           RolesOfUser[]
+  sessions        Session[]
+
+  createdAd       DateTime       @default(now())
+  updatedAd       DateTime       @updatedAt
+
+  @@map("Users")
+}
+
+model RolesOfUser {
+  user            User           @relation(fields: [userId], references: [id])
+  userId          String         @db.VarChar(36)
+  role            Role           @relation(fields: [roleId], references: [id])
+  roleId          String         @db.VarChar(36)
+
+  createdAd       DateTime       @default(now())
+  updatedAd       DateTime       @updatedAt
+
+  @@id([userId, roleId])
+  @@map("RolesOfUsers")
+}
+
+model Service {
+  id              String         @id @default(uuid())
+
+  name            String         @db.VarChar(40)
+
+  createdAd       DateTime       @default(now())
+  updatedAd       DateTime       @updatedAt
+
+  @@map("Services")
 }
