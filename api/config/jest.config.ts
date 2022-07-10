@@ -3,7 +3,7 @@ export default {
   moduleNameMapper: {
     '^@Config/(.*)$': '<rootDir>/config/$1',
     '^@Shared/(.*)$': '<rootDir>/src/shared/$1',
-    '^@Module/(.*)$': '<rootDir>/src/modules/$1',
+    '^@Module/(.*)$': '<rootDir>/src/module/$1',
   },
   roots: ['./src', './test'],
   preset: 'ts-jest',

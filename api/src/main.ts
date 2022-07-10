@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 async function start() {
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.API_PORT || 5000;
   const appOptions = { cors: true };
   const app = await NestFactory.create(AppModule, appOptions);
 
