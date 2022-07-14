@@ -77,7 +77,7 @@ export class SessionService {
   }
 
   /**
-   * Find session by user ID
+   * Find all sessions by user ID
    *
    * @param userId user ID
    * @returns session

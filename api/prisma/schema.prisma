@@ -52,7 +52,7 @@ model User {
 
   email           String         @unique @db.VarChar(319)
   username        String         @unique @db.VarChar(20)
-  password        String?        @db.VarChar(60)
+  password        String         @db.VarChar(60)
   banned          Boolean        @default(false)
   firstName       String?        @db.VarChar(30)
   lastName        String?        @db.VarChar(30)
