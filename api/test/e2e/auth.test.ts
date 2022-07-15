@@ -3,7 +3,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import Prisma, { PrismaClient } from '@prisma/client';
 import * as request from 'supertest';
 import * as cookieParser from 'cookie-parser';
 
@@ -28,6 +28,9 @@ const clientUser = {
   password: 'password',
 };
 
+let clientUserPrism: Prisma.User;
+let clientUserSessionPrism: Prisma.Session;
+
 describe('Auth testing', () => {
   let app: INestApplication;
 
@@ -45,96 +48,6 @@ describe('Auth testing', () => {
   });
 
   describe('register', () => {
-    describe('should prohibit registration with invalid', () => {
-      test('email', async () => {
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...helpUser,
-            email: 'bad',
-          })
-          .expect(400);
-
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...helpUser,
-            email: 'b@b.b',
-          })
-          .expect(400);
-      });
-
-      describe('username', () => {
-        test('length', async () => {
-          // Min length
-          for (let i = 0; i < 3; i++) {
-            await request(app)
-              .post('/auth/register')
-              .send({
-                ...helpUser,
-                username: 'a'.repeat(i),
-              })
-              .expect(400);
-          }
-
-          // Max length
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...helpUser,
-              username: 'a'.repeat(userConfig.username.maxLength + 1),
-            })
-            .expect(400);
-        });
-
-        test('characters', async () => {
-          for (const character of asciiCharacters) {
-            if (!character.match(usernamePattern)) {
-              await request(app)
-                .post('/auth/register')
-                .send({
-                  ...helpUser,
-                  username: character.repeat(userConfig.username.minLength),
-                })
-                .expect(400);
-            }
-          }
-        });
-
-        test('blocklist', async () => {
-          for (const username of UsernameBlockList) {
-            request(app)
-              .post('/auth/register')
-              .send({
-                ...helpUser,
-                username,
-              })
-              .expect(400);
-          }
-        });
-      });
-
-      test('password', async () => {
-        for (let i = 0; i < userConfig.password.minLength; i++) {
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...helpUser,
-              password: 'x'.repeat(i),
-            })
-            .expect(400);
-        }
-
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...helpUser,
-            password: 'x'.repeat(userConfig.password.maxLength + 1),
-          })
-          .expect(400);
-      });
-    });
-
     describe('should register user', () => {
       test('with correct data', async () => {
         await request(app)
@@ -186,19 +99,132 @@ describe('Auth testing', () => {
           .send({ password: '123456' })
           .expect(400);
       });
+
+      describe('with invalid', () => {
+        test('email', async () => {
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...helpUser,
+              email: 'bad',
+            })
+            .expect(400);
+
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...helpUser,
+              email: 'b@b.b',
+            })
+            .expect(400);
+        });
+
+        describe('username', () => {
+          test('length', async () => {
+            // Min length
+            for (let i = 0; i < 3; i++) {
+              await request(app)
+                .post('/auth/register')
+                .send({
+                  ...helpUser,
+                  username: 'a'.repeat(i),
+                })
+                .expect(400);
+            }
+
+            // Max length
+            await request(app)
+              .post('/auth/register')
+              .send({
+                ...helpUser,
+                username: 'a'.repeat(userConfig.username.maxLength + 1),
+              })
+              .expect(400);
+          });
+
+          test('characters', async () => {
+            for (const character of asciiCharacters) {
+              if (!character.match(usernamePattern)) {
+                await request(app)
+                  .post('/auth/register')
+                  .send({
+                    ...helpUser,
+                    username: character.repeat(userConfig.username.minLength),
+                  })
+                  .expect(400);
+              }
+            }
+          });
+
+          test('blocklist', async () => {
+            for (const username of UsernameBlockList) {
+              request(app)
+                .post('/auth/register')
+                .send({
+                  ...helpUser,
+                  username,
+                })
+                .expect(400);
+            }
+          });
+        });
+
+        test('password', async () => {
+          for (let i = 0; i < userConfig.password.minLength; i++) {
+            await request(app)
+              .post('/auth/register')
+              .send({
+                ...helpUser,
+                password: 'x'.repeat(i),
+              })
+              .expect(400);
+          }
+
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...helpUser,
+              password: 'x'.repeat(userConfig.password.maxLength + 1),
+            })
+            .expect(400);
+        });
+      });
     });
 
     test('check created user', async () => {
       const users = await prisma.user.findMany();
 
+      clientUserPrism = users[0];
+
       expect(users.length).toBe(1);
       expect(users[0].username).toBe(clientUser.username);
       expect(users[0].email).toBe(clientUser.email);
       expect(users[0].password).toBeTruthy();
+
+      const sessions = await prisma.session.findMany();
+
+      clientUserSessionPrism = sessions[0];
+
+      expect(sessions.length).toBe(1);
+      expect(sessions[0].userId).toBe(clientUserPrism.id);
     });
   });
 
   describe('login', () => {
+    describe('should login user', () => {
+      test.todo('add test for login');
+    });
 
+    describe('should prohibit login', () => {
+      test.todo('with not exists email');
+
+      test.todo('with not exists username');
+
+      test.todo('with not exists email and username');
+
+      test.todo('with invalid password');
+    });
+
+    test.todo('check sessions to be changed');
   });
 });
