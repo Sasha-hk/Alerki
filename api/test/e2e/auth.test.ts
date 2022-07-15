@@ -25,8 +25,8 @@ describe('Auth testing', () => {
   });
 
   describe('register', () => {
-    test('with empty body', async () => {
-      const r = await request(app)
+    test('should prohibit registration with an empty body', async () => {
+      await request(app)
         .post('/auth/register')
         .send({})
         .expect(400);

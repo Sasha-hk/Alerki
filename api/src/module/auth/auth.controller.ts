@@ -8,6 +8,8 @@ import {
   Res,
   Ip,
   HttpCode,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -41,6 +43,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @UsePipes(ValidationPipe)
   async register(
     @Res() res: Response,
     @Body() body: RegisterDto,
