@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
 import * as cookieParser from 'cookie-parser';
 
 import { UsernameBlockList } from '@Config/api/block-list';
@@ -15,13 +16,20 @@ describe('Auth testing', () => {
       imports: [AppModule],
     }).compile();
 
-    const application = await moduleFixture.createNestApplication()
-      .use(cookieParser)
+    const application = await moduleFixture
+      .createNestApplication()
+      .use(cookieParser())
       .init();
+
     app = application.getHttpServer();
   });
 
-  test('1 + 2 = 3', () => {
-    expect(1 + 2).toBe(3);
+  describe('register', () => {
+    test('with empty body', async () => {
+      const r = await request(app)
+        .post('/auth/register')
+        .send({})
+        .expect(400);
+    });
   });
 });

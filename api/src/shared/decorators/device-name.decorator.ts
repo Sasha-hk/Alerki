@@ -11,6 +11,6 @@ export const DeviceName = createParamDecorator(
       request.headers['user-agent'] || 'undefined',
     );
 
-    return `${device.client.name} ${device.device.brand} ${device.os.name}`;
+    return `${device.client?.name || ''} ${device.device?.brand || ''} ${device.os?.name || ''}`.trim();
   },
 );
