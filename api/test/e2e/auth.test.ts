@@ -2,11 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
-import { AppModule } from '../../src/app.module';
-import getCookies from '../utils/getCookies';
-import sleep from '../utils/sleep';
-
-import userNameBlockList from '../../config/username-block-list';
+import { UsernameBlockList } from '@Config/api/block-list';
+import { AppModule } from '@Src/app.module';
+import getCookies from '@Test/utils/getCookies';
+import sleep from '@Test/utils/sleep';
 
 describe('Auth testing', () => {
   let app: INestApplication;

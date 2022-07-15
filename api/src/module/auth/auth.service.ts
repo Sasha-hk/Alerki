@@ -5,6 +5,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcryptjs from 'bcryptjs';
 
+import { UsernameBlockList } from '@Config/api/block-list';
 import { UserService } from '@Module/user/user.service';
 import { SessionService } from '@Module/auth/session.service';
 import { RegisterDto } from '@Module/auth/dto/register.dto';
@@ -92,6 +93,14 @@ export class AuthService {
     const usernameExists = this.userService.findByUsername(data.username);
     if (usernameExists) {
       throw new BadRequestException('Username exists');
+    }
+
+    // Check if username is not in the block list
+    if (
+      UsernameBlockList.has(data.username.toLocaleLowerCase())
+      || UsernameBlockList.has(data.username)
+    ) {
+      throw new BadRequestException('Username is not allowed');
     }
 
     // Hash password

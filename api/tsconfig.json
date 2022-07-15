@@ -15,6 +15,8 @@
       "@Config/*": ["config/*"],
       "@Shared/*": ["src/shared/*"],
       "@Module/*": ["src/module/*"],
+      "@Src/*": ["src/*"],
+      "@Test/*": ["test/*"],
     },
     "strict": true,
     "incremental": true,
