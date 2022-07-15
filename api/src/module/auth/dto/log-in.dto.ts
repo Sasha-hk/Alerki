@@ -29,6 +29,7 @@ export class LogInDto implements ILogInDto {
   @IsString()
   @MinLength(userConfig.username.minLength)
   @MaxLength(userConfig.username.maxLength)
+  @Matches(userConfig.username.patternExp)
   readonly username?: string;
 
   @ApiProperty(userConfig.password)

@@ -21,7 +21,7 @@ export class AuthService {
 
   @SetEnvVariable('JWT_REFRESH_SECRET') jwtRefreshSecret: string;
 
-  @SetEnvVariable('PASSWORD_SALT', SetAs.string) passwordSalt: number;
+  @SetEnvVariable('PASSWORD_SALT', SetAs.number) passwordSalt: number;
 
   constructor(
     private readonly jwtService: JwtService,
@@ -83,18 +83,6 @@ export class AuthService {
    * @returns pair JWT tokens
    */
   async register(data: RegisterDto, deviceName: string, ip: string) {
-    // Check if email already not exists
-    const emailExists = this.userService.findByEmail(data.email);
-    if (emailExists) {
-      throw new BadRequestException('Email exists');
-    }
-
-    // Check if username already not exists
-    const usernameExists = this.userService.findByUsername(data.username);
-    if (usernameExists) {
-      throw new BadRequestException('Username exists');
-    }
-
     // Check if username is not in the block list
     if (
       UsernameBlockList.has(data.username.toLocaleLowerCase())
@@ -103,8 +91,20 @@ export class AuthService {
       throw new BadRequestException('Username is not allowed');
     }
 
+    // Check if email already not exists
+    const emailExists = await this.userService.findByEmail(data.email);
+    if (emailExists) {
+      throw new BadRequestException('Email exists');
+    }
+
+    // Check if username already not exists
+    const usernameExists = await this.userService.findByUsername(data.username);
+    if (usernameExists) {
+      throw new BadRequestException('Username exists');
+    }
+
     // Hash password
-    const hashedPassword = bcryptjs.hashSync(data.password, this.passwordSalt);
+    const hashedPassword = bcryptjs.hashSync(data.password, 1);
 
     // Create new user
     const newUser = await this.userService.create({
