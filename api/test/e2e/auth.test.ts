@@ -36,6 +36,7 @@ const clientUser: { [key: string]: any } = {
 
 let clientUserPrism: Prisma.User;
 let clientUserSessionPrism: Prisma.Session;
+let sessions: Array<Prisma.Session>;
 
 describe('Auth testing', () => {
   let app: INestApplication;
@@ -271,8 +272,6 @@ describe('Auth testing', () => {
         expect(r.body.accessToken).toBeTruthy();
       });
 
-      let sessions: Array<Prisma.Session>;
-
       test('check user and sessions', async () => {
         const users = await prisma.user.findMany();
 
@@ -349,6 +348,27 @@ describe('Auth testing', () => {
             password: 'invalid-password',
           })
           .expect(400);
+      });
+    });
+
+    describe('log-in with different fingerprint', () => {
+      test('login', async () => {
+        await request(app)
+          .post('/auth/log-in')
+          .send({
+            ...clientUser,
+            fingerprint: '103c090c2641a3976d2d4984bb659d61',
+          })
+          .expect(200);
+      });
+
+      test('check sessions', async () => {
+        const newSessions = await prisma.session.findMany();
+
+        expect(newSessions.length).toBe(2);
+        expect(newSessions[0].fingerprint).not.toBe(newSessions[1].fingerprint);
+
+        sessions = newSessions;
       });
     });
   });
