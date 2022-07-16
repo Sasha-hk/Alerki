@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   MinLength,
   MaxLength,
+  Length,
   IsString,
   Matches,
 } from 'class-validator';
@@ -34,4 +35,9 @@ export class RegisterDto implements IRegisterDto {
   @MinLength(userConfig.password.minLength)
   @MaxLength(userConfig.password.maxLength)
   readonly password: string;
+
+  @ApiProperty(userConfig.fingerprint)
+  @IsString()
+  @Length(userConfig.fingerprint.length)
+  readonly fingerprint: string;
 }

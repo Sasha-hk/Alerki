@@ -20,12 +20,18 @@ const helpUser = {
   email: 'auth_email@gmail.com',
   username: 'auth_username',
   password: 'auth_password',
+  fingerprint: '103c090c2641a3976d2d4984bb659d69',
 };
 
-const clientUser = {
+const clientUser: { [key: string]: any } = {
   email: 'auth_user@gmail.com',
   username: 'auth_user',
   password: 'password',
+  fingerprint: '1d3c090c2641a3976d2d4984bb659d69',
+  tokens: {
+    accessToken: {},
+    refreshToken: {},
+  },
 };
 
 let clientUserPrism: Prisma.User;
@@ -50,14 +56,43 @@ describe('Auth testing', () => {
   describe('register', () => {
     describe('should register user', () => {
       test('with correct data', async () => {
-        await request(app)
+        const r = await request(app)
           .post('/auth/register')
           .send(clientUser)
           .expect(200);
+
+        const cookies = getCookies(r);
+
+        clientUser.tokens.refreshToken = cookies.refreshToken;
+        clientUser.tokens.accessToken.value = r.body.accessToken;
+
+        expect(cookies.refreshToken.value).toBeTruthy();
+        expect(cookies.refreshToken.HttpOnly).toBe(true);
+        expect(cookies.refreshToken.Secure).toBe(true);
+        expect(cookies.refreshToken.SameSite).toBe('Strict');
+        expect(r.body.accessToken).toBeTruthy();
       });
     });
 
     describe('should prohibit registration', () => {
+      test('with exists email', async () => {
+        await request(app)
+          .post('/auth/register')
+          .send({
+            ...clientUser,
+            fingerprint: 'short fingerprint',
+          })
+          .expect(400);
+
+        await request(app)
+          .post('/auth/register')
+          .send({
+            ...clientUser,
+            fingerprint: 'short fingerprint',
+          })
+          .expect(400);
+      });
+
       test('with exists email', async () => {
         await request(app)
           .post('/auth/register')
@@ -207,6 +242,7 @@ describe('Auth testing', () => {
 
       expect(sessions.length).toBe(1);
       expect(sessions[0].userId).toBe(clientUserPrism.id);
+      expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
     });
   });
 

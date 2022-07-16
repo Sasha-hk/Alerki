@@ -4,6 +4,8 @@ interface Cookie {
   'Max-Age'?: number;
   Expires?: string;
   HttpOnly?: boolean;
+  Secure?: boolean;
+  SameSite?: 'Strict' | any,
   [key: string]: any;
 }
 

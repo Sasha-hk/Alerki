@@ -17,11 +17,14 @@ import { SetEnvVariable, SetAs } from '@Shared/decorators/set-env-variable.decor
  */
 @Injectable()
 export class AuthService {
-  @SetEnvVariable('JWT_ACCESS_SECRET') jwtAccessSecret: string;
+  @SetEnvVariable('JWT_ACCESS_SECRET')
+  private readonly jwtAccessSecret: string;
 
-  @SetEnvVariable('JWT_REFRESH_SECRET') jwtRefreshSecret: string;
+  @SetEnvVariable('JWT_REFRESH_SECRET')
+  private readonly jwtRefreshSecret: string;
 
-  @SetEnvVariable('PASSWORD_SALT', SetAs.number) passwordSalt: number;
+  @SetEnvVariable('PASSWORD_SALT', SetAs.number)
+  private readonly passwordSalt: number;
 
   constructor(
     private readonly jwtService: JwtService,
@@ -104,7 +107,7 @@ export class AuthService {
     }
 
     // Hash password
-    const hashedPassword = bcryptjs.hashSync(data.password, 1);
+    const hashedPassword = bcryptjs.hashSync(data.password, this.passwordSalt);
 
     // Create new user
     const newUser = await this.userService.create({
@@ -122,6 +125,7 @@ export class AuthService {
       ip,
       deviceName,
       refreshToken: tokens.refreshToken,
+      fingerprint: data.fingerprint,
     });
 
     return tokens;

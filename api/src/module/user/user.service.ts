@@ -18,7 +18,7 @@ export class UserService {
    * @param data registration data
    * @returns new user
    */
-  async create(data: RegisterDto) {
+  async create(data: Pick<RegisterDto, 'email' | 'password' | 'username'>) {
     return this.prismaService.user.create({ data });
   }
 

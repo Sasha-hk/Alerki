@@ -11,7 +11,8 @@ interface ISession extends Pick<
   'userId' |
   'ip' |
   'deviceName' |
-  'refreshToken'
+  'refreshToken' |
+  'fingerprint'
 > {}
 
 /**
@@ -96,7 +97,7 @@ export class SessionService {
    * @param args session identification information
    * @returns
    */
-  async findUnique(args: Pick<Session, 'userId' | 'ip' | 'deviceName'>) {
+  async findUnique(args: Pick<Session, 'userId' | 'fingerprint'>) {
     return this.prismaService.session.findFirst({
       where: args,
     });
