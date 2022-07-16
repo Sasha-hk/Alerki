@@ -7,7 +7,7 @@ import * as bcryptjs from 'bcryptjs';
 
 import { UsernameBlockList } from '@Config/api/block-list';
 import { UserService } from '@Module/user/user.service';
-import { SessionService } from '@Module/auth/session.service';
+import { SessionService, ISession } from '@Module/auth/session.service';
 import { RegisterDto } from '@Module/auth/dto/register.dto';
 import { JwtTokenData, JwtTokens } from '@Module/auth/interface/jwt.interface';
 import { SetEnvVariable, SetAs } from '@Shared/decorators/set-env-variable.decorator';
@@ -77,6 +77,22 @@ export class AuthService {
     };
   }
 
+  async generateAndSaveSession(userId: string, data: Pick<ISession, 'ip' | 'deviceName' | 'fingerprint'>) {
+    // Generate tokens
+    const tokens = await this.generatePairTokens({ id: userId });
+
+    // Create and save session
+    await this.sessionService.create({
+      userId,
+      ip: data.ip,
+      deviceName: data.deviceName,
+      refreshToken: tokens.refreshToken,
+      fingerprint: data.fingerprint,
+    });
+
+    return tokens;
+  }
+
   /**
    * Register user
    *
@@ -116,18 +132,13 @@ export class AuthService {
       password: hashedPassword,
     });
 
-    // Generate tokens
-    const tokens = await this.generatePairTokens({ id: newUser.id });
-
-    // Create and save session
-    await this.sessionService.create({
-      userId: newUser.id,
-      ip,
-      deviceName,
-      refreshToken: tokens.refreshToken,
-      fingerprint: data.fingerprint,
-    });
-
-    return tokens;
+    return this.generateAndSaveSession(
+      newUser.id,
+      {
+        ip,
+        deviceName,
+        fingerprint: data.fingerprint,
+      },
+    );
   }
 }

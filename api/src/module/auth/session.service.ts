@@ -6,7 +6,7 @@ import { PrismaService } from '@Shared/services/prisma.service';
 /**
  * Session interface
  */
-interface ISession extends Pick<
+export interface ISession extends Pick<
   Session,
   'userId' |
   'ip' |
