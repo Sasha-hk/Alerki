@@ -251,6 +251,7 @@ describe('Auth testing', () => {
   describe('login', () => {
     describe('should login user', () => {
       test('with correct password', async () => {
+        await sleep(1000);
         const r = await request(app)
           .post('/auth/log-in')
           .send({
@@ -270,6 +271,8 @@ describe('Auth testing', () => {
         expect(r.body.accessToken).toBeTruthy();
       });
 
+      let sessions: Array<Prisma.Session>;
+
       test('check user and sessions', async () => {
         const users = await prisma.user.findMany();
 
@@ -280,13 +283,20 @@ describe('Auth testing', () => {
         expect(users[0].email).toBe(clientUser.email);
         expect(users[0].password).toBeTruthy();
 
-        const sessions = await prisma.session.findMany();
+        sessions = await prisma.session.findMany();
+      });
 
-        clientUserSessionPrism = sessions[0];
-
+      test('amount of sessions == 1', async () => {
         expect(sessions.length).toBe(1);
+      });
+
+      test('session data have been changed', async () => {
         expect(sessions[0].userId).toBe(clientUserPrism.id);
         expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
+      });
+
+      test('refresh token have been changed', async () => {
+        expect(clientUserSessionPrism.refreshToken !== sessions[0].refreshToken).toBe(true);
       });
     });
 
@@ -331,9 +341,15 @@ describe('Auth testing', () => {
           .expect(400);
       });
 
-      test.todo('with invalid password');
+      test('without invalid password', async () => {
+        await request(app)
+          .post('/auth/log-in')
+          .send({
+            ...clientUser,
+            password: 'invalid-password',
+          })
+          .expect(400);
+      });
     });
-
-    test.todo('check sessions to be changed');
   });
 });
