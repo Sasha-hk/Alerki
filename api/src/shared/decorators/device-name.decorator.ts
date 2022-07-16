@@ -7,10 +7,8 @@ export const DeviceName = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
 
-    const device = deviceDetector.parse(
-      request.headers['user-agent'] || 'undefined',
-    );
+    const device = deviceDetector.parse(request.headers['user-agent']);
 
-    return `${device.client?.name || ''} ${device.device?.brand || ''} ${device.os?.name || ''}`.trim();
+    return [device.device.brand, device.os.name].join(' ') || undefined;
   },
 );
