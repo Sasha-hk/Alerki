@@ -2,6 +2,7 @@
 CREATE TABLE "Sessions" (
     "id" TEXT NOT NULL,
     "userId" VARCHAR(36) NOT NULL,
+    "fingerprint" VARCHAR(32) NOT NULL,
     "ip" VARCHAR(16) NOT NULL,
     "deviceName" VARCHAR(50) NOT NULL,
     "refreshToken" VARCHAR(1024) NOT NULL,
@@ -36,7 +37,7 @@ CREATE TABLE "Users" (
     "id" TEXT NOT NULL,
     "email" VARCHAR(319) NOT NULL,
     "username" VARCHAR(20) NOT NULL,
-    "password" VARCHAR(60),
+    "password" VARCHAR(60) NOT NULL,
     "banned" BOOLEAN NOT NULL DEFAULT false,
     "firstName" VARCHAR(30),
     "lastName" VARCHAR(30),
