@@ -61,6 +61,8 @@ describe('Auth testing', () => {
           .send(clientUser)
           .expect(200);
 
+        await sleep(1);
+
         const cookies = getCookies(r);
 
         clientUser.tokens.refreshToken = cookies.refreshToken;
@@ -71,6 +73,25 @@ describe('Auth testing', () => {
         expect(cookies.refreshToken.Secure).toBe(true);
         expect(cookies.refreshToken.SameSite).toBe('Strict');
         expect(r.body.accessToken).toBeTruthy();
+      });
+
+      test('check user and session', async () => {
+        const users = await prisma.user.findMany();
+
+        clientUserPrism = users[0];
+
+        expect(users.length).toBe(1);
+        expect(users[0].username).toBe(clientUser.username);
+        expect(users[0].email).toBe(clientUser.email);
+        expect(users[0].password).toBeTruthy();
+
+        const sessions = await prisma.session.findMany();
+
+        clientUserSessionPrism = sessions[0];
+
+        expect(sessions.length).toBe(1);
+        expect(sessions[0].userId).toBe(clientUserPrism.id);
+        expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
       });
     });
 
@@ -225,38 +246,90 @@ describe('Auth testing', () => {
         });
       });
     });
-
-    test('check created user', async () => {
-      const users = await prisma.user.findMany();
-
-      clientUserPrism = users[0];
-
-      expect(users.length).toBe(1);
-      expect(users[0].username).toBe(clientUser.username);
-      expect(users[0].email).toBe(clientUser.email);
-      expect(users[0].password).toBeTruthy();
-
-      const sessions = await prisma.session.findMany();
-
-      clientUserSessionPrism = sessions[0];
-
-      expect(sessions.length).toBe(1);
-      expect(sessions[0].userId).toBe(clientUserPrism.id);
-      expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
-    });
   });
 
   describe('login', () => {
     describe('should login user', () => {
-      test.todo('add test for login');
+      test('with correct password', async () => {
+        const r = await request(app)
+          .post('/auth/log-in')
+          .send({
+            ...clientUser,
+          })
+          .expect(200);
+
+        const cookies = getCookies(r);
+
+        clientUser.tokens.refreshToken = cookies.refreshToken;
+        clientUser.tokens.accessToken.value = r.body.accessToken;
+
+        expect(cookies.refreshToken.value).toBeTruthy();
+        expect(cookies.refreshToken.HttpOnly).toBe(true);
+        expect(cookies.refreshToken.Secure).toBe(true);
+        expect(cookies.refreshToken.SameSite).toBe('Strict');
+        expect(r.body.accessToken).toBeTruthy();
+      });
+
+      test('check user and sessions', async () => {
+        const users = await prisma.user.findMany();
+
+        clientUserPrism = users[0];
+
+        expect(users.length).toBe(1);
+        expect(users[0].username).toBe(clientUser.username);
+        expect(users[0].email).toBe(clientUser.email);
+        expect(users[0].password).toBeTruthy();
+
+        const sessions = await prisma.session.findMany();
+
+        clientUserSessionPrism = sessions[0];
+
+        expect(sessions.length).toBe(1);
+        expect(sessions[0].userId).toBe(clientUserPrism.id);
+        expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
+      });
     });
 
     describe('should prohibit login', () => {
-      test.todo('with not exists email');
+      test('with not exists email', async () => {
+        const data = { ...clientUser };
+        delete data.username;
 
-      test.todo('with not exists username');
+        await request(app)
+          .post('/auth/log-in')
+          .send({
+            ...data,
+            email: 'notexistsemail@gmail.com',
+          })
+          .expect(404);
+      });
 
-      test.todo('with not exists email and username');
+      test('with not exists username', async () => {
+        const data = { ...clientUser };
+        delete data.email;
+
+        await request(app)
+          .post('/auth/log-in')
+          .send({
+            fingerprint: clientUser.fingerprint,
+            username: 'notExistsUsername',
+            password: clientUser.password,
+          })
+          .expect(404);
+      });
+
+      test('without email and username', async () => {
+        const data = { ...clientUser };
+        delete data.email;
+        delete data.username;
+
+        const r = await request(app)
+          .post('/auth/log-in')
+          .send({
+            ...data,
+          })
+          .expect(400);
+      });
 
       test.todo('with invalid password');
     });
