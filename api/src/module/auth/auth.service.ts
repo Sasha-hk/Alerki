@@ -1,16 +1,28 @@
 import {
   Injectable,
   BadRequestException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import Prisma from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 
 import { UsernameBlockList } from '@Config/api/block-list';
 import { UserService } from '@Module/user/user.service';
 import { SessionService, ISession } from '@Module/auth/session.service';
 import { RegisterDto } from '@Module/auth/dto/register.dto';
+import { LogInDto } from '@Module/auth/dto/log-in.dto';
 import { JwtTokenData, JwtTokens } from '@Module/auth/interface/jwt.interface';
 import { SetEnvVariable, SetAs } from '@Shared/decorators/set-env-variable.decorator';
+
+export interface MetaData {
+  deviceName: string,
+  ip: string,
+}
+
+export interface LogInData extends MetaData, LogInDto {}
+
+export interface RegisterData extends MetaData, RegisterDto {}
 
 /**
  * Authentication / authorization service
@@ -77,18 +89,27 @@ export class AuthService {
     };
   }
 
-  async generateAndSaveSession(userId: string, data: Pick<ISession, 'ip' | 'deviceName' | 'fingerprint'>) {
+  async generateAndSaveSession(
+    userId: string,
+    data: Pick<ISession, 'ip' | 'deviceName' | 'fingerprint'>,
+    create: boolean = false,
+  ) {
     // Generate tokens
     const tokens = await this.generatePairTokens({ id: userId });
 
-    // Create and save session
-    await this.sessionService.create({
+    const sessionData = {
       userId,
       ip: data.ip,
       deviceName: data.deviceName,
       refreshToken: tokens.refreshToken,
       fingerprint: data.fingerprint,
-    });
+    };
+
+    if (create) {
+      await this.sessionService.create(sessionData);
+    } else {
+      await this.sessionService.createOrUpdate(sessionData);
+    }
 
     return tokens;
   }
@@ -97,11 +118,9 @@ export class AuthService {
    * Register user
    *
    * @param data registration data
-   * @param deviceName device name
-   * @param ip user IP
    * @returns pair JWT tokens
    */
-  async register(data: RegisterDto, deviceName: string, ip: string) {
+  async register(data: RegisterData) {
     // Check if username is not in the block list
     if (
       UsernameBlockList.has(data.username.toLocaleLowerCase())
@@ -134,11 +153,45 @@ export class AuthService {
 
     return this.generateAndSaveSession(
       newUser.id,
-      {
-        ip,
-        deviceName,
-        fingerprint: data.fingerprint,
-      },
+      data,
+      true,
+    );
+  }
+
+  /**
+   * Log-in user
+   *
+   * @param data registration data
+   * @returns pair JWT tokens
+   */
+  async logIn(data: LogInData) {
+    // Check if the username or email is exists
+    if (!data.email && !data.username) {
+      throw new BadRequestException('Required username or email');
+    }
+
+    // Find user by email or username
+    let candidate: Prisma.User;
+
+    if (data.email) {
+      candidate = await this.userService.findByEmail(data.email);
+    } else if (data.username) {
+      candidate = await this.userService.findByEmail(data.email);
+    }
+
+    // Check if candidate exists
+    if (!candidate) {
+      throw new NotFoundException('Username not exists');
+    }
+
+    // Check password
+    if (!bcryptjs.compareSync(data.password, candidate.password)) {
+      throw new BadRequestException('Bad password');
+    }
+
+    return this.generateAndSaveSession(
+      candidate.id,
+      data,
     );
   }
 }
