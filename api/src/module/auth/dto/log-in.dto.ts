@@ -5,6 +5,7 @@ import {
   MaxLength,
   Length,
   IsString,
+  IsOptional,
   Matches,
 } from 'class-validator';
 
@@ -21,6 +22,7 @@ interface ILogInDto extends Pick<Prisma.User, 'password'> {
 export class LogInDto implements ILogInDto {
   @ApiProperty(userConfig.email)
   @IsString()
+  @IsOptional()
   @MinLength(userConfig.email.minLength)
   @MaxLength(userConfig.email.maxLength)
   @Matches(userConfig.email.patternExp)
@@ -28,6 +30,7 @@ export class LogInDto implements ILogInDto {
 
   @ApiProperty(userConfig.username)
   @IsString()
+  @IsOptional()
   @MinLength(userConfig.username.minLength)
   @MaxLength(userConfig.username.maxLength)
   @Matches(userConfig.username.patternExp)

@@ -176,12 +176,12 @@ export class AuthService {
     if (data.email) {
       candidate = await this.userService.findByEmail(data.email);
     } else if (data.username) {
-      candidate = await this.userService.findByEmail(data.email);
+      candidate = await this.userService.findByUsername(data.username);
     }
 
     // Check if candidate exists
     if (!candidate) {
-      throw new NotFoundException('Username not exists');
+      throw new NotFoundException('User not exists');
     }
 
     // Check password

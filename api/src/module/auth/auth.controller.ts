@@ -85,7 +85,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.NOT_FOUND, description: 'User not found' })
   async logIn(
     @Res() res: Response,
-    @Body() body: RegisterDto,
+    @Body() body: LogInDto,
     @DeviceName() deviceName: string,
     @Ip() ip: string,
   ) {

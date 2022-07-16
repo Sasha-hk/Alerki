@@ -92,14 +92,22 @@ export class SessionService {
   }
 
   /**
-   * Find unique session
+   * Find unique session by:
    *
-   * @param args session identification information
+   * - ip
+   * - userId
+   * - fingerprint
+   *
+   * @param data session identification information
    * @returns
    */
-  async findUnique(args: Pick<Session, 'userId' | 'fingerprint'>) {
+  async findUnique(data: Pick<Session, 'userId' | 'fingerprint' | 'ip'>) {
     return this.prismaService.session.findFirst({
-      where: args,
+      where: {
+        ip: data.ip,
+        userId: data.userId,
+        fingerprint: data.fingerprint,
+      },
     });
   }
 
