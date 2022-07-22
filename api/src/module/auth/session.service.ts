@@ -56,7 +56,7 @@ export class SessionService {
    * @param id session ID to delete
    */
   async delete(id: string) {
-    this.prismaService.session.delete({
+    return this.prismaService.session.delete({
       where: {
         id,
       },
@@ -73,6 +73,15 @@ export class SessionService {
     return this.prismaService.session.findFirst({
       where: {
         id,
+      },
+    });
+  }
+
+  async findByUserIdAndToken(userId: string, refreshToken: string) {
+    return this.prismaService.session.findFirst({
+      where: {
+        userId,
+        refreshToken,
       },
     });
   }

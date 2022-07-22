@@ -11,6 +11,7 @@ import {
   ValidationPipe,
   UsePipes,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiOperation,
@@ -26,6 +27,10 @@ import { DeviceName } from '@Shared/decorators/device-name.decorator';
 import { RegisterDto } from '@Module/auth/dto/register.dto';
 import { LogInDto } from '@Module/auth/dto/log-in.dto';
 import { JwtTokens } from '@Module/auth/interface/jwt.interface';
+import { GetCookies } from '@Shared/decorators/cookies.decorator';
+import { AuthGuard, RefreshTokenGuard } from '@Module/auth/auth.guard';
+import { AuthRequest, AuthRequestToken } from '@Module/auth/interface/auth-request';
+import { GetRefreshToken } from '@Module/auth/decorator/get-tokens.decorator';
 
 /**
  * Send JWT refresh token to header
@@ -94,5 +99,23 @@ export class AuthController {
     setRefreshToken(res, tokens.refreshToken);
 
     res.status(200).json({ accessToken: tokens.accessToken });
+  }
+
+  @Get('log-out')
+  @UseGuards(RefreshTokenGuard)
+  @ApiOperation({ summary: 'Log-out' })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Log-out user' })
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'User unauthorized or has a bad refresh token' })
+  async logOut(
+    @GetRefreshToken() refreshToken: AuthRequestToken,
+    @Res() res: Response,
+  ) {
+    // Clear refresh token
+    res.clearCookie('refreshToken');
+
+    // Check if a refresh token exists and delete it
+    await this.authService.logOut(refreshToken.decoded.id, refreshToken.raw);
+
+    res.sendStatus(200);
   }
 }

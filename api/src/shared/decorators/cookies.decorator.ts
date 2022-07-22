@@ -2,7 +2,7 @@ import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
 
 /**
- * Example code hello world
+ * Get cookies
  */
 export const GetCookies = createParamDecorator(
   <T extends string | Array<string>>(data: T, ctx: ExecutionContext): string | Record<string, string> | undefined => {

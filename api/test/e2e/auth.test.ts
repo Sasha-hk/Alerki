@@ -62,8 +62,6 @@ describe('Auth testing', () => {
           .send(clientUser)
           .expect(200);
 
-        await sleep(1);
-
         const cookies = getCookies(r);
 
         clientUser.tokens.refreshToken = cookies.refreshToken;
@@ -97,12 +95,12 @@ describe('Auth testing', () => {
     });
 
     describe('should prohibit registration', () => {
-      test('with exists email', async () => {
+      test('with too short or long fingerprint', async () => {
         await request(app)
           .post('/auth/register')
           .send({
             ...clientUser,
-            fingerprint: 'short fingerprint',
+            fingerprint: 'o',
           })
           .expect(400);
 
@@ -110,32 +108,12 @@ describe('Auth testing', () => {
           .post('/auth/register')
           .send({
             ...clientUser,
-            fingerprint: 'short fingerprint',
-          })
-          .expect(400);
-      });
-
-      test('with exists email', async () => {
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...clientUser,
-            username: 'usernameD9(A',
+            fingerprint: 'o'.repeat(33),
           })
           .expect(400);
       });
 
-      test('with exists username', async () => {
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...clientUser,
-            email: 'usernameD9(A@gmail.com',
-          })
-          .expect(400);
-      });
-
-      test('with an empty body', async () => {
+      test('with an empty or partial body', async () => {
         await request(app)
           .post('/auth/register')
           .send({})
@@ -157,8 +135,18 @@ describe('Auth testing', () => {
           .expect(400);
       });
 
-      describe('with invalid', () => {
-        test('email', async () => {
+      describe('with invalid email', () => {
+        test('with exist email', async () => {
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...clientUser,
+              username: 'usernameNew',
+            })
+            .expect(400);
+        });
+
+        test('not matches pattern', async () => {
           await request(app)
             .post('/auth/register')
             .send({
@@ -167,7 +155,7 @@ describe('Auth testing', () => {
             })
             .expect(400);
 
-          await request(app)
+          const r = await request(app)
             .post('/auth/register')
             .send({
               ...helpUser,
@@ -175,55 +163,66 @@ describe('Auth testing', () => {
             })
             .expect(400);
         });
+      });
 
-        describe('username', () => {
-          test('length', async () => {
-            // Min length
-            for (let i = 0; i < 3; i++) {
-              await request(app)
-                .post('/auth/register')
-                .send({
-                  ...helpUser,
-                  username: 'a'.repeat(i),
-                })
-                .expect(400);
-            }
+      describe('with invalid username', () => {
+        test('already exists', async () => {
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...clientUser,
+              email: 'usernameD9A@gmail.com',
+            })
+            .expect(400);
+        });
 
-            // Max length
+        test('length', async () => {
+          // Min length
+          for (let i = 0; i < 3; i++) {
             await request(app)
               .post('/auth/register')
               .send({
                 ...helpUser,
-                username: 'a'.repeat(userConfig.username.maxLength + 1),
+                username: 'a'.repeat(i),
               })
               .expect(400);
-          });
+          }
 
-          test('characters', async () => {
-            for (const character of asciiCharacters) {
-              if (!character.match(usernamePattern)) {
-                await request(app)
-                  .post('/auth/register')
-                  .send({
-                    ...helpUser,
-                    username: character.repeat(userConfig.username.minLength),
-                  })
-                  .expect(400);
-              }
-            }
-          });
+          // Max length
+          await request(app)
+            .post('/auth/register')
+            .send({
+              ...helpUser,
+              username: 'a'.repeat(userConfig.username.maxLength + 1),
+            })
+            .expect(400);
+        });
 
-          test('blocklist', async () => {
-            for (const username of UsernameBlockList) {
-              request(app)
+        test('characters', async () => {
+          for (const character of asciiCharacters) {
+            if (!character.match(usernamePattern)) {
+              await request(app)
                 .post('/auth/register')
                 .send({
                   ...helpUser,
-                  username,
+                  username: character.repeat(userConfig.username.minLength),
                 })
                 .expect(400);
             }
-          });
+          }
+        });
+
+        test('blocklist', async () => {
+          for (const username of UsernameBlockList) {
+            await request(app)
+              .post('/auth/register')
+              .send({
+                ...helpUser,
+                email: 'newnotexistsemail@gmail.com',
+                username,
+              })
+              .expect(400);
+          }
         });
 
         test('password', async () => {
@@ -249,10 +248,9 @@ describe('Auth testing', () => {
     });
   });
 
-  describe('login', () => {
+  describe('log-in', () => {
     describe('should login user', () => {
       test('with correct password', async () => {
-        await sleep(1000);
         const r = await request(app)
           .post('/auth/log-in')
           .send({
@@ -369,6 +367,44 @@ describe('Auth testing', () => {
         expect(newSessions[0].fingerprint).not.toBe(newSessions[1].fingerprint);
 
         sessions = newSessions;
+      });
+    });
+  });
+
+  describe('log-out', () => {
+    describe('should log-out user', () => {
+      test('with correct refresh token', async () => {
+        await request(app)
+          .get('/auth/log-out')
+          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken.value}`])
+          .expect(200);
+      });
+
+      test('check if session was deleted', async () => {
+        const newSessions = await prisma.session.findMany();
+
+        expect(newSessions.length).toBe(sessions.length - 1);
+
+        for (const s of newSessions) {
+          if (s === clientUser.tokens.refreshToken.value) {
+            throw new Error('Session should be deleted');
+          }
+        }
+      });
+    });
+
+    describe('should not log-out user', () => {
+      test('with invalid refresh token', async () => {
+        await request(app)
+          .get('/auth/log-out')
+          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken.value + 'D'}`])
+          .expect(401);
+      });
+
+      test('without refresh token', async () => {
+        await request(app)
+          .get('/auth/log-out')
+          .expect(401);
       });
     });
   });

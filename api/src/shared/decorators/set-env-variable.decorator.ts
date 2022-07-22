@@ -42,7 +42,7 @@ export function SetEnvVariable(variableName: string, type: SetAs = SetAs.string)
       break;
 
     default:
-      throw new Error('Specified unhandled type');
+      throw new Error('SetEnvVariable unhandled type');
     }
 
     target[key as string] = prepared;

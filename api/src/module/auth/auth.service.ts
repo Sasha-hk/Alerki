@@ -2,6 +2,7 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
+  HttpException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import Prisma from '@prisma/client';
@@ -192,6 +193,46 @@ export class AuthService {
     return this.generateAndSaveSession(
       candidate.id,
       data,
+    );
+  }
+
+  async logOut(userId: string, refreshToken: string) {
+    const candidate = await this.sessionService.findByUserIdAndToken(userId, refreshToken);
+
+    if (!candidate) {
+      throw new BadRequestException('Refresh token not exists');
+    }
+
+    await this.sessionService.delete(candidate.id);
+  }
+
+  /**
+   * Verify access JWT token
+   *
+   * @param accessToken access JWT token
+   * @returns verified token
+   */
+  verifyAccessToken(accessToken: string): JwtTokenData {
+    return this.jwtService.verify(
+      accessToken,
+      {
+        secret: this.jwtAccessSecret,
+      },
+    );
+  }
+
+  /**
+   * Verify refresh JWT token
+   *
+   * @param refreshToken refresh JWT token
+   * @returns verified token
+   */
+  verifyRefreshToken(refreshToken: string): JwtTokenData {
+    return this.jwtService.verify(
+      refreshToken,
+      {
+        secret: this.jwtRefreshSecret,
+      },
     );
   }
 }
