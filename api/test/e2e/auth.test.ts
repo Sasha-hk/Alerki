@@ -2,7 +2,7 @@
 /* eslint-disable no-await-in-loop */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import Prisma, { PrismaClient } from '@prisma/client';
 import * as request from 'supertest';
 import * as cookieParser from 'cookie-parser';
@@ -11,7 +11,6 @@ import { UsernameBlockList } from '@Config/api/block-list';
 import { usernamePattern, userConfig } from '@Config/api/params.config';
 import { AppModule } from '@Src/app.module';
 import getCookies from '@Test/utils/getCookies';
-import sleep from '@Test/utils/sleep';
 import { asciiCharacters } from '@Test/data';
 
 const prisma = new PrismaClient();
@@ -49,6 +48,7 @@ describe('Auth testing', () => {
     const application = await moduleFixture
       .createNestApplication()
       .use(cookieParser())
+      .useGlobalPipes(new ValidationPipe({ transform: true }))
       .init();
 
     app = application.getHttpServer();
@@ -330,7 +330,7 @@ describe('Auth testing', () => {
         delete data.email;
         delete data.username;
 
-        const r = await request(app)
+        await request(app)
           .post('/auth/log-in')
           .send({
             ...data,
@@ -383,8 +383,6 @@ describe('Auth testing', () => {
       test('check if session was deleted', async () => {
         const newSessions = await prisma.session.findMany();
 
-        expect(newSessions.length).toBe(sessions.length - 1);
-
         for (const s of newSessions) {
           if (s === clientUser.tokens.refreshToken.value) {
             throw new Error('Session should be deleted');
@@ -406,6 +404,43 @@ describe('Auth testing', () => {
           .get('/auth/log-out')
           .expect(401);
       });
+    });
+  });
+
+  describe('sessions', () => {
+    test('get sessions', async () => {
+      // Log-in user
+      const r = await request(app)
+        .post('/auth/log-in')
+        .send({
+          ...clientUser,
+          fingerprint: '103c090c2641a3976d2d4984bb659d6D',
+        })
+        .expect(200);
+
+      const cookies = getCookies(r);
+
+      clientUser.tokens.refreshToken = cookies.refreshToken;
+      clientUser.tokens.accessToken.value = r.body.accessToken;
+
+      const r1 = await request(app)
+        .get('/auth/session')
+        .set({ Authorization: 'Bearer ' + r.body.accessToken })
+        .expect(200);
+
+      expect(r1.body.length).not.toBe(1);
+
+      const r2 = await request(app)
+        .get('/auth/session')
+        .set({ Authorization: 'Bearer ' + r.body.accessToken })
+        .query({ page: 0, limit: 1 })
+        .expect(200);
+
+      expect(r2.body.length).toBe(1);
+    });
+
+    test('delete session', () => {
+
     });
   });
 });

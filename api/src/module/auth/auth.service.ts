@@ -2,9 +2,8 @@ import {
   Injectable,
   BadRequestException,
   NotFoundException,
-  HttpException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import Prisma from '@prisma/client';
 import * as bcryptjs from 'bcryptjs';
 
@@ -13,8 +12,10 @@ import { UserService } from '@Module/user/user.service';
 import { SessionService, ISession } from '@Module/auth/session.service';
 import { RegisterDto } from '@Module/auth/dto/register.dto';
 import { LogInDto } from '@Module/auth/dto/log-in.dto';
-import { JwtTokenData, JwtTokens } from '@Module/auth/interface/jwt.interface';
 import { SetEnvVariable, SetAs } from '@Shared/decorators/set-env-variable.decorator';
+import { JwtTokensService } from '@Module/auth/jwt-tokens.service';
+import { AuthRequestToken } from '@Module/auth/interface/auth-request';
+import { RefreshTokensDto } from '@Module/auth/dto/refresh-tokens.dto';
 
 export interface MetaData {
   deviceName: string,
@@ -25,79 +26,32 @@ export interface LogInData extends MetaData, LogInDto {}
 
 export interface RegisterData extends MetaData, RegisterDto {}
 
+export interface RefreshData extends RefreshTokensDto {
+  refreshToken: AuthRequestToken,
+}
+
 /**
  * Authentication / authorization service
  */
 @Injectable()
 export class AuthService {
-  @SetEnvVariable('JWT_ACCESS_SECRET')
-  private readonly jwtAccessSecret: string;
-
-  @SetEnvVariable('JWT_REFRESH_SECRET')
-  private readonly jwtRefreshSecret: string;
-
   @SetEnvVariable('PASSWORD_SALT', SetAs.number)
   private readonly passwordSalt: number;
 
   constructor(
-    private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly sessionService: SessionService,
+    private readonly jwtTokensService: JwtTokensService,
   ) {}
-
-  /**
-   * Generate access JWT token
-   *
-   * @param data JWT token data
-   * @returns JWT token
-   */
-  async generateAccessToken(data: JwtTokenData) {
-    return this.jwtService.sign(
-      data,
-      {
-        secret: this.jwtAccessSecret,
-        expiresIn: '30m',
-      },
-    );
-  }
-
-  /**
-   * Generate refresh JWT token
-   *
-   * @param data JWT token data
-   * @returns JWT token
-   */
-  async generateRefreshToken(data: JwtTokenData) {
-    return this.jwtService.sign(
-      data,
-      {
-        secret: this.jwtRefreshSecret,
-        expiresIn: '30d',
-      },
-    );
-  }
-
-  /**
-   * Generate pair tokens, access and refresh
-   *
-   * @param data JWT tokens data
-   * @returns pair JWT tokens
-   */
-  async generatePairTokens(data: JwtTokenData): Promise<JwtTokens> {
-    return {
-      accessToken: await this.generateAccessToken(data),
-      refreshToken: await this.generateRefreshToken(data),
-    };
-  }
 
   async generateAndSaveSession(
     userId: string,
     data: Pick<ISession, 'ip' | 'deviceName' | 'fingerprint'>,
-    create: boolean = false,
   ) {
     // Generate tokens
-    const tokens = await this.generatePairTokens({ id: userId });
+    const tokens = await this.jwtTokensService.generatePairTokens({ id: userId });
 
+    // Create session data
     const sessionData = {
       userId,
       ip: data.ip,
@@ -106,11 +60,7 @@ export class AuthService {
       fingerprint: data.fingerprint,
     };
 
-    if (create) {
-      await this.sessionService.create(sessionData);
-    } else {
-      await this.sessionService.createOrUpdate(sessionData);
-    }
+    await this.sessionService.createOrUpdate(sessionData);
 
     return tokens;
   }
@@ -155,7 +105,6 @@ export class AuthService {
     return this.generateAndSaveSession(
       newUser.id,
       data,
-      true,
     );
   }
 
@@ -197,7 +146,7 @@ export class AuthService {
   }
 
   async logOut(userId: string, refreshToken: string) {
-    const candidate = await this.sessionService.findByUserIdAndToken(userId, refreshToken);
+    const candidate = await this.sessionService.findBy({ userId, refreshToken });
 
     if (!candidate) {
       throw new BadRequestException('Refresh token not exists');
@@ -206,33 +155,22 @@ export class AuthService {
     await this.sessionService.delete(candidate.id);
   }
 
-  /**
-   * Verify access JWT token
-   *
-   * @param accessToken access JWT token
-   * @returns verified token
-   */
-  verifyAccessToken(accessToken: string): JwtTokenData {
-    return this.jwtService.verify(
-      accessToken,
-      {
-        secret: this.jwtAccessSecret,
-      },
-    );
-  }
+  async refresh({ refreshToken, fingerprint }: RefreshData) {
+    const candidate = await this.sessionService.findBy({
+      userId: refreshToken.decoded.id,
+      refreshToken: refreshToken.raw,
+      fingerprint,
+    });
 
-  /**
-   * Verify refresh JWT token
-   *
-   * @param refreshToken refresh JWT token
-   * @returns verified token
-   */
-  verifyRefreshToken(refreshToken: string): JwtTokenData {
-    return this.jwtService.verify(
-      refreshToken,
-      {
-        secret: this.jwtRefreshSecret,
-      },
-    );
+    // Check if session exists
+    if (!candidate) {
+      throw new UnauthorizedException('Unauthorized or invalid refresh token');
+    }
+
+    const tokens = await this.jwtTokensService.generatePairTokens({ id: refreshToken.decoded.id });
+
+    await this.sessionService.update(candidate.id, { userId: candidate.id, ...tokens });
+
+    return tokens;
   }
 }

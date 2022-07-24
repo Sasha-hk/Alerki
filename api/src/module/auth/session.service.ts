@@ -1,7 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { AuthRequestToken } from '@Module/auth/interface/auth-request';
+import { JwtTokensService } from '@Module/auth/jwt-tokens.service';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from '@prisma/client';
 
 import { PrismaService } from '@Shared/services/prisma.service';
+import sleep from '@Shared/util/sleep';
+
+interface ICreateOrUpdate extends Pick<ISession, 'fingerprint'> {
+  refreshToken: string;
+  userId: string;
+  ip?: string;
+  deviceName?: string;
+}
 
 /**
  * Session interface
@@ -22,6 +32,7 @@ export interface ISession extends Pick<
 export class SessionService {
   constructor(
     private readonly prismaService: PrismaService,
+    private readonly jwtTokensService: JwtTokensService,
   ) {}
 
   /**
@@ -37,6 +48,10 @@ export class SessionService {
   /**
    * Create session if not exists or update
    *
+   * Features:
+   *
+   * - prevent concurrent token generation
+   *
    * @param data session data
    * @returns session
    */
@@ -45,6 +60,12 @@ export class SessionService {
 
     if (!candidate) {
       return this.create(data);
+    }
+
+    // Prevent concurrent JWT token generation
+    if (candidate.refreshToken === data.refreshToken) {
+      await sleep(1);
+      data.refreshToken = (await this.jwtTokensService.generatePairTokens({ id: data.userId })).refreshToken;
     }
 
     return this.update(candidate.id, data);
@@ -60,6 +81,28 @@ export class SessionService {
       where: {
         id,
       },
+    });
+  }
+
+  async deleteIfExists(id: string) {
+    const candidate = await this.findById(id);
+
+    if (!candidate) {
+      throw new NotFoundException('Session not exists');
+    }
+
+    return this.delete(id);
+  }
+
+  /**
+   * Find session bu custom parameters
+   *
+   * @param data session identification information
+   * @returns found session
+   */
+  async findBy(data: Partial<ISession>) {
+    return this.prismaService.session.findFirst({
+      where: data,
     });
   }
 
@@ -92,28 +135,28 @@ export class SessionService {
    * @param userId user ID
    * @returns session
    */
-  async findAllByUserId(userId: string) {
+  async findAllByUserId(userId: string, options: { page: number, limit: number }) {
     return this.prismaService.session.findMany({
       where: {
         userId,
       },
+      skip: options.page * options.limit,
+      take: options.limit,
     });
   }
 
   /**
    * Find unique session by:
    *
-   * - ip
    * - userId
    * - fingerprint
    *
    * @param data session identification information
    * @returns
    */
-  async findUnique(data: Pick<Session, 'userId' | 'fingerprint' | 'ip'>) {
+  async findUnique(data: Pick<Session, 'userId' | 'fingerprint'>) {
     return this.prismaService.session.findFirst({
       where: {
-        ip: data.ip,
         userId: data.userId,
         fingerprint: data.fingerprint,
       },
@@ -127,7 +170,7 @@ export class SessionService {
    * @param data session data to update
    * @returns session
    */
-  async update(id: string, data: ISession) {
+  async update(id: string, data: Partial<ISession>) {
     return this.prismaService.session.update({
       where: {
         id,

@@ -10,7 +10,7 @@ async function start() {
   const appOptions = { cors: true };
   const app = await NestFactory.create(AppModule, appOptions);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.enableCors();
   app.use(cookieParser());
 

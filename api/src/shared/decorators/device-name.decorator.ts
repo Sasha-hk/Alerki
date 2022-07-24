@@ -9,8 +9,18 @@ export const DeviceName = createParamDecorator(
 
     const device = deviceDetector.parse(request.headers['user-agent']);
 
-    const name = [device.device?.brand, device.os?.name].join(' ');
+    const name = [device.device?.brand, device.os?.name].reduce((item: string | undefined) => {
+      if (item) {
+        return item + ' ';
+      }
 
-    return name[0].toUpperCase() + name.slice(1) || 'undefined';
+      return '';
+    });
+
+    if (name.length > 1) {
+      return name[0].toUpperCase() + name.slice(1) || 'undefined';
+    }
+
+    return 'undefined';
   },
 );

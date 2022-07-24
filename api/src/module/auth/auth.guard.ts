@@ -8,6 +8,7 @@ import {
 
 import { AuthService } from '@Module/auth/auth.service';
 import { AuthRequest } from '@Module/auth/interface/auth-request';
+import { JwtTokensService } from '@Module/auth/jwt-tokens.service';
 
 /**
  * Authorization guard
@@ -21,14 +22,14 @@ import { AuthRequest } from '@Module/auth/interface/auth-request';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private readonly authService: AuthService,
+    private readonly jwtTokensService: JwtTokensService,
   ) {}
 
   canActivate(context: ExecutionContext) {
     const req: AuthRequest = context.switchToHttp().getRequest();
 
     // Check authorization header
-    const rawAccessToken = req.headers.Authorization as string;
+    const rawAccessToken = req.headers.authorization as string;
 
     if (!rawAccessToken) {
       throw new UnauthorizedException('Access token not exists');
@@ -36,7 +37,7 @@ export class AuthGuard implements CanActivate {
 
     const splitAccessToken = rawAccessToken.split(' ');
 
-    if (!splitAccessToken[1] || splitAccessToken[0] === 'Bearer') {
+    if (splitAccessToken[0] !== 'Bearer' || !splitAccessToken[1]) {
       throw new BadRequestException('Bad authorization header');
     }
 
@@ -47,10 +48,10 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const decodedAccessToken = this.authService.verifyAccessToken(accessToken);
+      const decodedAccessToken = this.jwtTokensService.verifyAccessToken(accessToken);
 
       Object.assign(
-        req.user,
+        req,
         {
           user: {
             tokens: {
@@ -82,7 +83,7 @@ export class AuthGuard implements CanActivate {
 @Injectable()
 export class RefreshTokenGuard {
   constructor(
-    private readonly authService: AuthService,
+    private readonly jwtTokensService: JwtTokensService,
   ) {}
 
   canActivate(context: ExecutionContext) {
@@ -95,7 +96,7 @@ export class RefreshTokenGuard {
     }
 
     try {
-      const decodedRefreshToken = this.authService.verifyRefreshToken(refreshToken);
+      const decodedRefreshToken = this.jwtTokensService.verifyRefreshToken(refreshToken);
 
       Object.assign(
         req,
