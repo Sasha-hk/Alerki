@@ -98,7 +98,7 @@ export class AuthService {
     // Create new user
     const newUser = await this.userService.create({
       email: data.email.toLocaleLowerCase(),
-      username: data.username.toLowerCase(),
+      username: data.username,
       password: hashedPassword,
     });
 
@@ -169,7 +169,7 @@ export class AuthService {
 
     const tokens = await this.jwtTokensService.generatePairTokens({ id: refreshToken.decoded.id });
 
-    await this.sessionService.update(candidate.id, { userId: candidate.id, ...tokens });
+    await this.sessionService.update(candidate.id, { refreshToken: tokens.refreshToken });
 
     return tokens;
   }

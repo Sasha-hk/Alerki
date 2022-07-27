@@ -12,435 +12,221 @@ import { usernamePattern, userConfig } from '@Config/api/params.config';
 import { AppModule } from '@Src/app.module';
 import getCookies from '@Test/utils/getCookies';
 import { asciiCharacters } from '@Test/data';
+import { AuthService } from '@Module/auth/auth.service';
+import { AuthController } from '@Module/auth/auth.controller';
+import { AuthGuard } from '@Module/auth/auth.guard';
+import { JwtTokensService } from '@Module/auth/jwt-tokens.service';
+import { SessionService } from '@Module/auth/session.service';
+import { UserService } from '@Module/user/user.service';
+import sleep from '@Shared/util/sleep';
 
 const prisma = new PrismaClient();
 
-const helpUser = {
-  email: 'auth_email@gmail.com',
-  username: 'auth_username',
-  password: 'auth_password',
+const clientUser = {
+  email: 'authtest@gmail.com',
+  username: 'authTest',
+  password: '12345678',
   fingerprint: '103c090c2641a3976d2d4984bb659d69',
-};
-
-const clientUser: { [key: string]: any } = {
-  email: 'auth_user@gmail.com',
-  username: 'auth_user',
-  password: 'password',
-  fingerprint: '1d3c090c2641a3976d2d4984bb659d69',
   tokens: {
-    accessToken: {},
-    refreshToken: {},
+    refreshToken: '',
+    accessToken: '',
   },
 };
-
-let clientUserPrism: Prisma.User;
-let clientUserSessionPrism: Prisma.Session;
-let sessions: Array<Prisma.Session>;
 
 describe('Auth testing', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    const application = await moduleFixture
+    const application = await module
       .createNestApplication()
       .use(cookieParser())
       .useGlobalPipes(new ValidationPipe({ transform: true }))
       .init();
 
     app = application.getHttpServer();
+
+    // Clear database
+    await prisma.user.deleteMany();
+    await prisma.session.deleteMany();
   });
 
-  describe('register', () => {
-    describe('should register user', () => {
-      test('with correct data', async () => {
+  afterAll(async () => {
+    await app.close();
+    await prisma.$disconnect();
+  });
+
+  describe('standard interaction', () => {
+    let sessions: Array<Prisma.Session> = [];
+    let users: Array<Prisma.User> = [];
+
+    describe('register', () => {
+      test('should register user', async () => {
         const r = await request(app)
           .post('/auth/register')
           .send(clientUser)
           .expect(200);
 
         const cookies = getCookies(r);
+        clientUser.tokens.accessToken = r.body.accessToken;
+        clientUser.tokens.refreshToken = cookies.refreshToken.value;
 
-        clientUser.tokens.refreshToken = cookies.refreshToken;
-        clientUser.tokens.accessToken.value = r.body.accessToken;
-
-        expect(cookies.refreshToken.value).toBeTruthy();
-        expect(cookies.refreshToken.HttpOnly).toBe(true);
-        expect(cookies.refreshToken.Secure).toBe(true);
-        expect(cookies.refreshToken.SameSite).toBe('Strict');
-        expect(r.body.accessToken).toBeTruthy();
+        users = await prisma.user.findMany();
+        sessions = await prisma.session.findMany();
       });
 
-      test('check user and session', async () => {
-        const users = await prisma.user.findMany();
-
-        clientUserPrism = users[0];
-
+      test('check created user', async () => {
         expect(users.length).toBe(1);
-        expect(users[0].username).toBe(clientUser.username);
         expect(users[0].email).toBe(clientUser.email);
-        expect(users[0].password).toBeTruthy();
+        expect(users[0].username).toBe(clientUser.username);
+      });
 
-        const sessions = await prisma.session.findMany();
-
-        clientUserSessionPrism = sessions[0];
-
+      test('check created session', () => {
         expect(sessions.length).toBe(1);
-        expect(sessions[0].userId).toBe(clientUserPrism.id);
-        expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
+        expect(sessions[0].userId).toBe(users[0].id);
+        expect(sessions[0].fingerprint === clientUser.fingerprint).toBeTruthy();
       });
     });
 
-    describe('should prohibit registration', () => {
-      test('with too short or long fingerprint', async () => {
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...clientUser,
-            fingerprint: 'o',
-          })
-          .expect(400);
+    describe('log-in', () => {
+      describe('with not exist fingerprint', () => {
+        const tokens: Record<string, any> = {};
 
-        await request(app)
-          .post('/auth/register')
-          .send({
-            ...clientUser,
-            fingerprint: 'o'.repeat(33),
-          })
-          .expect(400);
-      });
-
-      test('with an empty or partial body', async () => {
-        await request(app)
-          .post('/auth/register')
-          .send({})
-          .expect(400);
-
-        await request(app)
-          .post('/auth/register')
-          .send({ username: 'new_username' })
-          .expect(400);
-
-        await request(app)
-          .post('/auth/register')
-          .send({ email: 'test@gmail.com' })
-          .expect(400);
-
-        await request(app)
-          .post('/auth/register')
-          .send({ password: '123456' })
-          .expect(400);
-      });
-
-      describe('with invalid email', () => {
-        test('with exist email', async () => {
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...clientUser,
-              username: 'usernameNew',
-            })
-            .expect(400);
-        });
-
-        test('not matches pattern', async () => {
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...helpUser,
-              email: 'bad',
-            })
-            .expect(400);
-
+        test('should log-in user', async () => {
           const r = await request(app)
-            .post('/auth/register')
+            .post('/auth/log-in')
             .send({
-              ...helpUser,
-              email: 'b@b.b',
+              ...clientUser,
+              fingerprint: '1'.repeat(32),
             })
-            .expect(400);
+            .expect(200);
+
+          const cookies = getCookies(r);
+          tokens.accessToken = r.body.accessToken;
+          tokens.refreshToken = cookies.refreshToken.value;
+        });
+
+        test('check sessions', async () => {
+          const newSessions = await prisma.session.findMany();
+
+          expect(newSessions.length).toBe(2);
+
+          expect(newSessions.find(
+            (item: Prisma.Session) => tokens.refreshToken === item.refreshToken,
+          )).toBeTruthy();
+
+          expect(newSessions.find(
+            (item: Prisma.Session) => '1'.repeat(32) === item.fingerprint,
+          )).toBeTruthy();
+
+          sessions = newSessions;
+        });
+
+        test('check if fingerprints is different', () => {
+          expect(sessions[0].fingerprint).not.toBe(sessions[1].fingerprint);
         });
       });
 
-      describe('with invalid username', () => {
-        test('already exists', async () => {
-          await request(app)
-            .post('/auth/register')
+      describe('with exist fingerprint', () => {
+        const tokens: Record<string, any> = {};
+
+        test('should log-in user', async () => {
+          const r = await request(app)
+            .post('/auth/log-in')
             .send({
               ...clientUser,
-              email: 'usernameD9A@gmail.com',
             })
-            .expect(400);
+            .expect(200);
+
+          const cookies = getCookies(r);
+          tokens.accessToken = r.body.accessToken;
+          tokens.refreshToken = cookies.refreshToken.value;
+
+          clientUser.tokens.accessToken = r.body.accessToken;
+          clientUser.tokens.refreshToken = cookies.refreshToken.value;
         });
 
-        test('length', async () => {
-          // Min length
-          for (let i = 0; i < 3; i++) {
-            await request(app)
-              .post('/auth/register')
-              .send({
-                ...helpUser,
-                username: 'a'.repeat(i),
-              })
-              .expect(400);
-          }
+        test('check sessions', async () => {
+          const newSessions = await prisma.session.findMany();
 
-          // Max length
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...helpUser,
-              username: 'a'.repeat(userConfig.username.maxLength + 1),
-            })
-            .expect(400);
+          expect(newSessions.length).toBe(2);
+
+          expect(newSessions.find(
+            (item: Prisma.Session) => tokens.refreshToken === item.refreshToken,
+          )).toBeTruthy();
+
+          expect(newSessions.find(
+            (item: Prisma.Session) => clientUser.fingerprint === item.fingerprint,
+          )).toBeTruthy();
         });
 
-        test('characters', async () => {
-          for (const character of asciiCharacters) {
-            if (!character.match(usernamePattern)) {
-              await request(app)
-                .post('/auth/register')
-                .send({
-                  ...helpUser,
-                  username: character.repeat(userConfig.username.minLength),
-                })
-                .expect(400);
-            }
-          }
+        test('check if fingerprints is different', async () => {
+          const sessions = await prisma.session.findMany();
+
+          expect(sessions[0].fingerprint).not.toBe(sessions[1].fingerprint);
         });
 
-        test('blocklist', async () => {
-          for (const username of UsernameBlockList) {
-            await request(app)
-              .post('/auth/register')
-              .send({
-                ...helpUser,
-                email: 'newnotexistsemail@gmail.com',
-                username,
-              })
-              .expect(400);
-          }
-        });
+        test('check if refresh tokens has been changed', async () => {
+          const localSessions = await prisma.session.findMany();
 
-        test('password', async () => {
-          for (let i = 0; i < userConfig.password.minLength; i++) {
-            await request(app)
-              .post('/auth/register')
-              .send({
-                ...helpUser,
-                password: 'x'.repeat(i),
-              })
-              .expect(400);
-          }
-
-          await request(app)
-            .post('/auth/register')
-            .send({
-              ...helpUser,
-              password: 'x'.repeat(userConfig.password.maxLength + 1),
-            })
-            .expect(400);
+          const sessionBeforeNewLogin = sessions.find(
+            (item: Prisma.Session) => clientUser.fingerprint === item.fingerprint,
+          );
         });
       });
     });
-  });
 
-  describe('log-in', () => {
-    describe('should login user', () => {
-      test('with correct password', async () => {
+    describe('log-out', () => {
+      test('should log-out user', async () => {
+        console.log(`refreshToken=${clientUser.tokens.refreshToken}`);
         const r = await request(app)
-          .post('/auth/log-in')
+          .get('/auth/log-out')
+          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken}`])
+          // .expect(200);
+
+        console.log(r.body, r.statusCode);
+
+        expect(r.statusCode).toBe(200);
+      });
+
+      test('check sessions count', async () => {
+        const localSessions = await prisma.session.findMany();
+
+        expect(localSessions.length).toBe(1);
+      });
+    });
+
+    describe('refresh', () => {
+      test('should refresh token', async () => {
+        await sleep(1);
+
+        const r = await request(app)
+          .get('/auth/refresh')
           .send({
-            ...clientUser,
+            fingerprint: clientUser.fingerprint,
           })
+          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken}`])
+          .set({ Authorization: 'Bearer ' + clientUser.tokens.accessToken })
           .expect(200);
 
         const cookies = getCookies(r);
 
-        clientUser.tokens.refreshToken = cookies.refreshToken;
-        clientUser.tokens.accessToken.value = r.body.accessToken;
+        expect(clientUser.tokens.refreshToken).not.toBe(cookies.refreshToken.value);
 
-        expect(cookies.refreshToken.value).toBeTruthy();
-        expect(cookies.refreshToken.HttpOnly).toBe(true);
-        expect(cookies.refreshToken.Secure).toBe(true);
-        expect(cookies.refreshToken.SameSite).toBe('Strict');
-        expect(r.body.accessToken).toBeTruthy();
-      });
-
-      test('check user and sessions', async () => {
-        const users = await prisma.user.findMany();
-
-        clientUserPrism = users[0];
-
-        expect(users.length).toBe(1);
-        expect(users[0].username).toBe(clientUser.username);
-        expect(users[0].email).toBe(clientUser.email);
-        expect(users[0].password).toBeTruthy();
-
-        sessions = await prisma.session.findMany();
-      });
-
-      test('amount of sessions == 1', async () => {
-        expect(sessions.length).toBe(1);
-      });
-
-      test('session data have been changed', async () => {
-        expect(sessions[0].userId).toBe(clientUserPrism.id);
-        expect(sessions[0].fingerprint).toBe(clientUser.fingerprint);
-      });
-
-      test('refresh token have been changed', async () => {
-        expect(clientUserSessionPrism.refreshToken !== sessions[0].refreshToken).toBe(true);
-      });
-    });
-
-    describe('should prohibit login', () => {
-      test('with not exists email', async () => {
-        const data = { ...clientUser };
-        delete data.username;
-
-        await request(app)
-          .post('/auth/log-in')
-          .send({
-            ...data,
-            email: 'notexistsemail@gmail.com',
-          })
-          .expect(404);
-      });
-
-      test('with not exists username', async () => {
-        const data = { ...clientUser };
-        delete data.email;
-
-        await request(app)
-          .post('/auth/log-in')
-          .send({
-            fingerprint: clientUser.fingerprint,
-            username: 'notExistsUsername',
-            password: clientUser.password,
-          })
-          .expect(404);
-      });
-
-      test('without email and username', async () => {
-        const data = { ...clientUser };
-        delete data.email;
-        delete data.username;
-
-        await request(app)
-          .post('/auth/log-in')
-          .send({
-            ...data,
-          })
-          .expect(400);
-      });
-
-      test('without invalid password', async () => {
-        await request(app)
-          .post('/auth/log-in')
-          .send({
-            ...clientUser,
-            password: 'invalid-password',
-          })
-          .expect(400);
-      });
-    });
-
-    describe('log-in with different fingerprint', () => {
-      test('login', async () => {
-        await request(app)
-          .post('/auth/log-in')
-          .send({
-            ...clientUser,
-            fingerprint: '103c090c2641a3976d2d4984bb659d61',
-          })
-          .expect(200);
+        clientUser.tokens.accessToken = r.body.accessToken;
+        clientUser.tokens.refreshToken = cookies.refreshToken.value;
       });
 
       test('check sessions', async () => {
-        const newSessions = await prisma.session.findMany();
+        const localSessions = await prisma.session.findMany();
 
-        expect(newSessions.length).toBe(2);
-        expect(newSessions[0].fingerprint).not.toBe(newSessions[1].fingerprint);
-
-        sessions = newSessions;
+        expect(
+          localSessions.find((item: Prisma.Session) => item.refreshToken === clientUser.tokens.refreshToken),
+        ).toBeTruthy();
       });
-    });
-  });
-
-  describe('log-out', () => {
-    describe('should log-out user', () => {
-      test('with correct refresh token', async () => {
-        await request(app)
-          .get('/auth/log-out')
-          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken.value}`])
-          .expect(200);
-      });
-
-      test('check if session was deleted', async () => {
-        const newSessions = await prisma.session.findMany();
-
-        for (const s of newSessions) {
-          if (s === clientUser.tokens.refreshToken.value) {
-            throw new Error('Session should be deleted');
-          }
-        }
-      });
-    });
-
-    describe('should not log-out user', () => {
-      test('with invalid refresh token', async () => {
-        await request(app)
-          .get('/auth/log-out')
-          .set('Cookie', [`refreshToken=${clientUser.tokens.refreshToken.value + 'D'}`])
-          .expect(401);
-      });
-
-      test('without refresh token', async () => {
-        await request(app)
-          .get('/auth/log-out')
-          .expect(401);
-      });
-    });
-  });
-
-  describe('sessions', () => {
-    test('get sessions', async () => {
-      // Log-in user
-      const r = await request(app)
-        .post('/auth/log-in')
-        .send({
-          ...clientUser,
-          fingerprint: '103c090c2641a3976d2d4984bb659d6D',
-        })
-        .expect(200);
-
-      const cookies = getCookies(r);
-
-      clientUser.tokens.refreshToken = cookies.refreshToken;
-      clientUser.tokens.accessToken.value = r.body.accessToken;
-
-      const r1 = await request(app)
-        .get('/auth/session')
-        .set({ Authorization: 'Bearer ' + r.body.accessToken })
-        .expect(200);
-
-      expect(r1.body.length).not.toBe(1);
-
-      const r2 = await request(app)
-        .get('/auth/session')
-        .set({ Authorization: 'Bearer ' + r.body.accessToken })
-        .query({ page: 0, limit: 1 })
-        .expect(200);
-
-      expect(r2.body.length).toBe(1);
-    });
-
-    test('delete session', () => {
-
     });
   });
 });

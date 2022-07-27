@@ -1,6 +1,6 @@
 import { AuthRequestToken } from '@Module/auth/interface/auth-request';
 import { JwtTokensService } from '@Module/auth/jwt-tokens.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { Session } from '@prisma/client';
 
 import { PrismaService } from '@Shared/services/prisma.service';
@@ -48,10 +48,6 @@ export class SessionService {
   /**
    * Create session if not exists or update
    *
-   * Features:
-   *
-   * - prevent concurrent token generation
-   *
    * @param data session data
    * @returns session
    */
@@ -62,13 +58,9 @@ export class SessionService {
       return this.create(data);
     }
 
-    // Prevent concurrent JWT token generation
-    if (candidate.refreshToken === data.refreshToken) {
-      await sleep(1);
-      data.refreshToken = (await this.jwtTokensService.generatePairTokens({ id: data.userId })).refreshToken;
-    }
-
-    return this.update(candidate.id, data);
+    return this.update(candidate.id, {
+      refreshToken: data.refreshToken,
+    });
   }
 
   /**
